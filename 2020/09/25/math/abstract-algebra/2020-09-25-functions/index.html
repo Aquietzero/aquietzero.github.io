@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":250},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Function Classes of Functions Injective A function \(f:A \to B\) is called injective if each element of \(B\) is the image of no more than one element of \(A\). (单射) Surjective A function \(f: A \to B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Abstract Algebra - Functions">
+<meta property="og:url" content="https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Function Classes of Functions Injective A function \(f:A \to B\) is called injective if each element of \(B\) is the image of no more than one element of \(A\). (单射) Surjective A function \(f: A \to B">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-01T09:17:36.547Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/","path":"2020/09/25/math/abstract-algebra/2020-09-25-functions/","title":"Abstract Algebra - Functions"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Abstract Algebra - Functions | NullSpace</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#function"><span class="nav-number">1.</span> <span class="nav-text">Function</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#classes-of-functions"><span class="nav-number">1.1.</span> <span class="nav-text">Classes of Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#injective"><span class="nav-number">1.1.1.</span> <span class="nav-text">Injective</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#surjective"><span class="nav-number">1.1.2.</span> <span class="nav-text">Surjective</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bijective"><span class="nav-number">1.1.3.</span> <span class="nav-text">Bijective</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inverse"><span class="nav-number">1.1.4.</span> <span class="nav-text">Inverse</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#permutation"><span class="nav-number">2.</span> <span class="nav-text">Permutation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#groups-of-permutation"><span class="nav-number">2.1.</span> <span class="nav-text">Groups of permutation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#isomorphism"><span class="nav-number">3.</span> <span class="nav-text">Isomorphism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cayleys-theorem"><span class="nav-number">3.1.</span> <span class="nav-text">Cayley&#39;s Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#how-to-recognize-isomorphism"><span class="nav-number">3.2.</span> <span class="nav-text">How to recognize isomorphism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#automorphism"><span class="nav-number">3.3.</span> <span class="nav-text">Automorphism</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#partition-and-equivalence-relations"><span class="nav-number">4.</span> <span class="nav-text">Partition And Equivalence
+Relations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#partition"><span class="nav-number">4.1.</span> <span class="nav-text">Partition</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#equivalence-relation"><span class="nav-number">4.2.</span> <span class="nav-text">Equivalence Relation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#equivalence-class"><span class="nav-number">4.3.</span> <span class="nav-text">Equivalence Class</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#homomorphism"><span class="nav-number">5.</span> <span class="nav-text">Homomorphism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#homomorphism-for-groups"><span class="nav-number">5.1.</span> <span class="nav-text">Homomorphism for Groups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#homomorphism-for-rings"><span class="nav-number">5.2.</span> <span class="nav-text">Homomorphism for Rings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kernel"><span class="nav-number">5.3.</span> <span class="nav-text">Kernel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-theorems"><span class="nav-number">5.4.</span> <span class="nav-text">Basic Theorems</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fundermental-homomorphism-theorem"><span class="nav-number">5.5.</span> <span class="nav-text">Fundermental Homomorphism
+Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fht-for-groups"><span class="nav-number">5.6.</span> <span class="nav-text">FHT for Groups</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fht-for-rings"><span class="nav-number">5.7.</span> <span class="nav-text">FHT for Rings</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.png">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2020/10/28/math/abstract-algebra/2020-10-28-group/" rel="bookmark">
+        <time class="popular-posts-time">2020-10-28</time>
+        <br>
+      Abstract Algebra - Group
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2020/10/04/math/abstract-algebra/2020-10-04-ring/" rel="bookmark">
+        <time class="popular-posts-time">2020-10-04</time>
+        <br>
+      Abstract Algebra - Ring
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2020/10/17/math/abstract-algebra/2020-10-17-field/" rel="bookmark">
+        <time class="popular-posts-time">2020-10-17</time>
+        <br>
+      Abstract Algebra - Field
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.png">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Abstract Algebra - Functions | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Abstract Algebra - Functions
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-09-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-09-25T00:00:00+08:00">2020-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-11-01 17:17:36" itemprop="dateModified" datetime="2023-11-01T17:17:36+08:00">2023-11-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>910</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>3 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="function">Function</h1>
+<h2 id="classes-of-functions">Classes of Functions</h2>
+<h3 id="injective">Injective</h3>
+<p>A function <span class="math inline">\(f:A \to B\)</span> is called
+<strong>injective</strong> if each element of <span
+class="math inline">\(B\)</span> is the image of no more than one
+element of <span class="math inline">\(A\)</span>. (单射)</p>
+<h3 id="surjective">Surjective</h3>
+<p>A function <span class="math inline">\(f: A \to B\)</span> is called
+<strong>surjective</strong> if each element of <span
+class="math inline">\(B\)</span> is the image of at least one element of
+<span class="math inline">\(A\)</span>. (满射)</p>
+<h3 id="bijective">Bijective</h3>
+<p>A function <span class="math inline">\(f: A \to B\)</span> is called
+<strong>bijective</strong> if it is both injective and surjective, which
+defines a one to one mapping between <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>.</p>
+<h3 id="inverse">Inverse</h3>
+<p>A function <span class="math inline">\(f:A \to B\)</span> has an
+inverse if and only if it is a bijective.</p>
+<h1 id="permutation">Permutation</h1>
+<p>A bijective function <span class="math inline">\(f\)</span> from
+<span class="math inline">\(A \to A\)</span> is called a
+<strong>permutaion</strong> of a set <span
+class="math inline">\(A\)</span>.</p>
+<h2 id="groups-of-permutation">Groups of permutation</h2>
+<p>All the permutation of <span class="math inline">\(A\)</span>, which
+the operation <span class="math inline">\(\circ\)</span> of composition,
+is a group, where</p>
+<ol type="1">
+<li>The identity is <span class="math inline">\(\varepsilon\)</span>,
+where <span class="math inline">\(\varepsilon(x) = x, \forall \ x \in
+A\)</span> .</li>
+<li>The inverse is <span class="math inline">\(f^{-1}\)</span> which
+satisfies <span class="math inline">\([f \circ f^{-1}](x) =
+\varepsilon(x)\)</span>.</li>
+</ol>
+<h1 id="isomorphism">Isomorphism</h1>
+<p>Let <span class="math inline">\(G_1\)</span> and <span
+class="math inline">\(G_2\)</span> be groups. A bijective function <span
+class="math inline">\(f: G_1 \to G_2\)</span> with the property that for
+any two elements <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> in <span
+class="math inline">\(G_1\)</span> that <span
+class="math inline">\(f(ab) = f(a)f(b)\)</span> is called an isomorphism
+from <span class="math inline">\(G_1\)</span> to <span
+class="math inline">\(G_2\)</span>.</p>
+<aside>
+<p>💡 If there exists such an isomorphism <span
+class="math inline">\(f\)</span>, then we call <span
+class="math inline">\(G_1\)</span> is isomorphic to <span
+class="math inline">\(G_2\)</span>, which is symbolized as <span
+class="math inline">\(G_1 \cong G_2\)</span>.</p>
+</aside>
+<p>The logic behind the concise notation above is that <span
+class="math inline">\(f\)</span> is bijective from <span
+class="math inline">\(G_1\)</span> to <span
+class="math inline">\(G_2\)</span>. For <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> in <span
+class="math inline">\(G_1\)</span>, <span
+class="math inline">\(f\)</span> maps <span
+class="math inline">\(a\)</span> to <span
+class="math inline">\(a&#39;\)</span> in <span
+class="math inline">\(G_2\)</span> and also <span
+class="math inline">\(b\)</span>. More importantly, in this context a
+same operation is discussed on <span class="math inline">\(G_1\)</span>
+and <span class="math inline">\(G_2\)</span>, so <span
+class="math inline">\(f(ab)\)</span> maps <span
+class="math inline">\(ab\)</span> uniquely to <span
+class="math inline">\(a&#39;b&#39;\)</span> in <span
+class="math inline">\(G_2\)</span> since</p>
+<p><span class="math display">\[
+f(ab) = a&#39;b&#39; = f(a)f(b)
+\]</span></p>
+<p>And another pre-requisite which needs to pay attention is that <span
+class="math inline">\(G_1\)</span> and <span
+class="math inline">\(G_2\)</span> are groups.</p>
+<aside>
+<p>💡 Another attention have to be paid is that the operation on <span
+class="math inline">\(G_1\)</span> and <span
+class="math inline">\(G_2\)</span> can be different.</p>
+</aside>
+<h2 id="cayleys-theorem">Cayley's Theorem</h2>
+<p>Every group is isomorphic to a group of permutations.</p>
+<h2 id="how-to-recognize-isomorphism">How to recognize isomorphism</h2>
+<ol type="1">
+<li>Make an educated guess, and come up with a function <span
+class="math inline">\(f: G_1 \to G_2\)</span> which looks as though it
+might be an isomorphism.</li>
+<li>Check that <span class="math inline">\(f\)</span> is bijective.</li>
+<li>Check that <span class="math inline">\(f\)</span> satisfies the
+identity <span class="math inline">\(f(ab) = f(a)f(b)\)</span>.</li>
+</ol>
+<h2 id="automorphism">Automorphism</h2>
+<p>By an automorphism (自同构，自守) of <span
+class="math inline">\(G\)</span> we mean an isomorphism <span
+class="math inline">\(f:G \to G\)</span>.</p>
+<h1 id="partition-and-equivalence-relations">Partition And Equivalence
+Relations</h1>
+<h2 id="partition">Partition</h2>
+<p>By a partition of a set <span class="math inline">\(A\)</span> we
+mean a family <span class="math inline">\(\{ A_i: i \in I \}\)</span> of
+nonempty subsets of <span class="math inline">\(A\)</span> such that</p>
+<ul>
+<li>If any two classes, say <span class="math inline">\(A_i\)</span> and
+<span class="math inline">\(A_j\)</span>, have a common element <span
+class="math inline">\(x\)</span> (that is, are not distinct), then <span
+class="math inline">\(A_i = A_j\)</span>.</li>
+<li>Every element <span class="math inline">\(x\)</span> of <span
+class="math inline">\(A\)</span> lies in one of the classes.</li>
+</ul>
+<h2 id="equivalence-relation">Equivalence Relation</h2>
+<p>By an equivalence relation on a set <span
+class="math inline">\(A\)</span> we mean a relation <span
+class="math inline">\(\backsim\)</span> which is</p>
+<ul>
+<li>Reflexive: <span class="math inline">\(x \backsim x\)</span> for
+every <span class="math inline">\(x \in A\)</span>.</li>
+<li>Symmetric: if <span class="math inline">\(x \backsim y\)</span>,
+then <span class="math inline">\(y \backsim x\)</span>.</li>
+<li>Transitive: if <span class="math inline">\(x \backsim y\)</span> and
+<span class="math inline">\(y \backsim z\)</span>, then <span
+class="math inline">\(x \backsim z\)</span>.</li>
+</ul>
+<h2 id="equivalence-class">Equivalence Class</h2>
+<p>Let <span class="math inline">\(\backsim\)</span> be an equivalence
+relation on <span class="math inline">\(A\)</span> and <span
+class="math inline">\(x\)</span> an element of <span
+class="math inline">\(A\)</span>. The set of all the elements equivalent
+to <span class="math inline">\(x\)</span> is called the equivalence
+class of <span class="math inline">\(x\)</span>, and it's denoted by
+<span class="math inline">\([x]\)</span>. That is</p>
+<p><span class="math display">\[
+[x] = \{ y \in A: y \backsim x\}
+\]</span></p>
+<h1 id="homomorphism">Homomorphism</h1>
+<h2 id="homomorphism-for-groups">Homomorphism for Groups</h2>
+<p>If <span class="math inline">\(G\)</span> and <span
+class="math inline">\(H\)</span> are groups, a homomorphism from <span
+class="math inline">\(G\)</span> to <span
+class="math inline">\(H\)</span> is a function: <span
+class="math inline">\(f: G \to H\)</span> such that for any two elements
+<span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> in <span
+class="math inline">\(G\)</span>,</p>
+<p><span class="math display">\[
+f(ab) = f(a)f(b)
+\]</span></p>
+<aside>
+<p>💡 If there exists a homomorphism from <span
+class="math inline">\(G\)</span> <strong>onto</strong> <span
+class="math inline">\(H\)</span>, we say that <span
+class="math inline">\(H\)</span> is a <strong>homomorphic image</strong>
+of <span class="math inline">\(G\)</span>.</p>
+</aside>
+<h2 id="homomorphism-for-rings">Homomorphism for Rings</h2>
+<p>A homomorphism from a ring <span class="math inline">\(A\)</span> to
+a ring <span class="math inline">\(B\)</span> is a function <span
+class="math inline">\(f:A \to B\)</span> satisfying the identities</p>
+<p><span class="math display">\[
+f(x_1 + x_2) = f(x_1)f(x_2) \\
+f(x_1x_2) = f(x_1)f(x_2)
+\]</span></p>
+<h2 id="kernel">Kernel</h2>
+<p>Let <span class="math inline">\(f: G \to H\)</span> be a
+homomorphism. The kernel of <span class="math inline">\(f\)</span> is
+the set <span class="math inline">\(K\)</span> of all the elements of
+<span class="math inline">\(G\)</span> which are carried by <span
+class="math inline">\(f\)</span> onto the neutral eleemnt of <span
+class="math inline">\(H\)</span>. That is,</p>
+<p><span class="math display">\[
+K = \{ x \in G: f(x) = e\}
+\]</span></p>
+<aside>
+<p>💡 The kernel of a group <span class="math inline">\(G\)</span> is a
+normal subgroup of <span class="math inline">\(G\)</span>. And the
+kernel of a ring <span class="math inline">\(A\)</span> is an ideal of
+<span class="math inline">\(A\)</span>.</p>
+</aside>
+<h2 id="basic-theorems">Basic Theorems</h2>
+<p>Let <span class="math inline">\(G\)</span> and <span
+class="math inline">\(H\)</span> be groups, and <span
+class="math inline">\(f: G \to H\)</span> a homomorphism. Then</p>
+<ul>
+<li><span class="math inline">\(f(e) = e\)</span>.</li>
+<li><span class="math inline">\(f(a^{-1}) = [f(a)]^{-1}, \forall \  a
+\in G\)</span>.</li>
+</ul>
+<p>Let <span class="math inline">\(f: G \to H\)</span> be a
+homomorphism.</p>
+<ul>
+<li>The kernel of <span class="math inline">\(f\)</span> is a normal
+subgroup of <span class="math inline">\(G\)</span>.</li>
+<li>The range of <span class="math inline">\(f\)</span> is a subgroup of
+<span class="math inline">\(H\)</span>.</li>
+</ul>
+<p>Let <span class="math inline">\(f: G \to H\)</span> be a homomorphism
+with kernel <span class="math inline">\(K\)</span>. Then <span
+class="math inline">\(f(a) = f(b)\)</span> iff <span
+class="math inline">\(Ka = Kb\)</span>.</p>
+<h2 id="fundermental-homomorphism-theorem">Fundermental Homomorphism
+Theorem</h2>
+<h2 id="fht-for-groups">FHT for Groups</h2>
+<p>Let <span class="math inline">\(f: G \to H\)</span> be a homomorphism
+of <span class="math inline">\(G\)</span> onto <span
+class="math inline">\(H\)</span>. If <span
+class="math inline">\(K\)</span> is the kernel of <span
+class="math inline">\(f\)</span>, then</p>
+<p><span class="math display">\[
+H \cong G/K
+\]</span></p>
+<aside>
+<p>💡 It asserts that every homomorphic image of <span
+class="math inline">\(G\)</span> is isomorphic to a quotient group of
+<span class="math inline">\(G\)</span>. Which specific quotient group of
+<span class="math inline">\(G\)</span> ? Well, if <span
+class="math inline">\(f\)</span> is a homomorphism from <span
+class="math inline">\(G\)</span> onto <span
+class="math inline">\(H\)</span>, then <span
+class="math inline">\(H\)</span> is isomorphic to the quotient group of
+<span class="math inline">\(G\)</span> by the kernel of <span
+class="math inline">\(f\)</span>.</p>
+</aside>
+<h2 id="fht-for-rings">FHT for Rings</h2>
+<p>Let <span class="math inline">\(f: A \to B\)</span> be a homomorphism
+from a ring <span class="math inline">\(A\)</span> onto a ring <span
+class="math inline">\(B\)</span>, and let <span
+class="math inline">\(K\)</span> be the kernel of <span
+class="math inline">\(f\)</span>. Then</p>
+<p><span class="math display">\[
+B \cong A/K
+\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/" title="Abstract Algebra - Functions">https://aquietzero.github.io/2020/09/25/math/abstract-algebra/2020-09-25-functions/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/08/22/reading/2020-08-22-%E5%AB%8C%E3%82%8F%E3%82%8C%E3%82%8B%E5%8B%87%E6%B0%97/" rel="prev" title="嫌われる勇気">
+                  <i class="fa fa-angle-left"></i> 嫌われる勇気
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/04/math/abstract-algebra/2020-10-04-ring/" rel="next" title="Abstract Algebra - Ring">
+                  Abstract Algebra - Ring <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">88k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">5:20</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

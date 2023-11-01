@@ -2493,7 +2493,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #5d34f5;
+  background: #6e838b;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2543,6 +2543,7 @@ body {
 }
 strong {
   color: #b35588;
+  font-weight: bold;
 }
 .brand {
   background: #fff;
@@ -2571,6 +2572,15 @@ strong {
 }
 .post-body {
   text-align: left;
+}
+.post-body aside {
+  background: #f1f1ef;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.post-body aside p {
+  padding: 0;
+  margin: 0;
 }
 .post-copyright ul {
   border-left: solid 3px #b35588;
