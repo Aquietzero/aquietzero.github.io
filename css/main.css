@@ -2455,14 +2455,14 @@ header.header {
 }
 @media (min-width: 1200px) {
   .sidebar-active {
-    padding-right: 250px;
+    padding-right: 320px;
   }
   .sidebar-active .footer-fixed {
-    right: 250px;
+    right: 320px;
   }
 }
 .sidebar {
-  right: -250px;
+  right: -320px;
 }
 .sidebar-active .sidebar {
   right: 0;
@@ -2476,7 +2476,7 @@ header.header {
   position: fixed;
   top: 0;
   transition: all 0.2s ease-out;
-  width: 250px;
+  width: 320px;
   z-index: 20;
 }
 .sidebar a {
@@ -2498,7 +2498,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #a2944f;
+  background: #ff4eff;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2571,6 +2571,9 @@ strong {
 .pagination .extend {
   border: none;
 }
+.collection-title {
+  display: none;
+}
 .posts-collapse .post-content .collection-year {
   margin: 30px 0 10px 0;
 }
@@ -2588,17 +2591,24 @@ strong {
   background: #f1f1ef;
   padding: 10px 20px;
   border-radius: 5px;
+  margin: 0 0 20px;
 }
 .post-block .post-body aside p {
   padding: 0;
   margin: 0;
 }
+.post-block .post-body .highlight {
+  border-radius: 5px;
+}
 .post-block .post-body figcaption {
   font-weight: normal !important;
-  text-align: left !important;
+  line-height: 1.2;
 }
 .post-block .post-body figcaption strong {
   color: #999 !important;
+}
+.post-block .post-body .code {
+  font-size: 1em;
 }
 .post-block .post-copyright ul {
   border-left: solid 3px #b35588;
@@ -2615,12 +2625,20 @@ strong {
 }
 .posts-related .popular-posts .popular-posts-item {
   line-height: 1.6;
+  margin-bottom: 20px;
 }
 .posts-related .popular-posts .popular-posts-item .popular-posts-link {
   opacity: 1;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+}
+.posts-related .popular-posts .popular-posts-item .popular-posts-title {
+  font-size: 1em;
 }
 .posts-related .popular-posts .popular-posts-item .popular-posts-time {
   opacity: 0.5;
-  margin-left: 10px;
   font-size: 0.8em;
+  margin-bottom: -5px;
+  text-decoration: none !important;
 }
