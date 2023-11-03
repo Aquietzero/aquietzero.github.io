@@ -184,8 +184,8 @@ body {
   background: var(--body-bg-color);
   box-sizing: border-box;
   color: var(--text-color);
-  font-family: PT Serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 1em;
+  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 1.2em;
   line-height: 2;
   min-height: 100%;
   position: relative;
@@ -197,7 +197,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: PT Serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-weight: bold;
   line-height: 1.5;
   margin: 30px 0 15px;
@@ -1089,7 +1089,7 @@ pre code {
   color: var(--brand-hover-color);
 }
 .site-title {
-  font-family: PT Serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 1.375em;
   font-weight: normal;
   line-height: 1.5;
@@ -1807,7 +1807,7 @@ pre code {
   width: 4px;
 }
 .post-body {
-  font-family: PT Serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   overflow-wrap: break-word;
 }
 @media (min-width: 1200px) {
@@ -1993,7 +1993,7 @@ pre code {
 }
 .posts-expand .post-meta-container {
   color: #999;
-  font-family: PT Serif, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   font-size: 0.75em;
   margin-top: 3px;
 }
@@ -2532,7 +2532,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #44f42e;
+  background: #9a7fff;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2584,6 +2584,9 @@ strong {
   color: #b35588;
   font-weight: bold;
 }
+.site-title {
+  font-weight: bold;
+}
 .brand {
   background: #fff;
   color: #000;
@@ -2609,25 +2612,28 @@ strong {
   color: #000;
   margin: 10px 2px 0;
 }
-.post-body {
+.post-block h1.post-title {
+  font-weight: bold !important;
+}
+.post-block .post-body {
   text-align: left;
 }
-.post-body aside {
+.post-block .post-body aside {
   background: #f1f1ef;
   padding: 10px 20px;
   border-radius: 5px;
 }
-.post-body aside p {
+.post-block .post-body aside p {
   padding: 0;
   margin: 0;
 }
-.post-body figcaption {
+.post-block .post-body figcaption {
   font-weight: normal !important;
   text-align: left !important;
 }
-.post-body figcaption strong {
+.post-block .post-body figcaption strong {
   color: #999 !important;
 }
-.post-copyright ul {
+.post-block .post-copyright ul {
   border-left: solid 3px #b35588;
 }
