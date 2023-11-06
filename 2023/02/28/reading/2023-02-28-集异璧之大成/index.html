@@ -16,7 +16,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="哥德尔定理背后的原理的形象化表现  哥德尔定理背后的原理的形象化表现  两个映射背靠背具有了出乎意料的飞去来器效果。第一个映射是从纹道模式到声音，由一个唱机实现。第二个——很平常，但却常常被忽视——是从声音到唱机的震颤。注意第二个映射独立于第一个映射而存在，因为附近的任何声音——不仅是唱机自己产生的声音——都会引起这种震颤。哥德尔定理转述在这里就是：对任何一个唱机，都有它不能播放的唱片，因为后">
 <meta property="og:type" content="article">
@@ -99,7 +99,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section">关于</a></li>
   </ul>
 </nav>
 
@@ -364,19 +364,19 @@ y&gt;\)</span> 是可互换的。</p>
 y&gt;\)</span> 与 <span class="math inline">\(&lt;\sim x \to
 y&gt;\)</span> 是可互换的。（有点像程序语言里的逻辑短路）</p>
 <h3 id="幻想规则例子">幻想规则例子</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[       推入幻想</span><br><span class="line">    P     前提</span><br><span class="line">    ~~P   结果（根据双重弯号规则）</span><br><span class="line">]       弹出幻想</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[       推入幻想</span><br><span class="line">    P     前提</span><br><span class="line">    ~~P   结果（根据双重弯号规则）</span><br><span class="line">]       弹出幻想</span><br></pre></td></tr></table></figure>
 <p>这个幻想说明：假如 <span class="math inline">\(P\)</span>
 是一个定理，那么 <span class="math inline">\(\sim \sim P\)</span>
 也是一个定理。使用符号来表示便是 <span class="math inline">\(&lt;P \to
 \sim \sim P&gt;\)</span></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[           推入幻想</span><br><span class="line">    &lt;P^Q&gt;     前提</span><br><span class="line">    P         分隔</span><br><span class="line">    Q         分隔</span><br><span class="line">    &lt;Q^P&gt;     联结      </span><br><span class="line">]           弹出幻想</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[           推入幻想</span><br><span class="line">    &lt;P^Q&gt;     前提</span><br><span class="line">    P         分隔</span><br><span class="line">    Q         分隔</span><br><span class="line">    &lt;Q^P&gt;     联结      </span><br><span class="line">]           弹出幻想</span><br></pre></td></tr></table></figure>
 <p>由此得到的幻想规则是 <span class="math inline">\(&lt;&lt;P \land
 Q&gt; \to &lt;Q \land P&gt;&gt;\)</span></p>
 <aside>
 <p>💡 最后得到的才是幻想规则，中括号里面的只是幻想过程。</p>
 </aside>
 <h3 id="搬入规则的例子">搬入规则的例子</h3>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[               推入</span><br><span class="line">    P             外层幻想的前提</span><br><span class="line">    [             再次推入</span><br><span class="line">        Q           内层幻想的前提</span><br><span class="line">        P           把 P 搬入内层幻想</span><br><span class="line">        &lt;P^Q&gt;       联结</span><br><span class="line">    ]             弹出内层幻想，回到外层幻想</span><br><span class="line">    &lt;Q→&lt;P^Q&gt;&gt;     幻想规则</span><br><span class="line">]               弹出</span><br><span class="line">&lt;P→&lt;Q→&lt;P^Q&gt;&gt;&gt;   幻想规则</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[               推入</span><br><span class="line">    P             外层幻想的前提</span><br><span class="line">    [             再次推入</span><br><span class="line">        Q           内层幻想的前提</span><br><span class="line">        P           把 P 搬入内层幻想</span><br><span class="line">        &lt;P^Q&gt;       联结</span><br><span class="line">    ]             弹出内层幻想，回到外层幻想</span><br><span class="line">    &lt;Q→&lt;P^Q&gt;&gt;     幻想规则</span><br><span class="line">]               弹出</span><br><span class="line">&lt;P→&lt;Q→&lt;P^Q&gt;&gt;&gt;   幻想规则</span><br></pre></td></tr></table></figure>
 <h1 id="印符数论">印符数论</h1>
 <p>TNT（Topographical Number Theory）。使用形式系统表达数论。</p>
 <h2 id="系统定义">系统定义</h2>
@@ -574,7 +574,7 @@ class="math inline">\(n\)</span>
 为推导的最后一行，也就是推导结果。比如在 WJU 系统中，令 <span
 class="math inline">\(m = 3131131111301\)</span>，<span
 class="math inline">\(n = 301\)</span>，因为存在推导</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">WJ <span class="comment">// 31</span></span><br><span class="line">WJJ <span class="comment">// 311</span></span><br><span class="line">WJJJJ <span class="comment">// 31111</span></span><br><span class="line">WUJ <span class="comment">// 301</span></span><br><span class="line"></span><br><span class="line">m = <span class="number">3131131111301</span></span><br><span class="line">n = <span class="number">301</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">WJ <span class="comment">// 31</span></span><br><span class="line">WJJ <span class="comment">// 311</span></span><br><span class="line">WJJJJ <span class="comment">// 31111</span></span><br><span class="line">WUJ <span class="comment">// 301</span></span><br><span class="line"></span><br><span class="line">m = <span class="number">3131131111301</span></span><br><span class="line">n = <span class="number">301</span></span><br></pre></td></tr></table></figure>
 <p>所以 <span class="math inline">\(m\)</span> 和 <span
 class="math inline">\(n\)</span> 构成了一个证明对。</p>
 <h2 id="是证明对是原始递归的">“是证明对”是原始递归的</h2>
