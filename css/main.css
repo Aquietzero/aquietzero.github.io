@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #ffb401;
+  background: #ff220a;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2649,4 +2649,22 @@ strong {
 }
 .book-cover .book-authors {
   font-size: 0.8em;
+}
+@media (max-width: 991px) {
+  .math.display {
+    font-size: 0.8em;
+  }
+  .post-block .post-body img {
+    width: 95% !important;
+  }
+  .post-block .post-body figure {
+    margin-inline-start: 10px !important;
+    margin-inline-end: 10px !important;
+  }
+  .post-block .post-body figure.book-cover {
+    margin: 0 auto !important;
+  }
+  .post-block .post-body .code {
+    font-size: 0.7em;
+  }
 }
