@@ -18,19 +18,21 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="概述 低阶引擎系统 游戏循环及实时模拟 渲染引擎 动画系统 碰撞及刚体动力学 游戏性系统 运行时游戏性基础系统">
+    <meta name="description" content="游戏引擎架构  Jason Gregory, 叶劲锋 译    概述 低阶引擎系统 游戏循环及实时模拟 渲染引擎 动画系统 碰撞及刚体动力学 游戏性系统 运行时游戏性基础系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="游戏引擎架构">
 <meta property="og:url" content="https://aquietzero.github.io/2022/02/17/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/index/index.html">
 <meta property="og:site_name" content="NullSpace">
-<meta property="og:description" content="概述 低阶引擎系统 游戏循环及实时模拟 渲染引擎 动画系统 碰撞及刚体动力学 游戏性系统 运行时游戏性基础系统">
+<meta property="og:description" content="游戏引擎架构  Jason Gregory, 叶劲锋 译    概述 低阶引擎系统 游戏循环及实时模拟 渲染引擎 动画系统 碰撞及刚体动力学 游戏性系统 运行时游戏性基础系统">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/books/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84.png">
 <meta property="article:published_time" content="2022-02-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-04T16:15:57.788Z">
+<meta property="article:modified_time" content="2023-11-07T02:53:40.980Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="游戏引擎">
 <meta property="article:tag" content="架构">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/books/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84.png">
 
 
 <link rel="canonical" href="https://aquietzero.github.io/2022/02/17/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/index/">
@@ -224,7 +226,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>136</span>
+      <span>173</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -241,7 +243,14 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><ul>
+    <div class="post-body" itemprop="articleBody"><figure class="book-cover">
+<img src="/assets/images/books/游戏引擎架构.png" />
+<figcaption>
+游戏引擎架构 <br /> <span class="book-authors">Jason Gregory, 叶劲锋
+译</span>
+</figcaption>
+</figure>
+<ul>
 <li><a href="/2022/02/17/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-17-%E6%A6%82%E8%BF%B0/" title="概述">概述</a></li>
 <li><a href="/2022/02/18/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-18-%E4%BD%8E%E9%98%B6%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/" title="低阶引擎系统">低阶引擎系统</a></li>
 <li><a href="/2022/02/18/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-18-%E6%B8%B8%E6%88%8F%E5%BE%AA%E7%8E%AF%E5%8F%8A%E5%AE%9E%E6%97%B6%E6%A8%A1%E6%8B%9F/" title="游戏循环及实时模拟">游戏循环及实时模拟</a></li>
@@ -259,6 +268,22 @@
     
 
     <footer class="post-footer">
+  <div class="posts-related">
+    <div class="animated">
+      <div class="popular-posts-title">
+        <i class="fa fa-signs-post fa-fw"></i>
+        相关文章
+      </div>
+      <ul class="popular-posts">
+        <li class="popular-posts-item">
+          <a class="popular-posts-link" href="/2022/02/17/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-17-%E6%A6%82%E8%BF%B0/" rel="bookmark">
+              <time class="popular-posts-time">2022-02-17</time>
+            <span class="popular-posts-title">概述</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
           
 
 <div class="post-copyright">
