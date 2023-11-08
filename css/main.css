@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #ff220a;
+  background: #0ff;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2578,6 +2578,9 @@ strong {
 }
 .post-block .post-body {
   text-align: left;
+}
+.post-block .post-body table {
+  font-size: 0.8em;
 }
 .post-block .post-body aside {
   background: #f1f1ef;
