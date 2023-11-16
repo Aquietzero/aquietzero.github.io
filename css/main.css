@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #af424f;
+  background: #c96af4;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2597,6 +2597,10 @@ strong {
   background: #f9f2f5;
   text-decoration: none !important;
 }
+.post-block .post-body em {
+  font-style: normal;
+  border-bottom: solid 1px #000;
+}
 .post-block .post-body .highlight {
   border-radius: 5px;
 }
@@ -2608,7 +2612,7 @@ strong {
   color: #999 !important;
 }
 .post-block .post-body .code {
-  font-size: 0.92em;
+  font-size: 0.95em;
 }
 .post-block .post-copyright ul {
   border-left: solid 3px #b35588;

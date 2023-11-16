@@ -128,18 +128,18 @@ Major）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" hre
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">91</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -314,6 +314,17 @@ no.5）的同学，本来是满心期待的，没想到，这位同学弹得实�
     
 
     <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
           
 
 <div class="post-copyright">
@@ -377,13 +388,13 @@ no.5）的同学，本来是满心期待的，没想到，这位同学弹得实�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">208k</span>
+    <span title="站点总字数">211k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">12:36</span>
+    <span title="站点阅读时长">12:48</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
