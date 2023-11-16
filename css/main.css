@@ -1092,8 +1092,8 @@ pre code {
   color: var(--brand-hover-color);
 }
 .site-title {
-  font-family: Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 1.375em;
+  font-family: Agbalumo, Noto Serif SC, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 1.5em;
   font-weight: normal;
   line-height: 1.5;
   margin: 0;
@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #78ffc3;
+  background: #cdf13d;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2629,7 +2629,7 @@ strong {
 }
 .posts-related .popular-posts .popular-posts-item {
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .posts-related .popular-posts .popular-posts-item .popular-posts-link {
   opacity: 1;
@@ -2674,4 +2674,25 @@ strong {
   .post-block .post-body .code {
     font-size: 0.7em;
   }
+}
+.pagination .page-number.current {
+  background: #b35588;
+}
+.with-love {
+  color: #b35588;
+}
+.theme-color-blue code {
+  color: #477da5 !important;
+  background: #e9f3f7 !important;
+  text-decoration: none !important;
+}
+.theme-color-green code {
+  color: #548064 !important;
+  background: #eef3ed !important;
+  text-decoration: none !important;
+}
+.theme-color-purple code {
+  color: #a48bbe !important;
+  background: #f6f3f8 !important;
+  text-decoration: none !important;
 }
