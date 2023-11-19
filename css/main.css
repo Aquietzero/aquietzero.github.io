@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #cdf13d;
+  background: #81696a;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2695,4 +2695,7 @@ strong {
   color: #a48bbe !important;
   background: #f6f3f8 !important;
   text-decoration: none !important;
+}
+.post-copyright {
+  font-size: 0.8em;
 }
