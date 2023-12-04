@@ -2489,7 +2489,7 @@ header.header {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #81696a;
+  background: #5d67c9;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2607,6 +2607,7 @@ strong {
 .post-block .post-body figcaption {
   font-weight: normal !important;
   line-height: 1.2;
+  text-align: left;
 }
 .post-block .post-body figcaption strong {
   color: #999 !important;
