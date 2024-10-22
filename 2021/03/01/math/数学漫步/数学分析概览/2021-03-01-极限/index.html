@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="从上面的概念关系图来看，极限实际上是一个通用的概念，其研究变量变化的趋势结果。所以对于一个数来说，不存在“极限”的概念，它必须是针对一系列的数的变化趋势来说的。 整序变量 设有自然数列： \[ 1, 2, \cdots, n, \cdots, n&#39;, \cdots \] 在序列内数字由小而大的顺序排列着，较大的数 \(n&#39;\) 在较小的数 \(n\) 的后面，若在自然数列内，按照">
+<meta property="og:type" content="article">
+<meta property="og:title" content="极限">
+<meta property="og:url" content="https://aquietzero.github.io/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="从上面的概念关系图来看，极限实际上是一个通用的概念，其研究变量变化的趋势结果。所以对于一个数来说，不存在“极限”的概念，它必须是针对一系列的数的变化趋势来说的。 整序变量 设有自然数列： \[ 1, 2, \cdots, n, \cdots, n&#39;, \cdots \] 在序列内数字由小而大的顺序排列着，较大的数 \(n&#39;\) 在较小的数 \(n\) 的后面，若在自然数列内，按照">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-03T09:11:21.297Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="高等数学">
+<meta property="article:tag" content="数学分析">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/","path":"2021/03/01/math/数学漫步/数学分析概览/2021-03-01-极限/","title":"极限"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>极限 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E5%BA%8F%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">整序变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E5%BA%8F%E5%8F%98%E9%87%8F%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">1.1.</span> <span class="nav-text">整序变量的极限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E9%99%90%E8%BF%90%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">极限运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%AF%E6%89%98%E5%B0%94%E8%8C%A8o.stolz%E5%AE%9A%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">斯托尔茨（O.Stolz）定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0e"><span class="nav-number">1.4.</span> <span class="nav-text">数“e”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%B0%83%E6%95%B4%E5%BA%8F%E5%8F%98%E9%87%8F"><span class="nav-number">1.5.</span> <span class="nav-text">单调整序变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%94%B6%E6%95%9B%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E9%83%A8%E5%88%86%E6%9E%81%E9%99%90"><span class="nav-number">2.</span> <span class="nav-text">收敛原理以及部分极限</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%97%E5%8C%BA%E9%97%B4%E7%9A%84%E5%BC%95%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">套区间的引理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%B6%E6%95%9B%E5%8E%9F%E7%90%86%E6%9F%AF%E8%A5%BF---%E5%B8%83%E5%B0%94%E6%9F%A5%E8%AF%BA%E5%AE%9A%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">收敛原理（柯西 -
+布尔查诺定理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%83%E5%B0%94%E6%9F%A5%E8%AF%BA---%E7%BB%B4%E5%B0%94%E6%96%AF%E7%89%B9%E6%8B%89%E6%96%AF%E5%BC%95%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">布尔查诺 - 维尔斯特拉斯引理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">102</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="极限 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          极限
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-03-01 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-01T00:00:00+08:00">2021-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/03/01/math/数学漫步/数学分析概览/2021-03-01-极限/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img
+src="/assets/images/数学漫步/数学分析概览/极限/极限概念.png" /></p>
+<p>从上面的概念关系图来看，极限实际上是一个通用的概念，其研究变量变化的趋势结果。所以对于一个数来说，不存在“极限”的概念，它必须是针对一系列的数的变化趋势来说的。</p>
+<h1 id="整序变量">整序变量</h1>
+<p>设有自然数列：</p>
+<p><span class="math display">\[
+1, 2, \cdots, n, \cdots, n&#39;, \cdots
+\]</span></p>
+<p>在序列内数字由小而大的顺序排列着，较大的数 <span
+class="math inline">\(n&#39;\)</span> 在较小的数 <span
+class="math inline">\(n\)</span>
+的后面，若在自然数列内，按照任意规律，将每一个自然数 <span
+class="math inline">\(n\)</span> 换成实数 <span
+class="math inline">\(x_n\)</span>，则得到数列</p>
+<p><span class="math display">\[
+x_1, x_2, x_3, \cdots, x_n, \cdots, x_n&#39;, \cdots
+\]</span></p>
+<p>其项或元素 <span class="math inline">\(x_n\)</span>
+有一切自然数作为序号，并依照序号增大的次序排列，取成该序列的变量 <span
+class="math inline">\(x\)</span>，称之为<strong>整序变量</strong>。</p>
+<h2 id="整序变量的极限">整序变量的极限</h2>
+<p>若对于每一正数 <span
+class="math inline">\(\varepsilon\)</span>，不论它怎样小，恒有序号 <span
+class="math inline">\(N\)</span>，使得 <span class="math inline">\(n
+&gt; N\)</span> 时，一切 <span class="math inline">\(x_n\)</span>
+的值满足不等式</p>
+<p><span class="math display">\[
+|x_n - a| &lt; \varepsilon
+\]</span></p>
+<p>则常数 <span class="math inline">\(a\)</span> 称为整序变量 <span
+class="math inline">\(x = x_n\)</span> 的极限，记为</p>
+<p><span class="math display">\[
+\lim_{n \to +\infty} x_n = a
+\]</span></p>
+<p><img
+src="/assets/images/数学漫步/数学分析概览/极限/整序变量的极限.png" /></p>
+<p>这意味着，从某一项开始的后面所有项，都在区间 <span
+class="math inline">\((a - \varepsilon, a + \varepsilon)\)</span>
+里。如果 <span class="math inline">\(a = 0\)</span>，则称 <span
+class="math inline">\(x_n\)</span>
+为<strong>无穷小</strong>。如果从某项开始，其绝对值变成且保持着大于预先指定的任意大数
+<span class="math inline">\(E &gt; 0\)</span>，<span
+class="math inline">\(|x_n| &gt; E\)</span>，则称 <span
+class="math inline">\(x_n\)</span> 为<strong>无穷大</strong>。</p>
+<aside>
+<p>💡 **无穷小的引理</p>
+<p>引理一<strong>：任何有限个无穷小的和亦是无穷小。
+</strong>引理二**：有界变量与无穷小的乘积仍是无穷小。</p>
+</aside>
+<h2 id="极限运算">极限运算</h2>
+<ol type="1">
+<li><p>若整序变量 <span class="math inline">\(x_n\)</span> 与 <span
+class="math inline">\(y_n\)</span>
+趋于有限极限，则其和差积商均为有限极限。</p>
+<p><span class="math display">\[
+\lim x_n = a, \lim y_n = b \iff
+\begin{cases}
+&amp; \lim(x_n \pm y_n) = a \pm b \\
+&amp; \lim x_n y_n = ab \\
+&amp; \lim x_n / y_n = a/b
+\end{cases}
+\]</span></p></li>
+<li><p>若整序变量不趋于有限极限，有几种不定式的情形需要具体情况具体分析，包括</p>
+<p><span class="math display">\[
+\frac{0}{0}, \
+\frac{\infty}{\infty}, \
+{0}\cdot{\infty}, \
+{\infty} - {\infty}
+\]</span></p></li>
+</ol>
+<h2
+id="斯托尔茨o.stolz定理"><strong>斯托尔茨（O.Stolz）定理</strong></h2>
+<p>设整序变量 <span class="math inline">\(y_n \to +\infty\)</span>，并且
+—— 至少从某一项开始 —— 在 <span class="math inline">\(n\)</span> 增大时
+<span class="math inline">\(y_n\)</span> 亦增大：<span
+class="math inline">\(y_{n+1} &gt; y_n\)</span>，则</p>
+<p><span class="math display">\[
+\lim \frac{x_n}{y_n} = \lim \frac{x_n - x_{n-1}}{y_n - y_{n-1}}
+\]</span></p>
+<aside>
+<p>💡 在 <span class="math inline">\(x_n/n\)</span> 这种 <span
+class="math inline">\(\infty / \infty\)</span> 不定式下非常有用。</p>
+</aside>
+<h2 id="数e">数“e”</h2>
+<p>使用整序变量来对 e 进行定义。令</p>
+<p><span class="math display">\[
+x_n = (1 + \frac{1}{n})^n
+\]</span></p>
+<p>则</p>
+<p><span class="math display">\[
+\lim_{n \to +\infty} x_n = e
+\]</span></p>
+<h2 id="单调整序变量">单调整序变量</h2>
+<p>这是一种简单，重要， 并且特殊的变量。如果对于整序变量 <span
+class="math inline">\(x_n\)</span>，有</p>
+<p><span class="math display">\[
+x_1 &lt; x_2 &lt; \cdots &lt; x_n &lt; x_{n+1} &lt; \cdots
+\]</span></p>
+<p>就是说，如果 <span class="math inline">\(n&#39; &gt;
+n\)</span>，则必有 <span class="math inline">\(x_{n&#39;} &gt;
+x_n\)</span>，这时我们把 <span class="math inline">\(x_n\)</span>
+称为<strong>递增</strong>的。相应地，可以建立<strong>递减</strong>的概念。这种向单一方向改变的变量总称为<strong>单调变量</strong>。</p>
+<p><strong>定理</strong>：设已给单调增大的整序变量 <span
+class="math inline">\(x_n\)</span>，若它上有界：</p>
+<p><span class="math display">\[
+x_n \leq M, M = \text{constant}, n \in \mathbb{Z}^+
+\]</span></p>
+<p>则必有一有限的极限，否则极限为 <span
+class="math inline">\(+\infty\)</span>。</p>
+<h1 id="收敛原理以及部分极限">收敛原理以及部分极限</h1>
+<h2 id="套区间的引理">套区间的引理</h2>
+<p>设给定单调增大的整序变量 <span class="math inline">\(x_n\)</span>
+及单调减少的整序变量 <span
+class="math inline">\(y_n\)</span>，且恒有若其差 <span
+class="math inline">\(y_n - x_n\)</span> 趋向于 <span
+class="math inline">\(0\)</span>，则两整序变量必有公共的有限极限：</p>
+<p><span class="math display">\[
+c = \lim x_n = \lim y_n
+\]</span></p>
+<p>换一种形式叙述，满足不等式</p>
+<p><span class="math display">\[
+a \leq x \leq b
+\]</span></p>
+<p>的一切数（或常说成“点”）<span class="math inline">\(x\)</span>
+所成的集合称为区间 <span class="math inline">\([a, b]\)</span>，数 <span
+class="math inline">\(a\)</span> 及 <span
+class="math inline">\(b\)</span>
+各称为区间的<strong>左端点</strong>与区间的<strong>右端点</strong>，其差
+<span class="math inline">\(b - a\)</span>
+称为区间的<strong>长</strong>。若区间 <span
+class="math inline">\([a&#39;, b&#39;]\)</span> 的的一切点多属于区间
+<span class="math inline">\([a, b]\)</span>，即</p>
+<p><span class="math display">\[
+a \leq a&#39; &lt; b&#39; \leq b
+\]</span></p>
+<p>则约定说，区间 <span class="math inline">\([a&#39;, b&#39;]\)</span>
+包含在区间 <span class="math inline">\([a, b]\)</span>
+内，或者说“被套在里面”。设有一区间套的无穷序列</p>
+<p><span class="math display">\[
+[a_1, b_1], [a_2, b_2], \cdots, [a_n, b_n], \cdots
+\]</span></p>
+<p>后一个总是套在前一个内，并且在 <span class="math inline">\(n\)</span>
+增大的时候这些区间的长度趋于 <span class="math inline">\(0\)</span></p>
+<p><span class="math display">\[
+\lim (b_n - a_n) = 0
+\]</span></p>
+<p>则区间的端点 <span class="math inline">\(a_n\)</span> 与 <span
+class="math inline">\(b_n\)</span> 趋于公共的极限</p>
+<p><span class="math display">\[
+c = \lim a_n = \lim b_n
+\]</span></p>
+<h2 id="收敛原理柯西---布尔查诺定理">收敛原理（柯西 -
+布尔查诺定理）</h2>
+<p>整序变量 <span class="math inline">\(x_n\)</span>
+有有限极限的<strong>必要且充分条件</strong>是：对于每一个数 <span
+class="math inline">\(\varepsilon &gt; 0\)</span> 总存在着序号 <span
+class="math inline">\(N\)</span>，使得当 <span class="math inline">\(n
+&gt; N\)</span> 及 <span class="math inline">\(n &gt; N&#39;\)</span>
+时，便能成立不等式</p>
+<p><span class="math display">\[
+|x_n - x_{n&#39;}| &lt; \varepsilon
+\]</span></p>
+<h2 id="布尔查诺---维尔斯特拉斯引理">布尔查诺 - 维尔斯特拉斯引理</h2>
+<p>由任何有界数列内恒能选出收敛于有限极限的部分数列。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+  <div class="posts-related">
+    <div class="animated">
+      <div class="popular-posts-title">
+        <i class="fa fa-signs-post fa-fw"></i>
+        相关文章
+      </div>
+      <ul class="popular-posts">
+        <li class="popular-posts-item">
+          <a class="popular-posts-link" href="/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/" rel="bookmark">
+              <time class="popular-posts-time">2021-02-26</time>
+            <span class="popular-posts-title">实数</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/" title="极限">https://aquietzero.github.io/2021/03/01/math/数学漫步/数学分析概览/2021-03-01-极限/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/" rel="tag"># 高等数学</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/" rel="tag"># 数学分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E5%87%BD%E6%95%B0/" rel="prev" title="函数">
+                  <i class="fa fa-angle-left"></i> 函数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/04/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/index/" rel="next" title="数学分析概览">
+                  数学分析概览 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">229k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:54</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
