@@ -141,7 +141,7 @@ Caching</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a clas
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">108</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -494,7 +494,7 @@ Traversal</h2>
 operation of fitting the bounding volume directly to the data is to
 merge the child volumes themselves into a new bounding volume.</p>
 <h2 id="merging-two-aabbs">Merging Two AABBs</h2>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the AABB a of AABBs a0 and a1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AABBEnclosingAABBs</span><span class="params">(AABB &amp;a, AABB a0, AABB a1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">        a.min[i] = <span class="built_in">Min</span>(a0.min[i], a1.min[i]);</span><br><span class="line">        a.max[i] = <span class="built_in">Max</span>(a0.max[i], a1.max[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the AABB a of AABBs a0 and a1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AABBEnclosingAABBs</span><span class="params">(AABB &amp;a, AABB a0, AABB a1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">        a.min[i] = <span class="built_in">Min</span>(a<span class="number">0.</span>min[i], a<span class="number">1.</span>min[i]);</span><br><span class="line">        a.max[i] = <span class="built_in">Max</span>(a<span class="number">0.</span>max[i], a<span class="number">1.</span>max[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="merging-two-spheres">Merging Two Spheres</h2>
 <p>The calculation is best split into two cases:</p>
 <ul>
@@ -514,7 +514,7 @@ alt="Merging spheres S0 and S1." />
 <em>S</em>1.</figcaption>
 </figure>
 <p>Merging spheres <em>S</em>0 and <em>S</em>1.</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the bounding sphere s of spheres s0 and s1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">SphereEnclosingSpheres</span><span class="params">(Sphere &amp;s, Sphere s0, Sphere s1)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Compute the squared distance between the sphere centers</span></span><br><span class="line">    Vector d = s1.c - s0.c;</span><br><span class="line">    <span class="type">float</span> dist2 = <span class="built_in">Dot</span>(d, d);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Sqr</span>(s1.r - s0.r) &gt;= dist2) &#123;</span><br><span class="line">        <span class="comment">// The sphere with the larger radius encloses the other;</span></span><br><span class="line">        <span class="comment">// just set s to be the larger of the two spheres</span></span><br><span class="line">        <span class="keyword">if</span> (s1.r &gt;= s0.r)</span><br><span class="line">            s = s1;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            s = s0;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Spheres partially overlapping or disjoint</span></span><br><span class="line">        <span class="type">float</span> dist = <span class="built_in">Sqrt</span>(dist2);</span><br><span class="line">        s.r = (dist + s0.r + s1.r) * <span class="number">0.5f</span>;</span><br><span class="line">        s.c = s0.c;</span><br><span class="line">        <span class="keyword">if</span> (dist &gt; EPSILON)</span><br><span class="line">            s.c += ((s.r - s0.r) / dist) * d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the bounding sphere s of spheres s0 and s1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">SphereEnclosingSpheres</span><span class="params">(Sphere &amp;s, Sphere s0, Sphere s1)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Compute the squared distance between the sphere centers</span></span><br><span class="line">    Vector d = s<span class="number">1.</span>c - s<span class="number">0.</span>c;</span><br><span class="line">    <span class="type">float</span> dist2 = <span class="built_in">Dot</span>(d, d);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Sqr</span>(s<span class="number">1.</span>r - s<span class="number">0.</span>r) &gt;= dist2) &#123;</span><br><span class="line">        <span class="comment">// The sphere with the larger radius encloses the other;</span></span><br><span class="line">        <span class="comment">// just set s to be the larger of the two spheres</span></span><br><span class="line">        <span class="keyword">if</span> (s<span class="number">1.</span>r &gt;= s<span class="number">0.</span>r)</span><br><span class="line">            s = s1;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            s = s0;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Spheres partially overlapping or disjoint</span></span><br><span class="line">        <span class="type">float</span> dist = <span class="built_in">Sqrt</span>(dist2);</span><br><span class="line">        s.r = (dist + s<span class="number">0.</span>r + s<span class="number">1.</span>r) * <span class="number">0.5f</span>;</span><br><span class="line">        s.c = s<span class="number">0.</span>c;</span><br><span class="line">        <span class="keyword">if</span> (dist &gt; EPSILON)</span><br><span class="line">            s.c += ((s.r - s<span class="number">0.</span>r) / dist) * d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="efficient-tree-representation-and-traversal">Efficient Tree
 Representation and Traversal</h1>
 <h2 id="array-representation">Array Representation</h2>
@@ -693,13 +693,13 @@ objects are (hypothetically) found noncolliding.</figcaption>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">15:19</span>
+    <span title="站点阅读时长">15:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

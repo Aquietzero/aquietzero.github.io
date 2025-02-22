@@ -132,7 +132,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">108</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -268,7 +268,7 @@ src="/assets/images/2024-10-13-图片-向量-相机-背景/ppm格式.png" /></p>
 <p>上面是一个 PPM 格式的图片的例子。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Image</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> imageWidth = <span class="number">256</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> imageHeight = <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Render</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;P3\n&quot;</span> &lt;&lt; imageWidth &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; imageHeight &lt;&lt; <span class="string">&quot;\n255\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = imageHeight - <span class="number">1</span>; j &gt;= <span class="number">0</span>; --j) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; imageWidth; ++i) &#123;</span><br><span class="line">            <span class="keyword">auto</span> r = <span class="built_in">double</span>(i) / (imageWidth - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">auto</span> g = <span class="built_in">double</span>(j) / (imageHeight - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">auto</span> b = <span class="number">0.25</span>;</span><br><span class="line"></span><br><span class="line">            <span class="type">int</span> ir = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(<span class="number">255.999</span> * r);</span><br><span class="line">            <span class="type">int</span> ig = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(<span class="number">255.999</span> * g);</span><br><span class="line">            <span class="type">int</span> ib = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(<span class="number">255.999</span> * b);</span><br><span class="line"></span><br><span class="line">            std::cout &lt;&lt; ir &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; ig &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; ib &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>编译并执行。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">&gt; g++ -std=c++<span class="number">11</span> main.cpp -o main</span><br><span class="line">&gt; ./main &gt; image.ppm</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">&gt; g++ -std=c+<span class="number">+11</span> main.cpp -o main</span><br><span class="line">&gt; ./main &gt; image.ppm</span><br></pre></td></tr></table></figure>
 <p>最后得到一张渐变图片。</p>
 <p><img
 src="/assets/images/2024-10-13-图片-向量-相机-背景/1-render-an-image.png" /></p>
@@ -436,13 +436,13 @@ src="/assets/images/2024-10-13-图片-向量-相机-背景/2-render-background.p
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">15:19</span>
+    <span title="站点阅读时长">15:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

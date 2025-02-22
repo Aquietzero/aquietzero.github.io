@@ -139,7 +139,7 @@ Naive Bayes</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">108</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -290,7 +290,7 @@ if and only if it chooses the action that yields the highest expected
 utility, averaged over all the possible outcomes of the action. This is
 called the principle of <strong>maximum expected utility
 (MEU)</strong>.</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A decision-theoretic agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DT_Agent</span>(<span class="params">percept: Percept</span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// probabilistic beliefs about the current state of the world</span></span><br><span class="line">    <span class="keyword">const</span> beliefState</span><br><span class="line">    <span class="comment">// the agent&#x27;s action</span></span><br><span class="line">    <span class="keyword">const</span> action</span><br><span class="line"></span><br><span class="line">    beliefState.<span class="title function_">update</span>(action, percept)</span><br><span class="line">    <span class="keyword">const</span> probabilities = <span class="title class_">CalculateProbabilities</span>(</span><br><span class="line">        <span class="title class_">ActionDescriptions</span>,</span><br><span class="line">        beliefState.<span class="property">current</span></span><br><span class="line">    )</span><br><span class="line">    action = <span class="title class_">SelectAction</span>(</span><br><span class="line">        probabilities,</span><br><span class="line">        utilityInformation</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A decision-theoretic agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DT_Agent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// probabilistic beliefs about the current state of the world</span></span><br><span class="line">    <span class="keyword">const</span> beliefState</span><br><span class="line">    <span class="comment">// the agent&#x27;s action</span></span><br><span class="line">    <span class="keyword">const</span> action</span><br><span class="line"></span><br><span class="line">    beliefState.<span class="title function_">update</span>(action, percept)</span><br><span class="line">    <span class="keyword">const</span> probabilities = <span class="title class_">CalculateProbabilities</span>(</span><br><span class="line">        <span class="title class_">ActionDescriptions</span>,</span><br><span class="line">        beliefState.<span class="property">current</span></span><br><span class="line">    )</span><br><span class="line">    action = <span class="title class_">SelectAction</span>(</span><br><span class="line">        probabilities,</span><br><span class="line">        utilityInformation</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="basic-probability-notation">Basic Probability Notation</h1>
 <h2 id="probabilities">Probabilities</h2>
 <p>The set of all possible worlds is called the <strong>sample
@@ -683,13 +683,13 @@ tractable.</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">15:19</span>
+    <span title="站点阅读时长">15:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

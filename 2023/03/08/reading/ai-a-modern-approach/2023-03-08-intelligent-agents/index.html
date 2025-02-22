@@ -138,7 +138,7 @@ Agent Program Work</span></a></li></ol></li><li class="nav-item nav-level-1"><a 
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">108</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -412,7 +412,7 @@ agent = architecture + program
 <p>The agent programs that we designed in this book all have the same
 skeleton: they take the current percept as input from the sensors and
 return an action to the actuators.</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// The TABLE-DRIVEN-AGENT program</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TableDriveonAgent</span>(<span class="params">percept: Percept</span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// a sequence, initially empty</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">percepts</span>: <span class="title class_">Percept</span>[] = []</span><br><span class="line">    <span class="comment">// a table of actions, indexed by percept sequences,</span></span><br><span class="line">    <span class="comment">// initially fully specified</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">table</span>: &#123; [<span class="attr">percept</span>: <span class="title class_">Percept</span>]: <span class="title class_">Action</span> &#125; = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    percepts.<span class="title function_">push</span>(percept)</span><br><span class="line">    <span class="keyword">const</span> action = table[percept]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// The TABLE-DRIVEN-AGENT program</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TableDriveonAgent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// a sequence, initially empty</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">percepts</span>: <span class="title class_">Percept</span>[] = []</span><br><span class="line">    <span class="comment">// a table of actions, indexed by percept sequences,</span></span><br><span class="line">    <span class="comment">// initially fully specified</span></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">table</span>: &#123; [<span class="attr">percept</span>: <span class="title class_">Percept</span>]: <span class="title class_">Action</span> &#125; = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    percepts.<span class="title function_">push</span>(percept)</span><br><span class="line">    <span class="keyword">const</span> action = table[percept]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <aside>
 <p>💡 <strong>But the table-driven approach is doomed to
 failure.</strong> Let <span class="math inline">\(\mathcal{P}\)</span>
@@ -440,7 +440,7 @@ information used in the process.</figcaption>
 <p>Schematic diagram of a simple reflex agent. We use rectangles to
 denote the current internal state of the agent’s decision process, and
 ovals to represent the background information used in the process.</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A Simple Reflex Agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SimpleReflexAgent</span>(<span class="params">percept: Percept</span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// a set of condition–action rules</span></span><br><span class="line">    <span class="keyword">const</span> rules = <span class="title class_">Set</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> state = <span class="title class_">InterpretInput</span>(percept)</span><br><span class="line">    <span class="keyword">const</span> rule = <span class="title class_">RuleMatch</span>(state, rules)</span><br><span class="line">    <span class="keyword">const</span> action = rule.<span class="property">action</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A Simple Reflex Agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SimpleReflexAgent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// a set of condition–action rules</span></span><br><span class="line">    <span class="keyword">const</span> rules = <span class="title class_">Set</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> state = <span class="title class_">InterpretInput</span>(percept)</span><br><span class="line">    <span class="keyword">const</span> rule = <span class="title class_">RuleMatch</span>(state, rules)</span><br><span class="line">    <span class="keyword">const</span> action = rule.<span class="property">action</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <aside>
 <p>💡 The agent works only if the correct decision can be made on the
 basis of just the current percept —— that is, only if the environment is
@@ -461,7 +461,7 @@ alt="A model-based reflex agent." />
 <figcaption aria-hidden="true">A model-based reflex agent.</figcaption>
 </figure>
 <p>A model-based reflex agent.</p>
-<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A Model-Based Reflex Agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ModelBasedReflexAgent</span>(<span class="params">percept: Percept</span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// the agent’s current conception of the world state</span></span><br><span class="line">    <span class="keyword">const</span> state</span><br><span class="line">    <span class="comment">// a description of how the next state depends on the </span></span><br><span class="line">    <span class="comment">// current state and action</span></span><br><span class="line">    <span class="keyword">const</span> transitionModel</span><br><span class="line">    <span class="comment">// a description of how the current world state is reflected</span></span><br><span class="line">    <span class="comment">// in the agent’s percepts</span></span><br><span class="line">    <span class="keyword">const</span> sensorModel</span><br><span class="line">    <span class="comment">// a set of condition–action rules</span></span><br><span class="line">    <span class="keyword">const</span> rules</span><br><span class="line">    <span class="comment">// the most recent action, initially none</span></span><br><span class="line">    <span class="keyword">const</span> action</span><br><span class="line"></span><br><span class="line">    state = <span class="title class_">UpdateState</span>(</span><br><span class="line">        state,</span><br><span class="line">        action,</span><br><span class="line">        percept,</span><br><span class="line">        transitionModel,</span><br><span class="line">        sensorModel</span><br><span class="line">    )</span><br><span class="line">    rule = <span class="title class_">RuleMatch</span>(state, rules)</span><br><span class="line">    action = rule.<span class="property">action</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A Model-Based Reflex Agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ModelBasedReflexAgent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// the agent’s current conception of the world state</span></span><br><span class="line">    <span class="keyword">const</span> state</span><br><span class="line">    <span class="comment">// a description of how the next state depends on the </span></span><br><span class="line">    <span class="comment">// current state and action</span></span><br><span class="line">    <span class="keyword">const</span> transitionModel</span><br><span class="line">    <span class="comment">// a description of how the current world state is reflected</span></span><br><span class="line">    <span class="comment">// in the agent’s percepts</span></span><br><span class="line">    <span class="keyword">const</span> sensorModel</span><br><span class="line">    <span class="comment">// a set of condition–action rules</span></span><br><span class="line">    <span class="keyword">const</span> rules</span><br><span class="line">    <span class="comment">// the most recent action, initially none</span></span><br><span class="line">    <span class="keyword">const</span> action</span><br><span class="line"></span><br><span class="line">    state = <span class="title class_">UpdateState</span>(</span><br><span class="line">        state,</span><br><span class="line">        action,</span><br><span class="line">        percept,</span><br><span class="line">        transitionModel,</span><br><span class="line">        sensorModel</span><br><span class="line">    )</span><br><span class="line">    rule = <span class="title class_">RuleMatch</span>(state, rules)</span><br><span class="line">    action = rule.<span class="property">action</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="goal-based-agents">Goal-Based Agents</h2>
 <p>As well as a current state description, the agent needs some sort of
 goal information that describes situations that are desirable.
@@ -628,15 +628,15 @@ expected “happiness.”</li>
           </a>
         </li>
         <li class="popular-posts-item">
-          <a class="popular-posts-link" href="/2023/09/02/reading/grokking-deep-reinforcement-learning/2023-09-02-mathematical-foundations-of-reinforcement-learning/" rel="bookmark">
-              <time class="popular-posts-time">2023-09-02</time>
-            <span class="popular-posts-title">Mathematical foundations of reinforcement learning</span>
-          </a>
-        </li>
-        <li class="popular-posts-item">
           <a class="popular-posts-link" href="/2023/10/28/reading/deep-reinforcement-learning-in-action/2023-10-28-modeling-reinforcement-learning-problems/" rel="bookmark">
               <time class="popular-posts-time">2023-10-28</time>
             <span class="popular-posts-title">Modeling reinforcement learning problems: Markov decision processes</span>
+          </a>
+        </li>
+        <li class="popular-posts-item">
+          <a class="popular-posts-link" href="/2023/09/02/reading/grokking-deep-reinforcement-learning/2023-09-02-mathematical-foundations-of-reinforcement-learning/" rel="bookmark">
+              <time class="popular-posts-time">2023-09-02</time>
+            <span class="popular-posts-title">Mathematical foundations of reinforcement learning</span>
           </a>
         </li>
         <li class="popular-posts-item">
@@ -741,13 +741,13 @@ expected “happiness.”</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">15:19</span>
+    <span title="站点阅读时长">15:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动

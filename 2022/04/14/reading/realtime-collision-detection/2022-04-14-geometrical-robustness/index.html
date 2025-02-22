@@ -136,7 +136,7 @@ T-junctions</span></a></li></ol></div>
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">107</span>
+          <span class="site-state-item-count">108</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -377,7 +377,7 @@ class="math inline">\(z\)</span> component first. This is the
 <strong>lexicographic ordering</strong> of the vertices as implemented
 by the following code.</p>
 </aside>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Compare vertices lexicographically and return index (0 or 1) corresponding</span></span><br><span class="line"><span class="comment">// to which vertex is smaller. If equal, consider v0 as the smaller vertex</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">SmallerVertex</span><span class="params">(Vertex v0, Vertex v1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (v0.x != v1.x) <span class="keyword">return</span> v1.x &gt; v0.x;</span><br><span class="line">    <span class="keyword">if</span> (v0.y != v1.y) <span class="keyword">return</span> v1.y &gt; v0.y;</span><br><span class="line">    <span class="keyword">return</span> v1.z &gt; v0.z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Compare vertices lexicographically and return index (0 or 1) corresponding</span></span><br><span class="line"><span class="comment">// to which vertex is smaller. If equal, consider v0 as the smaller vertex</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">SmallerVertex</span><span class="params">(Vertex v0, Vertex v1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (v<span class="number">0.</span>x != v<span class="number">1.</span>x) <span class="keyword">return</span> v<span class="number">1.</span>x &gt; v<span class="number">0.</span>x;</span><br><span class="line">    <span class="keyword">if</span> (v<span class="number">0.</span>y != v<span class="number">1.</span>y) <span class="keyword">return</span> v<span class="number">1.</span>y &gt; v<span class="number">0.</span>y;</span><br><span class="line">    <span class="keyword">return</span> v<span class="number">1.</span>z &gt; v<span class="number">0.</span>z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Because edges are represented as a pair of vertex indices and this
 pair must be used to index into a table, an open hash table is employed.
 The hash key is computed from the two vertex indeces. The key is
@@ -529,13 +529,13 @@ edge.</figcaption>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">253k</span>
+    <span title="站点总字数">254k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">15:19</span>
+    <span title="站点阅读时长">15:24</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
