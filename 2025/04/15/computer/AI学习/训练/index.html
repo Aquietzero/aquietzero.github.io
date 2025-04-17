@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-04-16-AI%E5%AD%A6%E4%B9%A0-%E8%AE%AD%E7%BB%83/%E9%A2%84%E8%AE%AD%E7%BB%83.png">
 <meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-04-16-AI%E5%AD%A6%E4%B9%A0-%E8%AE%AD%E7%BB%83/%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.png">
 <meta property="article:published_time" content="2025-04-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-16T04:38:37.943Z">
+<meta property="article:modified_time" content="2025-04-16T07:00:21.344Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -489,8 +489,8 @@ p5.drawArrow([1, lossFunc(1)], [0.5, lossFunc(0.5)]);
 <p><strong>导数</strong>就是用来衡量这种变化的一种方式，回顾一下对于一元二次方程的导数，是以下的形式</p>
 <p><span class="math display">\[
 \begin{align*}
-y = ax^2 + bx + c
-y&#39; = 2ax + b
+y &amp;= ax^2 + bx + c \\
+y&#39; &amp;= 2ax + b
 \end{align*}
 \]</span></p>
 <p>对于上面的损失函数来说，我们把 <span class="math inline">\(y_i =
@@ -513,9 +513,6 @@ y&#39; = 2ax + b
 0，也就是这个点是这个函数的极值点，也就是我们需要的最小值。</p>
 <p>但假设我们将这个抛物线看成是一个现实中的斜坡，那参数更新的过程可以看成是从某一个位置释放一个小球，这个小球会随着重力的作用往下滚动，如果这个斜坡还是有阻尼的话，那么这个小球最终会停下来，也就是这个参数更新最终会使得误差为
 0，当然，这是非常理想的情况。但可以想象到的是，通过这种方式，是可以找到最优解的。</p>
-<p><span class="math display">\[
-a \gets a - \color{blue}\eta \color{black}\text{loss}&#39;
-\]</span></p>
 <canvas id="loss-func-guess-2-y=2x">
 </canvas>
 <script>
@@ -555,6 +552,9 @@ a \gets a - \text{loss}&#39;
 \]</span></p>
 <p>理论上这个公式就可以作为参数的更新方式了，但是考虑到误差的导数是不可控的，如果我们希望控制更新的步长，此时我们需要引入一个<strong>学习率（learning
 rate）</strong>的参数，用来“限制”变动的比例。</p>
+<p><span class="math display">\[
+a \gets a - \color{blue}\eta \color{black}\text{loss}&#39;
+\]</span></p>
 <p>直观上看，抛物线越往上越陡峭，如果我们学习率为 <span
 class="math inline">\(1\)</span>，也就是不控制步长的话，<span
 class="math inline">\(a\)</span>
@@ -583,7 +583,7 @@ const p8 = new Plot('learn-by-one-point-y=2x');
 p8.draw(x => 2*x);
 p8.draw(x => -3*x + 5, { color: 'green' });
 p8.draw(x => 3*x - 1, { color: 'blue' });
-p8.drawPoints([[1, 2]], { color: 'blue', radius: 3});
+p8.drawPoints([[1, 2]], { color: 'black', radius: 3});
 </script>
 <p>从上图可以看到，过一点其实会有无数条直线，这意味着过这一点能够找到无数个函数，使得误差为
 <span
