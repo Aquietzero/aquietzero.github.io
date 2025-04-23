@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="A bounding volume (BV) is a single volume encapsulating one or more objects of more complex nature. The use of bounding volumes generally results in a significant performance gain, and the elimination">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bounding Volumes">
+<meta property="og:url" content="https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="A bounding volume (BV) is a single volume encapsulating one or more objects of more complex nature. The use of bounding volumes generally results in a significant performance gain, and the elimination">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/aabb.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/tight-aabb.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/hill-climbing.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/stab.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/8-dop.png">
+<meta property="article:published_time" content="2022-03-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-03-26-bounding-volumes/aabb.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/","path":"2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/","title":"Bounding Volumes"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Bounding Volumes | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#desirable-bv-characteristics"><span class="nav-number">1.</span> <span class="nav-text">Desirable BV Characteristics</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#axis-aligned-bounding-boxes-aabbs"><span class="nav-number">2.</span> <span class="nav-text">Axis-aligned Bounding Boxes
+(AABBs)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aabb-aabb-intersection"><span class="nav-number">2.1.</span> <span class="nav-text">AABB-AABB Intersection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computing-and-updating-aabbs"><span class="nav-number">2.2.</span> <span class="nav-text">Computing and Updating AABBs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#aabb-from-the-object-bounding-sphere"><span class="nav-number">2.2.1.</span> <span class="nav-text">AABB from the Object
+Bounding Sphere</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#aabb-reconstructed-from-the-original-point-set"><span class="nav-number">2.2.2.</span> <span class="nav-text">AABB
+Reconstructed from the Original Point Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#aabb-from-hill-climbing-vertices-of-the-object-representation"><span class="nav-number">2.2.3.</span> <span class="nav-text">AABB
+from Hill-Climbing Vertices of the Object Representation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spheres"><span class="nav-number">3.</span> <span class="nav-text">Spheres</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sphere-sphere-intersection"><span class="nav-number">3.1.</span> <span class="nav-text">Sphere-sphere Intersection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computing-a-bounding-sphere"><span class="nav-number">3.2.</span> <span class="nav-text">Computing a Bounding Sphere</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bounding-sphere-from-direction-of-maximum-spread"><span class="nav-number">3.2.1.</span> <span class="nav-text">Bounding
+Sphere from Direction of Maximum Spread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-minimum-bounding-sphere"><span class="nav-number">3.2.2.</span> <span class="nav-text">The Minimum Bounding Sphere</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#oriented-bounding-boxes-obbs"><span class="nav-number">4.</span> <span class="nav-text">Oriented Bounding Boxes
+(OBBs)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#obb-obb-intersection"><span class="nav-number">4.1.</span> <span class="nav-text">OBB-OBB Intersection</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sphere-swept-volumes"><span class="nav-number">5.</span> <span class="nav-text">Sphere-swept Volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sphere-swept-volume-intersection"><span class="nav-number">5.1.</span> <span class="nav-text">Sphere-swept Volume
+Intersection</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#halfspace-intersection-volumes"><span class="nav-number">6.</span> <span class="nav-text">Halfspace Intersection
+Volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#discrete-orientation-polytopes-k-dops"><span class="nav-number">6.1.</span> <span class="nav-text">Discrete-orientation
+Polytopes (k-DOPs)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k-dop-k-dop-overlap-test"><span class="nav-number">6.2.</span> <span class="nav-text">k-DOP-k-DOP Overlap Test</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computing-and-realigning-k-dops"><span class="nav-number">6.3.</span> <span class="nav-text">Computing and Realigning
+k-DOPs</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Bounding Volumes | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Bounding Volumes
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-26 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-26T00:00:00+08:00">2022-03-26</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>A <strong>bounding volume (BV)</strong> is a single volume
+encapsulating one or more objects of more complex nature. The use of
+bounding volumes generally results in a significant performance gain,
+and the elimination of complex objects from further tests well justifies
+the small additional cost associated with the bounding volume test.</p>
+<h1 id="desirable-bv-characteristics">Desirable BV Characteristics</h1>
+<p>Desirable properties for bounding volumes include:</p>
+<ul>
+<li>Inexpensive intersection tests</li>
+<li>Tight fitting</li>
+<li>Inexpensive to compute</li>
+<li>Easy to rotate and transform</li>
+<li>Use little memory</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-03-26-bounding-volumes/bounding-volumes.png"
+alt="Types of bounding volumes: sphere, axis-aligned bounding box(AABB),oriented bounding box (OBB), eight-direction discrete orientation polytope (8-DOP), and convex hull." />
+<figcaption aria-hidden="true">Types of bounding volumes: sphere,
+axis-aligned bounding box(AABB),oriented bounding box (OBB),
+eight-direction discrete orientation polytope (8-DOP), and convex
+hull.</figcaption>
+</figure>
+<p>Typesofboundingvolumes:sphere,axis-alignedboundingbox(AABB),oriented
+bounding box (OBB), eight-direction discrete orientation polytope
+(8-DOP), and convex hull.</p>
+<h1 id="axis-aligned-bounding-boxes-aabbs">Axis-aligned Bounding Boxes
+(AABBs)</h1>
+<p>The axis-aligned bounding box (AABB) is a rectangular six-sided box
+categorized by having its faces oriented in such a way that its face
+normals are at all times parallel with the axes of the given coordinate
+system.</p>
+<figure>
+<img src="/assets/images/2022-03-26-bounding-volumes/aabb.png"
+alt="The three common AABB representations: (a) min-max, (b) min-widths, and (c) center-radius." />
+<figcaption aria-hidden="true">The three common AABB representations:
+(a) min-max, (b) min-widths, and (c) center-radius.</figcaption>
+</figure>
+<p>The three common AABB representations: (a) min-max, (b) min-widths,
+and (c) center-radius.</p>
+<aside>
+<p>💡 In terms of storage requirements, <strong>the center-radius
+representation is the most efficient</strong>, as the halfwidth values
+can often be stored in fewer bits than the center position values.</p>
+</aside>
+<h2 id="aabb-aabb-intersection">AABB-AABB Intersection</h2>
+<p>Two AABBs only overlap if they overlap on all three axes.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestAABBAABB</span><span class="params">(AABB a, AABB b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Abs</span>(a.c[<span class="number">0</span>] - b.c[<span class="number">0</span>]) &gt; (a.r[<span class="number">0</span>] + b.r[<span class="number">0</span>])) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Abs</span>(a.c[<span class="number">1</span>] - b.c[<span class="number">1</span>]) &gt; (a.r[<span class="number">1</span>] + b.r[<span class="number">1</span>])) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Abs</span>(a.c[<span class="number">2</span>] - b.c[<span class="number">2</span>]) &gt; (a.r[<span class="number">2</span>] + b.r[<span class="number">2</span>])) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="computing-and-updating-aabbs">Computing and Updating AABBs</h2>
+<p>Bounding volumes are usually specified in the local model space of
+the objects they bound(which may be world space).To perform an overlap
+query between two bounding volumes, the volumes must be transformed into
+a common coordinate system. The choice stands between transforming both
+bounding volumes into world space and transforming one bounding volume
+into the local space of the other.</p>
+<p>For updating or reconstructing the AABB, there are four common
+strategies:</p>
+<ul>
+<li>Utilizing a fixed-size loose AABB that always encloses the
+object.</li>
+<li>Computing a tight dynamic reconstruction from the original point
+set.</li>
+<li>Computing a tight dynamic reconstruction using hill climbing.</li>
+<li>Computing an approximate dynamic reconstruction from the rotated
+AABB.</li>
+</ul>
+<h3 id="aabb-from-the-object-bounding-sphere">AABB from the Object
+Bounding Sphere</h3>
+<p>The fixed-size encompassing AABB is computed as the bounding box of
+the bounding sphere of the contained object. <strong>The benefit of this
+representation is that during update the AABB simply need be translated
+(by the same translation applied to the bounded object), and any object
+ortation can be completely ignored.</strong></p>
+<h3 id="aabb-reconstructed-from-the-original-point-set">AABB
+Reconstructed from the Original Point Set</h3>
+<p>This strategy dynamically resizes the AABB as it is being realigned
+with the coordiante system axes. The straightforward approach loops
+through all vertices, keeping track of the vertex most distant along the
+direction vector. When <span class="math inline">\(n\)</span> is large,
+the tight AABB can be constructed only by the vertices on the convex
+hull of the object.</p>
+<figure>
+<img src="/assets/images/2022-03-26-bounding-volumes/tight-aabb.png"
+alt="When computing a tight AABB, only the highlighted vertices that lie on the convex hull of the object must be considered." />
+<figcaption aria-hidden="true">When computing a tight AABB, only the
+highlighted vertices that lie on the convex hull of the object must be
+considered.</figcaption>
+</figure>
+<p>When computing a tight AABB, only the highlighted vertices that lie
+on the convex hull of the object must be considered.</p>
+<h3
+id="aabb-from-hill-climbing-vertices-of-the-object-representation">AABB
+from Hill-Climbing Vertices of the Object Representation</h3>
+<p>Instead of keeping track of the minimum and maximum extent values
+along each axis, six vertex pointers are maintained. Corresponding to
+the same values as before, these now actually point at the (up to six)
+extremal vertices of the object along each axis direction. The
+hill-climbing step now proceeds by comparing the referenced vertices
+against their neighbor vertices to see if they are still extremal in the
+same direction as before. Those that are not are replaced with one of
+their more extreme neighbors and the test is repeated until the extremal
+vertex in that direction is found. <strong>The hill-climbing process
+requires objects to be convex.</strong></p>
+<figure>
+<img src="/assets/images/2022-03-26-bounding-volumes/hill-climbing.png"
+alt="(a)The extreme vertex E in direction d. (b) After object rotates counterclockwise, the new extreme vertex E in direction d can be obtained by hill climbing along the vertex path highlighted in gray." />
+<figcaption aria-hidden="true">(a)The extreme vertex <em>E</em> in
+direction <strong>d</strong>. (b) After object rotates counterclockwise,
+the new extreme vertex <em>E</em> in direction <strong>d</strong> can be
+obtained by hill climbing along the vertex path highlighted in
+gray.</figcaption>
+</figure>
+<h1 id="spheres">Spheres</h1>
+<p>Spheres are defined in terms of a center position and a radius:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Sphere</span> &#123;</span><br><span class="line">	Point c; <span class="comment">// Sphere center</span></span><br><span class="line">	<span class="type">float</span> r; <span class="comment">// Sphere radius</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="sphere-sphere-intersection">Sphere-sphere Intersection</h2>
+<p>The Euclidean distance between the sphere centers is computed and
+compared against the sum of the sphere radii. To avoid an often
+expensive square root operation, the squared distances are compared.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestSphereSphere</span><span class="params">(Sphere a, Sphere b)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Calculate the squared distance between centers.</span></span><br><span class="line">	Vector d = a.c - b.c;</span><br><span class="line">	<span class="type">float</span> dist2 = <span class="built_in">Dot</span>(d, d);</span><br><span class="line">	<span class="comment">// Spheres intersect if squared distance is less than squared sum of radii</span></span><br><span class="line">	<span class="type">float</span> radiusSum = a.r + b.r;</span><br><span class="line">	<span class="keyword">return</span> dist2 &lt;= radiusSum * radiusSum; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="computing-a-bounding-sphere">Computing a Bounding Sphere</h2>
+<p>The algorithm progresses in two passes.</p>
+<ul>
+<li>In the first pass
+<ul>
+<li>Six extremal points along the coordinate system axes are found.</li>
+<li>Out of the six points, the pair of points farthest apart is
+selected.</li>
+<li>The sphere center is now selected as the midpoint between these two
+points, and the radius is set to be half the distance between them.</li>
+</ul></li>
+<li>In the second pass
+<ul>
+<li>All points are looped throught again. For all points outside the
+current sphere, the sphere is updated to be the sphere just encompassing
+the old sphere and the outside point.</li>
+</ul></li>
+</ul>
+<aside>
+<p>💡 By starting with a better approximation of the true bounding
+sphere, the resulting sphere could be expected to be even tighter.</p>
+</aside>
+<h3 id="bounding-sphere-from-direction-of-maximum-spread">Bounding
+Sphere from Direction of Maximum Spread</h3>
+<p>Instead of finding a pair of distant points using an AABB, a
+suggested approach is to analyze the point cloud using statistical
+methods to find its direction of maximum spread.</p>
+<figure>
+<img
+src="/assets/images/2022-03-26-bounding-volumes/bounding-sphere-from-direction-of-maximum-spread.png"
+alt="The same point cloud projected onto two different axes. In (a) the spread on the axis is small. In (b) the spread is much larger. A bounding sphere can be determined from the axis for which the projected point set has the maximum spread." />
+<figcaption aria-hidden="true">The same point cloud projected onto two
+different axes. In (a) the spread on the axis is small. In (b) the
+spread is much larger. A bounding sphere can be determined from the axis
+for which the projected point set has the maximum spread.</figcaption>
+</figure>
+<p>The same point cloud projected onto two different axes. In (a) the
+spread on the axis is small. In (b) the spread is much larger. A
+bounding sphere can be determined from the axis for which the projected
+point set has the maximum spread.</p>
+<p>The <strong>mean</strong> is a measure of the central tendency of all
+values, <strong>variance</strong> is a messure of their dispersion. They
+are given by</p>
+<p><span class="math display">\[
+u = \frac{1}{n} \sum^n_{i=1} x_i \\
+\sigma^2 = \frac{1}{n}\sum^n_{i = 1}(x_i - u)^2 =
+\frac{1}{n}\bigg(\sum^n_{i=1} x_i^2\bigg) - u^2
+\]</span></p>
+<p>For multiple variables, the covariance of the data is conventionally
+computed and expressed as a matrix, the <strong>covariance
+matrix</strong>. The covariance matrix <span
+class="math inline">\(\bold{C} = [c_{ij}]\)</span> for a collection of
+<span class="math inline">\(n\)</span> points <span
+class="math inline">\(P_1, P_2, \dots, P_n\)</span> is given by</p>
+<p><span class="math display">\[
+c_{ij} = \frac{1}{n}\sum^n_{k = 1}(P_{k, i} - u_i)(P_{k, j} - u_j)
+\]</span></p>
+<p>or equivalently by</p>
+<p><span class="math display">\[
+c_{ij} = \frac{1}{n}\bigg(\sum^n_{k=1}P_{k, i} P_{k, j}\bigg) - u_i u_j
+\]</span></p>
+<p>where <span class="math inline">\(u_i\)</span> is the mean of the
+<span class="math inline">\(i\)</span>-th coordinate value of the
+points, given by</p>
+<p><span class="math display">\[
+u_i = \frac{1}{n}\sum^n_{k=1}P_{k, i}
+\]</span></p>
+<h3 id="the-minimum-bounding-sphere">The Minimum Bounding Sphere</h3>
+<p>Assume a minimum bounding sphere <span
+class="math inline">\(S\)</span> has been computed for a point set <span
+class="math inline">\(P\)</span>. If a new point <span
+class="math inline">\(Q\)</span> is added to <span
+class="math inline">\(P\)</span>, then only if <span
+class="math inline">\(Q\)</span> lies outside <span
+class="math inline">\(S\)</span> does <span
+class="math inline">\(S\)</span> need to be recomputed. It is not
+difficult to see that <span class="math inline">\(Q\)</span> must lie on
+the boundary of a new minimum bounding sphere for the point set <span
+class="math inline">\(P \cup \{ Q\}\)</span>.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">Sphere <span class="title">WelzlSphere</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    Point pt[],</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">unsigned</span> <span class="type">int</span> numPts,</span></span></span><br><span class="line"><span class="params"><span class="function">    Point sos[],</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">unsigned</span> <span class="type">int</span> numSos</span></span></span><br><span class="line"><span class="params"><span class="function">)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if no input points, the recursion has bottomed out. Now compute an</span></span><br><span class="line">    <span class="comment">// exact sphere based on points in set of support (zero through four points)</span></span><br><span class="line">    <span class="keyword">if</span> (numPts == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (numSos) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">return</span> <span class="built_in">Sphere</span>();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> <span class="built_in">Sphere</span>(sos[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">return</span> <span class="built_in">Sphere</span>(sos[<span class="number">0</span>], sos[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>: <span class="keyword">return</span> <span class="built_in">Sphere</span>(sos[<span class="number">0</span>], sos[<span class="number">1</span>], sos[<span class="number">2</span>]);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>: <span class="keyword">return</span> <span class="built_in">Sphere</span>(sos[<span class="number">0</span>], sos[<span class="number">1</span>], sos[<span class="number">2</span>], sos[<span class="number">3</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Pick a point at &quot;random&quot; (here just the last point of the input set)</span></span><br><span class="line">    <span class="type">int</span> index = numPts - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// Recursively compute the smallest bounding sphere of the remaining points</span></span><br><span class="line">    Sphere smallestSphere = <span class="built_in">WelzlSphere</span>(pt, numPts - <span class="number">1</span>, sos, numSos); <span class="comment">// (*)</span></span><br><span class="line">    <span class="comment">// If the selected point lies inside this sphere, it is indeed the smallest</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">PointInsideSphere</span>(pt[index], smallestSphere))</span><br><span class="line">        <span class="keyword">return</span> smallestSphere;</span><br><span class="line">    <span class="comment">// Otherwise, update set of support to additionally contain the new point</span></span><br><span class="line">    sos[numSos] = pt[index]</span><br><span class="line">    <span class="comment">// Recursively compute the smallest sphere of remaining points with new s.o.s.</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">WelzlSphere</span>(pt, numPts - <span class="number">1</span>, sos, numSos + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="oriented-bounding-boxes-obbs">Oriented Bounding Boxes
+(OBBs)</h1>
+<p>An oriented bounding box (OBB) is a rectangular block, much like an
+AABB but with an arbitrary orientation. There are so many
+representations of OBB, following is one of them.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">OBB</span> &#123;</span><br><span class="line">    Point c; <span class="comment">// OBB center point</span></span><br><span class="line">    Vector u[<span class="number">3</span>]; <span class="comment">// Local x-, y-, and z-axes</span></span><br><span class="line">    Vector e; <span class="comment">// Positive halfwidth extends of OBB along each axis</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="obb-obb-intersection">OBB-OBB Intersection</h2>
+<h1 id="sphere-swept-volumes">Sphere-swept Volumes</h1>
+<figure>
+<img
+src="/assets/images/2022-03-26-bounding-volumes/sphere-swept-volumes.png"
+alt="(a) A sphere-swept point(SSP). (b) A sphere-swept line(SSL). (c) A sphere-swept rectangle (SSR)." />
+<figcaption aria-hidden="true">(a) A sphere-swept point(SSP). (b) A
+sphere-swept line(SSL). (c) A sphere-swept rectangle (SSR).</figcaption>
+</figure>
+<p>Sphere-swept points (SSPs), sphere-swept lines (SSLs), and
+sphere-swept rectangles (SSRs) — are commonly referred to, respectively,
+as <em>spheres</em>, <em>capsules</em>, and <em>lozenges</em>.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Capsule</span> &#123;</span><br><span class="line">    Point a; <span class="comment">// Medial line segment start point</span></span><br><span class="line">    Point b; <span class="comment">// Medial line segment endpoint</span></span><br><span class="line">    <span class="type">float</span> r; <span class="comment">// Radius</span></span><br><span class="line">&#125;</span><br><span class="line">   </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Lozenge</span> &#123;</span><br><span class="line">    Point a; <span class="comment">// Origin</span></span><br><span class="line">    Vector u[<span class="number">2</span>]; <span class="comment">// The two edges axes of the rectangle</span></span><br><span class="line">    <span class="type">float</span> r; <span class="comment">// Radius</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="sphere-swept-volume-intersection">Sphere-swept Volume
+Intersection</h2>
+<p>By construction, all sphere-swept volume tests can be formulated in
+the same way. First, the distance between the inner structures is
+computed. Then this distance is compared against the sum of the
+radii.</p>
+<h1 id="halfspace-intersection-volumes">Halfspace Intersection
+Volumes</h1>
+<p>Although convex hulls form the tightest bounding volumes, they are
+not neces- sarily the best choice of bounding volume. Some drawbacks of
+convex hulls include their being expensive and difficult to compute,
+taking large amounts of memory to represent, and potentially being
+costly to operate upon. By limiting the number of halfspaces used in the
+intersection volume, several simpler alternative bounding volumes can be
+formed.</p>
+<figure>
+<img src="/assets/images/2022-03-26-bounding-volumes/stab.png"
+alt="A slab is the infinite region of space between two planes, defined by a normal n and two signed distances from the origin." />
+<figcaption aria-hidden="true">A slab is the infinite region of space
+between two planes, defined by a normal <strong>n</strong> and two
+signed distances from the origin.</figcaption>
+</figure>
+<p>A slab is the infinite region of space between two planes, defined by
+a normal <strong>n</strong> and two signed distances from the
+origin.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Slab</span> &#123;</span><br><span class="line">    <span class="type">float</span> n[<span class="number">3</span>]; <span class="comment">// Normal n = (a, b, c)</span></span><br><span class="line">    <span class="type">float</span> dNear; <span class="comment">// Signed distance from origin for near plane (dNear)</span></span><br><span class="line">    <span class="type">float</span> dFar; <span class="comment">// Signed distance from origin for far plane (dFar)</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>To form a bounding volume, a number of normals are chosen. Then, for
+each normal, pairs of planes are positioned so that they bound the
+object on both its sides along the direction of the normal. <strong>To
+form a closed 3D volume, at least three slabs are required.</strong></p>
+<h2 id="discrete-orientation-polytopes-k-dops">Discrete-orientation
+Polytopes (k-DOPs)</h2>
+<p>These <em>k</em>-DOPs are convex polytopes, almost identical to the
+slab-based volumes except that <strong>the normals are defined as a
+fixed set of axes shared among all <em>k</em>-DOP bounding
+volumes.</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">DOP8</span> &#123;</span><br><span class="line">    <span class="type">float</span> min[<span class="number">4</span>]; <span class="comment">// Minimum distance (from origin) along axes 0 to 3</span></span><br><span class="line">    <span class="type">float</span> max[<span class="number">4</span>]; <span class="comment">// Maximum distance (from origin) along axes 0 to 3</span></span><br><span class="line">&#125;; </span><br></pre></td></tr></table></figure>
+<p>An 8-DOP has faces aligned with the eight directions <span
+class="math inline">\((\pm1, \pm1, \pm1)\)</span> and a 12-DOP with the
+12 directions <span class="math inline">\((\pm1, \pm1, 0)\)</span>,
+<span class="math inline">\((\pm1, 0, \pm1)\)</span> and <span
+class="math inline">\((0, \pm1, \pm1)\)</span>.</p>
+<figure>
+<img src="/assets/images/2022-03-26-bounding-volumes/8-dop.png"
+alt="8-DOP for triangle (3,1),(5,4),(1,5) is {1,1,4,−4,5,5,9,2} for axes (1,0), (0,1), (1, 1), (1, −1)." />
+<figcaption aria-hidden="true">8-DOP for triangle (3,1),(5,4),(1,5) is
+{1,1,4,−4,5,5,9,2} for axes (1,0), (0,1), (1, 1), (1, −1).</figcaption>
+</figure>
+<p>8-DOP for triangle (3,1),(5,4),(1,5) is {1,1,4,−4,5,5,9,2} for axes
+(1,0), (0,1), (1, 1), (1, −1).</p>
+<aside>
+<p>💡 Note that the <em>k</em>-DOP is not just any intersection of
+slabs, but the tightest slabs that form the body.</p>
+</aside>
+<h2 id="k-dop-k-dop-overlap-test">k-DOP-k-DOP Overlap Test</h2>
+<p>Due to the fixed set of axes being shared among all objects, the test
+simply checks the <span class="math inline">\(k/2\)</span> intervals for
+overlap. If any pair of intervals do not overlap, the k-DOPs do not
+intersect.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestKDOPKDOP</span><span class="params">(KDOP &amp;a, KDOP &amp;b, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// Check if any intervals are non-overlapping, return if so</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k / <span class="number">2</span>; i++)</span><br><span class="line">    <span class="keyword">if</span> (a.min[i] &gt; b.max[i] || a.max[i] &lt; b.min[i])</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// All intervals are overlapping, so k-DOPs must intersect</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="computing-and-realigning-k-dops">Computing and Realigning
+k-DOPs</h2>
+<p>Computing the k-DOP for an object can be seen as a generalization of
+the method for computing an AABB, much as the overlap test for two
+k-DOPs is really a generalization of the AABB-AABB overlap test.
+<strong>As such, a k-DOP is simply computed from the projection spread
+of the object vertices along the defining axes of the
+k-DOP</strong>.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/" title="Bounding Volumes">https://aquietzero.github.io/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/" rel="prev" title="Collision Detection Design Issues">
+                  <i class="fa fa-angle-left"></i> Collision Detection Design Issues
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/" rel="next" title="Basic Primitive Tests">
+                  Basic Primitive Tests <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

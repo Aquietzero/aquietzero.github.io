@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="集异璧之大成  Hofstadter     哥德尔定理背后的原理的形象化表现  哥德尔定理背后的原理的形象化表现  两个映射背靠背具有了出乎意料的飞去来器效果。第一个映射是从纹道模式到声音，由一个唱机实现。第二个——很平常，但却常常被忽视——是从声音到唱机的震颤。注意第二个映射独立于第一个映射而存在，因为附近的任何声音——不仅是唱机自己产生的声音——都会引起这种震颤。哥德尔定理转述在这里就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集异璧之大成">
+<meta property="og:url" content="https://aquietzero.github.io/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="集异璧之大成  Hofstadter     哥德尔定理背后的原理的形象化表现  哥德尔定理背后的原理的形象化表现  两个映射背靠背具有了出乎意料的飞去来器效果。第一个映射是从纹道模式到声音，由一个唱机实现。第二个——很平常，但却常常被忽视——是从声音到唱机的震颤。注意第二个映射独立于第一个映射而存在，因为附近的任何声音——不仅是唱机自己产生的声音——都会引起这种震颤。哥德尔定理转述在这里就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/books/%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E8%87%AA%E6%88%91%E5%A4%8D%E5%88%B6.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E8%BD%AC%E5%BD%95.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E6%B0%A8%E5%9F%BA%E9%85%B8.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E9%81%97%E4%BC%A0%E5%AF%86%E7%A0%81.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E8%82%8C%E7%BA%A2%E8%9B%8B%E7%99%BD.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/mRNA.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/FlooP.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E5%BE%AE%E8%A7%82%E5%BD%A2%E5%BC%8F.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/%E7%AE%80%E5%8C%96%E8%AE%BA%E5%BD%A2%E5%BC%8F.png">
+<meta property="article:published_time" content="2023-02-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.525Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="GEB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/books/%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/","path":"2023/02/28/reading/2023-02-28-集异璧之大成/","title":"集异璧之大成"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>集异璧之大成 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%84%8F%E4%B9%89%E4%BD%8D%E4%BA%8E%E4%BD%95%E5%A4%84"><span class="nav-number">1.</span> <span class="nav-text">意义位于何处</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF"><span class="nav-number">1.1.</span> <span class="nav-text">消息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E6%BC%94%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">命题演算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%A2%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">形式系统定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BB%E6%83%B3%E8%A7%84%E5%88%99%E4%BE%8B%E5%AD%90"><span class="nav-number">2.1.1.</span> <span class="nav-text">幻想规则例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%AC%E5%85%A5%E8%A7%84%E5%88%99%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.1.2.</span> <span class="nav-text">搬入规则的例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B0%E7%AC%A6%E6%95%B0%E8%AE%BA"><span class="nav-number">3.</span> <span class="nav-text">印符数论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">系统定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%97"><span class="nav-number">3.1.1.</span> <span class="nav-text">数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E5%85%83%E5%92%8C%E6%9C%AF%E8%AF%AD"><span class="nav-number">3.1.2.</span> <span class="nav-text">变元和术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97"><span class="nav-number">3.1.3.</span> <span class="nav-text">运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E4%B8%8E%E5%91%BD%E9%A2%98%E7%AC%A6%E5%8F%B7"><span class="nav-number">3.1.4.</span> <span class="nav-text">原子与命题符号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E7%94%B1%E5%8F%98%E5%85%83%E5%92%8C%E9%87%8F%E8%AF%8D"><span class="nav-number">3.1.5.</span> <span class="nav-text">自由变元和量词</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tnt-%E7%9A%84%E4%BA%94%E6%9D%A1%E5%85%AC%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">TNT 的五条公理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tnt-%E6%96%B0%E8%A7%84%E5%88%99"><span class="nav-number">3.3.</span> <span class="nav-text">TNT 新规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%A7%B0%E8%A7%84%E5%88%99"><span class="nav-number">3.3.1.</span> <span class="nav-text">特称规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E6%8B%AC%E8%A7%84%E5%88%99"><span class="nav-number">3.3.2.</span> <span class="nav-text">概括规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%92%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-number">3.3.3.</span> <span class="nav-text">互换规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E8%A7%84%E5%88%99"><span class="nav-number">3.3.4.</span> <span class="nav-text">存在规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%8F%B7%E8%A7%84%E5%88%99"><span class="nav-number">3.3.5.</span> <span class="nav-text">等号规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%A7%E8%A7%84%E5%88%99"><span class="nav-number">3.3.6.</span> <span class="nav-text">后继规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#omega-%E4%B8%8D%E5%AE%8C%E5%85%A8%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.4.</span> <span class="nav-text">\(\omega\)
+不完全系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">二元论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%BF%E6%82%9F"><span class="nav-number">4.1.</span> <span class="nav-text">顿悟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A5%E5%BE%B7%E5%B0%94%E9%85%8D%E6%95%B0"><span class="nav-number">4.2.</span> <span class="nav-text">哥德尔配数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9-tnt-%E8%BF%9B%E8%A1%8C%E5%93%A5%E5%BE%B7%E5%B0%94%E9%85%8D%E6%95%B0"><span class="nav-number">4.3.</span> <span class="nav-text">对 TNT 进行哥德尔配数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA-tnt-%E5%8F%8A%E6%9C%89%E5%85%B3%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%BD%A2%E5%BC%8F%E4%B8%8A%E4%B8%8D%E5%8F%AF%E5%88%A4%E5%AE%9A%E7%9A%84%E5%91%BD%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">论 TNT
+及有关系统中形式上不可判定的命题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E6%98%8E%E5%AF%B9"><span class="nav-number">5.1.</span> <span class="nav-text">证明对</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E8%AF%81%E6%98%8E%E5%AF%B9%E6%98%AF%E5%8E%9F%E5%A7%8B%E9%80%92%E5%BD%92%E7%9A%84"><span class="nav-number">5.2.</span> <span class="nav-text">“是证明对”是原始递归的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%BC%BA%E6%9C%89%E5%8A%9B%E7%9A%84%E5%BD%A2%E5%BC%8F%E7%B3%BB%E7%BB%9F"><span class="nav-number">6.</span> <span class="nav-text">一个更强有力的形式系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B0%E7%AC%A6%E9%81%97%E4%BC%A0%E5%AD%A6"><span class="nav-number">7.</span> <span class="nav-text">印符遗传学</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="nav-number">7.1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B2%E5%9F%BA%E9%85%B6"><span class="nav-number">7.1.1.</span> <span class="nav-text">串，基，酶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%8A%B6%E6%80%81"><span class="nav-number">7.1.2.</span> <span class="nav-text">复制状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%A8%E5%9F%BA%E9%85%B8"><span class="nav-number">7.1.3.</span> <span class="nav-text">氨基酸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%B0%E7%AC%A6%E9%81%97%E4%BC%A0%E5%AF%86%E7%A0%81"><span class="nav-number">7.1.4.</span> <span class="nav-text">印符遗传密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%B6%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BB%93%E6%9E%84"><span class="nav-number">7.1.5.</span> <span class="nav-text">酶的三级结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E7%82%B9%E5%9F%BA%E5%9B%A0%E4%B8%8E%E6%A0%B8%E7%B3%96%E4%BD%93"><span class="nav-number">7.1.6.</span> <span class="nav-text">标点，基因与核糖体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B0%E7%AC%A6%E9%81%97%E4%BC%A0%E5%AD%A6%E7%9A%84%E8%87%AA%E5%A4%8D%E5%88%B6"><span class="nav-number">7.2.</span> <span class="nav-text">印符遗传学的自复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dna-%E4%B8%8E%E6%A0%B8%E8%8B%B7%E9%85%B8"><span class="nav-number">7.2.1.</span> <span class="nav-text">DNA 与核苷酸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E4%BD%BF-rna-%E4%B8%8E%E6%A0%B8%E7%B3%96%E4%BD%93"><span class="nav-number">7.2.2.</span> <span class="nav-text">信使 RNA 与核糖体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B0%A8%E5%9F%BA%E9%85%B8-1"><span class="nav-number">7.2.3.</span> <span class="nav-text">氨基酸</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E7%B3%96%E4%BD%93"><span class="nav-number">7.2.4.</span> <span class="nav-text">核糖体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%8A%9F%E8%83%BD"><span class="nav-number">7.2.5.</span> <span class="nav-text">蛋白质功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%98%E5%A5%87%E5%9B%BE%E7%81%B5%E8%AE%BA%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">丘奇—图灵论题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%9E%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">8.1.</span> <span class="nav-text">同构形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E8%A7%82%E5%BD%A2%E5%BC%8F"><span class="nav-number">8.2.</span> <span class="nav-text">微观形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E8%AE%BA%E5%BD%A2%E5%BC%8F"><span class="nav-number">8.3.</span> <span class="nav-text">简化论形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%BD%A2%E5%BC%8F"><span class="nav-number">8.4.</span> <span class="nav-text">人工智能形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%98%E5%A5%87%E5%AE%9A%E7%90%86"><span class="nav-number">8.5.</span> <span class="nav-text">丘奇定理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD"><span class="nav-number">9.</span> <span class="nav-text">人工智能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%B0%E6%96%AF%E5%8B%92%E5%AE%9A%E7%90%86"><span class="nav-number">9.1.</span> <span class="nav-text">泰斯勒定理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="集异璧之大成 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          集异璧之大成
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2023-02-28T00:00:00+08:00">2023-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/02/28/reading/2023-02-28-集异璧之大成/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>27 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><figure class="book-cover">
+<img src="/assets/images/books/集异璧之大成.png" />
+<figcaption>
+集异璧之大成 <br /> <span class="book-authors">Hofstadter</span>
+</figcaption>
+</figure>
+<figure>
+<img
+src="/assets/images/2023-02-28-集异璧之大成/哥德尔定理背后的原理的形象化表现.png"
+alt="哥德尔定理背后的原理的形象化表现" />
+<figcaption
+aria-hidden="true">哥德尔定理背后的原理的形象化表现</figcaption>
+</figure>
+<p>哥德尔定理背后的原理的形象化表现</p>
+<blockquote>
+<p>两个映射背靠背具有了出乎意料的飞去来器效果。第一个映射是从纹道模式到声音，由一个唱机实现。第二个——很平常，但却常常被忽视——是从声音到唱机的震颤。注意第二个映射独立于第一个映射而存在，因为附近的任何声音——不仅是唱机自己产生的声音——都会引起这种震颤。哥德尔定理转述在这里就是：对任何一个唱机，都有它不能播放的唱片，因为后者会导致前者的间接自摧毁。</p>
+</blockquote>
+<p>上图与哥德尔定理之间的映射</p>
+<p><span class="math display">\[
+\begin{align}
+唱机 &amp;\iff 数论的公理系统 \\
+低保真唱机 &amp;\iff “弱”公理系统 \\
+高保真唱机 &amp;\iff “强”公理系统 \\
+“完备的”唱机 &amp;\iff 数论的完全系统 \\
+唱机的图纸 &amp;\iff 形式系统的公理与规则 \\
+唱片 &amp;\iff 形式系统的符号串 \\
+可以播放的唱片 &amp;\iff 公理系统的定理 \\
+不能播放的唱片 &amp;\iff 公理系统的非定理 \\
+声音 &amp;\iff 数论的真陈述 \\
+可重现的声音 &amp;\iff 系统中经过解释了的定理 \\
+不可重现的声音 &amp;\iff 非定理的真陈述 \\
+\end{align}
+\]</span></p>
+<aside>
+<p>💡 曲名：“<strong>我不能在唱机 X 上播放</strong>” <span
+class="math inline">\(\iff\)</span>
+哥德尔串的隐含意义：“<strong>我不能在形式系统 X 中导出</strong>”</p>
+</aside>
+<p>一致性：每个定理经解释后都成为真的（在某个想象的世界里）。</p>
+<p>完全性：所有真的（在某个想象的世界里）且可表示成系统中的良构符号串的陈述都是定理。</p>
+<p>哥德尔不完全性定理说的是任何“足够强有力”的系统，由于起能力较强，因而是不完全的。即：存在良构的字符串，表示了数论中的真陈述，但不是定理。</p>
+<h1 id="意义位于何处">意义位于何处</h1>
+<h2 id="消息">消息</h2>
+<p>消息分为三个层面</p>
+<ol type="1">
+<li>框架消息</li>
+<li>外在消息</li>
+<li>内在消息</li>
+</ol>
+<aside>
+<p>💡 理解内在消息就是抽取出发送人所要传递的意义。</p>
+</aside>
+<p>框架消息是这样的一种消息：“我是一条消息，你有本事就来解释我”它是由信息携带者总体的结构特征隐含传递的。</p>
+<aside>
+<p>💡 理解框架消息就是确认需要一种解码机制。</p>
+</aside>
+<p>外在消息，有信息中的符号模式及结构隐含地携带的信息，说明如何去解释内在消息。</p>
+<aside>
+<p>💡
+理解外在消息就是建造——或知道如何建造——能正确解释内在消息的解码机制。</p>
+</aside>
+<p>在理解任何一条消息之前，你必须有另一条消息来告诉你如何理解这条消息，换句话说，存在一个具有无穷多层次的消息体系，这就阻止了对任何消息的理解。</p>
+<h1 id="命题演算">命题演算</h1>
+<h2 id="形式系统定义">形式系统定义</h2>
+<p><strong>符号表</strong>：</p>
+<p><span class="math display">\[
+\{
+&lt;, &gt;, P, Q, R, &#39;, \land, \lor, \to,  \sim, [, ]
+\}
+\]</span></p>
+<p><strong>原子</strong>：<span class="math inline">\(P, Q, R\)</span>
+都称作原子，新的原子是在老的原子的右上角加撇构成，比如 <span
+class="math inline">\(P&#39;, Q&#39;, R&#39;&#39;\)</span>
+等。所有原子都是良构的。</p>
+<p><strong>形成规则</strong>：如果 <span
+class="math inline">\(x\)</span> 和 <span
+class="math inline">\(y\)</span>
+都是良构的，那么以下四种串也是良构的：</p>
+<ol type="1">
+<li><span class="math inline">\(\sim x\)</span></li>
+<li><span class="math inline">\(&lt;x \land y&gt;\)</span></li>
+<li><span class="math inline">\(&lt;x \lor y&gt;\)</span></li>
+<li><span class="math inline">\(&lt;x \to y&gt;\)</span></li>
+</ol>
+<p><strong>联结规则</strong>：如果 <span
+class="math inline">\(x\)</span> 和 <span
+class="math inline">\(y\)</span> 都是系统的定理，那么串 <span
+class="math inline">\(&lt;x\land y&gt;\)</span> 也是该系统的定理。</p>
+<p><strong>分隔规则</strong>：如果 <span class="math inline">\(&lt;x
+\land y&gt;\)</span> 是一个定理，那么 <span
+class="math inline">\(x\)</span> 和 <span
+class="math inline">\(y\)</span> 都是定理。</p>
+<p><strong>双重弯号规则</strong>：<span class="math inline">\(\sim
+\sim\)</span>
+可以从任何定理中删去，也可以嵌入任何定理中，条件是所得的结果是良构串。</p>
+<p><strong>幻想规则</strong>：令 <span class="math inline">\(x\)</span>
+为幻想的前提，然后通过遵循系统的规则的推导，得到幻想的结果 <span
+class="math inline">\(y\)</span>。那么“假如 <span
+class="math inline">\(x\)</span> 是一个定理，那么 <span
+class="math inline">\(y\)</span> 就会是一个定理”。</p>
+<p><strong>搬入规则</strong>：在一个幻想里，任何来自“现实性”高一个层次的定理都可以拿进并使用。</p>
+<p><strong>分离规则</strong>：如果 <span
+class="math inline">\(x\)</span> 和 <span class="math inline">\(&lt;x
+\to y&gt;\)</span> 两者都是定理，那么 <span
+class="math inline">\(y\)</span> 是一个定理。</p>
+<p><strong>易位规则</strong>：<span class="math inline">\(&lt;x \to
+y&gt;\)</span> 与 <span class="math inline">\(&lt;\sim x \to \sim
+y&gt;\)</span> 是可互换的。</p>
+<p><strong>德·摩根规则</strong>：<span class="math inline">\(&lt;\sim x
+\land \sim y&gt;\)</span> 与 <span class="math inline">\(\sim&lt;x \lor
+y&gt;\)</span> 是可互换的。</p>
+<p><strong>思维陀螺规则</strong>：<span class="math inline">\(&lt;x \lor
+y&gt;\)</span> 与 <span class="math inline">\(&lt;\sim x \to
+y&gt;\)</span> 是可互换的。（有点像程序语言里的逻辑短路）</p>
+<h3 id="幻想规则例子">幻想规则例子</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[       推入幻想</span><br><span class="line">    P     前提</span><br><span class="line">    ~~P   结果（根据双重弯号规则）</span><br><span class="line">]       弹出幻想</span><br></pre></td></tr></table></figure>
+<p>这个幻想说明：假如 <span class="math inline">\(P\)</span>
+是一个定理，那么 <span class="math inline">\(\sim \sim P\)</span>
+也是一个定理。使用符号来表示便是 <span class="math inline">\(&lt;P \to
+\sim \sim P&gt;\)</span></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[           推入幻想</span><br><span class="line">    &lt;P^Q&gt;     前提</span><br><span class="line">    P         分隔</span><br><span class="line">    Q         分隔</span><br><span class="line">    &lt;Q^P&gt;     联结      </span><br><span class="line">]           弹出幻想</span><br></pre></td></tr></table></figure>
+<p>由此得到的幻想规则是 <span class="math inline">\(&lt;&lt;P \land
+Q&gt; \to &lt;Q \land P&gt;&gt;\)</span></p>
+<aside>
+<p>💡 最后得到的才是幻想规则，中括号里面的只是幻想过程。</p>
+</aside>
+<h3 id="搬入规则的例子">搬入规则的例子</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[               推入</span><br><span class="line">    P             外层幻想的前提</span><br><span class="line">    [             再次推入</span><br><span class="line">        Q           内层幻想的前提</span><br><span class="line">        P           把 P 搬入内层幻想</span><br><span class="line">        &lt;P^Q&gt;       联结</span><br><span class="line">    ]             弹出内层幻想，回到外层幻想</span><br><span class="line">    &lt;Q→&lt;P^Q&gt;&gt;     幻想规则</span><br><span class="line">]               弹出</span><br><span class="line">&lt;P→&lt;Q→&lt;P^Q&gt;&gt;&gt;   幻想规则</span><br></pre></td></tr></table></figure>
+<h1 id="印符数论">印符数论</h1>
+<p>TNT（Topographical Number Theory）。使用形式系统表达数论。</p>
+<h2 id="系统定义">系统定义</h2>
+<h3 id="数字">数字</h3>
+<p>数字使用后继的记法，也就是</p>
+<p>零：0</p>
+<p>一：S0</p>
+<p>二：SS0</p>
+<p>三：SSS0</p>
+<h3 id="变元和术语">变元和术语</h3>
+<p>使用字母表达变元，字母不够的时候可以加撇</p>
+<h3 id="运算">运算</h3>
+<p>运算只定义加法和乘法，用常规的记号进行。比如 b + c，b x c。</p>
+<h3 id="原子与命题符号">原子与命题符号</h3>
+<p>命题验算中的所有符号，除了用于构成原子的字母 P，Q，R 之外，都在 TNT
+中使用。<strong>原子的角色将由这样的串来充当：当它们解释出来时，是一些关于相等的陈述。</strong>比如
+S0 = SS0 或 ~(SS0 + SS0) = SSS0 等。</p>
+<h3 id="自由变元和量词">自由变元和量词</h3>
+<p>存在自由变元的良构公式不具备真假性，比如 (b + S0) = SS0。因为 b
+未指定，所以不能表达出真假。但如果加上<strong>全称量词 <span
+class="math inline">\(\forall\)</span></strong> 或者<strong>存在量词
+<span
+class="math inline">\(\exists\)</span></strong>，则具备了真假性。</p>
+<h2 id="tnt-的五条公理">TNT 的五条公理</h2>
+<p>上面的定义只能不断通过规则构造出良构串，然而是否能通过印符系统来给出真描述的规则呢？先从五个公理入手。</p>
+<p><span class="math display">\[
+\begin{align}
+公理1 &amp;: \forall a: \sim Sa = 0 \\
+公理2 &amp;: \forall a: (a+0) = a \\
+公理3 &amp;: \forall a: \forall b: (a + Sb) = S(a + b) \\
+公理4 &amp;: \forall a: a \cdot 0 = 0 \\
+公理5 &amp;: \forall a: \forall b: (a \cdot Sb) = ((a \cdot b) + a) \\
+\end{align}
+\]</span></p>
+<h2 id="tnt-新规则">TNT 新规则</h2>
+<p><strong>特称规则</strong>与<strong>概括规则</strong>，将全称量词取消并且加回，<strong>互换规则</strong>提供全称量词与存在量词的互换。</p>
+<h3 id="特称规则">特称规则</h3>
+<p>假设 <span class="math inline">\(u\)</span> 是一个出现在串 <span
+class="math inline">\(x\)</span> 中的变元，如果串 <span
+class="math inline">\(\forall u: x\)</span> 是一个定理，则 <span
+class="math inline">\(x\)</span> 也是定理。并且，对 <span
+class="math inline">\(x\)</span> 中的 <span
+class="math inline">\(u\)</span> 做任何替换得到的串同样是定理。</p>
+<h3 id="概括规则">概括规则</h3>
+<p>假设 <span class="math inline">\(x\)</span> 是一个定理，其中的变元
+<span class="math inline">\(u\)</span> 是自由出现的，那么 <span
+class="math inline">\(\forall u : x\)</span> 是一个定理。</p>
+<h3 id="互换规则">互换规则</h3>
+<p>假设 <span class="math inline">\(u\)</span> 是一个变元，那么串 <span
+class="math inline">\(\forall u: \sim\)</span> 与 <span
+class="math inline">\(\sim \exists u:\)</span>
+在任何定理中的任何地方都是可以互换的。</p>
+<h3 id="存在规则">存在规则</h3>
+<p>假设一个项（可以含有变元，只要是自由的）在一个定理中出现一次或多次，那么，这个项的任何（或者是一些，或者是所有）出现都可以用一个不在定理中出现的变元来替代，相应的存在量词则必须放在最前面。</p>
+<h3 id="等号规则">等号规则</h3>
+<p>对称：如果 <span class="math inline">\(r = s\)</span>
+是一个定理，那么 <span class="math inline">\(s = r\)</span>
+同样也是定理。</p>
+<p>传递：如果 <span class="math inline">\(r = s\)</span> 和 <span
+class="math inline">\(s = t\)</span> 都是定理，那么 <span
+class="math inline">\(r = s\)</span> 也是定理。</p>
+<h3 id="后继规则">后继规则</h3>
+<p>加 <span class="math inline">\(S\)</span>：如果 <span
+class="math inline">\(r = t\)</span> 是一个定理，那么 <span
+class="math inline">\(Sr = St\)</span> 是一个定理。</p>
+<p>去 <span class="math inline">\(S\)</span>：如果 <span
+class="math inline">\(Sr = St\)</span> 是一个定理，那么 <span
+class="math inline">\(r = t\)</span> 是一个定理。</p>
+<h2 id="omega-不完全系统"><span class="math inline">\(\omega\)</span>
+不完全系统</h2>
+<aside>
+<p>💡 一个系统是 <span class="math inline">\(\omega\)</span>
+不完全的，如果在一个金字塔中所有的串都是定理，而全程量化的概述串却不是一个定理。</p>
+</aside>
+<p>比如，在 TNT 系统中可以推导出下面的金字塔串</p>
+<p><span class="math display">\[
+(0 + S0) = S0 \\
+(0 + SS0) = SS0 \\
+(0 + SSS0) = SSS0 \\
+(0 + SSSS0) = SSSS0 \\
+\]</span></p>
+<p>但其全称量词化的串</p>
+<p><span class="math display">\[
+\forall a: (0 + a) = a
+\]</span></p>
+<p>却不能通过规则推导出来。这意味着，这个串在系统里是不可判定的。这种不一致性的产生是由于下面两件事的对立</p>
+<ol type="1">
+<li>一个由一些定理组成的金字塔，它们集合起来断言所有的自然数具有某种性质。</li>
+<li>一个单个的定理，它看上去是断言并非所有的自然数具有该性质。</li>
+</ol>
+<p>这种不一致性成为 <span class="math inline">\(\omega\)</span>
+不一致性。一个 <span class="math inline">\(\omega\)</span>
+不一致的系统更像一个被人们“初拒后纳”的非欧几里得几何。<strong>这意味着：迄今所介绍的
+TNT 的公理和规则并没有完全固定住对 TNT 符号的解释。</strong></p>
+<h1 id="二元论">二元论</h1>
+<h2 id="顿悟">顿悟</h2>
+<p>所谓顿悟，最简明扼要地说或许就是：超越二元论。二元论是指把世界从概念上划分为种种范畴。二元论不仅是概念上对世界的划分，同样也是感知上对世界的划分。</p>
+<p>禅宗来看，<strong>二元论的核心就是词语——普通的词</strong>。对词的使用必然导致二元化，因此每个词很明显地就代表了一个概念范畴。所以，禅宗的一个主要部分就是反对依靠词语而斗争。</p>
+<p>如果依赖词语走向真理，那就如同一个依赖一个不完全的形式系统而走向真理。一个形式系统的确会给你一些真理，但是无论一个形式系统多么强有力，都不可能给出所有真理。</p>
+<p>摒弃感知，摒弃逻辑，词语，二元化的思维——这就是禅宗的实质，主义的实质。禅宗采纳整体论，并且推向逻辑上的极端。如果整体论是断言事物必须作为一个整体被理解，而非其各个部分的总和，那么禅宗走的更远，认为整个世界根本就不能被划分为一个个事物。划分世界就会侮辱歧途，因而就不能达到顿悟了。</p>
+<h2 id="哥德尔配数">哥德尔配数</h2>
+<p>若有一条印符规则，它在任一十进制表示的数中移动，改变，删除或插入数码，那么这条规则可由同样的一条算术规则来替代，后者包括对
+10 的方幂的算术运算以及加，减等运算。</p>
+<p>一旦对一个形式系统进行了哥德尔配数，立刻就有了一组规则，使我们得到完整的<strong>哥德尔同构</strong>。结果就是，<strong>我们可以把对任一形式系统的研究——事实上即对所有形式系统的研究——转成数论工作。</strong></p>
+<p>当把形式系统研究转换成数论研究时，就会产生这类问题，对每个算数话的系统都可以问，<strong>“我们能否用一种递归可枚举的办法刻画不可产生的数？”</strong></p>
+<h2 id="对-tnt-进行哥德尔配数">对 TNT 进行哥德尔配数</h2>
+<p>对 TNT
+的符号进行哥德尔配数，然后将其推理规则“算术化”。下面是一些对应关系。</p>
+<p><span class="math display">\[
+\begin{vmatrix}
+符号 &amp;\ \ \ \ \ \ \   密码子 \\
+0 &amp;\ \ \ \ \ \ \   666 \\
+S &amp;\ \ \ \ \ \ \   123 \\
+= &amp;\ \ \ \ \ \ \   111 \\
++ &amp;\ \ \ \ \ \ \   112 \\
+\cdot &amp;\ \ \ \ \ \ \   236 \\
+( &amp;\ \ \ \ \ \ \   362 \\
+) &amp;\ \ \ \ \ \ \   323 \\
+&lt; &amp;\ \ \ \ \ \ \   212 \\
+&gt; &amp;\ \ \ \ \ \ \   213 \\
+[ &amp;\ \ \ \ \ \ \   312 \\
+] &amp;\ \ \ \ \ \ \   313 \\
+a &amp;\ \ \ \ \ \ \   262 \\
+&#39; &amp;\ \ \ \ \ \ \   163 \\
+\land &amp;\ \ \ \ \ \ \   161 \\
+\lor &amp;\ \ \ \ \ \ \   616 \\
+\to &amp;\ \ \ \ \ \ \   633 \\
+\sim &amp;\ \ \ \ \ \ \   333 \\
+\exists &amp;\ \ \ \ \ \ \   626 \\
+\forall &amp;\ \ \ \ \ \ \   636 \\
+: &amp;\ \ \ \ \ \ \   611 \\
+\end{vmatrix}
+\]</span></p>
+<p>每个 TNT 符号都与由 1、2、3 和 6
+组成的一个三位数配对，配对原则只是有助于记忆。公理的记法将进行如下转换</p>
+<p><span class="math display">\[
+\begin{align}
+\forall &amp; a &amp; : &amp; \sim &amp; S &amp; a &amp; = &amp; 0 \\
+626 &amp; 262 &amp; 636 &amp; 223 &amp; 123 &amp; 262 &amp; 111 &amp;
+666
+\end{align}
+\]</span></p>
+<p>这样看来，对于定理的推导就是一系列高度曲折的数论变换，每个变换都作用在一个或多个作为输入的数之上，给出输出的数。这些产生出来的数，称为
+TNT 数。</p>
+<p>这种对 TNT 的“哥德尔化”引出了一个新的数论谓词：</p>
+<p><span class="math display">\[
+\text{a 是个 TNT 数}
+\]</span></p>
+<p>我们如果在前面加一个弯号，得到的串表示一个互补的命题：</p>
+<p><span class="math display">\[
+\text{a 不是一个 TNT 数}
+\]</span></p>
+<p>如果我们把所有 a 都替换成与 123，666，111，666 相应的 TNT
+数码，我们会得到一个 TNT
+串，它可以从两个层次上来解释。首先，这个串说的是</p>
+<p><span class="math display">\[
+\text{123, 666, 111, 666 不是个 TNT 数}
+\]</span></p>
+<p>但因为有一个连结 TNT 数与 TNT
+定理的同构，这个串还有第二层含义，就是</p>
+<p><span class="math display">\[
+\text{S0 = 0 不是 TNT 的定理}
+\]</span></p>
+<p>这个双重性证实了 <strong>TNT 中有谈论其他 TNT
+串的符号串</strong>。换句话说，我们在外面用于谈论 TNT
+的元语言，多少是部分地在 TNT
+内部遭到了模仿。<strong>这种事情之所以发生，是因为任何形式系统的构建都可以在
+N（数论）
+中得到反映。是数论的形式化的本质导致其元语言嵌在其自身中。</strong>这一看法被冠以“数理逻辑的中心法则”，用一个两步的图解来描述。</p>
+<p><span class="math display">\[
+\text{TNT} \to \text{N} \to \text{元 TNT}
+\]</span></p>
+<p>TNT 的一个串有一个 N 中的解释，而 N
+中的一个陈述可以有一个第二意义，即作为 TNT 的陈述。</p>
+<h1 id="论-tnt-及有关系统中形式上不可判定的命题">论 TNT
+及有关系统中形式上不可判定的命题</h1>
+<p>两个关于哥德尔定理证明的核心想法</p>
+<ul>
+<li>某些 TNT符号串能解释成在谈论另一些 TNT
+符号串，这是哥德尔配数的产物。</li>
+<li>这种自我审视的性质可以全部集中于一个单个的符号串，于是这个符号串所注视的唯一交点就是它自己了。本质上，这种“聚焦手法”可以上溯到康托尔的对角线方法。</li>
+</ul>
+<h2 id="证明对">证明对</h2>
+<p>一个证明对是一对以某种特殊方式结合在一起的自然数。这里的想法是：</p>
+<aside>
+<p>💡 两个自然数 <span class="math inline">\(m\)</span> 和 <span
+class="math inline">\(n\)</span> 形成一个 TNT 证明对，当且仅当 <span
+class="math inline">\(m\)</span> 是某个 TNT
+推导的哥德尔数，而该推导的最末一行是哥德尔数为 <span
+class="math inline">\(n\)</span> 的符号串。</p>
+</aside>
+<p>实际上是构造了一种映射，将整个推导过程（推导过程必须是合法的）进行哥德尔数编码，得到
+<span class="math inline">\(m\)</span>，然后 <span
+class="math inline">\(n\)</span>
+为推导的最后一行，也就是推导结果。比如在 WJU 系统中，令 <span
+class="math inline">\(m = 3131131111301\)</span>，<span
+class="math inline">\(n = 301\)</span>，因为存在推导</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">WJ <span class="comment">// 31</span></span><br><span class="line">WJJ <span class="comment">// 311</span></span><br><span class="line">WJJJJ <span class="comment">// 31111</span></span><br><span class="line">WUJ <span class="comment">// 301</span></span><br><span class="line"></span><br><span class="line">m = <span class="number">3131131111301</span></span><br><span class="line">n = <span class="number">301</span></span><br></pre></td></tr></table></figure>
+<p>所以 <span class="math inline">\(m\)</span> 和 <span
+class="math inline">\(n\)</span> 构成了一个证明对。</p>
+<h2 id="是证明对是原始递归的">“是证明对”是原始递归的</h2>
+<aside>
+<p>💡
+<strong>基本事实1</strong>：“是证明对”这一性质是原始递归的数论性质，因而可以用一个
+BlooP 程序测试。</p>
+</aside>
+<p>这和另一个密切相关的数论性质——“是定理数”——有个值得注意的对比。要断定
+<span class="math inline">\(n\)</span> 是一个定理数，就是要断定存在某个
+<span class="math inline">\(m\)</span> 能与 <span
+class="math inline">\(n\)</span>
+形成证明对，所以这有可能将要进行一场无穷尽的追寻。</p>
+<aside>
+<p>💡 <strong>基本事实2</strong>：“构成证明对”这一性质可以用 BlooP
+测试，因而被一个有两个自由变元的公式在 TNT 中所体现。</p>
+</aside>
+<h1 id="一个更强有力的形式系统">一个更强有力的形式系统</h1>
+<p>TNT
+的弱点何在？本质上就是在于它能表示自指陈述——具体说，就是陈述<strong>“我在形式系统
+TNT中不可证”</strong>。或者，<strong>“没有一个自然数与本符号串的哥德尔数形成
+TNT 证明对”</strong>。</p>
+<p>在一个给定的系统中，是否可能利用哥德尔的自指方法构造一个不可判定的符号串，依赖于三个基本条件：</p>
+<ol type="1">
+<li>该系统要足够丰富，一遍全部所需要的有关数的陈述，无论真假，都能在其中表示。（做不到这一点，就意味着形式系统从一开始就弱得不能与
+TNT 匹配，因为它连 TNT 能表示的那些数论概念都表示不了。）</li>
+<li>所有的一般递归关系都能用该系统的公式体现。（做不到这一点，就意味着该系统不能用定理来把握一般递归的真理，也就是说，这种系统是不能用来产生数论中的全部真理的。）</li>
+<li>公理以及根据该系统的规则所确定的印符模式，都能通过某个有终止的过程来辨认。（做不到这一点，就意味着无法区分该系统中的有效推导和无效推导——因而该“形式系统”根本就不是形式化的，更谈不上是良定义的了。）</li>
+</ol>
+<p>满足了这三个条件，就保证每个一致的系统都不完全，因为哥德尔的构造能得以实施。<strong>系统本身的丰富性使其垮台，由于该系统强得能有自指句子，这种垮台现象就不可避免。</strong></p>
+<h1 id="印符遗传学">印符遗传学</h1>
+<h2 id="基础概念">基础概念</h2>
+<h3 id="串基酶">串，基，酶</h3>
+<p>使用四个字母，A，C，T，G，这四个字母可以组成一些串，GGGG，ATTACCA
+等。在遗传学中，这些串为 DNA 片段。</p>
+<p>可以对串进行一些操作，可以想象一台程序化的机器在串上移来移去施加操作，这些活动着的机器称为“印符酶”，简称酶。有四种酶，喜欢
+A 的酶，喜欢 C 的酶等等。假设一个酶由三项操作构成：</p>
+<ol type="1">
+<li>删除拴着这个酶的单元（并把酶往右移动一个单元）</li>
+<li>向右移动一个单元</li>
+<li>在当前单元右边插入一个 T</li>
+</ol>
+<p>那么这个酶的作用就是将 ACA 变为 CAT。</p>
+<h3 id="复制状态">复制状态</h3>
+<p>复制一个串的时候，并不是直接复制它，而是产生出它的补串。</p>
+<h3 id="氨基酸">氨基酸</h3>
+<p>总拥有十五种类型</p>
+<ul>
+<li>cut —— 切断串</li>
+<li>del —— 从串里删除一个基</li>
+<li>swi —— 把酶转移到另一个串上</li>
+<li>mvr —— 右移一个单元</li>
+<li>mvl —— 左移一个单元</li>
+<li>cop —— 进入复制状态</li>
+<li>off —— 退出复制状态</li>
+<li>ina —— 在本单元右侧插入 A</li>
+<li>inc —— 在本单元右侧插入 C</li>
+<li>ing —— 在本单元右侧插入 G</li>
+<li>int —— 在本单元右侧插入 T</li>
+<li>rpy —— 寻找右边最近的嘧啶</li>
+<li>rpu —— 寻找右边最近的嘌呤</li>
+<li>lpy —— 寻找左边最近的嘧啶</li>
+<li>lpu —— 寻找左边最近的嘌呤</li>
+</ul>
+<p>于是，每个酶都由一系列的氨基酸制成。比如</p>
+<p><span class="math display">\[
+rpu - inc - cop - mvr - mvl - swi - lpu - int
+\]</span></p>
+<p>这个氨基酸，作用在串 TAGATCCAGTCCATCGA 上的时候，如果这个酶从中间的 G
+开始操作，最终会得到两个串，ATC 和 TAGATCCAGTCCATCGA。</p>
+<h3 id="印符遗传密码">印符遗传密码</h3>
+<p>一个串中各对相邻的基——称作“二元组”——表示各种不同的氨基酸，总共有 16
+种可能的二元组：AA，AC，AG，AT，CA，CC 等，而氨基酸共有 15 种。</p>
+<p><img
+src="/assets/images/2023-02-28-集异璧之大成/印符遗传密码.png" /></p>
+<p>按照这个表，一个串便能口述成一种酶了。例如串</p>
+<blockquote>
+<p>TAGATCCAGTCCACATCGA</p>
+</blockquote>
+<p>分解成二元组就是</p>
+<blockquote>
+<p>TA GA TC CA GT CC AC AT CG A</p>
+</blockquote>
+<p>翻译成酶就是</p>
+<p>rpy-ina-rpu-mvr-int-mvl-cut-swi-cop</p>
+<p>剩下的 A 没什么用处。</p>
+<h3 id="酶的三级结构">酶的三级结构</h3>
+<p>一级结构指的是氨基酸序列，而三级结构指的是其折叠方式。表中的下标含义为</p>
+<ul>
+<li>l：左</li>
+<li>r：右</li>
+<li>s：直</li>
+</ul>
+<p>用上面的酶做例子，其三级结构为</p>
+<p><img
+src="/assets/images/2023-02-28-集异璧之大成/酶的三级结构.png" /></p>
+<p>在酶的三级结构中，第一段和最后一段的相对方向决定了酶应该拴在什么地方。我们总能调整酶的方向，使其第一段指向右方，如果这样做了，那么最后一段就决定了酶所栓的位置。</p>
+<p><img
+src="/assets/images/2023-02-28-集异璧之大成/酶的三级结构2.png" /></p>
+<h3 id="标点基因与核糖体">标点，基因与核糖体</h3>
+<p>印符遗传密码 AA 起到标点的作用，比如串</p>
+<blockquote>
+<p>CG GA TA CT AA AC CG A</p>
+</blockquote>
+<p>就是两个酶编码，分别是</p>
+<blockquote>
+<p>cop-ina-rpy-off 和 cut-cop</p>
+</blockquote>
+<p>AA
+把该串分成了两个”基因“。<strong>基因的定义是：一个串中给一个酶编码的那个部分。</strong></p>
+<p><strong>读串并产生出它们编码的酶，这种装置称为核糖体</strong>。</p>
+<h2 id="印符遗传学的自复制">印符遗传学的自复制</h2>
+<p>通过一个初始串，核糖体作用在其上面，就产生出该串编码的所有酶。然后让这些酶接触原本的串，得到一批”子串“。这些子串又通过核糖体的作用得到第二代酶，这些酶作用在子串上，如此循环往复。<strong>问题是：最终，在某一代里，能找到最初那个串的两个副本吗？</strong></p>
+<p><img src="/assets/images/2023-02-28-集异璧之大成/自我复制.png" /></p>
+<h3 id="dna-与核苷酸">DNA 与核苷酸</h3>
+<p>DNA 由两条核苷酸长链构成，而一个核苷酸由三部分构成</p>
+<ol type="1">
+<li>脱去一个特殊氧原子的，称为”核糖“的一种糖</li>
+<li>磷酸基</li>
+<li>一个基</li>
+</ol>
+<p>区别各种核苷酸的东西只是这个”基“，出现在 DNA
+核苷酸中的四种类型的基是</p>
+<ul>
+<li>A：腺嘌呤</li>
+<li>G：鸟嘌呤</li>
+<li>C：胞嘧啶</li>
+<li>T：胸腺嘧啶</li>
+</ul>
+<p>其中 A-T 配对，C-G 配对。</p>
+<h3 id="信使-rna-与核糖体">信使 RNA 与核糖体</h3>
+<p>细胞核内有一种特殊类型的酶把 DNA 序列中的一个长段复制到一个新串 ——
+信使 RNA 串（mRNA） —— 上。然后，这个 mRNA
+离开细胞核，在细胞质中跑进核糖体内，这些核糖体再根据这个 mRNA
+来制造酶。<strong>在细胞核内把 DNA 复制到 mRNA
+上的过程叫转录</strong>。</p>
+<p>RNA 为”核糖核酸“，其核苷酸里都包含 DNA 核苷酸所缺的那个氧原子。另外
+RNA 用尿嘧啶这个基，没有胸腺嘧啶。转录的过程为</p>
+<p><img src="/assets/images/2023-02-28-集异璧之大成/转录.png" /></p>
+<h3 id="氨基酸-1">氨基酸</h3>
+<p>蛋白质由一系列的氨基酸组成。</p>
+<p><img src="/assets/images/2023-02-28-集异璧之大成/氨基酸.png" /></p>
+<h3 id="核糖体">核糖体</h3>
+<p>当一个 mRNA
+游离出来进入细胞质，然后遇到一个核糖体的时候，就会发生翻译的过程。这个翻译过程是一切生命的根本所在。</p>
+<p>每三个核苷酸编码一个氨基酸，编码表与印符遗传密码类似，只是数量更多罢了。核糖体每三个三个地读核苷酸，然后生成一个新的氨基酸，并把这个氨基酸加到正在生产的蛋白质上。由此，蛋白质就在核糖体内被制造出来了。</p>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/遗传密码.png"
+alt="遗传密码。信使RNA串中的每个三元组就这样为二十种氮基酸(及一个标点符号)编码。" />
+<figcaption
+aria-hidden="true">遗传密码。信使RNA串中的每个三元组就这样为二十种氮基酸(及一个标点符号)编码。</figcaption>
+</figure>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/肌红蛋白.png"
+alt="从一些高分辨率的X光资料推断出的肌红蛋白的结构。大尺寸的“扭曲管道”形状是三级结构，内部的细螺旋——“阿尔法 螺旋”——是二级结构。" />
+<figcaption
+aria-hidden="true">从一些高分辨率的X光资料推断出的肌红蛋白的结构。大尺寸的“扭曲管道”形状是三级结构，内部的细螺旋——“阿尔法
+螺旋”——是二级结构。</figcaption>
+</figure>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/mRNA.png"
+alt="一段 mRNA 通过核糖体。漂浮在附近的是些 tRNA 分子，它们带有能被核糖体抓来并加进正在生成的蛋白质中的氨基酸。 遗传密码作为一个整体包含在 tRNA 分子内。要注意，基对(A-U，C-G)在图中由卡在一起的字型表示。" />
+<figcaption aria-hidden="true">一段 mRNA 通过核糖体。漂浮在附近的是些
+tRNA 分子，它们带有能被核糖体抓来并加进正在生成的蛋白质中的氨基酸。
+遗传密码作为一个整体包含在 tRNA
+分子内。要注意，基对(A-U，C-G)在图中由卡在一起的字型表示。</figcaption>
+</figure>
+<p>一段 mRNA 通过核糖体。漂浮在附近的是些 tRNA
+分子，它们带有能被核糖体抓来并加进正在生成的蛋白质中的氨基酸。
+遗传密码作为一个整体包含在 tRNA
+分子内。要注意，基对(A-U，C-G)在图中由卡在一起的字型表示。</p>
+<p>细胞质周围漂浮着大量的“四叶草”（如上图），在其中一个叶片上拴着一个氨基酸，氨基酸对面的叶片上有一个成为<strong>反密码子</strong>的核苷酸三元组。当
+mRNA 进入核糖体的时候，核糖体会吸收一个其反密码子刚好与 mRNA
+互补的四叶草，，然后拿下其叶子上的氨基酸，用一个共价键将其粘到正在生成的蛋白质上。这种草的名字为<strong>转移
+RNA（ tRNA）</strong>。</p>
+<p>于是，简而言之，我们眼前是这样一幅画面:从 DNA 御座出发，DNA 把信使
+RNA 的一些⻓串送到细胞 质中的核糖体上;而核糖体利用盘旋在自己周围的那些
+tRNA“单词卡片”，根据 mRNA 中含有的蓝图，一个氨
+基酸接一个氨基酸地、高效率地构造蛋白质。DNA
+仅指示了蛋白质的一级结构。但这足够了，因为当蛋白质从
+核糖体中出来时，它们便“魔术般地”折叠成复杂的形态，从而有能力像一台大功率的化学机器一样行动。</p>
+<aside>
+<p>💡 核糖体本身也是由各类蛋白质和<strong>核糖体
+RNA（rRNA）</strong>构成。</p>
+</aside>
+<h3 id="蛋白质功能">蛋白质功能</h3>
+<p>酶是如何在细胞里的分子上起作用？酶是折叠的多肽链，每个酶中都有一个裂缝或口袋或某种清晰定义的外观特性，酶在那里拴住某个种类的分子。这个地点叫<strong>活性部位</strong>，拴在那里的分子叫<strong>基质</strong>。酶可以有不止一个活性部位和不止一个基质。</p>
+<p>一旦把酶与其基质拴在一起，就会发生某种电荷不平衡状态，随后，电荷——以电子或质子的形式——就围绕着拴住的分子流动并重新排布自己。达到平衡时，基质可能已经发生了意义深刻的化学变化。</p>
+<h1 id="丘奇图灵论题">丘奇—图灵论题</h1>
+<h2 id="同构形式">同构形式</h2>
+<p>假定有一种方法，一个有感知能力的生物可以利用它逐个把数分成两类。又假定这种方法总能在有穷的时间内得到答案，而且对于一个给定的数总能给出相同的答案。那么，存在某个有终止的
+FlooP
+程序（即一般的递归函数），它给出的答案恰好与这个有感知能力的生物的方法所得到的答案一样。<strong>而且，这个心智过程与这个
+FlooP
+程序在下述意义上同构：在某个层次上，计算机和大脑各自执行的那些步骤之间存在一个对应。</strong></p>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/FlooP.png"
+alt="自然数的性质能在人类大脑和计算机程序中得到反映。这两个不同的描述因而能在一个适当的抽象层次上彼此对应" />
+<figcaption
+aria-hidden="true">自然数的性质能在人类大脑和计算机程序中得到反映。这两个不同的描述因而能在一个适当的抽象层次上彼此对应</figcaption>
+</figure>
+<p>自然数的性质能在人类大脑和计算机程序中得到反映。这两个不同的描述因而能在一个适当的抽象层次上彼此对应</p>
+<h2 id="微观形式">微观形式</h2>
+<p>一个生物体的各个组成部分的行为能用计算机来模拟。也就是说，任何元素（为典型起见，就假定是一个细胞）的行为，都能用一个
+FlooP 程序（即一般递归函数）——
+在给定该元素的内部状态和外部环境的一个足够精确的描述之后 ——
+计算到任意精确的程度。</p>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/微观形式.png"
+alt="大脑的符号层漂浮于神经元活动之上，从而反应了世界。不过能在计算机上模拟的那种神经元活动本身并不能产生思维，那得靠组织中的一些更高的层次" />
+<figcaption
+aria-hidden="true">大脑的符号层漂浮于神经元活动之上，从而反应了世界。不过能在计算机上模拟的那种神经元活动本身并不能产生思维，那得靠组织中的一些更高的层次</figcaption>
+</figure>
+<p>大脑的符号层漂浮于神经元活动之上，从而反应了世界。不过能在计算机上模拟的那种神经元活动本身并不能产生思维，那得靠组织中的一些更高的层次</p>
+<h2 id="简化论形式">简化论形式</h2>
+<p>全部的大脑过程都可以从一个可计算的基质中导出。</p>
+<figure>
+<img src="/assets/images/2023-02-28-集异璧之大成/简化论形式.png"
+alt="使人热衷于从事人工智能研究的关键，在于这样一种观念:心智的符号层次能从它们的神经原基质上被“撇出”，并用诸如 计算机的电子基质之类的方法实现。至于对大脑的复制需要做到什么深度，现在还完全不清楚" />
+<figcaption
+aria-hidden="true">使人热衷于从事人工智能研究的关键，在于这样一种观念:心智的符号层次能从它们的神经原基质上被“撇出”，并用诸如
+计算机的电子基质之类的方法实现。至于对大脑的复制需要做到什么深度，现在还完全不清楚</figcaption>
+</figure>
+<p>使人热衷于从事人工智能研究的关键，在于这样一种观念:心智的符号层次能从它们的神经原基质上被“撇出”，并用诸如
+计算机的电子基质之类的方法实现。至于对大脑的复制需要做到什么深度，现在还完全不清楚</p>
+<h2 id="人工智能形式">人工智能形式</h2>
+<p>任何种类的心智过程都可以用一个计算机程序来模拟，而该程序的基础语言与
+FlooP 一样强，也就是说全体部分递归函数都能用这种语言程序化。</p>
+<h2 id="丘奇定理">丘奇定理</h2>
+<p>在任何强如 TNT 的形式系统中都不可能有判定定理的过程。</p>
+<h1 id="人工智能">人工智能</h1>
+<h2 id="泰斯勒定理">泰斯勒定理</h2>
+<p>一旦某些心智功能被程序化了，人们很快就不再把它看做“真正的思维”的一种本质成分。人工智能是尚未做到的东西。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/" title="集异璧之大成">https://aquietzero.github.io/2023/02/28/reading/2023-02-28-集异璧之大成/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/GEB/" rel="tag"># GEB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/" rel="prev" title="哥德尔证明">
+                  <i class="fa fa-angle-left"></i> 哥德尔证明
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/03/08/reading/ai-a-modern-approach/index/" rel="next" title="AI: A Modern Approach">
+                  AI: A Modern Approach <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

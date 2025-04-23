@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="const examples &#x3D; {   &#39;y&#x3D;2x&#39;: (() &#x3D;&gt; {     const func &#x3D; x &#x3D;&gt; 2*x;     const xs &#x3D; [-1.2, -0.8, 0.5, 1.0, 1.2, 1.5, 2, 2.4];     return {       func,       xs,       points: xs.map(x &#x3D;&gt; [x, func(x)]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 04 - 训练">
+<meta property="og:url" content="https://aquietzero.github.io/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="const examples &#x3D; {   &#39;y&#x3D;2x&#39;: (() &#x3D;&gt; {     const func &#x3D; x &#x3D;&gt; 2*x;     const xs &#x3D; [-1.2, -0.8, 0.5, 1.0, 1.2, 1.5, 2, 2.4];     return {       func,       xs,       points: xs.map(x &#x3D;&gt; [x, func(x)]">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-04-16-AI%E5%AD%A6%E4%B9%A0-%E8%AE%AD%E7%BB%83/%E9%A2%84%E8%AE%AD%E7%BB%83.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-04-16-AI%E5%AD%A6%E4%B9%A0-%E8%AE%AD%E7%BB%83/%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.png">
+<meta property="article:published_time" content="2025-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-22T09:38:30.968Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="训练">
+<meta property="article:tag" content="大模型训练">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2025-04-16-AI%E5%AD%A6%E4%B9%A0-%E8%AE%AD%E7%BB%83/%E9%A2%84%E8%AE%AD%E7%BB%83.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/","path":"2025/04/15/computer/AI学习/训练/","title":"AI学习时间 04 - 训练"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 04 - 训练 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">复习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">一个简单的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E4%B8%8E%E8%AF%AF%E5%B7%AE"><span class="nav-number">3.3.</span> <span class="nav-text">建模与误差</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.4.</span> <span class="nav-text">损失函数与学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E7%8E%87%E4%B8%8E%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0"><span class="nav-number">3.5.</span> <span class="nav-text">学习率与参数更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E6%89%B9%E9%87%8F%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.6.</span> <span class="nav-text">小批量学习</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">4.</span> <span class="nav-text">大语言模型的预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86-1"><span class="nav-number">4.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1"><span class="nav-number">4.2.</span> <span class="nav-text">建模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1"><span class="nav-number">4.3.</span> <span class="nav-text">损失</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 04 - 训练 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 04 - 训练
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-04-15 00:00:00" itemprop="dateCreated datePublished" datetime="2025-04-15T00:00:00+08:00">2025-04-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/04/15/computer/AI学习/训练/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><script src="/assets/lib/plot.js" />
+</script>
+<script src="/assets/lib/graph.js" />
+</script>
+<script>
+const examples = {
+  'y=2x': (() => {
+    const func = x => 2*x;
+    const xs = [-1.2, -0.8, 0.5, 1.0, 1.2, 1.5, 2, 2.4];
+    return {
+      func,
+      xs,
+      points: xs.map(x => [x, func(x)]),
+    }
+  })()
+}
+</script>
+<div class="theme-color-blue" data-markdown="1">
+<p><code>#训练</code> <code>#损失</code> <code>#批学习</code>
+<code>#学习率</code> <code>#大模型预训练</code></p>
+</div>
+<style>
+canvas {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px;
+  border:1px solid #ddd;
+  width:400px;
+  height:400px;
+}
+</style>
+<h1 id="复习">复习</h1>
+<ul>
+<li><p><strong>训练</strong>：通过不断地尝试，来得到模型的参数。</p>
+<pre class="mermaid">    graph LR
+      Data[训练数据] --> Model[模型]
+      Model --> Output[模型输出]
+      Target[期望输出] --> Loss[损失函数]
+      Output --> Loss
+      Loss --> Optimizer[优化器]
+      Optimizer -->|更新参数| Model</pre></li>
+<li><p><strong>数据集</strong>：包含了我们希望模型学习的样本。</p></li>
+<li><p><strong>损失函数</strong>：接受模型的输出和我们期望的输出，然后输出一个损失值。</p></li>
+<li><p><strong>优化器</strong>：接受损失函数的输出，然后输出一个新的模型。</p></li>
+<li><p><strong>大模型</strong>：一个将输入转换为输出的函数，本质是一系列向量变换的组合</p>
+<p><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> output = <span class="title class_">Model</span>(input)</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>大语言模型</strong>：是概率模型，预测给定上下文的下一个词，条件概率表示为
+<span class="math inline">\(p(w_1, \dots, w_m) = \prod^m_{t = 1} P(w_t |
+w_1, \dots, w_{t - 1})\)</span>。</p></li>
+</ul>
+<h1 id="训练">训练</h1>
+<p>对于一个模型的训练，是寻找最优的参数的过程，使得模型的输出尽可能接近我们期望的输出。下面是模型训练的一次循环。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> model = <span class="keyword">new</span> <span class="title class_">Model</span>()</span><br><span class="line"><span class="comment">// 计算当前结果</span></span><br><span class="line"><span class="keyword">const</span> output = <span class="title function_">model</span>(input)</span><br><span class="line"><span class="comment">// 计算当前结果与期望结果之间的损失</span></span><br><span class="line"><span class="keyword">const</span> loss = <span class="title class_">Loss</span>(output, target)</span><br><span class="line"><span class="comment">// 通过损失计算优化方向</span></span><br><span class="line"><span class="keyword">const</span> optimizer = <span class="title class_">Optimizer</span>(loss)</span><br><span class="line"><span class="comment">// 优化模型</span></span><br><span class="line"><span class="keyword">const</span> newModel = optimizer.<span class="title function_">update</span>(model)</span><br></pre></td></tr></table></figure>
+<p>在这个流程中有几个关键问题：</p>
+<ul>
+<li>损失是如何衡量的？</li>
+<li>模型的参数是怎样更新的？</li>
+</ul>
+<h1 id="一个简单的例子">一个简单的例子</h1>
+<h2 id="数据集">数据集</h2>
+<p>假设现在有这些数据，我们需要找到一个模型，使得</p>
+<ul>
+<li>这个模型能尽可能拟合这些已知数据</li>
+<li>这个模型能比较好预测未来的数据</li>
+</ul>
+<canvas id="points-y=2x">
+</canvas>
+<script>
+// 使用示例
+const p1 = new Plot('points-y=2x');
+p1.drawPoints(examples['y=2x'].points, {
+  showCoordinates: true,
+  radius: 3,
+});
+</script>
+<h2 id="目标函数">目标函数</h2>
+<p>从这个简单的数据集，我们可以看到这些数据点“貌似”是在一条直线上的。当然，事先知道这个答案可能会对我们的理解更有利。这个目标函数是
+<span class="math inline">\(y = 2x\)</span>。</p>
+<canvas id="func-y=2x">
+</canvas>
+<script>
+// 使用示例
+const p2 = new Plot('func-y=2x');
+p2.draw(examples['y=2x'].func, {
+  label: 'y=2x',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+p2.drawPoints(examples['y=2x'].points, {
+  showCoordinates: true,
+  radius: 3,
+});
+</script>
+<h2 id="建模与误差">建模与误差</h2>
+<p>假设我们事先不知道这个答案是 <span class="math inline">\(y =
+2x\)</span>，我们也不能对问题一无所知，通过数据猜测（或者说建立）背后的模型，也是需要一定的洞察力和方法的，但我们先跳过这个“建模”的技巧说明，先聚焦于深度学习训练这个课题。假设我们已经有一定的洞察力了，知道这是一条直线（为了让说明更简单，这里先忽略直线不过原点的情况），那么我们就得到了一个简单的模型：</p>
+<p><span class="math display">\[
+y = ax
+\]</span></p>
+<p>我们先对 <span class="math inline">\(a\)</span>
+值进行一个盲猜，假设我们猜 <span class="math inline">\(a =
+1\)</span>，那么模型与数据之间就会产生误差，我们通过一个整体误差来衡量这个猜测。</p>
+<canvas id="loss-y=x">
+</canvas>
+<script>
+const p3 = new Plot('loss-y=x');
+const guess = x => x;
+p3.draw(guess, {
+  label: 'y=x',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+p3.drawPoints(examples['y=2x'].points, {
+  func: guess,
+  showCoordinates: true,
+  showDistance: true,
+  radius: 3,
+});
+</script>
+<p>上图展示的虚线长度（一般为了方便是用长度的平方）总和就是 <span
+class="math inline">\(a = 1\)</span>
+时模型产生的整体误差，也可以形式化表示为</p>
+<p><span class="math display">\[
+\text{loss} = \sum_{i=1}^n \big[y_i^\text{data} -
+y_i^\text{model(a=1)}\big]^2
+\]</span></p>
+<p>由于我们知道答案，所以可以想一个办法让 <span
+class="math inline">\(a\)</span> 慢慢靠近正确答案 <span
+class="math inline">\(a =
+2\)</span>，但是作为一个通用的方法，我们需要有一种通用的方式来更新参数。观察上面的公式，里面的两个变量</p>
+<ul>
+<li><span class="math inline">\(y^\text{data}_i\)</span>
+是已知的数据</li>
+<li><span class="math inline">\(y^\text{model}_i\)</span>
+是模型的输出，也就是 <span class="math inline">\(f(x^\text{data}_i) = a
+x^\text{data}_i\)</span></li>
+</ul>
+<p>整个公式里，只有 <span class="math inline">\(a\)</span>
+一个未知变量，所以当整体误差展开的时候，是一个一元二次方程，并且二次项符号是正的。由于上标均变为
+<code>data</code>，所以下面省略上标。</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{loss} &amp;= \sum_{i=1}^n \big[y_i - ax_i\big]^2 \\
+&amp;= \sum_{i=1}^n \big[y_i^2 + ax_i^2 - 2 a y_i x_i\big] \\
+&amp;= \sum_{i=1}^n y_i^2 + \sum_{i=1}^n a^2 x_i^2 - \sum_{i=1}^n 2 a
+x_i y_i \\
+&amp;=
+  + \color{blue}\sum_{i=1}^n  x_i^2 \color{black} a^2
+  - \color{blue}\sum_{i=1}^n 2 x_i y_i \color{black} a
+  + \color{blue}\sum_{i=1}^n y_i^2 \\
+\end{align*}
+\]</span></p>
+<p>既然是一个一元二次方程，开口向上，那么它就会存在一个最低点，因为我们知道正确答案是
+<span class="math inline">\(a=2\)</span>，所以这个抛物线的顶点，就是在
+<span class="math inline">\((2, 0)\)</span> 这个位置。</p>
+<canvas id="loss-func-y=2x">
+</canvas>
+<script>
+const p4 = new Plot('loss-func-y=2x');
+const lossFunc = x => (x - 2) ** 2;
+p4.draw(lossFunc, {
+  label: 'y=(x - 2)^2',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+p4.drawPoints([[2, 0]], {
+  showCoordinates: true,
+  radius: 3,
+});
+</script>
+<h2 id="损失函数与学习">损失函数与学习</h2>
+<p>上述讨论还揭示了一点，不知不觉间，我们发现整体损失 <span
+class="math inline">\(\text{loss}\)</span> 实际上是关于模型参数 <span
+class="math inline">\(a\)</span> 的一个函数 <span
+class="math inline">\(\text{loss} =
+f(a)\)</span>，这意味着，当我们通过调整 <span
+class="math inline">\(a\)</span> 让 <span
+class="math inline">\(\text{loss}\)</span> 达到最小值，那么此时的 <span
+class="math inline">\(a\)</span> 就是我们需要的模型参数了。</p>
+<p>有了上面的认知与工具，我们就可以开始考虑如何更新参数了。在上面的例子中，我们一开始猜测
+<span class="math inline">\(a =
+1\)</span>，此时我们得到一个误差，但此时并没有任何信息告诉我们，应该往哪个方向调整
+<span class="math inline">\(a\)</span> 的值，究竟是尝试 <span
+class="math inline">\(a = 1.5\)</span> 还是 <span
+class="math inline">\(a = 0.5\)</span>（假设更新步长是 <span
+class="math inline">\(0.5\)</span>）。此时我们可以不用决策，随机找一个方向即可，通过<strong>误差的变化</strong>来指导下一步的操作。</p>
+<canvas id="loss-func-guess-y=2x">
+</canvas>
+<script>
+const p5 = new Plot('loss-func-guess-y=2x');
+p5.draw(lossFunc, {
+  label: 'y=(x - 2)^2',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+p5.drawPoints([
+  [2, 0],
+  [1, lossFunc(1)],
+  [1.5, lossFunc(1.5)],
+  [0.5, lossFunc(0.5)],
+], {
+  showCoordinates: true,
+  radius: 3,
+});
+p5.drawArrow([1, lossFunc(1)], [1.5, lossFunc(1.5)]);
+p5.drawArrow([1, lossFunc(1)], [0.5, lossFunc(0.5)]);
+</script>
+<p>从上图我们可以看到，当 <span class="math inline">\(a\)</span> 变大到
+<span class="math inline">\(1.5\)</span>
+的时候，整体误差变小了，所以这个方向是正确的，于是我们可以继续往这个方向调整。如果我们固定步长是
+<span class="math inline">\(0.5\)</span> 的话，那么下一个迭代就会到
+<span class="math inline">\(a =
+2\)</span>，这样我们就能终止整个更新过程。</p>
+<p>考虑到<strong>方向性</strong>的问题，如果我们要判断方向，是需要一些“标记”的，观察这个典型的抛物线图，往上误差增大，往下误差减小，当从一个位置向上下移动的时候，刚好可以通过符号来判断。</p>
+<p><strong>导数</strong>就是用来衡量这种变化的一种方式，回顾一下对于一元二次方程的导数，是以下的形式</p>
+<p><span class="math display">\[
+\begin{align*}
+y &amp;= ax^2 + bx + c \\
+y&#39; &amp;= 2ax + b
+\end{align*}
+\]</span></p>
+<p>对于上面的损失函数来说，我们把 <span class="math inline">\(y_i =
+2x_i\)</span> 也代入，会得到</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{loss} &amp;= \sum_{i=1}^n \big[y_i - ax_i\big]^2 \\
+&amp;= \sum_{i=1}^n \big[2x_i - ax_i\big]^2 \\
+&amp;= \sum_{i=1}^n  x_i^2  a^2
+  - \sum_{i=1}^n 4 x_i^2  a
+  + \sum_{i=1}^n y_i^2 \\
+\frac{\partial \text{loss}}{\partial a}
+&amp;= 2\sum_{i=1}^n  x_i^2  a
+  - 4\sum_{i=1}^n x_i^2 \\
+&amp;= 2Ca - 4C \text{(把常数换为} C \text{)}
+\end{align*}
+\]</span></p>
+<p>从这个公式可以看到，当 <span class="math inline">\(a = 2\)</span>
+的时候，导数为
+0，也就是这个点是这个函数的极值点，也就是我们需要的最小值。</p>
+<p>但假设我们将这个抛物线看成是一个现实中的斜坡，那参数更新的过程可以看成是从某一个位置释放一个小球，这个小球会随着重力的作用往下滚动，如果这个斜坡还是有阻尼的话，那么这个小球最终会停下来，也就是这个参数更新最终会使得误差为
+0，当然，这是非常理想的情况。但可以想象到的是，通过这种方式，是可以找到最优解的。</p>
+<canvas id="loss-func-guess-2-y=2x">
+</canvas>
+<script>
+const p6 = new Plot('loss-func-guess-2-y=2x');
+p6.draw(lossFunc, {
+  label: 'y=(x - 2)^2',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+const guessPoints = [4, 0.5, 3, 1.5, 2]
+p6.drawPoints(guessPoints.map(p => [p, lossFunc(p)]), {
+  showCoordinates: false,
+  radius: 3,
+});
+for (let i = 0; i < guessPoints.length - 1; i++) {
+  let p1 = guessPoints[i];
+  let p2 = guessPoints[i + 1];
+  p6.drawArrow([p1, lossFunc(p1)], [p2, lossFunc(p2)], { width: 1, size: 7 });
+}
+</script>
+<p>上面展示的是另一种更新的可能，虽然看着在最优值之间来回跳动，但是只要向着损失最小化的方向，最终还是有机会到达最优点。</p>
+<h2 id="学习率与参数更新">学习率与参数更新</h2>
+<p>进一步看，<span class="math inline">\(a\)</span>
+在抛物线两边变动的时候，导数的变动方向刚好和误差的变动方向是一致的（大家可以验证下），而误差是
+<span class="math inline">\(a\)</span> 的函数 <span
+class="math inline">\(\text{loss} =
+f(a)\)</span>，对这个函数求导，实际上表明了 <span
+class="math inline">\(a\)</span>
+的变化会如何导致误差的变化，<strong>这两者的变化是同步的</strong>。而我们的目标是让误差最小，所以可以通过导数反过来指导
+<span class="math inline">\(a\)</span> 的变化。</p>
+<p>这意味着 <span class="math inline">\(a\)</span>
+的更新可以写成（注意符号，导数为正意味着误差增大，我们要往反方向走，所以是减去导数，如果导数是负数，意味着误差减小，方向正确，所以负负得正）</p>
+<p><span class="math display">\[
+a \gets a - \text{loss}&#39;
+\]</span></p>
+<p>理论上这个公式就可以作为参数的更新方式了，但是考虑到误差的导数是不可控的，如果我们希望控制更新的步长，此时我们需要引入一个<strong>学习率（learning
+rate）</strong>的参数，用来“限制”变动的比例。</p>
+<p><span class="math display">\[
+a \gets a - \color{blue}\eta \color{black}\text{loss}&#39;
+\]</span></p>
+<p>直观上看，抛物线越往上越陡峭，如果我们学习率为 <span
+class="math inline">\(1\)</span>，也就是不控制步长的话，<span
+class="math inline">\(a\)</span>
+的变动会非常大，有可能直接错过最优解，而越靠近最优解，坡度越平缓，如果步长足够小，那么可以很有机会慢慢接近最优解。</p>
+<canvas id="slope-y=2x">
+</canvas>
+<script>
+const p7 = new Plot('slope-y=2x');
+p7.draw(lossFunc, {
+  label: 'y=(x - 2)^2',
+  labelPosition: {
+    x: (width) => -width/4,
+    y: (height) => -height/4,
+  }
+});
+p7.drawRect([-0.12, 3], 0.42, 1.5);
+p7.drawRect([1.5, 0], 1, 0.22);
+</script>
+<h2 id="小批量学习">小批量学习</h2>
+<p>在上面的例子中，我们是使用一堆数据点的误差总和进行学习的，这其实已经属于<strong>批量学习（batch
+learning）</strong>的范畴。先考虑一下，一个个点进行学习会产生什么问题。</p>
+<canvas id="learn-by-one-point-y=2x">
+</canvas>
+<script>
+const p8 = new Plot('learn-by-one-point-y=2x');
+p8.draw(x => 2*x);
+p8.draw(x => -3*x + 5, { color: 'green' });
+p8.draw(x => 3*x - 1, { color: 'blue' });
+p8.drawPoints([[1, 2]], { color: 'black', radius: 3});
+</script>
+<p>从上图可以看到，过一点其实会有无数条直线，这意味着过这一点能够找到无数个函数，使得误差为
+<span
+class="math inline">\(0\)</span>，这相当于我们的模型可以有无数个解，以至于无法学习。但当我们选取一小部分的点一起训练，情况就不同了。</p>
+<canvas id="learn-by-few-points-y=2x">
+</canvas>
+<script>
+const p9 = new Plot('learn-by-few-points-y=2x');
+const p9Points = [[-1, -2], [-0.8, -1.6], [0.2, 0.4]];
+p9.draw(x => 2*x);
+p9.drawPoints(p9Points, {
+  color: 'black', radius: 3,
+  func: x => -3*x + 5,
+  showDistance: true,
+  distanceColor: 'green',
+});
+p9.drawPoints(p9Points, {
+  color: 'black', radius: 3,
+  func: x => 3*x - 1,
+  showDistance: true,
+  distanceColor: 'blue',
+});
+p9.draw(x => -3*x + 5, {
+  color: 'green',
+});
+p9.draw(x => 3*x - 1, {
+  color: 'blue',
+});
+</script>
+<p>从上图可以看到，如果是一次计算几个点的误差，那么这几个点到红色直线（目标函数）的损失为
+<span
+class="math inline">\(0\)</span>，而这几个点到绿色和蓝色直线的误差都比较大，所以如果我们的建模“比较准确”的话，通过几个点一起训练可以大大增加学习的准确率。</p>
+<h1 id="大语言模型的预训练">大语言模型的预训练</h1>
+<p>语言模型的内在逻辑是概率模型，也就是给定一个上文，得到一个下文的概率分布。大语言模型的预训练，就是为了学习这个概率分布。而这个概率分布的目的，是为了预测下一个词。</p>
+<p>通过上面的例子，我们已经知道一个训练过程的关键要点，接下来我们可以逐个环节来看大语言模型是如何训练的。</p>
+<h2 id="数据集-1">数据集</h2>
+<p>在上面的例子中，由于输入和输出都是数字，然后模型是一个简单的线性函数，所以我们很容易理解这些数字和函数在后面的流程是如何被使用的，到了大语言模型这个语境里，输入
+<span class="math inline">\(x\)</span> 是什么？输出 <span
+class="math inline">\(y\)</span> 又是什么？</p>
+<p>直观来看，由于大语言模型是用来预测下一个词的，那么“下一个词”，自然就是我们所希望的
+<span class="math inline">\(y\)</span>，而它的上文，就是对应的 <span
+class="math inline">\(x\)</span>。假如我们有这样一个语料（这个语料很简陋，只有一句话）。</p>
+<blockquote>
+<p>今天天气很好</p>
+</blockquote>
+<p>那么我们可以构造以下数据。</p>
+<table>
+<thead>
+<tr>
+<th>data ID</th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>d0</td>
+<td>BEGIN</td>
+<td>今</td>
+</tr>
+<tr>
+<td>d1</td>
+<td>今</td>
+<td>天</td>
+</tr>
+<tr>
+<td>d2</td>
+<td>今天</td>
+<td>天</td>
+</tr>
+<tr>
+<td>d3</td>
+<td>今天天</td>
+<td>气</td>
+</tr>
+<tr>
+<td>d4</td>
+<td>今天天气</td>
+<td>很</td>
+</tr>
+<tr>
+<td>d5</td>
+<td>今天天气很</td>
+<td>好</td>
+</tr>
+<tr>
+<td>d6</td>
+<td>今天天气很好</td>
+<td>END</td>
+</tr>
+</tbody>
+</table>
+<p>这种构造数据的方法，称为<strong>自监督的预训练</strong>。因为全程无需人类标注，只需要有语料库，就能通过字符串处理构造出一堆的原始训练数据，所以称为自监督。当然，实际的切割方法还有不少讲究的地方，但是暂时不深入过多，需要稍微注意的一点是，让大模型学会何时终止也是非常重要的，所以在句末需要加上一个特别的占位符
+<code>END</code>。（句首同理）。</p>
+<figure>
+<img src="/assets/images/2025-04-16-AI学习-训练/预训练.png"
+alt="不同方式的预训练" />
+<figcaption aria-hidden="true">不同方式的预训练</figcaption>
+</figure>
+<p>上图也展示了另一种构造数据的方式，通过对一个句子进行挖空，然后让大模型来填空，注意挖空处的标记。这种挖空的训练任务称为<strong>去噪自编码</strong>。</p>
+<h2 id="建模">建模</h2>
+<p>给大语言模型建模，当然不是一件简单的事情。下面是目前主流的基于
+transformer
+架构的大语言模型架构图。这样图比较出名，大家可能不止一次看到过。</p>
+<figure>
+<img src="/assets/images/2025-04-16-AI学习-训练/模型架构.png"
+alt="transformer 架构" />
+<figcaption aria-hidden="true">transformer 架构</figcaption>
+</figure>
+<p>这个架构后面会详细解释，相信到时候大家也会明白为什么是这样的设计，以及里面的细节与原理，不过现在暂时不深入，因为并不影响理解，这个复杂的架构，与上面例子里的
+<span class="math inline">\(y = f(x) = ax\)</span>
+并没有本质的区别，这个架构无非就是多了很多层的函数以及循环而已。</p>
+<p>但这个图值得我们注意的一点是，最后的输出是<strong>输出概率</strong>。</p>
+<h2 id="损失">损失</h2>
+<p>在上面的例子里，由于输出是一个数值，而数据里也是数值，所以我们可以很直观地使用两者之间的距离作为损失的衡量。但大模型最后一步输出的是一个概率分布，那该如何拿这个概率分布，与我们期望的概率分布进行对比并计算损失呢？</p>
+<canvas id="dist-1">
+</canvas>
+<script>
+const g1 = new Graph('dist-1');
+g1.histogram([
+  { label: '今', value: 0.05 },
+  { label: '气', value: 0.01 },
+  { label: '好', value: 0.4 },
+  { label: '天', value: 0.5 },
+  { label: '很', value: 0.04 },
+  { label: 'END', value: 0.1 }
+], {
+  xLabel: '词元',
+  yLabel: '概率',
+  barColor: '#eee',
+  borderColor: '#000'
+});
+</script>
+<p>假设上图是“今天天气很”的大语言模型输出，在这个上文下，理论上“好”的概率应该是最高的，因为这句话和其他几个字都不太搭，但大模型却给出了“天”是最高概率，这与我们的期望是不一致的。而且从上面的数据中，<code>d5</code>
+这个数据（<code>['今天天气很', '好']</code>）的答案也是“好”，所以我们需要一种方法来描述这种认知差别，也就是我们希望的分布应该是这样的。</p>
+<canvas id="dist-2">
+</canvas>
+<script>
+const g2 = new Graph('dist-2');
+g2.histogram([
+  { label: '今', value: 0 },
+  { label: '气', value: 0 },
+  { label: '好', value: 1 },
+  { label: '天', value: 0 },
+  { label: '很', value: 0 },
+  { label: 'END', value: 0 }
+], {
+  xLabel: '词元',
+  yLabel: '概率',
+  barColor: '#eee',
+  borderColor: '#000'
+});
+</script>
+<p>数学上有一种叫做<strong>交叉熵（cross
+entropy）误差</strong>的方法用于描述两个概率分布之间的差异，计算方式为</p>
+<p><span class="math display">\[
+E = -\sum_{w \in \mathcal{V}}^n p(w) \log q(w)
+\]</span></p>
+<p>其中 <span class="math inline">\(p\)</span>
+是我们期望的概率分布，<span class="math inline">\(q\)</span>
+是大模型输出的概率分布，<span class="math inline">\(n\)</span>
+是概率分布的维度（在这个例子中就是词汇表单词的数量）。通过这种方式，我们也将误差转化为一个数值了，就可以用上面的老办法来进行训练了。</p>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>训练</strong>：训练是寻找让误差最小的一组参数的过程。</li>
+<li><strong>数据集</strong>：数据集给出一组输入输出，让模型通过学习来得到一组参数。</li>
+<li><strong>损失</strong>：损失是模型参数的函数，用来衡量当前模型的参数造成的整体误差。</li>
+<li><strong>学习率</strong>：可以通过对损失函数求导来更新参数，但是通常会乘以一个比率来控制参数变化粒度。</li>
+<li><strong>大语言模型预训练</strong>：采用一种自监督的学习方式来学习语言模型。</li>
+<li><strong>预训练数据</strong>：通过构造上下文的方式来构造训练数据。</li>
+<li><strong>交叉熵误差</strong>：用来衡量两个概率分布之间的差异。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/" title="AI学习时间 04 - 训练">https://aquietzero.github.io/2025/04/15/computer/AI学习/训练/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E8%AE%AD%E7%BB%83/" rel="tag"># 训练</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/" rel="tag"># 大模型训练</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="prev" title="AI学习时间 03 - 深度学习">
+                  <i class="fa fa-angle-left"></i> AI学习时间 03 - 深度学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/04/20/computer/2025-04-20-%E6%96%B0%E7%94%B5%E8%84%91%E9%85%8D%E7%BD%AE/" rel="next" title="新电脑配置">
+                  新电脑配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

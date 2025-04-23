@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Matrices Algebraic Identites involving matrices are listed below. Given scalars \(r\) and \(s\) and matrices \(\textbf{A}, \textbf{B}\) and \(\textbf{C}\). For matrix addition, subtraction and scalar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A Math and Geometry Primer">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Matrices Algebraic Identites involving matrices are listed below. Given scalars \(r\) and \(s\) and matrices \(\textbf{A}, \textbf{B}\) and \(\textbf{C}\). For matrix addition, subtraction and scalar">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/","path":"2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/","title":"A Math and Geometry Primer"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>A Math and Geometry Primer | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#matrices"><span class="nav-number">1.</span> <span class="nav-text">Matrices</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#determinants"><span class="nav-number">2.</span> <span class="nav-text">Determinants</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#form-of-linear-equation"><span class="nav-number">2.1.</span> <span class="nav-text">Form of Linear Equation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cramers-rule"><span class="nav-number">2.2.</span> <span class="nav-text">Cramer’s Rule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#determinant-predicates"><span class="nav-number">2.3.</span> <span class="nav-text">Determinant Predicates</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#orient2da-b-c"><span class="nav-number">2.3.1.</span> <span class="nav-text">ORIENT2D(A, B, C)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#orient3da-b-c-d"><span class="nav-number">2.3.2.</span> <span class="nav-text">ORIENT3D(A, B, C, D)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#incircle2da-b-c-d"><span class="nav-number">2.3.3.</span> <span class="nav-text">INCIRCLE2D(A, B, C, D)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inspherea-b-c-d-e"><span class="nav-number">2.3.4.</span> <span class="nav-text">INSPHERE(A, B, C, D, E)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vectors"><span class="nav-number">3.</span> <span class="nav-text">Vectors</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dot-product"><span class="nav-number">3.1.</span> <span class="nav-text">Dot Product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cross-product"><span class="nav-number">3.2.</span> <span class="nav-text">Cross Product</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scalar-triple-product"><span class="nav-number">3.3.</span> <span class="nav-text">Scalar Triple Product</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#barycentric-coordinates"><span class="nav-number">4.</span> <span class="nav-text">Barycentric Coordinates</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#line-rays-and-segments"><span class="nav-number">5.</span> <span class="nav-text">Line, Rays, and Segments</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#planes-and-halfspaces"><span class="nav-number">6.</span> <span class="nav-text">Planes and Halfspaces</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#polygons"><span class="nav-number">7.</span> <span class="nav-text">Polygons</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#convex-hull"><span class="nav-number">7.1.</span> <span class="nav-text">Convex Hull</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-polygonal-convexity"><span class="nav-number">7.2.</span> <span class="nav-text">Testing Polygonal Convexity</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#polyhedra"><span class="nav-number">8.</span> <span class="nav-text">Polyhedra</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#computing-convex-hulls"><span class="nav-number">9.</span> <span class="nav-text">Computing Convex Hulls</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#andrews-algorithm"><span class="nav-number">9.1.</span> <span class="nav-text">Andrew’s Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-quickhull-algorithm"><span class="nav-number">9.2.</span> <span class="nav-text">The Quickhull Algorithm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#voronoi-regions"><span class="nav-number">10.</span> <span class="nav-text">Voronoi Regions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#minkowski-sum-and-difference"><span class="nav-number">11.</span> <span class="nav-text">Minkowski Sum and Difference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="A Math and Geometry Primer | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          A Math and Geometry Primer
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-11 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-11T00:00:00+08:00">2022-04-11</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="matrices">Matrices</h1>
+<p>Algebraic Identites involving matrices are listed below. Given
+scalars <span class="math inline">\(r\)</span> and <span
+class="math inline">\(s\)</span> and matrices <span
+class="math inline">\(\textbf{A}, \textbf{B}\)</span> and <span
+class="math inline">\(\textbf{C}\)</span>. For matrix addition,
+subtraction and scalar multiplication:</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{A} + \textbf{B} &amp;= \textbf{B} + \textbf{A} \\
+\textbf{A} - \textbf{B} &amp;= \textbf{A} + (-\textbf{B}) \\
+-(-\textbf{A}) &amp;= \textbf{A} \\
+s(\textbf{A} \pm \textbf{B}) &amp;= s\textbf{A} \pm s\textbf{B} \\
+(r \pm s)\textbf{A} &amp;= r\textbf{A} \pm s\textbf{A} \\
+r(s\textbf{A}) &amp;= s(r\textbf{A}) = (rs)\textbf{A}
+\end{align}
+\]</span></p>
+<p>For matrix multiplication, the following identities hold:</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{A}\textbf{I} &amp;= \textbf{I}\textbf{A} = \textbf{A} \\
+\textbf{A}(\textbf{B}\textbf{C}) &amp;= (\textbf{A}\textbf{B})\textbf{C}
+\\
+\textbf{A}(\textbf{B} \pm \textbf{C}) &amp;= \textbf{A}\textbf{B} \pm
+\textbf{A}\textbf{C} \\
+(\textbf{A} \pm \textbf{B})\textbf{C} &amp;= \textbf{A}\textbf{C} \pm
+\textbf{B}\textbf{C} \\
+(s\textbf{A})\textbf{B} &amp;= s(\textbf{A}\textbf{B})  =
+\textbf{A}(s\textbf{B})
+\end{align}
+\]</span></p>
+<p>For matrix transpose the following identities hold:</p>
+<p><span class="math display">\[
+\begin{align}
+(\textbf{A} \pm \textbf{B})^T &amp;= \textbf{A}^T \pm \textbf{B}^T \\
+(s\textbf{A})^T &amp;= s\textbf{A}^T \\
+(\textbf{A}\textbf{B})^T &amp;= \textbf{B}^T\textbf{A}^T
+\end{align}
+\]</span></p>
+<h1 id="determinants">Determinants</h1>
+<p>The determinant of a matrix <span
+class="math inline">\(\textbf{A}\)</span> is a number associated with
+<span class="math inline">\(\textbf{A}\)</span>, denoted <span
+class="math inline">\(\det(\textbf{A})\)</span> or <span
+class="math inline">\(|\textbf{A}|\)</span>. It is often used in
+determining the solvability of systems of linear equations.</p>
+<p><span class="math display">\[
+\begin{align}
+|\textbf{A}| &amp;= |u_1| = u_1 \\
+|\textbf{A}| &amp;=
+\begin{vmatrix}
+u_1 &amp; u_2 \\
+v_1 &amp; v_2
+\end{vmatrix} = u_1 v_2 - u_2 v_1 \\
+|\textbf{A}| &amp;=
+\begin{vmatrix}
+u_1 &amp; u_2 &amp; u_3 \\
+v_1 &amp; v_2 &amp; v_3 \\
+w_1 &amp; w_2 &amp; w_3
+\end{vmatrix} \\
+&amp;= u_1(v_2 w_3 - v_3 w_2) + u_2(v_3 w_1 - v_1 w_3) + u_3(v_1 w_2 -
+v_2 w_1) \\
+&amp;= \textbf{u} \cdot (\textbf{v} \times \textbf{w})  
+\end{align}
+\]</span></p>
+<aside>
+<p>💡 An effective way of evaluating determinants is to use row and
+column operations on the matrix to reduce it to a triangular matrix. The
+determinant is then the product of the main diagonal entries.</p>
+</aside>
+<h2 id="form-of-linear-equation">Form of Linear Equation</h2>
+<p>A set of equations can be expressed in the form of matrix
+equation.</p>
+<p><span class="math display">\[
+\textbf{A}\textbf{X} = \textbf{B}
+\]</span></p>
+<p>where <span class="math inline">\(\textbf{A}\)</span> is the
+coefficient matrix, <span class="math inline">\(\textbf{X}\)</span> the
+solution vector and <span class="math inline">\(\textbf{B}\)</span> the
+constant vector.</p>
+<h2 id="cramers-rule">Cramer’s Rule</h2>
+<p>A system of linear equations has a unique solution if and only if the
+determinant of the coefficient matrix is nonzero, <span
+class="math inline">\(|\textbf{A}| \neq 0\)</span>. In this case, the
+solution is given by <span class="math inline">\(\textbf{X} =
+\textbf{A}^{-1}\textbf{B}\)</span>, which is called Cramer’s Rule.</p>
+<aside>
+<p>💡 Solving systems of linear equations using Cramer’s rule is not
+recommended for systems with more than three or perhaps four equations,
+in that amount of work involved increases drastically. For larger
+systems, a better solution is to use a Gaussian elimination
+algorithm.</p>
+</aside>
+<h2 id="determinant-predicates">Determinant Predicates</h2>
+<p>Determinants are also useful in concisely expressing geometrical
+tests.</p>
+<h3 id="orient2da-b-c">ORIENT2D(A, B, C)</h3>
+<p>Let <span class="math inline">\(A = (a_x, a_y)\)</span>, <span
+class="math inline">\(B = (b_x, b_y)\)</span> and <span
+class="math inline">\(C = (c_x, c_y)\)</span> be three 2D points, and
+let <code>ORIENT2D(A, B, C)</code> be defined as</p>
+<p><span class="math display">\[
+\text{ORIENT2D}(A, B, C) =
+\begin{vmatrix}
+a_x &amp; a_y &amp; 1 \\
+b_x &amp; b_y &amp; 1 \\
+c_x &amp; c_y &amp; 1
+\end{vmatrix}
+=
+\begin{vmatrix}
+a_x - c_x &amp; a_y - c_y \\
+b_x - c_x &amp; b_y - c_y
+\end{vmatrix}
+\]</span></p>
+<ul>
+<li>if <code>ORIENT2D(A, B, C)</code> &gt; 0, <span
+class="math inline">\(C\)</span> lies to the left of the directed line
+<span class="math inline">\(AB\)</span> . Equivalently, the triangle
+<span class="math inline">\(ABC\)</span> is oriented
+<strong>counterclockwise</strong>.</li>
+<li>if <code>ORIENT2D(A, B, C)</code> &lt; 0, <span
+class="math inline">\(C\)</span> lies to the right of the directed line
+<span class="math inline">\(AB\)</span>. Equivalently, the triangle
+<span class="math inline">\(ABC\)</span> is oriented
+<strong>clockwise</strong>.</li>
+<li>when <code>ORIENT2D(A, B, C)</code> = 0, the three points are
+collinear.</li>
+</ul>
+<p>The determinant can be seen as the implicit equation of the 2D line
+through <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> by defining <span
+class="math inline">\(L(x, y)\)</span> as follows</p>
+<p><span class="math display">\[
+L(x, y) =
+\begin{vmatrix}
+a_x &amp; a_y &amp; 1 \\
+b_x &amp; b_y &amp; 1 \\
+x &amp; y &amp; 1
+\end{vmatrix}
+\]</span></p>
+<h3 id="orient3da-b-c-d">ORIENT3D(A, B, C, D)</h3>
+<p>Given four 3D points <span class="math inline">\(A = (a_x, a_y,
+a_z)\)</span>, <span class="math inline">\(B = (b_x, b_y, b_z)\)</span>,
+<span class="math inline">\(C = (c_x, c_y, c_z)\)</span> and <span
+class="math inline">\(D = (d_x, d_y, d_z)\)</span>, define
+<code>ORIENT3D(A, B, C, D)</code> as</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;\text{ORIENT3D}(A, B, C, D) \\
+&amp;=
+\begin{vmatrix}
+a_x &amp; a_y &amp; a_z &amp; 1 \\
+b_x &amp; b_y &amp; b_z &amp; 1 \\
+c_x &amp; c_y &amp; c_z &amp; 1 \\
+d_x &amp; d_y &amp; d_z &amp; 1
+\end{vmatrix}
+=
+\begin{vmatrix}
+a_x - d_x &amp; a_y - d_y &amp; a_z - d_z \\
+b_x - d_x &amp; b_y - d_y &amp; b_z - d_z \\
+c_x - d_x &amp; c_y - d_y &amp; c_z - d_z
+\end{vmatrix} \\
+&amp;= (A - D) \cdot ((B - D) \times (C - D))
+\end{align}
+\]</span></p>
+<ul>
+<li>if <code>ORIENT3D(A, B, C, D)</code> &lt; 0, <span
+class="math inline">\(D\)</span> lies above the supporting plane of
+triangle <span class="math inline">\(ABC\)</span>, in the sense that
+<span class="math inline">\(ABC\)</span> <strong>appears in
+counterclockwise order when viewed from <span
+class="math inline">\(D\)</span></strong>.</li>
+<li>if <code>ORIENT3D(A, B, C, D)</code> &gt; 0, <span
+class="math inline">\(D\)</span> instead lies below the plane <span
+class="math inline">\(ABC\)</span>.</li>
+<li>when <code>ORIENT3D(A, B, C, D)</code> = 0, the four points are
+coplaner.</li>
+</ul>
+<p>Alternatively, the determinant can be seen as the implicit equation
+of the 3D plane <span class="math inline">\(P(x, y,z ) = 0\)</span>
+through points <span class="math inline">\(A, B, C\)</span> as</p>
+<p><span class="math display">\[
+P(x, y, z) =
+\begin{vmatrix}
+a_x &amp; a_y &amp; a_z &amp; 1 \\
+b_x &amp; b_y &amp; b_z &amp; 1 \\
+c_x &amp; c_y &amp; c_z &amp; 1 \\
+x &amp; y &amp; z &amp; 1
+\end{vmatrix}
+\]</span></p>
+<h3 id="incircle2da-b-c-d">INCIRCLE2D(A, B, C, D)</h3>
+<p>Given four 3D points <span class="math inline">\(A = (a_x,
+a_y)\)</span>, <span class="math inline">\(B = (b_x, b_y)\)</span>,
+<span class="math inline">\(C = (c_x, c_y)\)</span> and <span
+class="math inline">\(D = (d_x, d_y)\)</span>, define
+<code>INCIRCLE2D(A, B, C, D)</code> as</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \text{INCIRCLE2D}(A, B, C, D) \\
+&amp;=
+\begin{vmatrix}
+a_x &amp; a_y &amp; a_x^2 + a_y^2 &amp; 1 \\
+b_x &amp; b_y &amp; b_x^2 + b_y^2 &amp; 1 \\
+c_x &amp; c_y &amp; c_x^2 + c_y^2 &amp; 1 \\
+d_x &amp; d_y &amp; d_x^2 + d_y^2 &amp; 1
+\end{vmatrix} \\
+&amp;=
+\begin{vmatrix}
+a_x - d_x &amp; a_y - d_y &amp; (a_x - d_x)^2 + (a_y - d_y)^2 \\
+b_x - d_x &amp; b_y - d_y &amp; (b_x - d_x)^2 + (b_y - d_y)^2 \\
+c_x - d_x &amp; c_y - d_y &amp; (c_x - d_x)^2 + (c_y - d_y)^2
+\end{vmatrix}
+\end{align}
+\]</span></p>
+<p><strong>Let the triangle <span class="math inline">\(ABC\)</span>
+appear in counterclockwise order, as indicated by
+<code>ORIENT2D(A, B, C)</code> &gt; 0, then</strong></p>
+<ul>
+<li>if <code>INCIRCLE2D(A, B, C, D)</code> &gt; 0, <span
+class="math inline">\(D\)</span> lies inside the circle through the
+three points <span class="math inline">\(A, B\)</span> and <span
+class="math inline">\(C\)</span>.</li>
+<li>if <code>INCIRCLE(A, B, C, D)</code> &lt; 0, <span
+class="math inline">\(D\)</span> lies outside the circle.</li>
+<li>when <code>INCIRCLE(A, B, C, D)</code> = 0, the four points are
+cocircle.</li>
+</ul>
+<p><strong>If <code>ORIENT2D(A, B, C)</code> &lt; 0, then the result is
+reversed.</strong></p>
+<h3 id="inspherea-b-c-d-e">INSPHERE(A, B, C, D, E)</h3>
+<p>Given five 3D points <span class="math inline">\(A = (a_x, a_y,
+a_z)\)</span>, <span class="math inline">\(B = (b_x, b_y, b_z)\)</span>,
+<span class="math inline">\(C = (c_x, c_y, c_z)\)</span>, <span
+class="math inline">\(D = (d_x, d_y, d_z)\)</span>, and <span
+class="math inline">\(E = (e_x, e_y, e_z)\)</span>, define
+<code>INSPHERE(A, B, C, D, E)</code> as</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \text{INSPHERE}(A, B, C, D, E) \\
+&amp;=
+\begin{vmatrix}
+a_x &amp; a_y &amp; a_z &amp; a_x^2 + a_y^2 + a_z^2 &amp; 1 \\
+b_x &amp; b_y &amp; b_z &amp; b_x^2 + b_y^2 + b_z^2 &amp; 1 \\
+c_x &amp; c_y &amp; c_z &amp; c_x^2 + c_y^2 + c_z^2 &amp; 1 \\
+d_x &amp; d_y &amp; d_z &amp; d_x^2 + d_y^2 + d_z^2 &amp; 1 \\
+e_x &amp; e_y &amp; e_z &amp; e_x^2 + e_y^2 + e_z^2 &amp; 1 \\
+\end{vmatrix} \\
+&amp;=
+\begin{vmatrix}
+a_x - e_x &amp; a_y - e_y &amp; a_z - e_z &amp; (a_x - e_x)^2 + (a_y -
+e_y)^2 + (a_z - e_z)^2 \\
+b_x - e_x &amp; b_y - e_y &amp; b_z - e_z &amp; (b_x - e_x)^2 + (b_y -
+e_y)^2 + (b_z - e_z)^2 \\
+c_x - e_x &amp; c_y - e_y &amp; c_z - e_z &amp; (c_x - e_x)^2 + (c_y -
+e_y)^2 + (c_z - e_z)^2 \\
+d_x - e_x &amp; d_y - e_y &amp; d_z - e_z &amp; (d_x - e_x)^2 + (d_y -
+e_y)^2 + (d_z - e_z)^2
+\end{vmatrix}
+\end{align}
+\]</span></p>
+<p>Let the four points <span class="math inline">\(A, B, C\)</span> and
+<span class="math inline">\(D\)</span> be oriented such that
+<code>ORIENT3D(A, B, C, D)</code> &gt; 0.</p>
+<ul>
+<li>if <code>INSPHERE(A, B, C, D, E)</code> &gt; 0, <span
+class="math inline">\(E\)</span> lies inside the sphere through <span
+class="math inline">\(A, B, C\)</span> and <span
+class="math inline">\(D\)</span>.</li>
+<li>if <code>INSPHERE(A, B, C, D, E)</code> &lt; 0, <span
+class="math inline">\(E\)</span> lies outside the sphere.</li>
+<li>when <code>INSPHERE(A, B, C, D, E)</code> = 0, the five points are
+cospherical.</li>
+</ul>
+<h1 id="vectors">Vectors</h1>
+<p>Given vectors <span class="math inline">\(\textbf{u},
+\textbf{v}\)</span> and <span class="math inline">\(\textbf{w}\)</span>
+and scalars <span class="math inline">\(r, s\)</span>. Algebraic
+identities of vectors are listing below:</p>
+<p>$$ <span class="math display">\[\begin{align}
+\textbf{u} + \textbf{v} &amp;= \textbf{v} + \textbf{u} \\
+(\textbf{u} + \textbf{v}) + \textbf{w} &amp;= \textbf{u} + (\textbf{v} +
+\textbf{w}) \\
+\textbf{u} - \textbf{v} &amp;= \textbf{u} + (-\textbf{v}) \\
+-(-\textbf{v}) &amp;= \textbf{v} \\
+\textbf{v} + (-\textbf{v}) &amp;= \textbf{0} \\
+r(s\textbf{v}) &amp;= (rs)\textbf{v} \\
+(r + s)\textbf{v} &amp;= r\textbf{v} + s\textbf{v} \\
+s(\textbf{u} + \textbf{v}) &amp;= s\textbf{u} + s\textbf{v} \\
+1\textbf{v} &amp;= \textbf{v} \\
+
+\end{align}\]</span> $$</p>
+<h2 id="dot-product">Dot Product</h2>
+<p>The dot product (or scalar product) of two vectors is defined as
+below</p>
+<p><span class="math display">\[
+\textbf{u} \cdot \textbf{v} = \sum_{i = 1}^n u_i v_i
+\]</span></p>
+<p>The length of a vector is the dot product of itself</p>
+<p><span class="math display">\[
+\|\textbf{v}\|^2 = \textbf{v} \cdot \textbf{v}
+\]</span></p>
+<p>The smallest angle <span class="math inline">\(\theta\)</span>
+between <span class="math inline">\(\textbf{u}\)</span> and <span
+class="math inline">\(\textbf{v}\)</span> satisfies the equation</p>
+<p><span class="math display">\[
+\textbf{u} \cdot \textbf{v} = \|\textbf{u}\| \|\textbf{v}\| \cos \theta
+\]</span></p>
+<p>and thus <span class="math inline">\(\theta\)</span> can be obtained
+as</p>
+<p><span class="math display">\[
+\theta = \cos^{-1} \frac{\textbf{u} \cdot \textbf{v}}{\|\textbf{u}\|
+\|\textbf{v}\|}
+\]</span></p>
+<p>Geometrically, the dot product can be seen as the projection of <span
+class="math inline">\(\textbf{v}\)</span> onto <span
+class="math inline">\(\textbf{u}\)</span>, returning the signed distance
+<span class="math inline">\(d\)</span> of <span
+class="math inline">\(\textbf{v}\)</span> along <span
+class="math inline">\(\textbf{u}\)</span> in units of <span
+class="math inline">\(\|\textbf{u}\|\)</span></p>
+<p><span class="math display">\[
+d = \frac{\textbf{u} \cdot \textbf{v}}{\| \textbf{u} \|}
+\]</span></p>
+<p>Algebraic identities involving dot products are listed below</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{u} \cdot \textbf{v} &amp;= \|\textbf{u}\| \|\textbf{v}\| \cos
+\theta \\
+\textbf{u} \cdot \textbf{u} &amp;= \|\textbf{u}\|^2 \\
+\textbf{u} \cdot \textbf{v} &amp;= \textbf{v} \cdot \textbf{u} \\
+\textbf{u} \cdot （\textbf{v} \pm \textbf{w}) &amp;= \textbf{u} \cdot
+\textbf{v} \pm \textbf{u} \cdot \textbf{w} \\
+r\textbf{u} \cdot s\textbf{v} &amp;= rs(\textbf{v} \cdot \textbf{u})
+\end{align}
+\]</span></p>
+<h2 id="cross-product">Cross Product</h2>
+<p>The cross product of two 3D vectors <span
+class="math inline">\(\textbf{u} = (u_1, u_2, u_3)\)</span> and <span
+class="math inline">\(\textbf{v} = (v_1, v_2, v_3)\)</span> is defined
+as below</p>
+<p><span class="math display">\[
+\textbf{u} \times \textbf{v} = (u_2 v_3 - u_3 v_2, -(u_1 v_3 - u_3
+v_1)， u_1 v_2 - u_2 v_1)
+\]</span></p>
+<p>The result is a vector perpendicular to <span
+class="math inline">\(\textbf{u}\)</span> and <span
+class="math inline">\(\textbf{v}\)</span>. Its magnitude is equal to the
+product of the lengths of <span
+class="math inline">\(\textbf{u}\)</span> and <span
+class="math inline">\(\textbf{v}\)</span> and the sine of the smallest
+angle <span class="math inline">\(\theta\)</span> between them. That
+is,</p>
+<p><span class="math display">\[
+\textbf{u} \times \textbf{v} = \textbf{n} \|\textbf{u}\| \|\textbf{v}\|
+\sin \theta
+\]</span></p>
+<p>where <span class="math inline">\(\textbf{n}\)</span> is a unit
+vector perpendicular to the plane of <span
+class="math inline">\(\textbf{u}\)</span> and <span
+class="math inline">\(\textbf{v}\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/cross-product.png"
+alt="corss product" />
+<figcaption aria-hidden="true">corss product</figcaption>
+</figure>
+<p>The cross product can aslo be defined as the pseudo-determinant as
+below</p>
+<p><span class="math display">\[
+\textbf{u} \times \textbf{v} =
+\begin{vmatrix}
+\textbf{i} &amp; \textbf{j} &amp; \textbf{k} \\
+u_1 &amp; u_2 &amp; u_3 \\
+v_1 &amp; v_2 &amp; v_3
+\end{vmatrix} =
+\begin{vmatrix}
+u_2 &amp; u_3 \\
+v_2 &amp; v_3
+\end{vmatrix}\textbf{i} -
+\begin{vmatrix}
+u_1 &amp; u_3 \\
+v_1 &amp; v_3
+\end{vmatrix}\textbf{j} +
+\begin{vmatrix}
+u_1 &amp; u_2 \\
+v_1 &amp; v_2
+\end{vmatrix}\textbf{k}
+\]</span></p>
+<p>where <span class="math inline">\(\textbf{i} = (1, 0, 0), \textbf{j}
+= (0, 1, 0)\)</span> and <span class="math inline">\(\textbf{k} = (0, 0,
+1)\)</span> are unit vectors parallel to the coordinate axes.</p>
+<aside>
+<p>💡 Given a triangle <span class="math inline">\(ABC\)</span>, the
+magnitude of the cross product of two of its edges equals twice the area
+of <span class="math inline">\(ABC\)</span>. For an arbitrary non
+self-intersecting quadrilateral <span
+class="math inline">\(ABCD\)</span>, the magnitude <span
+class="math inline">\(\|\textbf{e}\|\)</span> of the cross product of
+the two diagonals, <span class="math inline">\(\textbf{e} = (C - A)
+\times (D - B)\)</span>, equals twice the area of <span
+class="math inline">\(ABCD\)</span>.</p>
+</aside>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/quadrilateral-area-and-cross-product.png" /></p>
+<p>Algebraic identities involving cross products are listed below. Let
+<span class="math inline">\(\textbf{u}, \textbf{v}, \textbf{w}\)</span>
+and <span class="math inline">\(\textbf{r}\)</span> are vectors and
+<span class="math inline">\(r, s\)</span> be scalars.</p>
+<p>$$ <span class="math display">\[\begin{align}
+\textbf{u} \times \textbf{v} &amp;= -(\textbf{v} \times \textbf{u}) \\
+\textbf{u} \times \textbf{u} &amp;= \textbf{0} \\
+\textbf{u} \times \textbf{0} &amp;= \textbf{0} \times \textbf{u} \\
+\textbf{u} \cdot (\textbf{v} \times \textbf{w}) &amp;= (\textbf{u}
+\times \textbf{v}) \cdot \textbf{w} \\
+(\textbf{u} \pm \textbf{v}) \times \textbf{w} &amp;= \textbf{u} \times
+\textbf{w} \pm \textbf{v} \times \textbf{w} \\
+\| \textbf{u} \times \textbf{v} \| &amp;= \| \textbf{u} \| \| \textbf{v}
+\| \sin \theta \\
+r\textbf{u} \times s\textbf{v} &amp;= rs(\textbf{u} \times \textbf{v})
+\\
+
+(\textbf{u} \times \textbf{v}) \cdot (\textbf{w} \times \textbf{x})
+&amp;=
+(\textbf{u} \cdot \textbf{w})(\textbf{v} \cdot \textbf{x}) - (\textbf{v}
+\cdot \textbf{w})(\textbf{u} \cdot \textbf{x}) \\
+\textbf{u} \times (\textbf{v} \times \textbf{w}) + \textbf{v} \times
+(\textbf{w} \times &amp;\textbf{u}) + \textbf{w} \times (\textbf{u}
+\times \textbf{v}) = 0
+\end{align}\]</span> $$</p>
+<h2 id="scalar-triple-product">Scalar Triple Product</h2>
+<p>The scalar triple product is defined as <span
+class="math inline">\((\textbf{u} \times \textbf{v}) \cdot
+\textbf{w}\)</span>. Geometrically, the value of the scalar triple
+product corresponds to the signed volume of a parrallelepiped formed by
+the three independent vectors <span class="math inline">\(\textbf{u},
+\textbf{v}\)</span> and <span
+class="math inline">\(\textbf{w}\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/triple-product.png"
+alt="triple product" />
+<figcaption aria-hidden="true">triple product</figcaption>
+</figure>
+<p>The scalar triple product also remains constant under the cyclic
+permutation of its three arguments:</p>
+<p><span class="math display">\[
+(\textbf{u} \times \textbf{v}) \cdot \textbf{w} = (\textbf{v} \times
+\textbf{w}) \cdot \textbf{u} = (\textbf{w} \times \textbf{u}) \cdot
+\textbf{v}
+\]</span></p>
+<p>Because of these identities, the special notation <span
+class="math inline">\([\textbf{u}, \textbf{v} ,\textbf{w}]\)</span> is
+often used to denote a triple product. The scalar triple product can
+also be expressed in the form of determinant.</p>
+<p><span class="math display">\[
+\begin{align}
+[\textbf{u}, \textbf{v}, \textbf{w}] &amp;=
+\begin{vmatrix}
+u_1 &amp; u_2 &amp; u_3 \\
+v_1 &amp; v_2 &amp; v_3 \\
+w_1 &amp; w_2 &amp; w_3
+\end{vmatrix} \\
+&amp;=
+u_1
+\begin{vmatrix}
+v_2 &amp; v_3 \\
+w_2 &amp; w_3
+\end{vmatrix} -
+u_2
+\begin{vmatrix}
+v_1 &amp; v_3 \\
+w_1 &amp; w_3
+\end{vmatrix} +
+u_3
+\begin{vmatrix}
+v_1 &amp; v_2 \\
+w_1 &amp; w_2
+\end{vmatrix} \\
+&amp;=
+\textbf{u} \cdot (\textbf{v} \times \textbf{w})
+\end{align}
+\]</span></p>
+<h1 id="barycentric-coordinates">Barycentric Coordinates</h1>
+<p>Barycentric coordinates parameterize the space that can be formed as
+a weighted combination of a set of reference points.</p>
+<p>Consider two points <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>. A point <span
+class="math inline">\(P\)</span> on the line between <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> can be expressed as <span
+class="math inline">\(P = A + t(B - A) = (1 - t)A + tB\)</span>, or
+simply just <span class="math inline">\(P = uA + vB\)</span>, where
+<span class="math inline">\(u + v = 1\)</span>. In such a way, <span
+class="math inline">\((u, v)\)</span> are the barycentric coordinates of
+<span class="math inline">\(P\)</span> with respect to <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>.</p>
+<p>Consider three noncollinear points <span class="math inline">\(A,
+B\)</span> and <span class="math inline">\(C\)</span>. Any point in the
+plane can be expressed as <span class="math inline">\(P = uA + vB +
+wC\)</span> for some constants <span class="math inline">\(u, v\)</span>
+and <span class="math inline">\(w\)</span> where <span
+class="math inline">\(u + v + w = 1\)</span>. The triplet <span
+class="math inline">\((u, v, w)\)</span> corresponds to the barycentric
+coordinates of the point. After reformulation <span
+class="math inline">\(P\)</span> can be expressed as</p>
+<p><span class="math display">\[
+\begin{align}
+P &amp;= A + v(B - A) + w(C - A) \\
+&amp;= (1 - v - w)A + vB + wC
+\end{align}
+\]</span></p>
+<p>The barycentric coordinates of a given point <span
+class="math inline">\(P\)</span> can be computed as the ratios of the
+triangle areas of <span class="math inline">\(PBC, PCA\)</span> and
+<span class="math inline">\(PAB\)</span> with respect to the area of the
+entire triangle <span class="math inline">\(ABC\)</span>. For this
+reason barycentric coordinates are also called <strong>areal
+coordinates</strong>.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">u = <span class="built_in">SignedArea</span>(PBC) / <span class="built_in">SignedArea</span>(ABC);</span><br><span class="line">v = <span class="built_in">SignedArea</span>(PCA) / <span class="built_in">SignedArea</span>(ABC);</span><br><span class="line">w = <span class="built_in">SignedArea</span>(PAB) / <span class="built_in">SignedArea</span>(ABC) = <span class="number">1</span> - u - v;</span><br></pre></td></tr></table></figure>
+<p>Barycentric coordinates divide the plane of the triangle <span
+class="math inline">\(ABC\)</span> into seven regions based on the sign
+of the coordinate components.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/barycentric-coordinates.png"
+alt="barycentric coordinate" />
+<figcaption aria-hidden="true">barycentric coordinate</figcaption>
+</figure>
+<p>Determining whether a point <span class="math inline">\(P\)</span> is
+in a triangle or not can be easily obtained by determining whether all
+of its barycentric coordinates are positive or not.</p>
+<h1 id="line-rays-and-segments">Line, Rays, and Segments</h1>
+<p>A line is defined as</p>
+<p><span class="math display">\[
+L(t) = (1 - t)A + tB
+\]</span></p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/line-ray-segment.png"
+alt="(a) A line. (b) A ray. (c) A line segment." />
+<figcaption aria-hidden="true">(a) A line. (b) A ray. (c) A line
+segment.</figcaption>
+</figure>
+<ol type="a">
+<li>A line. (b) A ray. (c) A line segment.</li>
+</ol>
+<h1 id="planes-and-halfspaces">Planes and Halfspaces</h1>
+<p>There are many ways to express a plane. Given three points <span
+class="math inline">\(A, B\)</span> and <span
+class="math inline">\(C\)</span>, with <strong>parametric
+representation</strong> a plane can be given by</p>
+<p><span class="math display">\[
+P(u, v) = A + u(B - A) + v(C - A)
+\]</span></p>
+<p>Let <span class="math inline">\(\textbf{n}\)</span> be the normal
+vector of the plane and <span class="math inline">\(P\)</span> be the
+fixed point on the plane and <span class="math inline">\(X\)</span> be
+any point on the plane. Then the <strong>point-normal form</strong> of
+the plane is</p>
+<p><span class="math display">\[
+\textbf{n} \cdot (X - P) = 0
+\]</span></p>
+<p>It can also be expressed as</p>
+<p><span class="math display">\[
+\textbf{n} \cdot X = d
+\]</span></p>
+<p>where <span class="math inline">\(d = \textbf{n} \cdot P\)</span> is
+the constant-normal form of the plane. When <span
+class="math inline">\(\textbf{n}\)</span> is unit, <span
+class="math inline">\(|d|\)</span> equals the distance of the plane from
+the origin.</p>
+<p>Planes in arbitrary dimensions are referred to as
+<strong>hyperplanes</strong>: planes with on less dimension than the
+space they are in. Any hyperplanes divides the space into two infinite
+sets of points on either side of the plane. The <strong>positive
+halfspace</strong> lies on the side in which the plane normal points,
+while the other side is called <strong>negative halfspace</strong>.</p>
+<h1 id="polygons">Polygons</h1>
+<p>A polygon is a closed figure with <span
+class="math inline">\(n\)</span> sides, defined by an ordered set of
+three or more points in the plane in such a way that each point is
+connected to the next with a line segment. The line segments that make
+up the polygon boundary are referred to as the polygon
+<strong>sides</strong> or <strong>edges</strong>. And the points
+themselves are called the polygon <strong>vertices</strong>.</p>
+<p>A polygon <span class="math inline">\(P\)</span> is a <strong>convex
+polygon</strong> if all the line segments between any two points of
+<span class="math inline">\(P\)</span> lie fully inside <span
+class="math inline">\(P\)</span>. A polygon that is not convex is called
+a <strong>concave polygon</strong>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/polygon.png"
+alt="(a) For a convex polygon, the line segment connecting any two points of the polygon must lie entirely inside the polygon. (b) If two points can be found such that the segment is partially outside the polygon, the polygon is concave." />
+<figcaption aria-hidden="true">(a) For a convex polygon, the line
+segment connecting any two points of the polygon must lie entirely
+inside the polygon. (b) If two points can be found such that the segment
+is partially outside the polygon, the polygon is concave.</figcaption>
+</figure>
+<ol type="a">
+<li>For a convex polygon, the line segment connecting any two points of
+the polygon must lie entirely inside the polygon. (b) If two points can
+be found such that the segment is partially outside the polygon, the
+polygon is concave.</li>
+</ol>
+<aside>
+<p>💡 A polygon with one or more concave vertices is necessarily
+concave, but <strong>a polygon with only convex vertices is not always
+convex.</strong></p>
+</aside>
+<h2 id="convex-hull">Convex Hull</h2>
+<p>A convex point set <span class="math inline">\(S\)</span> is a set of
+points wherein the line segment between any two points in <span
+class="math inline">\(S\)</span> is also in <span
+class="math inline">\(S\)</span>. Given a point set <span
+class="math inline">\(S\)</span>, the <strong>convex hull</strong> of
+<span class="math inline">\(S\)</span>, denoted <span
+class="math inline">\(CH(S)\)</span>, is the <strong>smallest convex
+point set</strong> fully containing <span
+class="math inline">\(S\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/convex-hull.png"
+alt="convex hull" />
+<figcaption aria-hidden="true">convex hull</figcaption>
+</figure>
+<p>Related to the convex hull is the <strong>affine hull</strong>, <span
+class="math inline">\(AH(S)\)</span>. The affine hull is the lowest
+dimensional hyperplane that contains all points of <span
+class="math inline">\(S\)</span>.</p>
+<h2 id="testing-polygonal-convexity">Testing Polygonal Convexity</h2>
+<p>Assuming all vertices of the quad <span
+class="math inline">\(ABCD\)</span> lie in the same plane, the quad is
+convex if and only if its two diagonals lie fully in the interior of the
+quad. This test is equivalent to testing if the two line segments <span
+class="math inline">\(AC\)</span> and <span
+class="math inline">\(BD\)</span> intersect each other.</p>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/testing-polygon-convexity.png" /></p>
+<ul>
+<li>Intersection of the segments is equivalent to the points <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(C\)</span> lying on the opposite sides of the line
+through <span class="math inline">\(BD\)</span>.</li>
+<li>And the above test is equivalent to the triangle <span
+class="math inline">\(BDA\)</span> having opposite winding to <span
+class="math inline">\(BDC\)</span>.</li>
+<li>And the opposite winding can be detected by computing the normals of
+the triangles and examining the sign of the dot product between the
+normals of the triangles to be compared.</li>
+</ul>
+<p>Hence the quad is threfore convex if</p>
+<p><span class="math display">\[
+(BD \times BA) \cdot (BD \times BC) &lt; 0 \text{ and } \\
+(AC \times AD) \cdot (AC \times AB)
+\]</span></p>
+<h1 id="polyhedra">Polyhedra</h1>
+<p>A <strong>polyhedron</strong> is the 3D counterpart of a polygon. A
+<strong>d-simplex</strong> is the convex hull of d+1 affinely
+independent points in d-dimensional space. A <strong>simplex</strong> is
+a d-simplex for some given d.</p>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/simplex.png" /></p>
+<p>For a general convex set <span class="math inline">\(C\)</span>, a
+point from the set most distant along a given direction is called a
+<strong>supporting point</strong> of <span
+class="math inline">\(C\)</span>. More specifically, <span
+class="math inline">\(P\)</span> is a supporting point of <span
+class="math inline">\(C\)</span> if for a given direction <span
+class="math inline">\(\textbf{d}\)</span> it holds that <span
+class="math inline">\(\textbf{d} \cdot P = \max \{ \textbf{d} \cdot V: V
+\in C \}\)</span>. Supporting points are sometimes called
+<strong>extreme points</strong>. They are not necessarily unique.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/supporting-vertex.png"
+alt="(a) A supporting vertex P of polygon C with respect to the direction d. (b) A supporting point P of circle C with respect to the direction d. In both cases, P is given by the support mapping function SC(d)." />
+<figcaption aria-hidden="true">(a) A supporting vertex <em>P</em> of
+polygon <em>C</em> with respect to the direction <strong>d</strong>. (b)
+A supporting point <em>P</em> of circle <em>C</em> with respect to the
+direction <strong>d</strong>. In both cases, <em>P</em> is given by the
+support mapping function <em>SC</em>(<strong>d</strong>).</figcaption>
+</figure>
+<p>A <strong>support mapping</strong> (or <strong>support
+function</strong>) is a function, <span
+class="math inline">\(S_C(\textbf{d})\)</span>, associated with a convex
+set <span class="math inline">\(C\)</span> that maps the direction <span
+class="math inline">\(\textbf{d}\)</span> into a supporting point of
+<span class="math inline">\(C\)</span>.</p>
+<p>A <strong>supporting plane</strong> is a plane through a supporting
+point with the given direction as the plane normal.</p>
+<p>A <strong>separating plane</strong> of two convex sets is a plane
+such that one set is fully in the positive halfspace and the other fully
+in the negative halfspace. An axis orthogonal to a separating plane is
+referred to as a <strong>separating axis</strong>.</p>
+<h1 id="computing-convex-hulls">Computing Convex Hulls</h1>
+<p>Among other uses, convex hull can serve as tight bounding volumes for
+collision geometry.</p>
+<h2 id="andrews-algorithm">Andrew’s Algorithm</h2>
+<p>This is a 2D convex hull algorithm.</p>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/andrews-algo.png" /></p>
+<ol type="1">
+<li>The first pass, sort the points in the given point set from left to
+right.</li>
+<li>The second pass construct the upper chain of the convex hull.</li>
+<li>The third pass construct the lower chain of the convex hull.</li>
+</ol>
+<p>Combining two chains to form the convex hull. The upper chain is
+constructed in the following manner.</p>
+<ol type="1">
+<li>Add the left most two points into the chain.</li>
+<li>For each of the following points, test whether the point is on the
+right side of the chain.
+<ol type="1">
+<li>if the point is on the right side of the chain, add it to the
+chain.</li>
+<li>if the point lies on the left of the chain, then remove the last
+point of the chian and test until the current point lies on the right of
+the chain.</li>
+</ol></li>
+</ol>
+<p>The lower chain can be constructed with a similar manner.</p>
+<h2 id="the-quickhull-algorithm">The Quickhull Algorithm</h2>
+<p>This method works in both 2D and 3D.</p>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/the-quick-hull-algo.png" /></p>
+<ol type="1">
+<li>Start by finding four extreme points of the given point set, forming
+the initial convex hull.
+<ol type="1">
+<li>Abandoning all points inside the convex hull.</li>
+</ol></li>
+<li>Searching for farthest point of each of the sides of the current
+convex hull.
+<ol type="1">
+<li>Add them to the current convex hull.</li>
+<li>Abandoning all points inside current the convex hull.</li>
+</ol></li>
+<li>Repeat 2 until no new points are discovered.</li>
+</ol>
+<h1 id="voronoi-regions">Voronoi Regions</h1>
+<p>Given a polyhedron <span class="math inline">\(P\)</span>, let a
+feature of <span class="math inline">\(P\)</span> be on of its vertices,
+edges, or faces. <strong>The Voronoi region of a feature <span
+class="math inline">\(F\)</span> of <span
+class="math inline">\(P\)</span> is then the set of points in space
+closer to <span class="math inline">\(F\)</span> than to any other
+feature of <span class="math inline">\(P\)</span>.</strong> The boundary
+planes of a Voronoi region are referred to as Voronoi planes.</p>
+<figure>
+<img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/voronoi-regions.png"
+alt="The three types of Voronoi feature regions of a 3D cube. (a) An edge region. (b) A vertex region. (c) A face region." />
+<figcaption aria-hidden="true">The three types of Voronoi feature
+regions of a 3D cube. (a) An edge region. (b) A vertex region. (c) A
+face region.</figcaption>
+</figure>
+<p>The three types of Voronoi feature regions of a 3D cube. (a) An edge
+region. (b) A vertex region. (c) A face region.</p>
+<h1 id="minkowski-sum-and-difference">Minkowski Sum and Difference</h1>
+<p>Let <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> be two point sets, and let <span
+class="math inline">\(\textbf{a}\)</span> and <span
+class="math inline">\(\textbf{b}\)</span> be the position vectors
+corresponding to pairs of points in <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>. The Minkowski sum, <span
+class="math inline">\(A \oplus B\)</span>, is defined as the set</p>
+<p><span class="math display">\[
+A \oplus B = \{ \textbf{a} + \textbf{b}: \textbf{a} \in A, \textbf{b}
+\in B\}
+\]</span></p>
+<p>Visully, the Minkowski sum can be seen as the region swept by <span
+class="math inline">\(A\)</span> translated to every point in <span
+class="math inline">\(B\)</span>(or vise versa).</p>
+<p><img
+src="/assets/images/2022-04-11-a-math-and-geometry-primer/minkowski-diff.png" /></p>
+<p>And analogously the Minkowski difference is defined as below</p>
+<p><span class="math display">\[
+A \ominus B = \{ \textbf{a} - \textbf{b}: \textbf{a} \in A, \textbf{b}
+\in B\}
+\]</span></p>
+<p>The Minkowski difference is obtained by adding <span
+class="math inline">\(A\)</span> to the reflection of <span
+class="math inline">\(B\)</span> about the origin; that is <span
+class="math inline">\(A \ominus B = A \oplus (-B)\)</span>.</p>
+<p>Let <span class="math inline">\(A, B\)</span> be two point sets, the
+minimum distance between <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span> is defined as below</p>
+<p><span class="math display">\[
+\begin{align}
+\text{distance}(A, B) &amp;= \min \{ \| \textbf{a} - \textbf{b} \|:
+\textbf{a} \in A, \textbf{b} \in B \} \\ &amp;= \min \{ \| \textbf{c} \|
+: \textbf{c} \in A \ominus B\}
+\end{align}
+\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/" title="A Math and Geometry Primer">https://aquietzero.github.io/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/" rel="prev" title="Spatial Partitioning">
+                  <i class="fa fa-angle-left"></i> Spatial Partitioning
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/" rel="next" title="Convexity-based Methods">
+                  Convexity-based Methods <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

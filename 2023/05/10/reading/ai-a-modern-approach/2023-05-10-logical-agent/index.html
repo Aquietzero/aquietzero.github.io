@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In AI, knowledge-based agents use a process of reasoning over an internal representation of knowledge to decide what actions to take. Knowledge-Based Agents The central component of a knowledge-based">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Logical Agents">
+<meta property="og:url" content="https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="In AI, knowledge-based agents use a process of reasoning over an internal representation of knowledge to decide what actions to take. Knowledge-Based Agents The central component of a knowledge-based">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-05-10-logical-agent/wumpus-world.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-05-10-logical-agent/agent-example.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-05-10-logical-agent/reasoning-process.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-05-10-logical-agent/hybrid-agent.png">
+<meta property="article:published_time" content="2023-05-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.526Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="方法论">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="逻辑">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2023-05-10-logical-agent/wumpus-world.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/","path":"2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/","title":"Logical Agents"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Logical Agents | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#knowledge-based-agents"><span class="nav-number">1.</span> <span class="nav-text">Knowledge-Based Agents</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-wumpus-world"><span class="nav-number">2.</span> <span class="nav-text">The Wumpus World</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#logic"><span class="nav-number">3.</span> <span class="nav-text">Logic</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#propositional-logic-a-very-simple-logic"><span class="nav-number">4.</span> <span class="nav-text">Propositional Logic: A
+Very Simple Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#syntax"><span class="nav-number">4.1.</span> <span class="nav-text">Syntax</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#semantics"><span class="nav-number">4.2.</span> <span class="nav-text">Semantics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-simple-knowledge-base"><span class="nav-number">4.3.</span> <span class="nav-text">A Simple Knowledge Base</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-simple-inference-procedure"><span class="nav-number">4.4.</span> <span class="nav-text">A Simple Inference Procedure</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#propositional-theorem-proving"><span class="nav-number">5.</span> <span class="nav-text">Propositional Theorem
+Proving</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#inference-and-proofs"><span class="nav-number">5.1.</span> <span class="nav-text">Inference and Proofs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proof-by-resolution"><span class="nav-number">5.2.</span> <span class="nav-text">Proof by Resolution</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#conjunctive-normal-form"><span class="nav-number">5.2.1.</span> <span class="nav-text">Conjunctive Normal Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a-resolution-algorithm"><span class="nav-number">5.2.2.</span> <span class="nav-text">A Resolution Algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#completeness-of-resolution"><span class="nav-number">5.2.3.</span> <span class="nav-text">Completeness of Resolution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#horn-clauses-and-definite-clauses"><span class="nav-number">5.3.</span> <span class="nav-text">Horn Clauses and Definite
+Clauses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#forward-and-backward-chaining"><span class="nav-number">5.4.</span> <span class="nav-text">Forward and Backward
+Chaining</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#effective-propositional-model-checking"><span class="nav-number">6.</span> <span class="nav-text">Effective Propositional
+Model Checking</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a-complete-backtracking-algorithm"><span class="nav-number">6.1.</span> <span class="nav-text">A Complete Backtracking
+Algorithm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#agents-based-on-propositional-logic"><span class="nav-number">7.</span> <span class="nav-text">Agents based on
+Propositional Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-current-state-of-the-world"><span class="nav-number">7.1.</span> <span class="nav-text">The Current State of the
+World</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-hybrid-agent"><span class="nav-number">7.2.</span> <span class="nav-text">A hybrid agent</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Logical Agents | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Logical Agents
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-05-10 00:00:00" itemprop="dateCreated datePublished" datetime="2023-05-10T00:00:00+08:00">2023-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>21 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In AI, <strong>knowledge-based agents</strong> use a process of
+<strong>reasoning</strong> over an internal
+<strong>representation</strong> of knowledge to decide what actions to
+take.</p>
+<h1 id="knowledge-based-agents">Knowledge-Based Agents</h1>
+<p>The central component of a knowledge-based agent is its
+<strong>knowledge base</strong>, or <strong>KB</strong>. A knowledge
+base is a set of <strong>sentences</strong>. Each sentence is expressed
+in a language called a <strong>knowledge representation
+language</strong> and represents some assertion about the world. When
+the sentence is taken as being given without being derived from other
+sentences, we call it an <strong>axiom</strong>.</p>
+<p><strong>TELL</strong> and <strong>ASK</strong> are two operations
+that can add new sentences to the knowledge base. Both operations may
+involve <strong>inference</strong> —— that is, deriving new sentences
+from old.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Knowledge-Based Agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">KBAgent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="variable constant_">KB</span> <span class="comment">// a knowledge base</span></span><br><span class="line">    <span class="keyword">const</span> t  <span class="comment">// a counter, initially 0, indicating time</span></span><br><span class="line"></span><br><span class="line">    <span class="title function_">TELL</span>(<span class="variable constant_">KB</span>, <span class="title class_">MakePerceptSentence</span>(percept, t))</span><br><span class="line">    <span class="keyword">const</span> action = <span class="title function_">ASK</span>(<span class="variable constant_">KB</span>, <span class="title class_">MakeActionQuery</span>(t))</span><br><span class="line">    <span class="title function_">TELL</span>(<span class="variable constant_">KB</span>, <span class="title class_">MakeActionSentence</span>(action, t))</span><br><span class="line"></span><br><span class="line">    t = t + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>A generic knowledge-based agent. Given a percept, the agent adds the
+percept to its knowledge base, asks the knowledge base for the best
+action, and tells the knowledge base that it has in fact taken that
+action. The agent may initially contain some <strong>background
+knowledge</strong>.</p>
+<ul>
+<li><strong><code>MAKE-PERCEPT-SENTENCE</code></strong> constructs a
+sentence asserting that the agent perceived the given percept at the
+given time.</li>
+<li><strong><code>MAKE-ACTION-QUERY</code></strong> constructs a
+sentence that asks what action should be done at the current time.</li>
+<li><strong><code>MAKE-ACTION-SENTENCE</code></strong> constructs a
+sentence asserting that the chosen action was executed.</li>
+<li>The details of the inference mechanisms are hidden inside
+<strong><code>TELL</code></strong> and
+<strong><code>ASK</code></strong>.</li>
+</ul>
+<h1 id="the-wumpus-world">The Wumpus World</h1>
+<p>The <strong>wumpus world</strong> is a cave consisting of rooms
+connected by passageways.</p>
+<figure>
+<img src="/assets/images/2023-05-10-logical-agent/wumpus-world.png"
+alt="A typical wumpus world. The agent is in the bottom left corner, facing east (rightward)." />
+<figcaption aria-hidden="true">A typical wumpus world. The agent is in
+the bottom left corner, facing east (rightward).</figcaption>
+</figure>
+<p>A typical wumpus world. The agent is in the bottom left corner,
+facing east (rightward).</p>
+<ul>
+<li><p><strong>Performance measure</strong>: +1000 for climbing out of
+the cave with the gold, –1000 for falling into a pit or being eaten by
+the wumpus, –1 for each action taken, and –10 for using up the arrow.
+The game ends either when the agent dies or when the agent climbs out of
+the cave.</p></li>
+<li><p><strong>Environment</strong>: A 4×4 grid of rooms, with walls
+surrounding the grid. The agent always starts in the square labeled
+[1,1], facing to the east. The locations of the gold and the wumpus are
+chosen randomly, with a uniform distribution, from the squares other
+than the start square. In addition, each square other than the start can
+be a pit, with probability 0.2.</p></li>
+<li><p><strong>Actuators</strong>: The agent can move <em>Forward</em>,
+<em>TurnLeft</em> by 90◦, or <em>TurnRight</em> by 90◦. The agent dies a
+miserable death if it enters a square containing a pit or a live wumpus.
+(It is safe, albeit smelly, to enter a square with a dead wumpus.) If an
+agent tries to move forward and bumps into a wall, then the agent does
+not move. The action <em>Grab</em> can be used to pick up the gold if it
+is in the same square as the agent. The action <em>Shoot</em> can be
+used to fire an arrow in a straight line in the direction the agent is
+facing. The arrow continues until it either hits (and hence kills) the
+wumpus or hits a wall. The agent has only one arrow, so only the first
+<em>Shoot</em> action has any effect. Finally, the action <em>Climb</em>
+can be used to climb out of the cave, but only from square
+[1,1].</p></li>
+<li><p><strong>Sensors</strong>: The agent has five sensors, each of
+which gives a single bit of information:</p>
+<ol type="1">
+<li>In the squares directly (not diagonally) adjacent to the wumpus, the
+agent will perceive a <em>Stench</em>.</li>
+<li>In the squares directly adjacent to a pit, the agent will perceive a
+<em>Breeze</em>.</li>
+<li>In the square where the gold is, the agent will perceive a
+<em>Glitter</em>.</li>
+<li>When an agent walks into a wall, it will perceive a
+<em>Bump</em>.</li>
+<li>When the wumpus is killed, it emits a woeful <em>Scream</em> that
+can be perceived anywhere in the cave.</li>
+</ol>
+<p>The percepts will be given to the agent program in the form of a list
+of five symbols; for example, if there is a stench and a breeze, but no
+glitter, bump, or scream, the agent program will get [<em>Stench</em>,
+<em>Breeze</em>, <em>None</em>, <em>None</em>, <em>None</em>].</p>
+<figure>
+<img src="/assets/images/2023-05-10-logical-agent/agent-example.png"
+alt="Two later stages in the progress of the agent. (a) After moving to [1,1] and then [1,2], and perceiving [Stench, None, None, None, None]. (b) After moving to [2,2] and then [2,3], and perceiving [Stench, Breeze, Glitter, None, None]." />
+<figcaption aria-hidden="true">Two later stages in the progress of the
+agent. (a) After moving to [1,1] and then [1,2], and perceiving
+[<em>Stench</em>, <em>None</em>, <em>None</em>, <em>None</em>,
+<em>None</em>]. (b) After moving to [2,2] and then [2,3], and perceiving
+[<em>Stench</em>, <em>Breeze</em>, <em>Glitter</em>, <em>None</em>,
+<em>None</em>].</figcaption>
+</figure>
+<p>Two later stages in the progress of the agent. (a) After moving to
+[1,1] and then [1,2], and perceiving [<em>Stench</em>, <em>None</em>,
+<em>None</em>, <em>None</em>, <em>None</em>]. (b) After moving to [2,2]
+and then [2,3], and perceiving [<em>Stench</em>, <em>Breeze</em>,
+<em>Glitter</em>, <em>None</em>, <em>None</em>].</p></li>
+</ul>
+<h1 id="logic">Logic</h1>
+<p>A logic must also define the <strong>semantics</strong>, or meaning,
+of sentences. The semantics defines the <strong>truth</strong> of each
+sentence with respect to each <strong>possible world</strong>. With more
+precision, the term <strong>model</strong> is used instead of “possible
+world”.</p>
+<p>If a sentence <span class="math inline">\(\alpha\)</span> is true in
+model <span class="math inline">\(m\)</span>, we say that <span
+class="math inline">\(m\)</span> <strong>satisfies</strong> <span
+class="math inline">\(\alpha\)</span> or sometimes <span
+class="math inline">\(m\)</span> <strong>is a model of</strong> <span
+class="math inline">\(\alpha\)</span>. The notation <span
+class="math inline">\(M(\alpha)\)</span> is used to mean the set of all
+models of <span class="math inline">\(\alpha\)</span>.</p>
+<p>Logical <strong>entailment</strong> is defined as</p>
+<p><span class="math display">\[
+\alpha \models \beta \text{ if and only if } M(\alpha) \subseteq
+M(\beta)
+\]</span></p>
+<p>which means <span class="math inline">\(\alpha \vDash \beta\)</span>
+if and only if, in every model in which <span
+class="math inline">\(\alpha\)</span> is true, <span
+class="math inline">\(\beta\)</span> is also true. <span
+class="math inline">\(\alpha\)</span> is a stronger assertion than <span
+class="math inline">\(\beta\)</span>.</p>
+<p>If an inference algorithm <span class="math inline">\(i\)</span> can
+derive <span class="math inline">\(\alpha\)</span> from KB, we write</p>
+<p><span class="math display">\[
+KB \vdash_i \alpha
+\]</span></p>
+<p>which is pronounced “<span class="math inline">\(\alpha\)</span> is
+derived from KB by <span class="math inline">\(i\)</span>” or “<span
+class="math inline">\(i\)</span> derives <span
+class="math inline">\(\alpha\)</span> from KB”.</p>
+<p>An inference algorithm that derives only entailed sentences is call
+<strong>sound</strong> or <strong>truth preserving</strong>. An
+inference algorithm is <strong>complete</strong> if it can derive any
+sentence that is entailed.</p>
+<aside>
+<p>💡 If KB is true in the real world, then any sentence <span
+class="math inline">\(\alpha\)</span> derived from KB by a sound
+inference procedure is also true in the real world.</p>
+</aside>
+<figure>
+<img src="/assets/images/2023-05-10-logical-agent/reasoning-process.png"
+alt="Sentences are physical configurations of the agent, and reasoning is a process of constructing new physical configurations from old ones. Logical reasoning should ensure that the new configurations represent aspects of the world that actually follow from the aspects that the old configurations represent." />
+<figcaption aria-hidden="true">Sentences are physical configurations of
+the agent, and reasoning is a process of constructing new physical
+configurations from old ones. Logical reasoning should ensure that the
+new configurations represent aspects of the world that actually follow
+from the aspects that the old configurations represent.</figcaption>
+</figure>
+<p>Sentences are physical configurations of the agent, and reasoning is
+a process of constructing new physical configurations from old ones.
+Logical reasoning should ensure that the new configurations represent
+aspects of the world that actually follow from the aspects that the old
+configurations represent.</p>
+<p>The final issue to consider is <strong>grounding</strong> —— the
+connection between logical reasoning processes and the real environment
+in which the agent exists. In particular, how do we know that KB is true
+in the real world? A simple answer is that the agent’s sensors create
+the connection.</p>
+<h1 id="propositional-logic-a-very-simple-logic">Propositional Logic: A
+Very Simple Logic</h1>
+<h2 id="syntax">Syntax</h2>
+<p>The <strong>syntax</strong> of propositional logic defines the
+allowable sentences. The <strong>atomic sentences</strong> consist of a
+single <strong>proposition symbol</strong>. Each symbol stands for a
+proposition that can be true or false. There are two proposition symbols
+with fixed meanings: <code>True</code> is the always-true proposition
+and <code>False</code> is the always-false proposition.</p>
+<p><strong>Complex sentences</strong> are constructed from simpler
+sentences, using parentheses and operators called <strong>logical
+connectives</strong>.</p>
+<ul>
+<li><span class="math inline">\(\neg\)</span> (not): A literal is either
+an atomic sentence (a positive literal) or a <strong>negated</strong>
+atomic sentence (a negative literal).</li>
+<li><span class="math inline">\(\land\)</span> (and): A sentence whose
+main connective is <span class="math inline">\(\land\)</span> is called
+a <strong>conjunction</strong>; its parts are the
+<strong>conjuncts</strong>.</li>
+<li><span class="math inline">\(\lor\)</span> (or): A sentence whose
+main connective is <span class="math inline">\(\lor\)</span> is a
+<strong>disjunction</strong>; its parts are
+<strong>disjuncts</strong>.</li>
+<li><span class="math inline">\(\implies\)</span> (implies):
+Implications are also known as <strong>rules</strong> or
+<strong>if-then</strong> statements.</li>
+<li><span class="math inline">\(\iff\)</span> (if and only if): The
+sentence <span class="math inline">\(A \iff B\)</span> is
+<strong>biconditional</strong>.</li>
+</ul>
+<p>Below gives the grammar of propositional logic.</p>
+<p>A <strong>BNF (Backus–Naur Form) grammar</strong> of sentences in
+propositional logic, along with operator precedences, from highest to
+lowest.</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{Sentence} &amp;\to \text{AtomicSentence} | \text{ComplexSentence}
+\\
+\text{AtomicSentence} &amp;\to True | False | P | Q | R | \cdots \\
+\text{ComplexSentence} &amp;\to (\text{Sentence}) \\
+&amp;\ \ \ | \ \   \neg \text{Sentence} \\
+&amp;\ \ \ | \ \    \text{Sentence} \land \text{Sentence} \\
+&amp;\ \ \ | \ \  \text{Sentence} \lor \text{Sentence} \\
+&amp;\ \ \ | \ \  \text{Sentence} \implies \text{Sentence} \\
+&amp;\ \ \ | \ \  \text{Sentence} \iff \text{Sentence} \\
+\text{Operator Precedence} &amp;\ \ : \ \ \neg, \land, \lor, \implies,
+\iff
+\end{align*}
+\]</span></p>
+<h2 id="semantics">Semantics</h2>
+<p>In propositional logic, a model simply set the <strong>truth
+value</strong> —— true or false —— for every proposition symbol. The
+semantics for propositional logic must specify how to compute the truth
+value of any sentence, given a model.</p>
+<p>Rules for evaluating atomic sentences.</p>
+<ul>
+<li><code>True</code> is true in every model and <code>False</code> is
+false in every model.</li>
+<li>The truth value of every other proposition symbol must be specified
+directly in the model.</li>
+</ul>
+<p>For complex sentences, the following rules hold for subsentences
+<span class="math inline">\(P\)</span> and <span
+class="math inline">\(Q\)</span> in any model <span
+class="math inline">\(m\)</span>.</p>
+<ul>
+<li><span class="math inline">\(\neg P\)</span> is true iff <span
+class="math inline">\(P\)</span> is false in <span
+class="math inline">\(m\)</span>.</li>
+<li><span class="math inline">\(P \land Q\)</span> is true iff both
+<span class="math inline">\(P\)</span> and <span
+class="math inline">\(Q\)</span> are true in <span
+class="math inline">\(m\)</span>.</li>
+<li><span class="math inline">\(P \lor Q\)</span> is true iff either
+<span class="math inline">\(P\)</span> or <span
+class="math inline">\(Q\)</span> are true in <span
+class="math inline">\(m\)</span>.</li>
+<li><span class="math inline">\(P \implies Q\)</span> is true unless
+<span class="math inline">\(P\)</span> is true and <span
+class="math inline">\(Q\)</span> is false in <span
+class="math inline">\(m\)</span>.</li>
+<li><span class="math inline">\(P \iff Q\)</span> is true iff <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(Q\)</span> are both true or both false in <span
+class="math inline">\(m\)</span>.</li>
+</ul>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th><span class="math inline">\(P\)</span></th>
+<th><span class="math inline">\(Q\)</span></th>
+<th><span class="math inline">\(\neg P\)</span></th>
+<th><span class="math inline">\(P \land Q\)</span></th>
+<th><span class="math inline">\(P \lor Q\)</span></th>
+<th><span class="math inline">\(P \implies Q\)</span></th>
+<th><span class="math inline">\(P \iff Q\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<p>Truth tables for the five logical connectives. To use the table to
+compute, forexample, the value of <em>P</em> ∨ <em>Q</em> when
+<em>P</em> is true and <em>Q</em> is false, first look on the left for
+the row where <em>P</em> is <em>true</em> and <em>Q</em> is
+<em>false</em> (the third row). Then look in that row under the
+<em>P</em> ∨ <em>Q</em> column to see the result: <em>true</em>.</p>
+<h2 id="a-simple-knowledge-base">A Simple Knowledge Base</h2>
+<p>For the wumpus world, define the following symbols for each <span
+class="math inline">\([x, y]\)</span> location:</p>
+<ul>
+<li><span class="math inline">\(P_{x, y}\)</span> is true if there is a
+pit in <span class="math inline">\([x, y]\)</span>.</li>
+<li><span class="math inline">\(W_{x, y}\)</span> is true if there is a
+wumpus in <span class="math inline">\([x, y]\)</span>, dead or
+alive.</li>
+<li><span class="math inline">\(B_{x, y}\)</span> is true if there is a
+breeze in <span class="math inline">\([x, y]\)</span>.</li>
+<li><span class="math inline">\(S_{x, y}\)</span> is true if there is a
+stench in <span class="math inline">\([x, y]\)</span>.</li>
+<li><span class="math inline">\(L_{x, y}\)</span> is true if the agent
+is in location <span class="math inline">\([x, y]\)</span>.</li>
+</ul>
+<p>Sentences in the knowledge base of the wumpus world are something
+like</p>
+<ul>
+<li><p>There is no pit in <span class="math inline">\([1,
+1]\)</span>:</p>
+<p><span class="math display">\[
+  R_1: \neg P_{1, 1}
+  \]</span></p></li>
+<li><p>A square is breezy if and only if there is a pit in a neighboring
+square.</p>
+<p><span class="math display">\[
+  \begin{align*}
+  R_2 &amp;: B_{1, 1} \iff (P_{1, 2} \lor P_{2, 1}) \\
+  R_3 &amp;: B_{2, 1} \iff (P_{1, 1} \lor P_{2, 2} \lor P_{3, 1})  \\
+  \end{align*}
+  \]</span></p></li>
+<li><p>The breeze percepts for the first two squares visisted in the
+specific world the agent is in, leading up to the situation in the above
+figure (b).</p>
+<p><span class="math display">\[
+  \begin{align*}
+  R_4 &amp;: \neg B_{1, 1} \\
+  R_5 &amp;: B_{2, 1}
+  \end{align*}
+  \]</span></p></li>
+</ul>
+<h2 id="a-simple-inference-procedure">A Simple Inference Procedure</h2>
+<p>The goal now is to decide whether <span class="math inline">\(KB
+\models \alpha\)</span> for some sentence <span
+class="math inline">\(\alpha\)</span>. A basic algorithm for inference
+is a model-checking approach that is a direct implementation of the
+definition of entailment: enumerate the models, and check that <span
+class="math inline">\(\alpha\)</span> is true in every model in which
+<span class="math inline">\(KB\)</span> is true. Models are assignments
+of true or false to every proposition symbol.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr>
+<th><span class="math inline">\(B_{1, 1}\)</span></th>
+<th><span class="math inline">\(B_{2, 1}\)</span></th>
+<th><span class="math inline">\(P_{1, 1}\)</span></th>
+<th><span class="math inline">\(P_{1, 2}\)</span></th>
+<th><span class="math inline">\(P_{2, 1}\)</span></th>
+<th><span class="math inline">\(P_{2, 2}\)</span></th>
+<th><span class="math inline">\(P_{3, 1}\)</span></th>
+<th><span class="math inline">\(R_1\)</span></th>
+<th><span class="math inline">\(R_2\)</span></th>
+<th><span class="math inline">\(R_3\)</span></th>
+<th><span class="math inline">\(R_4\)</span></th>
+<th><span class="math inline">\(R_5\)</span></th>
+<th>KB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td><strong>true</strong></td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td><strong>true</strong></td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td><strong>true</strong></td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+<td><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+<p>A truth table constructed for the knowledge base given in the text.
+<em>KB</em> is true if <em>R</em>1 through <em>R</em>5 are true, which
+occurs in just 3 of the 128 rows (the ones underlined in the right-hand
+column). In all 3 rows, <em>P</em>1,2 is false, so there is no pit in
+[1,2]. On the other hand, there might (or might not) be a pit in
+[2,2].</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">TT_Entails</span>(<span class="params"></span></span><br><span class="line"><span class="params">    <span class="comment">// knowledge base, a sentence in propositional logic</span></span></span><br><span class="line"><span class="params">    <span class="attr">KB</span>: <span class="title class_">KnowledgeBase</span>,</span></span><br><span class="line"><span class="params">    <span class="comment">// the query, a sentence in propositional logic</span></span></span><br><span class="line"><span class="params">    <span class="attr">a</span>: <span class="title class_">Query</span></span></span><br><span class="line"><span class="params"></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> symbols = [</span><br><span class="line">        ...<span class="variable constant_">KB</span>.<span class="title function_">propositionSymbols</span>(),</span><br><span class="line">        ...a.<span class="title function_">propositionalSymbols</span>()</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">TT_CheckAll</span>(<span class="variable constant_">KB</span>, a, symbols, <span class="keyword">new</span> <span class="title class_">Set</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">TT_CheckAll</span>(<span class="params"><span class="attr">KB</span>: <span class="title class_">KnowledgeBase</span>, <span class="attr">a</span>: <span class="title class_">Query</span>, symbols, model</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (symbols.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_">PL_True</span>(<span class="variable constant_">KB</span>, model)) <span class="keyword">return</span> <span class="title function_">PL_True</span>(a, model)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span> <span class="comment">// when KB is false, always return true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> [P, ...rest] = symbols</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">TT_CheckAll</span>(<span class="variable constant_">KB</span>, a, rest, <span class="title function_">AND</span>(model, <span class="title class_">True</span>(P)))</span><br><span class="line">            &amp;&amp; <span class="title function_">TT_CheckAll</span>(<span class="variable constant_">KB</span>, a, rest, <span class="title function_">AND</span>(model, <span class="title class_">False</span>(P)))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>A <strong>truth-table enumeration algorithm</strong> for deciding
+propositional entailment. (TT stands for truth table.)
+<code>PL-TRUE?</code> returns <em><code>true</code></em> if a sentence
+holds within a model. The variable <em>model</em> represents a partial
+model —— an assignment to some of the symbols. The keyword
+<strong>and</strong> here is an infix function symbol in the pseudocode
+programming language, not an operator in propositional logic; it takes
+two arguments and returns <em><code>true</code></em> or
+<em><code>false</code></em>.</p>
+<aside>
+<p>💡 Every known inference algorithm for propositional logic has a
+worst-case complexity that is exponential in the size of the input.</p>
+</aside>
+<h1 id="propositional-theorem-proving">Propositional Theorem
+Proving</h1>
+<p>Entailment can be done by <strong>theorem proving</strong> ——
+applying rules of inference directly to the sentences in our knowledge
+base to construct a proof of the desired sentence without consulting
+models. If the number of models is large but the length of the proof is
+short, then theorem proving can be more efficient than model
+checking.</p>
+<p>Two sentences <span class="math inline">\(\alpha\)</span> and <span
+class="math inline">\(\beta\)</span> are <strong>logically
+equivalent</strong> if they are true in the same set of models. We write
+this as <span class="math inline">\(\alpha \equiv \beta\)</span>. Any
+two sentences <span class="math inline">\(\alpha\)</span> and <span
+class="math inline">\(\beta\)</span> are equivalent if and only if each
+of them entails the other:</p>
+<p><span class="math display">\[
+\alpha \equiv \beta \text{ if and only if } \alpha \models \beta \text{
+and } \beta \models \alpha
+\]</span></p>
+<p>A sentence is <strong>valid</strong> if it is true in all models. For
+example, the sentence <span class="math inline">\(P \lor \neg P\)</span>
+is valid. Valid sentences are also known as <strong>tautologies</strong>
+—— they are necessarily true.</p>
+<p>Deduction theorem:</p>
+<p><span class="math display">\[
+\forall \alpha,  \forall \beta, \alpha \models \beta \text{ if and only
+if the sentence } (\alpha \implies \beta) \text{ is valid.}
+\]</span></p>
+<p>Hence, we can decide if <span class="math inline">\(\alpha \models
+\beta\)</span> by checking that <span class="math inline">\((\alpha
+\implies \beta)\)</span> is true in every model.</p>
+<p>A sentence is <strong>satisfiable</strong> if it is true in, or
+satisfied by, some model. Satisfiability can be checked by enumerating
+the possible models until one is found that satisfies the sentence. The
+problem of determining the satisfiability of sentences in propositional
+logic —— the SAT problem —— was the first problem proved to be
+NP-complete.</p>
+<p>Validity and satisfiability are connected: <span
+class="math inline">\(\alpha\)</span> is valid iff <span
+class="math inline">\(\neg \alpha\)</span> is unsatisfiable. A useful
+result is given below:</p>
+<p><span class="math display">\[
+\alpha \models \beta \text{ if and only if the sentence} (\alpha \land
+\neg \beta) \text{ is unsatisfiable.}
+\]</span></p>
+<p>Proving <span class="math inline">\(\beta\)</span> from <span
+class="math inline">\(\alpha\)</span> by checking the unsatisfiability
+of <span class="math inline">\((\alpha \land \neg \beta)\)</span>
+corresponds exactly to the standard mathematical proof technique of
+<strong>refutation</strong> or proof by
+<strong>contradiction</strong>.</p>
+<h2 id="inference-and-proofs">Inference and Proofs</h2>
+<p><strong>Inference rules</strong> can be applied to derive a
+<strong>proof</strong> —— a chain of conclusions that leads to the
+desired goal. The best-known rule is called <strong>Modus
+Ponens</strong> and is written</p>
+<p><span class="math display">\[
+\frac{\alpha \implies \beta, \alpha}{\beta}
+\]</span></p>
+<p>which means that, whenever any sentences of the form <span
+class="math inline">\(\alpha \implies \beta\)</span> and <span
+class="math inline">\(\alpha\)</span> is given, then the sentence <span
+class="math inline">\(\beta\)</span> can be inferred.</p>
+<p>Another useful inference rule is <strong>And-Elimination</strong>,
+which says that, from a conjunction, any of the conjuncts can be
+inferred.</p>
+<p><span class="math display">\[
+\frac{\alpha \land \beta}{\alpha}
+\]</span></p>
+<p>Standard logical equivalences are shown as below</p>
+<p><span class="math display">\[
+\begin{align*}
+(\alpha \land \beta) &amp;\equiv (\beta \land \alpha) &amp;\text{
+community of } \land \\
+(\alpha \lor \beta) &amp;\equiv (\beta \lor \alpha) &amp;\text{
+community of } \lor \\
+((\alpha \land \beta) \land \gamma) &amp;\equiv (\alpha \land (\beta
+\land \gamma)) &amp;\text{ associativity of } \land \\
+((\alpha \lor \beta) \lor \gamma) &amp;\equiv (\alpha \lor (\beta \lor
+\gamma)) &amp;\text{ associativity of } \lor \\
+\neg(\neg \alpha) &amp;\equiv \alpha &amp;\text{ double-negation
+elimination} \\
+(\alpha \implies \beta) &amp;\equiv (\neg \beta \implies \neg \alpha)
+&amp;\text{ contraposition} \\
+(\alpha \implies \beta) &amp;\equiv (\neg \alpha \lor \beta) &amp;\text{
+implication elimination} \\
+(\alpha \iff \beta) &amp;\equiv ((\alpha \implies \beta) \land (\beta
+\implies \alpha)) &amp;\text{ biconditional elimination} \\
+\neg (\alpha \land \beta) &amp;\equiv (\neg \alpha \lor \neg \beta)
+&amp;\text{De Morgan} \\
+\neg (\alpha \lor \beta) &amp;\equiv (\neg \alpha \land \neg \beta)
+&amp;\text{De Morgan} \\
+(\alpha \land (\beta \lor \gamma)) &amp;\equiv ((\alpha \land \beta)
+\lor (\beta \land \gamma)) &amp;\text{distributivity of } \land \text{
+over } \lor \\
+(\alpha \lor (\beta \land \gamma)) &amp;\equiv ((\alpha \lor \beta)
+\land (\beta \lor \gamma)) &amp;\text{distributivity of } \lor \text{
+over } \land
+\end{align*}
+\]</span></p>
+<p>The symbols <span class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span> and <span
+class="math inline">\(\gamma\)</span> stand for arbitrary sentences of
+propositional logic. All the logical equivalences can be used as
+inference rules.</p>
+<p>Any of the search algorithms can be used to find a sequence of steps
+that constitutes the proof. The proof problem can be defined as:</p>
+<ul>
+<li><strong>Initial State</strong>: the initial knowledge base.</li>
+<li><strong>Actions</strong>: the set of actions consists of all the
+inference rules applied to all the sentences that match the top half of
+the inference rule.</li>
+<li><strong>Result</strong>: the result of an action is to add the
+sentence in the bottom half of the inference rule.</li>
+<li><strong>Goal</strong>: the goal is a state that contains the
+sentence we are trying to prove.</li>
+</ul>
+<p>One final property of logical systems is monotonicity, which says
+that the set of entailed sentences can only increase as information is
+added to the knowledge base. For any sentences <span
+class="math inline">\(\alpha\)</span> and <span
+class="math inline">\(\beta\)</span>,</p>
+<p><span class="math display">\[
+\text{ if } KB \models \alpha \text{ then } KB \land \beta \models
+\alpha
+\]</span></p>
+<p>Monotonicity means that inference rules can be applied whenever
+suitable premises are found in the knowledge base —— the conclusion of
+the rule must folow regardless of what else is in the knowledge
+base.</p>
+<h2 id="proof-by-resolution">Proof by Resolution</h2>
+<p>A inference rule, <strong>resolution</strong>, that can yield a
+complete inference algorithm when coupled with any complete search
+algorithm.</p>
+<p>The <strong>unit resolution inference rule</strong> is defined as
+below:</p>
+<p><span class="math display">\[
+\frac{l_1 \lor \cdots \lor l_k, \ m}{l_1 \lor \cdots \lor l_{i - 1} \lor
+l_{i + 1} \lor \cdots \lor l_k}
+\]</span></p>
+<p>where each <span class="math inline">\(l\)</span> is a literal and
+<span class="math inline">\(l_i\)</span> and <span
+class="math inline">\(m\)</span> are complementary literals (one is the
+negation of the other). The unit resolution rule can be generalized to
+the full resolution rule.</p>
+<p><span class="math display">\[
+\frac{l_1 \lor \cdots \lor l_k, \ m_1 \lor \cdots m_n}{l_1 \lor \cdots
+\lor l_{i - 1} \lor l_{i + 1} \lor \cdots \lor l_k \lor m_1 \lor \cdots
+\lor m_{j - 1} \lor m_{j + 1} \lor \cdots \lor m_n}
+\]</span></p>
+<p>where <span class="math inline">\(l_i\)</span> and <span
+class="math inline">\(m_j\)</span> are complementary literals. The
+resulting clause should contain only one copy of each literal. The
+removal of multiple copies of literals is called
+<strong>factoring</strong>. For example, if we resolve <span
+class="math inline">\((A \lor B)\)</span> with <span
+class="math inline">\((A \lor \neg B)\)</span>, we obtain <span
+class="math inline">\((A \lor A )\)</span>, which is reduced to just
+<span class="math inline">\(A\)</span> by factoring.</p>
+<h3 id="conjunctive-normal-form">Conjunctive Normal Form</h3>
+<p>Every sentence of propositional logic (that is, disjunctions of
+literals) is logically equivalent to a conjunction of clauses. A
+sentence expressed as a conjunction of clauses is said to be in
+<strong>conjunctive normal form</strong> or <strong>CNF</strong>.</p>
+<p><span class="math display">\[
+\begin{align*}
+\text{CNFSentence} &amp;\to \text{Clause}_1 \land \cdots \land
+\text{Clause}_n \\
+\text{Clause} &amp;\to \text{Literal}_1 \lor \cdots \lor
+\text{Literal}_m \\
+\text{Fact} &amp;\to \text{Symbol} \\
+\text{Literal} &amp;\to \text{Symbol} \ | \  \neg \text{Symbol} \\
+\text{Symbol} &amp;\to P \ |\  Q \ |\  R \\
+\text{HornClauseForm} &amp;\to \text{DefiniteClauseForm} \ |
+\  \text{GoalClauseForm} \\
+\text{DefiniteClauseForm} &amp;\to \text{Fact} \ | \  (\text{Symbol}_1
+\land \cdots \land \text{Symbol}_l) \implies \text{Symbol} \\
+\text{GoalClauseForm} &amp;\to (\text{Symbol}_1 \land \cdots \land
+\text{Symbol}_l) \implies \text{False} \\
+\end{align*}
+\]</span></p>
+<p>A grammar for conjunctive normal form, Horn clauses, and definite
+clauses. A CNF clause such as <span class="math inline">\(\neg A \lor
+\neg B \lor C\)</span> can be written in definite clause form as <span
+class="math inline">\(A \land B \implies C\)</span>.</p>
+<blockquote>
+<p><strong>Example: converting the sentence <span
+class="math inline">\(B_{1, 1} \iff (P_{1, 2} \lor P_{2, 1})\)</span>
+into CNF.</strong></p>
+</blockquote>
+<ol type="1">
+<li><p>Eliminate <span class="math inline">\(\iff\)</span>, replacing
+<span class="math inline">\(\alpha \iff \beta\)</span> with <span
+class="math inline">\((\alpha \implies \beta) \land (\beta \implies
+\alpha)\)</span>:</p>
+<p><span class="math inline">\((B_{1, 1} \implies (P_{1, 2} \lor P_{2,
+1})) \land ((P_{1, 2} \lor P_{2, 1}) \implies B_{1,
+1})\)</span></p></li>
+<li><p>Eliminate <span class="math inline">\(\implies\)</span>,
+replacing <span class="math inline">\(\alpha \implies \beta\)</span>
+with <span class="math inline">\(\neg \alpha \lor \beta\)</span>:</p>
+<p><span class="math inline">\((\neg B_{1, 1} \lor P_{1, 2} \lor P_{2,
+1}) \land (\neg(P_{1, 2} \lor P_{2, 1}) \lor B_{1, 1})\)</span></p></li>
+<li><p>CNF requires <span class="math inline">\(\neg\)</span> to appear
+only in literals, so repeatedly using double-negation elimination and De
+Morgan to move <span class="math inline">\(\neg\)</span> inwards.</p>
+<p><span class="math inline">\((\neg B_{1, 1} \lor P_{1, 2} \lor P_{2,
+1}) \land ((\neg P_{1, 2} \land \neg P_{2, 1}) \lor B_{1,
+1})\)</span></p></li>
+<li><p>Then apply the distributivity law to further reduce nested <span
+class="math inline">\(\lor\)</span> and <span
+class="math inline">\(\land\)</span>.</p>
+<p><span class="math inline">\((\neg B_{1, 1} \lor P_{1, 2} \lor P_{2,
+1}) \land (\neg P_{1, 2} \lor B_{1, 1}) \land (\neg P_{2, 1} \lor B_{1,
+1})\)</span> &gt;</p></li>
+</ol>
+<h3 id="a-resolution-algorithm">A Resolution Algorithm</h3>
+<p>Inference procedures based on resolution work by using the principle
+of proof by contradiction. That is, to show that <span
+class="math inline">\(KB \models \alpha\)</span>, we show that <span
+class="math inline">\((KB \land \neg \alpha)\)</span> is
+unsatisfiable.</p>
+<p>First, <span class="math inline">\((KB \land \neg \alpha)\)</span> is
+converted to CNF. Then, the resolution rule is applied to the resulting
+clauses. Each pair that contains complementary literals is resolved to
+produce a new clause, which is added to the set if it is not already
+present. The process continues until one of the two things happens:</p>
+<ul>
+<li>there are no new clauses that can be added, in which case <span
+class="math inline">\(KB\)</span> does not entail <span
+class="math inline">\(\alpha\)</span>.</li>
+<li>two clauses resolve to yield the empty clause, in which case <span
+class="math inline">\(KB\)</span> entails <span
+class="math inline">\(\alpha\)</span>.</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">PL_Resolution</span>(<span class="params"><span class="attr">KB</span>: <span class="title class_">KnowledgeBase</span>, <span class="attr">a</span>: <span class="title class_">Query</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="comment">// the set of clauses in the CNF representation of KB ∧ ¬α</span></span><br><span class="line">    <span class="keyword">let</span> clauses = <span class="keyword">new</span> <span class="title function_">CNF</span>(<span class="title function_">AND</span>(<span class="variable constant_">KB</span>, <span class="title function_">NOT</span>(a))).<span class="title function_">clauses</span>()</span><br><span class="line">    <span class="keyword">let</span> sentences = <span class="keyword">new</span> <span class="title class_">Set</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        clauses.<span class="title function_">forEach</span>(<span class="function">(<span class="params"><span class="title class_">Ci</span>, <span class="title class_">Cj</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> resolvents = <span class="title function_">PL_Resolve</span>(<span class="title class_">Ci</span>, <span class="title class_">Cj</span>)</span><br><span class="line">            <span class="keyword">if</span> (<span class="title class_">Resolvents</span>.<span class="title function_">includes</span>(<span class="title class_">EmptyClause</span>)) <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">            sentences = <span class="title class_">Union</span>(sentences, resolvents)</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (clauses.<span class="title function_">contains</span>(sentences)) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        clauses = <span class="title class_">Union</span>(clauses, sentences)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>PL-RESOLVE</code> returns the set of all possible clauses
+obtained by resolving its two inputs.</p>
+<figure>
+<img
+src="/assets/images/2023-05-10-logical-agent/pl-resolve-example.png"
+alt="Partial application of PL-RESOLUTION to a simple inference in the wumpus world to prove the query ¬P1,2. Each of the leftmost four clauses in the top row is paired with each of the other three, and the resolution rule is applied to yield the clauses on the bottom row. We see that the third and fourth clauses on the top row combine to yield the clause ¬P1,2, which is then resolved with P1,2 to yield the empty clause, meaning that the query is proven." />
+<figcaption aria-hidden="true">Partial application of PL-RESOLUTION to a
+simple inference in the wumpus world to prove the query ¬<em>P</em>1,2.
+Each of the leftmost four clauses in the top row is paired with each of
+the other three, and the resolution rule is applied to yield the clauses
+on the bottom row. We see that the third and fourth clauses on the top
+row combine to yield the clause ¬<em>P</em>1,2, which is then resolved
+with <em>P</em>1,2 to yield the empty clause, meaning that the query is
+proven.</figcaption>
+</figure>
+<h3 id="completeness-of-resolution">Completeness of Resolution</h3>
+<p>The algorithm <code>PL-RESOLUTION</code> is complete. Define
+resolution closure <span class="math inline">\(RC(S)\)</span> of a set
+of clauses <span class="math inline">\(S\)</span>, which is the set of
+all clauses derivable by repeated application of the resolution rule to
+clauses in <span class="math inline">\(S\)</span> or their derivatives.
+The <strong>resolution closure</strong> is what
+<code>PL-RESOLUTION</code> computes as the final value of the variable
+clauses. Thanks to the factoring step, there are only finitely many
+distinct clauses that can be constructed out of the symbols <span
+class="math inline">\(P_1, \dots, P_k\)</span> that appear in <span
+class="math inline">\(S\)</span>. Hance, <code>PL-RESOLUTION</code>
+always terminates.</p>
+<p>The completeness theorem for resolution in propositional logic is
+called the ground resolution theorem:</p>
+<p><span class="math display">\[
+\text{ If a set of clauses is unsatisfiable, then the} \\ \text{
+resolution closure of those clauses contains the empty clause}
+\]</span></p>
+<h2 id="horn-clauses-and-definite-clauses">Horn Clauses and Definite
+Clauses</h2>
+<p><strong>Definite clause</strong> is a disjunction of literals of
+which exactly one is positive. Slightly more general is the <strong>Horn
+clause</strong>, which is a disjunction of literals of which at most one
+is positive. So all definite clauses are Horn clauses. <strong>Goal
+clauses</strong> are those with no positive literals. <span
+class="math inline">\(k\)</span>-CNF sentence is a CNF sentence where
+each clause has at most <span class="math inline">\(k\)</span>
+literals.</p>
+<p>Knowledge bases containing only definite clauses are interesting for
+three reasons:</p>
+<ol type="1">
+<li>Every definite clause can be written as an implication whose premise
+is a conjunction of positive literals and whose conclusion is a single
+positive literal. For example, the definite clause <span
+class="math inline">\((\neg L_{1, 1} \lor \neg Breeze \lor B_{1,
+1})\)</span> can be written as the implication <span
+class="math inline">\((L_{1, 1} \land Breeze) \implies B_{1,
+1}\)</span>. In Horn form, the premise is called the
+<strong>body</strong> and the conclusion is called the
+<strong>head</strong>. A sentence consisting of a single positive
+literal is called a <strong>fact</strong>.</li>
+<li>Inference with Horn clauses can be done throught the
+<strong>forward-chaining</strong> and
+<strong>backward-chaining</strong>.</li>
+<li>Deciding entailment with Horn clauses can be done in time that is
+linear in the size of the knowledge base.</li>
+</ol>
+<h2 id="forward-and-backward-chaining">Forward and Backward
+Chaining</h2>
+<p>The forward-chaining algorithm <code>PL-FC-ENTAILS?(KB, q)</code>
+determines if a single proposition symbol <span
+class="math inline">\(q\)</span> —— the query —— is entail by a
+knowledge base of definite clauses.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Forward-chaining Algorithm</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">PL_FC_Entails</span>(<span class="params"><span class="attr">KB</span>: <span class="title class_">KnowledgeBase</span>, <span class="attr">q</span>: <span class="title class_">Query</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="comment">// a table, where count[c] is initially the number of</span></span><br><span class="line">    <span class="comment">// symbols in clause c’s premise</span></span><br><span class="line">    <span class="keyword">const</span> count = &#123;&#125;</span><br><span class="line">    <span class="comment">// a table, where inferred[s] is initially false for all symbols</span></span><br><span class="line">    <span class="keyword">const</span> inferred = &#123;&#125;</span><br><span class="line">    <span class="comment">// a queue of symbols, initially symbols known to be true in KB </span></span><br><span class="line">    <span class="keyword">const</span> queue = <span class="variable constant_">KB</span>.<span class="title function_">trueSymbols</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (queue.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> p = queue.<span class="title function_">pop</span>()</span><br><span class="line">        <span class="keyword">if</span> (p === q) <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (!inferred[p]) &#123;</span><br><span class="line">            inferred[p] = <span class="literal">true</span></span><br><span class="line">            <span class="variable constant_">KB</span>.<span class="property">clauses</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">clause</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (clause.<span class="property">premise</span>.<span class="title function_">includes</span>(p)) &#123;</span><br><span class="line">                    count[clause] -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> (count[clause] === <span class="number">0</span>) &#123;</span><br><span class="line">                        queue.<span class="title function_">push</span>(c.<span class="property">conclusion</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The forward-chaining algorithm for propositional logic. The
+<em><code>queue</code></em> keeps track of symbols known to be true but
+not yet “processed.” The <em><code>count</code></em> table keeps track
+of how many premises of each implication are not yet proven. Whenever a
+new symbol <em><code>p</code></em> from the agenda is processed, the
+count is reduced by one for each implication in whose premise
+<em><code>p</code></em> appears (easily identified in constant time with
+appropriate indexing.) If a count reaches zero, all the premises of the
+implication are known, so its conclusion can be added to the agenda.
+Finally, we need to keep track of which symbols have been processed; a
+symbol that is already in the set of inferred symbols need not be added
+to the agenda again. This avoids redundant work and prevents loops
+caused by implications such as <span class="math inline">\(p \implies
+Q\)</span> and <span class="math inline">\(Q \implies P\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2023-05-10-logical-agent/set-of-horn-clauses.png"
+alt="(a) A set of Horn clauses. (b) The corresponding AND–OR graph." />
+<figcaption aria-hidden="true">(a) A set of Horn clauses. (b) The
+corresponding AND–OR graph.</figcaption>
+</figure>
+<ol type="a">
+<li>A set of Horn clauses. (b) The corresponding AND–OR graph.</li>
+</ol>
+<p>Forward chaining is an example of the general concept of
+<strong>data-driven</strong> reasoning —— that is, reasoning in which
+the focus of attention starts with the known data. It can be used within
+an agent to derive conclusions from incoming percepts, often without a
+specific query in mind.</p>
+<h1 id="effective-propositional-model-checking">Effective Propositional
+Model Checking</h1>
+<h2 id="a-complete-backtracking-algorithm">A Complete Backtracking
+Algorithm</h2>
+<p>DPLL takes an input a sentence in conjunctive normal form —— a set of
+clauses. It embodies three improvements over the simple scheme of
+<code>TT-ENTAILS?</code>.</p>
+<ul>
+<li><strong>Early termination</strong>: The algorithm detects whether
+the sentence must be true or false, even with a partially completed
+model.</li>
+<li><strong>Pure symbol heuristic</strong>: A pure symbol is a symbol
+that always appears with the same “sign” in all clauses.</li>
+<li><strong>Unit clause heuristic</strong>: A unit clause was defined
+earlier as a clause with just one literal. In the context of DPLL, it
+also means clauses in which all literals but one are already assigned
+false by the model.</li>
+</ul>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Forward-chaining Algorithm</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DPLL_Statisfiable</span>(<span class="params"><span class="attr">s</span>: <span class="title class_">Sentence</span></span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> clauses = <span class="keyword">new</span> <span class="title function_">CNF</span>(s).<span class="title function_">clauses</span>()</span><br><span class="line">    <span class="keyword">const</span> symbols = s.<span class="title function_">propositionSymbols</span>()</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">DPLL</span>(clauses, symbols, <span class="keyword">new</span> <span class="title class_">Set</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DPLL</span>(<span class="params">clauses, symbols, model</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> allTrue = _.<span class="title function_">every</span>(clauses, <span class="function"><span class="params">clause</span> =&gt;</span> model.<span class="title function_">check</span>(clause))</span><br><span class="line">    <span class="keyword">if</span> (allTrue) <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    <span class="keyword">const</span> someFalse = _.<span class="title function_">some</span>(clauses, <span class="function"><span class="params">clause</span> =&gt;</span> !model.<span class="title function_">check</span>(clause))</span><br><span class="line">    <span class="keyword">if</span> (someFalse) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> [P, value] = <span class="title class_">FindPureSymbol</span>(symbols, clauses, model)</span><br><span class="line">    <span class="keyword">if</span> (P) <span class="keyword">return</span> <span class="title function_">DPLL</span>(clauses, _.<span class="title function_">omit</span>(symbols, P), <span class="title class_">Union</span>(model, <span class="title class_">Value</span>(P)))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> [P, value] = <span class="title class_">FindUnitClause</span>(clauses, model)</span><br><span class="line">    <span class="keyword">if</span> (P) <span class="keyword">return</span> <span class="title function_">DPLL</span>(clauses, _.<span class="title function_">omit</span>(symbols, P), <span class="title class_">Union</span>(model, <span class="title class_">Value</span>(P)))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> [P, ...rest] = symbols</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">DPLL</span>(clauses, rest, <span class="title class_">Union</span>(model, <span class="title class_">True</span>(P)))</span><br><span class="line">        || <span class="title function_">DPLL</span>(clauses, rest, <span class="title class_">Union</span>(model, <span class="title class_">False</span>(P)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="agents-based-on-propositional-logic">Agents based on
+Propositional Logic</h1>
+<h2 id="the-current-state-of-the-world">The Current State of the
+World</h2>
+<p>The knowledge base is composed of axioms —— general knowledge about
+how the world works —— and percept sentences obtained from the agent’s
+experience in a particular world.</p>
+<p>For each square, it knows that the square is breezy if and only if a
+neighboring square has a pit; and a square is smelly if and only if a
+neighboring square has a wumpus. In such a way, a large collection of
+axioms can be included.</p>
+<p><span class="math display">\[
+\begin{align*}
+B_{1, 1} &amp;\iff (P_{1, 2} \lor P_{2, 1}) \\
+S_{1, 1} &amp;\iff (W_{1, 2} \lor W_{2, 1}) \\
+&amp;\ \ \ \ \ \vdots
+\end{align*}
+\]</span></p>
+<p>The agent also knows that there is exactly one wumpus. First, we have
+to say that there is at least one wumpus.</p>
+<p><span class="math display">\[
+W_{1, 1} \lor W_{1, 2} \lor \cdots \lor W_{4, 3} \lor W_{4, 4}
+\]</span></p>
+<p>Then we have to say that there is at most one wumpus.</p>
+<p><span class="math display">\[
+\begin{align*}
+\neg W_{1, 1} &amp;\lor \neg W_{1, 2} \\
+\neg W_{1, 1} &amp;\lor \neg W_{1, 3} \\
+&amp;\ \vdots \\
+\neg W_{4, 3} &amp;\lor \neg W_{4, 4} \\
+\end{align*}
+\]</span></p>
+<p>The idea of associating propositions with time steps extends to any
+aspect of the world that changes over time. For example, the initial
+knowledge base includes <span class="math inline">\(L^0_{1, 1}\)</span>
+—— the agent is in square <span class="math inline">\([1, 1]\)</span> at
+time 0 —— as well as <span class="math inline">\(FacingEast^0\)</span>,
+<span class="math inline">\(HaveArrow^0\)</span>, and <span
+class="math inline">\(WumpusAlive^0\)</span>. We use the noun
+<strong>fluent</strong> to refer to an aspect of the world that changes.
+“Fluent” is a synonym for “state variable”.</p>
+<p>We can connect stench and breeze percepts directly to the properties
+of the squares where they are experienced as follows. For any time step
+<span class="math inline">\(t\)</span> and any square <span
+class="math inline">\([x, y]\)</span>, we assert</p>
+<p><span class="math display">\[
+L^t_{x, y} \implies (Breeze^t \iff B_{x, y}) \\
+L^t_{x, y} \implies (Stench^t \iff S_{x, y})
+\]</span></p>
+<p>Then we need axioms that allow the agent to keep track of fluents
+such as <span class="math inline">\(L^t_{x, y}\)</span>. These fluents
+change as the result of actions taken by the agent. To describe how the
+world changes, we can try writing <strong>effect axioms</strong> that
+specify the outcome of an action at the next time step. For example, if
+the agent is at location <span class="math inline">\([1, 1]\)</span>
+facing east at time 0 and goes <span
+class="math inline">\(Forward\)</span>, the result is that the agent is
+in square <span class="math inline">\([2, 1]\)</span>:</p>
+<p><span class="math display">\[
+L^0_{1, 1} \land FacingEast^0 \land Forward^0 \implies (L^1_{2, 1} \land
+\neg L^1_{1, 1})
+\]</span></p>
+<p>We would need one such sentence for each possible time step, for each
+of the 16 squares, and each of the four orientations. We would also need
+similar sentences for the other actions: <span
+class="math inline">\(Grab\)</span>, <span
+class="math inline">\(Shoot\)</span>, <span
+class="math inline">\(Climb\)</span>, <span
+class="math inline">\(TurnLeft\)</span>, <span
+class="math inline">\(TurnRight\)</span>.</p>
+<p>There is some information that remains unchanged as the result of an
+action. The need to do this gives rise to the <strong>frame
+problem</strong>. One possible solution to the frame problem would be to
+add frame axioms explicitly asserting all propositions that remain the
+same. For example, for each time <span class="math inline">\(t\)</span>
+we have</p>
+<p><span class="math display">\[
+\begin{align*}
+Forward^t &amp;\implies (HaveArrow^t \iff HaveArrow^{t + 1}) \\
+Forward^t &amp;\implies (WumpusAlive^t \iff WumpusAlive^{t + 1}) \\
+&amp;\ \ \ \ \ \vdots
+\end{align*}
+\]</span></p>
+<p>In a world with <span class="math inline">\(m\)</span> different
+actions and <span class="math inline">\(n\)</span> fluents, the set of
+frame axioms will be of size <span class="math inline">\(O(mn)\)</span>.
+The solution to the problem involves changing one’s focus from writing
+axioms about actions to writing axioms about fluents.</p>
+<p>For each fluent <span class="math inline">\(F\)</span>, we will have
+an axiom that defines the truth value of <span
+class="math inline">\(F^{t + 1}\)</span> in terms of fluents at time
+<span class="math inline">\(t\)</span> and the actions that may have
+occurred as time <span class="math inline">\(t\)</span>. The following
+is a <strong>successor-state axiom</strong>:</p>
+<p><span class="math display">\[
+F^{t + 1} \iff ActionCausesF^t \lor (F^t \land \neg ActionCausesNotF^t)
+\]</span></p>
+<p>The successor-state axiom for <span
+class="math inline">\(HaveArrow\)</span> is as follows.</p>
+<p><span class="math display">\[
+HaveArrow^{t + 1} \iff (HaveArrow^t \land \neg Shoot^t)
+\]</span></p>
+<p>For the agent’s location, the successor-state axioms are more
+elaborate.</p>
+<p><span class="math display">\[
+\begin{align*}
+L^{t+1}_{1, 1} &amp;\iff (L^t_{1, 1} \land (\neg Forward^t \lor Bump^{t
++ 1})) \\
+&amp;\lor (L^t_{1, 2} \land (FacingSouth^t \land Forward^t)) \\
+&amp;\lor (L^t_{2, 1} \land (FacingWest^t \land Forward^t)) \\
+\end{align*}
+\]</span></p>
+<p>The most important question for the agent is whether a square is OK
+to move into —— that is, whether the square is free of a pit or live
+wumpus. It’s coinvenient to add axioms for this</p>
+<p><span class="math display">\[
+OK^t_{x, y} \iff \neg P_{x, y} \land \neg(W_{x, y} \land WumpusAlive^t)
+\]</span></p>
+<p>So finally, the agent can move into any square where <span
+class="math inline">\(\text{ASK}(KB, OK^t_{x, y}) = true\)</span>.</p>
+<h2 id="a-hybrid-agent">A hybrid agent</h2>
+<p>The agent program maintains and updates a knowledge base as well as a
+current plan. The initial knowledge base contains atemporal axioms ——
+those that don’t depend on <span class="math inline">\(t\)</span>, such
+as the successor-state axioms. At each time step, the new percept
+sentence is added along with all the axioms that depend on <span
+class="math inline">\(t\)</span>, such as the successor-state
+axioms.</p>
+<figure>
+<img src="/assets/images/2023-05-10-logical-agent/hybrid-agent.png"
+alt="A hybrid agent program for the wumpus world. It uses a propositional knowl- edge base to infer the state of the world, and a combination of problem-solving search and domain-specific code to choose actions. Each time HYBRID-WUMPUS-AGENT is called, it adds the percept to the knowledge base, and then either relies on a previously-defined plan or creates a new plan, and pops off the first step of the plan as the action to do next." />
+<figcaption aria-hidden="true">A hybrid agent program for the wumpus
+world. It uses a propositional knowl- edge base to infer the state of
+the world, and a combination of problem-solving search and
+domain-specific code to choose actions. Each time HYBRID-WUMPUS-AGENT is
+called, it adds the percept to the knowledge base, and then either
+relies on a previously-defined plan or creates a new plan, and pops off
+the first step of the plan as the action to do next.</figcaption>
+</figure>
+<p>The main body of the agent program constructs a plan based on a
+decreasing priority of goals. First, if there is a glitter, the program
+constructs a plan to grab the gold, follow a route back to the initial
+location, and climb out of the cave. Otherwise, if there is no current
+plan, the program plans a route to the closest safe square that it has
+not visited yet, making sure the route goes through only safe
+squares.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/" title="Logical Agents">https://aquietzero.github.io/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/" rel="tag"># 方法论</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E9%80%BB%E8%BE%91/" rel="tag"># 逻辑</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/" rel="prev" title="First-Order Logic">
+                  <i class="fa fa-angle-left"></i> First-Order Logic
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/" rel="next" title="Inference in First-Order Logic">
+                  Inference in First-Order Logic <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

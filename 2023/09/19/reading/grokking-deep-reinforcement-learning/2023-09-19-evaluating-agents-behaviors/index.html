@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="In this chapter, we’ll study agents that can learn to estimate the value of policies, similar to the policy-evaluation method, but this time without the MDP. This is often called the prediction proble">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Evaluating Agent&#39;s Behaviors">
+<meta property="og:url" content="https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="In this chapter, we’ll study agents that can learn to estimate the value of policies, similar to the policy-evaluation method, but this time without the MDP. This is often called the prediction proble">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.528Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/","path":"2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/","title":"Evaluating Agent's Behaviors"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Evaluating Agent's Behaviors | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#learning-to-estimate-the-value-of-policies"><span class="nav-number">1.</span> <span class="nav-text">Learning to estimate
+the value of policies</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#first-visit-monte-carlo-improving-estimates-after-each-episode"><span class="nav-number">1.1.</span> <span class="nav-text">First-visit
+Monte Carlo: Improving estimates after each episode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#every-visit-monte-carlo-a-different-way-of-handling-state-visits"><span class="nav-number">1.2.</span> <span class="nav-text">Every-visit
+Monte Carlo: A different way of handling state visits</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#temporal-difference-learning-improving-estimates-after-each-step"><span class="nav-number">1.3.</span> <span class="nav-text">Temporal-difference
+learning: Improving estimates after each step</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#learning-to-estimate-from-multiple-steps"><span class="nav-number">2.</span> <span class="nav-text">Learning to estimate
+from multiple steps</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#n-step-td-learning-improving-estimates-after-a-couple-of-steps"><span class="nav-number">2.1.</span> <span class="nav-text">N-step
+TD learning: Improving estimates after a couple of steps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#forward-view-td%CE%BB-improving-estimates-of-all-visited-states"><span class="nav-number">2.2.</span> <span class="nav-text">Forward-view
+TD(λ): Improving estimates of all visited states</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#td%CE%BB-improving-estimates-of-all-visited-states-after-each-step"><span class="nav-number">2.3.</span> <span class="nav-text">TD(λ):
+Improving estimates of all visited states after each step</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Evaluating Agent's Behaviors | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Evaluating Agent's Behaviors
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-09-19 00:00:00" itemprop="dateCreated datePublished" datetime="2023-09-19T00:00:00+08:00">2023-09-19</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>In this chapter, we’ll study agents that can learn to estimate the
+value of policies, similar to the policy-evaluation method, but this
+time without the MDP. This is often called the prediction problem
+because we’re estimating value functions, and these are defined as the
+expectation of future discounted rewards.</p>
+<h1 id="learning-to-estimate-the-value-of-policies">Learning to estimate
+the value of policies</h1>
+<h2
+id="first-visit-monte-carlo-improving-estimates-after-each-episode">First-visit
+Monte Carlo: Improving estimates after each episode</h2>
+<p>The goal is to estimate the state-value function <span
+class="math inline">\(v_\pi(s)\)</span> of a policy <span
+class="math inline">\(\pi\)</span>. <strong>Monte Carlo prediction
+(MC)</strong> run episodes with a given policy and then calculate
+averages for every state.</p>
+<p>The agent first interact with the environment using policy <span
+class="math inline">\(\pi\)</span> util the agent hits a terminal state
+<span class="math inline">\(S_T\)</span>. The collection of state <span
+class="math inline">\(S_t\)</span>, action <span
+class="math inline">\(A_t\)</span>, reward <span
+class="math inline">\(R_{t+1}\)</span>, and next state <span
+class="math inline">\(S_{t+1}\)</span> is called an <strong>experience
+tuple</strong>. A sequence of experiences is called a
+<strong>trajectory</strong>. Once a trajectory is given, returns <span
+class="math inline">\(G_{t:T}\)</span> for every state <span
+class="math inline">\(S_t\)</span> can be calculated. For instance, for
+state <span class="math inline">\(S_t\)</span>, go from time step <span
+class="math inline">\(t\)</span> forward, adding up and discounting the
+rewards received along the way: <span class="math inline">\(R_{t+1},
+R_{t+2}, R_{t+3}, \dots, R_{T}\)</span>, until the end of the trajectory
+at time step <span class="math inline">\(T\)</span>. Repeat the process
+from <span class="math inline">\(S_{t+1}\)</span> until the final state
+<span class="math inline">\(S_T\)</span>, which by definition has a
+value of <span class="math inline">\(0\)</span>. Then discount these
+rewards with an exponentially decaying discount factor: <span
+class="math inline">\(\gamma^0, \gamma^1, \gamma^2, \dots,
+\gamma^{T-1}\)</span>.</p>
+<p>After generating a trajectory and calculating the returns for all
+states <span class="math inline">\(S_t\)</span>, you can estimate the
+state-value function <span class="math inline">\(v_\pi(s)\)</span> at
+the end of every episode <span class="math inline">\(e\)</span> and
+final time step <span class="math inline">\(T\)</span> by merely
+averaging the returns obtained from each state <span
+class="math inline">\(s\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2023-09-19-evaluating-agents-behaviors/monte-carlo-prediction.png"
+alt="monte-carlo-prediction" />
+<figcaption aria-hidden="true">monte-carlo-prediction</figcaption>
+</figure>
+<p>The action-value function under policy <span
+class="math inline">\(\pi\)</span> is</p>
+<p><span class="math display">\[
+v_\pi(s) = \Bbb{E}_\pi[G_{t:T}|S_t=s]
+\]</span></p>
+<p>and the returns are the total discounted reward</p>
+<p><span class="math display">\[
+G_{t:T} = R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{T-1}R_T
+\]</span></p>
+<p>Sample a trajectory from the policy</p>
+<p><span class="math display">\[
+S_t, A_t, R_{t+1}, S_{t+1}, \dots, R_T, S_T \sim \pi_{t:T}
+\]</span></p>
+<p>Then add up the per-state returns and increment a count</p>
+<p><span class="math display">\[
+T_T(S_t) = T_T(S_t) + G_{t:T} \\
+N_T(S_t) = N_T(S_t) + 1
+\]</span></p>
+<p>Then we can estimate the expectation using the empirial mean, so, the
+estimated state-value function for a state is the mean return for that
+state.</p>
+<p><span class="math display">\[
+V_T(S_t) = \frac{T_T(S_t)}{N_T(S_t)} \\
+\lim_{N(s) \to \infty} V(s) = v_\pi(s)
+\]</span></p>
+<p>Notice that means can be calculated incrementally. There is no need
+to keep track of the sum of returns for all states. This equation is
+equivalent and more efficient.</p>
+<p><span class="math display">\[
+V_T(S_t) = V_{T-1}(S_t) + \frac{1}{N_t(S_t)}[G_{t:T} - V_{T-1}(S_t)]
+\]</span></p>
+<p>The mean is usually replace for a learning value that can be time
+dependent or constant.</p>
+<p><span class="math display">\[
+V_T(S_t) = V_{T-1}(S_t) + \alpha_t\bigg[
+\overbrace{
+\underbrace{G_{t:T}}_{\text{MC target}} - V_{T-1}(S_t)
+}^{\text{MC error}}
+\bigg]
+\]</span></p>
+<h2
+id="every-visit-monte-carlo-a-different-way-of-handling-state-visits">Every-visit
+Monte Carlo: A different way of handling state visits</h2>
+<p>There are two different ways of implementing an averaging-of-returns
+algorithm. This is because a single trajectory may contain multiple
+visits to the same state. In this case, should we calculate the returns
+following each of those visits independently and then include all of
+those targets in the averages, or should we only use the first visit to
+each state?</p>
+<p>Both are valid approaches, and they have similar theoretical
+properties. The more “standard” version is <strong>first-visit MC
+(FVMC)</strong>, and its convergence properties are easy to justify
+because each trajectory is an independent and identically distributed
+sample of <span class="math inline">\(v_\pi(s)\)</span>.
+<strong>Every-visit MC (EVMC)</strong> is slightly different because
+returns are no longer independent and identically distributed when
+states are visited multiple times in the same trajectory.</p>
+<p><strong>Both method converge given infinite samples.</strong></p>
+<aside>
+<p>💡 MC prediction estimates <span
+class="math inline">\(v_\pi(s)\)</span> **as the average of returns of
+<span class="math inline">\(\pi\)</span>. FVMC uses only one return per
+state per episode: the return following a first visit. EVMC averages the
+returns following all visits to a state, even if in the same
+episode.</p>
+</aside>
+<h2
+id="temporal-difference-learning-improving-estimates-after-each-step">Temporal-difference
+learning: Improving estimates after each step</h2>
+<p>One of the main drawbacks of MC is the fact that the agent has to
+wait until the end of an episode when it can obtain the actual return
+<span class="math inline">\(G_{t:T}\)</span> before it can update the
+state-value function estimate <span
+class="math inline">\(V_T(S_t)\)</span>. On the other hand, MC has
+pretty solid convergence properties because it updates the value
+function estimate <span class="math inline">\(V_T(S_t)\)</span> toward
+the actual return <span class="math inline">\(G_{t:T}\)</span>, which is
+an unbiased estimate of the true state-value funtion <span
+class="math inline">\(v_\pi(s)\)</span>.</p>
+<p>Also, due to the high variance of the actual returns <span
+class="math inline">\(G_{t:T}\)</span>, MC can be sampled inefficient.
+All of that randomness becomes noise that can only be alleviated with
+lots of data.</p>
+<p>Instead of using the actual return <span
+class="math inline">\(G_{t:T}\)</span>, estimate a return. A single-step
+reward <span class="math inline">\(R_{t + 1}\)</span>, and once the next
+state <span class="math inline">\(S_{t+1}\)</span> is observed, the
+state-value function estimates <span
+class="math inline">\(V(S_{t+1})\)</span> can be used as an estimate of
+the return at the next step <span
+class="math inline">\(G_{t+1:T}\)</span>. This is the relationship in
+the equations that <strong>temporal-difference (TD)</strong> methods
+exploit. These methods, unlike MC, can learn from incomplete episodes by
+using the one-step actual return, which is the immediate reward <span
+class="math inline">\(R_{t+1}\)</span>, but then an estimate of the
+return from the next state onwards, which is the state-value function
+estimate of the next state <span
+class="math inline">\(V(S_{t+1})\)</span>, that is, <span
+class="math inline">\(R_{t+1} + \gamma V(S_{t+1})\)</span>, which is
+called the <strong>TD target</strong>.</p>
+<figure>
+<img
+src="/assets/images/2023-09-19-evaluating-agents-behaviors/td-prediction.png"
+alt="td-prediction" />
+<figcaption aria-hidden="true">td-prediction</figcaption>
+</figure>
+<p>Start from the definition of the state-value function</p>
+<p><span class="math display">\[
+v_\pi(s) = \Bbb{E}_\pi[G_{t:T}|S_t = s]
+\]</span></p>
+<p>and the definition of the return in recursive form</p>
+<p><span class="math display">\[
+\begin{align*}
+G_{t:T} &amp;= R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{T-1}R_T \\
+&amp;= R_{t+1} + \gamma (R_{t+2} + \dots + \gamma^{T-2}R_T) \\
+&amp;= R_{t+1} + \gamma G_{t+1:T}
+\end{align*}
+\]</span></p>
+<p>Substitute the recursive form into the state-value function</p>
+<p><span class="math display">\[
+\begin{align*}
+v_\pi(s) &amp;= \Bbb{E}_\pi[G_{t:T}|S_t = s] \\
+&amp;= \Bbb{E}_\pi[R_{t+1} + \gamma G_{t+1:T}|S_t = s] \\
+&amp;= \Bbb{E}_\pi[R_{t+1} + \gamma \textcolor{blue}{v_\pi(S_{t+1})}|S_t
+= s]
+\end{align*}
+\]</span></p>
+<p>Since the expectation of the returns from the next state is the
+state-value function of the next state, so the above definition becomes
+recursive. So the estimate <span class="math inline">\(V(S)\)</span> of
+the true state-value function <span
+class="math inline">\(v_\pi(s)\)</span> can be obtained by</p>
+<p><span class="math display">\[
+V_{\textcolor{blue}{t+1}}(S_t) = V_{\textcolor{blue}t}(S_t) +
+\alpha_t\bigg[
+\overbrace{
+\underbrace{R_{t+1} + \gamma V_t(S_{t+1})}_{\text{TD target}} -
+V_{t}(S_t)
+}^{\text{TD error}}
+\bigg]
+\]</span></p>
+<p>A big win is we can make updates to the state-value function
+estimates <span class="math inline">\(V(S)\)</span> every time step.</p>
+<h1 id="learning-to-estimate-from-multiple-steps">Learning to estimate
+from multiple steps</h1>
+<p>In MC methods, we sample the environment all the way through the end
+of the episode before we estimate the value function. On the other hand,
+in TD learning, the agent interacts with the environment only once, and
+it estimates the expected return to go to, then estimates the target
+then the value function. As it turns out, there’s a spectrum of
+algorithms lying in between MC and TD.</p>
+<h2
+id="n-step-td-learning-improving-estimates-after-a-couple-of-steps">N-step
+TD learning: Improving estimates after a couple of steps</h2>
+<p>MC and TD methods can be generalized into an n-step method. Instead
+of doing a single step as TD or the full episode like MC, <strong>n-step
+TD</strong> does an n-step bootstrapping.</p>
+<p>The experience sequence is</p>
+<p><span class="math display">\[
+S_t, A_t, R_{t+1}, S_{t+1}, \dots, R_{t+n}, S_{t+n} \sim \pi_{t:t+n}
+\]</span></p>
+<p>In n-step TD we must wait n steps before we can update <span
+class="math inline">\(v(s)\)</span>. In MC, <span
+class="math inline">\(n\)</span> is <span
+class="math inline">\(\infty\)</span> while in TD, <span
+class="math inline">\(n\)</span> is <span
+class="math inline">\(1\)</span>. The total discounted reward from step
+<span class="math inline">\(t\)</span> to <span class="math inline">\(t
++ n\)</span> is given by</p>
+<p><span class="math display">\[
+G_{t:t+n} = R_{t+1} + \dots + \gamma^{n-1} R_{t+n} + \gamma^n V_{t + n -
+1}(S_{t+n})
+\]</span></p>
+<p>Then the state value can be estimated by</p>
+<p><span class="math display">\[
+V_{t+n}(S_t) = V_{t+n-1}(S_t) + \alpha\bigg[
+\overbrace{
+\underbrace{G_{t:t+n}}_{\text{n-step target}} - V_{t+n-1}(S_t)
+}^{\text{n-step error}}
+\bigg]
+\]</span></p>
+<h2
+id="forward-view-tdλ-improving-estimates-of-all-visited-states">Forward-view
+TD(<strong>λ</strong>): Improving estimates of all visited states</h2>
+<p><strong>Forward-view TD(<span
+class="math inline">\(\lambda\)</span>)</strong> is a prediction method
+that combines multiple n-steps into a single update. In this particular
+version, the agent will have to wait until the end of an episode before
+it can update the state-value function estimates. However, another
+method, called, <strong>backward-view TD(<span
+class="math inline">\(\lambda\)</span>)</strong>, can split the
+corresponding updates into partial updates and apply those partial
+updates to the state-value function estimates on every step.</p>
+<figure>
+<img
+src="/assets/images/2023-09-19-evaluating-agents-behaviors/generalized-bootstrapping.png"
+alt="generalized-bootstrapping" />
+<figcaption aria-hidden="true">generalized-bootstrapping</figcaption>
+</figure>
+<p>In forward view TD(<span class="math inline">\(\lambda\)</span>), all
+n-step returns until the final step <span
+class="math inline">\(T\)</span> are used, and weighting it with an
+exponentially decaying value <span
+class="math inline">\(\lambda\)</span>.</p>
+<p><span class="math display">\[
+G_{t:T}^\lambda = (1 - \lambda)\sum_{n=1}^{T-t-1} \lambda^{n-1}
+G_{t:t+n} + \underbrace{\lambda^{T-t-1}G_{t:T}}_\text{Weighted final
+return}
+\]</span></p>
+<p>The coefficient before the weighted final return is needed so that
+all weights add up to 1. The above equation says that we use the
+following way to calculate the n-step return</p>
+<p><span class="math display">\[
+\begin{align*}
+G_{t:t+1} &amp;= R_{t+1} + \gamma V_t(S_{t+1}) &amp; 1 - \lambda \\
+G_{t:t+2} &amp;= R_{t+1} + \gamma R_{t+2} + \gamma^2 V_{t+1}(S_{t+2})
+&amp; (1 - \lambda)\lambda \\
+G_{t:t+3} &amp;= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3
+V_{t+2}(S_{t+3}) &amp; (1 - \lambda)\lambda^2 \\
+\vdots \\
+G_{t:t+n} &amp;= R_{t+1} + \cdots + \gamma^{n-1} R_{t+n} + \gamma^n
+V_{t+n-1}(S_{t+n}) &amp; (1 - \lambda)\lambda^{n-1} \\
+\end{align*}
+\]</span></p>
+<p>Until the agent reaches a terminal state, then weight by this
+normalizing factor</p>
+<p><span class="math display">\[
+G_{t:T} = R_{t+1} + \gamma R_{t+2} + \dots + \gamma^{T-1} R_T
+\]</span></p>
+<p>The final recursive equation for value state function is</p>
+<p><span class="math display">\[
+V_{T}(S_t) = V_{T-1}(S_t) + \alpha\bigg[
+\overbrace{
+\underbrace{G_{t:T}^\lambda}_{\lambda \text{-return}} - V_{T-1}(S_t)
+}^{\lambda \text{-error}}
+\bigg]
+\]</span></p>
+<h2
+id="tdλ-improving-estimates-of-all-visited-states-after-each-step">TD(<strong>λ</strong>):
+Improving estimates of all visited states after each step</h2>
+<p>MC methods are under “<strong>the curse of the time step</strong>”
+because they can only apply updates to the state-value function
+estimates after reaching a terminal state.</p>
+<p>With n-step bootstrapping, you’re still under “the curse of the time
+step” because you still have to wait until <span
+class="math inline">\(n\)</span> **interactions with the environment
+have passed before you can make an update to the state-value function
+estimates.</p>
+<p>With forward-view TD(<span class="math inline">\(\lambda\)</span>),
+we’re back at MC in terms of the time step.</p>
+<p>In addition to generalizing and unifying MC and TD methods,
+<strong>backward-view TD(<span
+class="math inline">\(\lambda\)</span>)</strong>, or <strong>TD(<span
+class="math inline">\(\lambda\)</span>)</strong> for short, can still
+tune the bias/variance trade-off in addition to the ability to apply
+updates on every time step.</p>
+<p>The mechanism that provides TD(<span
+class="math inline">\(\lambda\)</span>) this advantage is known as
+<strong>eligibility traces</strong>. An eligibility trace is a memory
+vector that keeps track of recently visited states. The basic idea is to
+track the states that are eligible for an update on every step. We keep
+track, not only of whether a state is eligible or not, but also by how
+much, so that the corresponding update is applied correctly to eligible
+states.</p>
+<figure>
+<img
+src="/assets/images/2023-09-19-evaluating-agents-behaviors/eligibility-traces.png"
+alt="eligibility-traces" />
+<figcaption aria-hidden="true">eligibility-traces</figcaption>
+</figure>
+<p>For example, all eligibility traces are initialized to zero, and when
+you encounter a state, you add a one to its trace. Each time step, you
+calculate an update to the value function for all states and multiply it
+by the eligibility trace vector. This way, only eligible states will get
+updated. After the update, the eligibility trace vector is decayed by
+the <span class="math inline">\(\lambda\)</span> (weight mix-in factor)
+and <span class="math inline">\(\gamma\)</span> (discount factor), so
+that future reinforcing events have less impact on earlier states. By
+doing this, the most recent states get more significant credit for a
+reward encountered in a recent transition than those states visited
+earlier in the episode, given that <span
+class="math inline">\(\lambda\)</span> isn’t set to one; otherwise, this
+is similar to an MC update, which gives equal credit (assuming no
+discounting) to all states visited during the episode.</p>
+<p>Every new episode we set the eligibility vector to <span
+class="math inline">\(0\)</span>.</p>
+<p><span class="math display">\[
+E_0 = 0
+\]</span></p>
+<p>Then, we interact with the environment one cycle: <span
+class="math inline">\(S_t, A_t, R_{t+1}, S_{t+1} \sim
+\pi_{t:t+1}\)</span>. Then, the eligibility of state <span
+class="math inline">\(S_t\)</span> is incremented.</p>
+<p><span class="math display">\[
+E_t(S_t) = E_t(S_t) + 1
+\]</span></p>
+<p>Then calculate the TD error just as we’ve done so far</p>
+<p><span class="math display">\[
+\delta^\text{TD}_{t:t+1}(S_t) = \underbrace{R_{t+1} + \gamma
+V_t(S_{t+1})}_\text{TD target} - V_t(S_t)
+\]</span></p>
+<p>But unlike before, we update the estimated the entire state-value
+function at once.</p>
+<p><span class="math display">\[
+V_{t+1} = V_t + \alpha_t
+\underbrace{\delta^\text{TD}_{t:t+1}(S_t)}_\text{TD error}E_t
+\]</span></p>
+<p>Then we decay the eligibility</p>
+<p><span class="math display">\[
+E_{t+1} = E_t \gamma \lambda
+\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/" title="Evaluating Agent&#39;s Behaviors">https://aquietzero.github.io/2023/09/19/reading/grokking-deep-reinforcement-learning/2023-09-19-evaluating-agents-behaviors/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/09/13/reading/grokking-deep-reinforcement-learning/2023-09-13-balancing-the-gathering-and-use-of-information/" rel="prev" title="Balancing the gathering and use of information">
+                  <i class="fa fa-angle-left"></i> Balancing the gathering and use of information
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/20/reading/grokking-deep-reinforcement-learning/2023-09-20-improving-agents-behaviors/" rel="next" title="Improving Agent's Behaviors">
+                  Improving Agent's Behaviors <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

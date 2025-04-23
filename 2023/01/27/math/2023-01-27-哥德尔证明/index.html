@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一个成功的一致性绝对证明例子 形式系统 考虑一个简单的形式演算系统。 符号集 符号集包含命题变量 \(p,q,r\) 等，符号常量为 \(\sim, \lor, \to, \land\)，以及标点符号 \((, )\)。这些符号都是我们平时使用的含义。 公理 这个演算系统的公理为下面四个。 \[ \begin{align} (p \lor p) \to p \\ p \to (p \lor q)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哥德尔证明">
+<meta property="og:url" content="https://aquietzero.github.io/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="一个成功的一致性绝对证明例子 形式系统 考虑一个简单的形式演算系统。 符号集 符号集包含命题变量 \(p,q,r\) 等，符号常量为 \(\sim, \lor, \to, \land\)，以及标点符号 \((, )\)。这些符号都是我们平时使用的含义。 公理 这个演算系统的公理为下面四个。 \[ \begin{align} (p \lor p) \to p \\ p \to (p \lor q)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.521Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/","path":"2023/01/27/math/2023-01-27-哥德尔证明/","title":"哥德尔证明"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>哥德尔证明 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%88%90%E5%8A%9F%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E7%BB%9D%E5%AF%B9%E8%AF%81%E6%98%8E%E4%BE%8B%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">一个成功的一致性绝对证明例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%A2%E5%BC%8F%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.</span> <span class="nav-text">形式系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E9%9B%86"><span class="nav-number">1.1.1.</span> <span class="nav-text">符号集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AC%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">公理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-number">1.1.3.</span> <span class="nav-text">变换规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%80%83%E5%AF%9F"><span class="nav-number">1.2.</span> <span class="nav-text">考察</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A5%E5%BE%B7%E5%B0%94%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">哥德尔编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%BA%94%E5%BC%95%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">对应引理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E5%AD%A6%E7%9A%84%E7%AE%97%E6%9C%AF%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">元数学的算术化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">3.1.</span> <span class="nav-text">一个简单的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%A4%8D%E6%9D%82%E7%9A%84%E5%91%BD%E9%A2%98"><span class="nav-number">3.2.</span> <span class="nav-text">一个复杂的命题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2"><span class="nav-number">3.3.</span> <span class="nav-text">替换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E8%AF%81%E7%9A%84%E6%A0%B8%E5%BF%83"><span class="nav-number">3.4.</span> <span class="nav-text">论证的核心</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5"><span class="nav-number">3.4.1.</span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5"><span class="nav-number">3.4.2.</span> <span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5"><span class="nav-number">3.4.3.</span> <span class="nav-text">第三步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5"><span class="nav-number">3.4.4.</span> <span class="nav-text">第四步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5"><span class="nav-number">3.4.5.</span> <span class="nav-text">第五步</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="哥德尔证明 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          哥德尔证明
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-27 00:00:00" itemprop="dateCreated datePublished" datetime="2023-01-27T00:00:00+08:00">2023-01-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/01/27/math/2023-01-27-哥德尔证明/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一个成功的一致性绝对证明例子">一个成功的一致性绝对证明例子</h2>
+<h3 id="形式系统">形式系统</h3>
+<p>考虑一个简单的形式演算系统。</p>
+<h4 id="符号集">符号集</h4>
+<p>符号集包含命题变量 <span class="math inline">\(p,q,r\)</span>
+等，符号常量为 <span class="math inline">\(\sim, \lor, \to,
+\land\)</span>，以及标点符号 <span class="math inline">\((,
+)\)</span>。这些符号都是我们平时使用的含义。</p>
+<h4 id="公理">公理</h4>
+<p>这个演算系统的公理为下面四个。</p>
+<p><span class="math display">\[
+\begin{align}
+(p \lor p) \to p \\
+p \to (p \lor q) \\
+(p \lor q) \to (q \lor p) \\
+(p \to q) \to ( (r \lor p) \to (r \lor q)) \\
+\end{align}
+\]</span></p>
+<h4 id="变换规则">变换规则</h4>
+<ol type="1">
+<li>替换规则：可以使用一个命题变量替换同一个公式里的某一个命题变量。</li>
+<li>分离规则：如果 <span class="math inline">\(S_1\)</span> 和 <span
+class="math inline">\(S_1 \to S_2\)</span>，那么有 <span
+class="math inline">\(S_2\)</span>。</li>
+</ol>
+<h3 id="考察">考察</h3>
+<p>公式 <span class="math inline">\(p \to (\sim p \to q)\)</span>
+是该形式系统的一条定理。假设，某一命题 <span
+class="math inline">\(S\)</span> 以及其否定形式 <span
+class="math inline">\(\sim S\)</span>
+都能从公理中推导出来，那么通过使用替换规则和分离规则，可以得到公式 <span
+class="math inline">\(q\)</span>。</p>
+<p><span class="math display">\[
+\begin{align}
+p \to (\sim p \to q) \\
+S \to (\sim S \to q) \\
+\sim S \to q \\
+q
+\end{align}
+\]</span></p>
+<p>这意味着，如果有某个公式 <span class="math inline">\(S\)</span>
+及其否定形式 <span class="math inline">\(\sim S\)</span>
+都能从公理中导出，则任何公式都能从这组公理中导出。<strong>总之一句话，如果这个系统不是一致的，则每一个公式都是定理。反过来说，如果不是每个公式都是定理（即如果至少有一个公式不能从公理中推导出来），那么这个形式系统是一致的。</strong></p>
+<h2 id="哥德尔编码">哥德尔编码</h2>
+<p>哥德尔描述了一种形式验算系统，我们称其为
+PM，在其中能够表达所有的通常的算术概念，并建立熟悉的算术关系。</p>
+<p>给每一个原始符号，每一个公式（或符号串）以及每一个证明（公式的有限序列）都指定一个独一无二的数是可能的。这个数可以看作是一种区别用的标签，被称为符号，公式或证明的“哥德尔数”。</p>
+<p>编码方式如下</p>
+<p><span class="math display">\[
+\def\arraystretch{1.2}
+\begin{array}{c|c|c}
+固定符号 &amp; 哥德尔数 &amp; 意义 \\
+\hline
+\sim &amp; 1 &amp; 非 \\
+\lor &amp; 2 &amp; 或 \\
+\to &amp; 3 &amp; 如果 \cdots 那么 \cdots \\
+\exists &amp; 4 &amp; 存在一个 \cdots \\
+= &amp; 5 &amp; 等于 \\
+0 &amp; 6 &amp; 零 \\
+s &amp; 7 &amp; \cdots 的直接后继 \\
+( &amp; 8 &amp; 标点 \\
+) &amp; 9 &amp; 标点 \\
+, &amp; 10 &amp; 标点 \\
++ &amp; 11 &amp; 加 \\
+\times &amp; 12 &amp; 乘 \\
+\end{array}
+\]</span></p>
+<p><span class="math display">\[
+\def\arraystretch{1.2}
+\begin{array}{c|c|c}
+数字变量 &amp; 哥德尔数 &amp; 可能的代入 \\
+\hline
+x &amp; 13 &amp; 0 \\
+y &amp; 17 &amp; s0 \\
+z &amp; 19 &amp; y \\
+\end{array} \\
+\]</span></p>
+<p>数字变量与大于 12 的素数相联系</p>
+<p><span class="math display">\[
+\def\arraystretch{1.2}
+\begin{array}{c|c|c}
+命题变量 &amp; 哥德尔数 &amp; 可能的代入 \\
+\hline
+p &amp; 13^2 &amp; 0=0 \\
+q &amp; 17^2 &amp; (\exists x)(x=sy) \\
+r &amp; 19^2 &amp; p \to q \\
+\end{array} \\
+\]</span></p>
+<p>命题变量与大于 12 的素数平方相联系</p>
+<p><span class="math display">\[
+\def\arraystretch{1.2}
+\begin{array}{c|c|c}
+谓词变量 &amp; 哥德尔数 &amp; 可能的代入 \\
+\hline
+P &amp; 13^3 &amp; x=sy \\
+Q &amp; 17^3 &amp; \sim(x=ss0 \times y) \\
+R &amp; 19^3 &amp; (\exists z)(x = y + sz) \\
+\end{array} \\
+\]</span></p>
+<p>谓词变量与大于 12 的素数立方相联系</p>
+<h3 id="对应引理">对应引理</h3>
+<p>每一个原始递归的真理，当用形式演算的符号将其编码为符号串时，都成为一条定理。其次，在一个接一个的基础上，形式符号配得上其约定的解释。</p>
+<h2 id="元数学的算术化">元数学的算术化</h2>
+<p>哥德尔证明有关形式演算中表达式的结构性质的元数学命题，能够被精确地映射到这个验算自身。他的这个做法的基本思想是：因为
+PM
+中的每一个表达式都对应一个特定的哥德尔数，因而关于表达式及其相互间排列关系的元数学命题，就可以被理解为关于与之对应的哥德尔数及这些数相互的算术关系的命题。用这种方法，元数学就变得完全“算术化”了。</p>
+<h3 id="一个简单的例子">一个简单的例子</h3>
+<p>一个简单的公式“<span class="math inline">\(\sim(0 =
+0)\)</span>”，它表达了一个明显的错误，即零不等于自己。</p>
+<p>现在看一个简单的元数学命题：<strong>这个公式的第一个字符是“<span
+class="math inline">\(\sim\)</span>”</strong>。</p>
+<p>首先计算该公式的哥德尔数，称其为 <span
+class="math inline">\(a\)</span>，则有</p>
+<p><span class="math display">\[
+a = 2^1 \times 3^8 \times 5^6 \times 7^5 \times 11^6 \times 13^9
+\]</span></p>
+<p>由于 <span class="math inline">\(\sim\)</span> 的哥德尔数是 <span
+class="math inline">\(1\)</span>，则该公式必然会有一个因子是 <span
+class="math inline">\(2^1\)</span>，所以这个元数学命题对应的一个数论命题是：<span
+class="math inline">\(**2\)</span> 是 <span
+class="math inline">\(a\)</span> 的一个因数，但 <span
+class="math inline">\(2^2\)</span> 不是**。</p>
+<p>以上展示了如何用数论的方式来说我们的公式的第一个符号是波折号。下一步是，将这个用汉语说的命题，转换为
+PM 的正式符号串。在 PM 中表达“<span class="math inline">\(x\)</span> 是
+<span class="math inline">\(y\)</span> 的一个因子”，可以表述为“<span
+class="math inline">\((\exists z)(y = x \times
+z)\)</span>”。所以上面是数论命题可以表达为</p>
+<p><span class="math display">\[
+(\exists z)(\underbrace{ss \cdots ss}_{a\tiny 个}0 = z \times ss0) ∙
+\sim(\exists z)(\underbrace{ss \cdots ss}_{a\tiny 个}0 = z \times (ss0
+\times ss0)
+\]</span></p>
+<aside>
+<p>💡 由于算术谓词“<span class="math inline">\(x\)</span> 是 <span
+class="math inline">\(y\)</span>
+的因子”是<strong>原始递归</strong>的，<strong>对应引理</strong>确保了上述的字符串表达了一个关于数的真理，因而是
+PM 的一个定理。</p>
+</aside>
+<p>综上，有一个 PM 的定理，它翻译了“<strong>‘<span
+class="math inline">\(\sim(0=0)\)</span>’的开始符号是波这号</strong>”这个真的元数学命题。</p>
+<h3 id="一个复杂的命题">一个复杂的命题</h3>
+<p>现在将注意力转向一个更为复杂的元数学命题：具有哥德尔数 <span
+class="math inline">\(x\)</span> 的公式序列是哥德尔数为 <span
+class="math inline">\(z\)</span> 的公式（在 PM 中）的证明。用 <span
+class="math inline">\(\text{dem}(x, z)\)</span> 来表示 <span
+class="math inline">\(x\)</span> 和 <span
+class="math inline">\(z\)</span>
+之间的算术关系。从这个事实出发，通过哥德尔对应引理，在 PM
+中有一个形式符号组成的公式表达了这个关系。用 <span
+class="math inline">\(\text{Dem}(x, z)\)</span> 来指此公式。</p>
+<p>哥德尔的对应引理表明，任何时候数论术语 <span
+class="math inline">\(\text{dem}(x, z)\)</span> 为真时，形式为 <span
+class="math inline">\(\text{Dem}(\underbrace{ss\cdots ss}_{x\tiny 个}0,
+\underbrace{ss\cdots ss}_{z\tiny 个}0)\)</span>
+的字符串是（PM的）一个定理。</p>
+<h3 id="替换">替换</h3>
+<p>考察公式 <span class="math inline">\((\exists x)(x =
+sy)\)</span>，其哥德尔数是 <span
+class="math inline">\(m\)</span>，而其中的一个变量 <span
+class="math inline">\(y\)</span> 的哥德尔数为 <span
+class="math inline">\(17\)</span>。用 <span
+class="math inline">\(m\)</span> 替换 <span
+class="math inline">\(y\)</span>，将得到一个极长的公式</p>
+<p>$ (x)(x = _{m + 1 个}0) $</p>
+<p>这个新的 PM 字符串的意思是，存在一个数 <span
+class="math inline">\(x\)</span> 是 <span
+class="math inline">\(m\)</span> 的直接后继。或者简单地说，<span
+class="math inline">\(m\)</span>
+有一个后继。这个公式本身又有一个哥德尔数，可以用一种元数学方式简单地刻画这个结果数：它是在一个哥德尔数为
+<span class="math inline">\(m\)</span> 的公式中，用 <span
+class="math inline">\(m\)</span> 本身去替换其中哥德尔数为 <span
+class="math inline">\(17\)</span> 的变量而得到的新公式的哥德尔数。用记号
+<span class="math inline">\(\text{sub}(x, 17, x)\)</span>
+来代表新哥德尔数。它是老哥德尔数 <span class="math inline">\(x\)</span>
+的函数。</p>
+<p>而由于 <span class="math inline">\(\text{sub}\)</span>
+函数是原始递归，所以在 PM
+中存在一个恰好映射它的形式表达式，我们将这个表达式记为 <span
+class="math inline">\(\text{Sub}(x, 17, x)\)</span>。</p>
+<h3 id="论证的核心">论证的核心</h3>
+<ol type="1">
+<li>在 PM 中构造一个公式 <span
+class="math inline">\(G\)</span>，使其表达以下元数学命题：“使用 PM
+的规则，公式 <span class="math inline">\(G\)</span> 不可证“。</li>
+<li>证明，<span class="math inline">\(G\)</span>
+是可证明的，当且仅当它的否定形式 <span class="math inline">\(\sim
+G\)</span> 是可证明的。如果一个公式及其否定都是形式可证明的，那么 PM
+就是不一致的。反过来，如果 PM 是一致的，则 <span
+class="math inline">\(G\)</span> 和 <span class="math inline">\(\sim
+G\)</span> 都不可能从 PM 的公理中推导出来。</li>
+<li>尽管 <span class="math inline">\(G\)</span>
+是形式不可证明的，它却是真的算术公式。</li>
+<li>由于 <span class="math inline">\(G\)</span>
+是真的，又是形式上不可判定的（在 PM 中），因此 PM
+肯定是不完全的。换句话说，我们不能用 PM
+的公理和规则导出所有的算术真理。并且，哥德尔进一步证明，PM
+在本质上是不完全的。即使用附加的公理（或规则）来扩大 PM，使真公式 <span
+class="math inline">\(G\)</span>
+在增强了的演算中称为形式可推导的，也会有另一个用完全类似的方式构造出的真公式
+<span class="math inline">\(G&#39;\)</span>，而 <span
+class="math inline">\(G&#39;\)</span>
+在增强的演算中是形式不可判定的。</li>
+<li>哥德尔描述了怎样构造一个 PM 的公式 <span
+class="math inline">\(A\)</span>，它所表达的元数学问题是：”PM
+是一致的“，并且证明公式”<span class="math inline">\(A \to G\)</span>“在
+PM 中是形式可证明的。最后，他表明公式 <span
+class="math inline">\(A\)</span> 在 PM 中是不可证明的，从而得出推论，PM
+的一致性是无法用任何系列的逻辑推理来证明的，只要这些推理是可以被映射在
+PM 本身组成的形式演绎系统中。</li>
+</ol>
+<h4 id="第一步">第一步</h4>
+<p>公式 <span class="math inline">\(\text{Dem}(x, z)\)</span> 在 PM
+中表达了元数学命题：”哥德尔数为 <span class="math inline">\(x\)</span>
+的公式序列是哥德尔数为 <span class="math inline">\(z\)</span>
+的公式的一个证明“，在其前面加上存在量词，即 <strong><span
+class="math inline">\((\exists x) \text{Dem}(x,
+z)\)</span></strong>，这个公式表明：”<strong>哥德尔数为 <span
+class="math inline">\(z\)</span>
+的公式是可证的</strong>“。在其前方加上否定，即 <span
+class="math inline">\(\sim (\exists x) \text{Dem}(x,
+z)\)</span>，这个公式表示：”<strong>哥德尔数为 <span
+class="math inline">\(z\)</span> 的公式是不可证的</strong>“。</p>
+<p>需要做的是，证明这个公式的某个特例是不可证的。从下面的公式开始</p>
+<p><span class="math display">\[
+\tag{1} \sim (\exists x) \text{Dem}(x, \text{Sub}(y, 17, y))
+\]</span></p>
+<p>公式（1）表达了元数学命题：”哥德尔数为 <span
+class="math inline">\(\text{sub}(y, 17, y)\)</span>
+的公式不可证明“。但此时包含了变量 <span
+class="math inline">\(y\)</span>，接下来需要将变量换成一个数字。由于公式（1）属于
+PM，所以这个公式有一个对应的哥德尔数，令其为 <span
+class="math inline">\(n\)</span>，用 <span
+class="math inline">\(n\)</span> 来替代 <span
+class="math inline">\(y\)</span>，得到一个新的公式，称其为 <span
+class="math inline">\(G\)</span>，有</p>
+<p><span class="math display">\[
+\tag*{G} \sim (\exists x) \text{Dem}(x, \text{Sub}(n, 17, n))
+\]</span></p>
+<p>公式 <span class="math inline">\(G\)</span>
+表明的元数学问题是：”哥德尔数为 <span
+class="math inline">\(\text{sub}(n, 17, n)\)</span>
+的公式是不可证的“。公式 <span class="math inline">\(G\)</span> 属于
+PM，因此会有一个对应的哥德尔数 <span
+class="math inline">\(g\)</span>。而 <strong><span
+class="math inline">\(g = \text{sub(n, 17, n)}\)</span></strong>。</p>
+<blockquote>
+<p>令公式 <span class="math inline">\(\sim(\exists x )\text{Dem}(x,
+\text{Sub}(y, 17, y))\)</span> 的哥德尔数为 <span
+class="math inline">\(n\)</span>，用 <span
+class="math inline">\(n\)</span> 替代 <span
+class="math inline">\(y\)</span> 得到 <span
+class="math inline">\(\sim(\exists x )\text{Dem}(x, \text{Sub}(n, 17,
+n))\)</span>。而其中的 <span class="math inline">\(\text{Sub}(n, 17,
+n)\)</span> 为”对于哥德尔数为 <span class="math inline">\(n\)</span>
+的公式，用 <span class="math inline">\(n\)</span> 替换 <span
+class="math inline">\(y\)</span> 得到的公式的哥德尔数“，这个数实际上是
+<span class="math inline">\(\text{sub}(n, 17,
+n)\)</span>，而这样替换之后，得到的正是公式 <span
+class="math inline">\(G\)</span>，所以公式 <span
+class="math inline">\(G\)</span> 的哥德尔数 <span
+class="math inline">\(g\)</span> 就是 <span
+class="math inline">\(\text{sub}(n, 17, n)\)</span>。</p>
+</blockquote>
+<p>但公式 <span class="math inline">\(G\)</span> 表明的是”哥德尔数为
+<span class="math inline">\(g\)</span> 的公式是不可证的“，而 <span
+class="math inline">\(G\)</span> 的哥德尔数是 <span
+class="math inline">\(g\)</span>，<strong>所以 <span
+class="math inline">\(G\)</span> 实际上是说”<span
+class="math inline">\(G\)</span> 是不可证的“</strong>。</p>
+<h4 id="第二步">第二步</h4>
+<p>哥德尔证明了，如果 <span class="math inline">\(G\)</span> 可证，则
+<span class="math inline">\(\sim G\)</span> 可证（因而 PM
+不一致），而如果 <span class="math inline">\(\sim G\)</span> 可证，则 PM
+是 <span
+class="math inline">\(\omega\)</span>-不一致的。一个更强的结果是后人
+Rosser 在 1936 年得到的，也就是”<span class="math inline">\(G\)</span>
+是可证明的，当且仅当它的否定形式 <span class="math inline">\(\sim
+G\)</span> 是可证明的“。</p>
+<p><strong>如果一个公式及其否定形式都能从 PM 中得出，那证明 PM
+不是一致的。反过来，如果 PM 是一致的，则 <span
+class="math inline">\(G\)</span> 及 <span class="math inline">\(\sim
+G\)</span> 均不可证，也就是 <span class="math inline">\(G\)</span>
+是不能判定的。</strong></p>
+<h4 id="第三步">第三步</h4>
+<p>在 PM 一致的前提下，由于 <span class="math inline">\(G\)</span>
+说的是”<span class="math inline">\(G\)</span> 是不可证的“，但实际上
+<span class="math inline">\(G\)</span> 是不能判定的，所以 <span
+class="math inline">\(G\)</span> 说了真理，也就是 PM 的一个定理。</p>
+<aside>
+<p>💡 其实 <span class="math inline">\(G\)</span> 和 <span
+class="math inline">\(\sim G\)</span>
+肯定有一个是真的，因为它们构成了关于数的一对对立的判断，肯定其中有一个为真一个为假。</p>
+</aside>
+<p>但不难看出 <span class="math inline">\(G\)</span>
+为真，因为在第二步才证明了 <span class="math inline">\(G\)</span> 在 PM
+是不可证的，而 <span class="math inline">\(G\)</span>
+表述的也是这件事情。</p>
+<h4 id="第四步">第四步</h4>
+<p>一个演绎系统被称作是”完全的“，如果每一个能在此系统内表示的真命题都是可以用演绎规则从公理中推导出来。如果不是这种情况，那么这个系统被称作”不完全的“。<strong>由于上面的步骤表明
+<span class="math inline">\(G\)</span> 是 PM 的真公式但又是在 PM
+中形式不可推导，因此 PM 是一个不完全的系统（当然，假定的前提是 PM
+是一致的）。</strong></p>
+<h4 id="第五步">第五步</h4>
+<p>考虑一个元数学命题：”<strong>如果 PM
+是一致的，则它是不完全的</strong>“。</p>
+<p>上面的例子已经给出，如果一个形式系统是一致的，则会有至少一个公式是不可证的，所以上述命题的前半句，等价于说”至少有一个
+PM 的公式在 PM 中是不可证的“。而对应的数论命题则是”至少存在一个 <span
+class="math inline">\(y\)</span>，没有一个 <span
+class="math inline">\(x\)</span> 能和它构成 <span
+class="math inline">\(\text{dem}\)</span> 关系“。</p>
+<p><span class="math display">\[
+\tag* A (\exists y) \sim (\exists x) \text{Dem(x, y)}
+\]</span></p>
+<p>一个系统不完全，意味着存在真的但又不可证的公式 <span
+class="math inline">\(X\)</span> 不是 PM 的定理。通过上面可知，<span
+class="math inline">\(G\)</span> 正是这样的一个公式，它在 PM
+不可证，但是确实真的。所以 <span class="math inline">\(A \to G\)</span>
+正是这个元数学命题的 PM 公式，也就是</p>
+<p><span class="math display">\[
+(\exists y) \sim (\exists x) \text{Dem(x, y)} \to \sim (\exists x)
+\text{Dem}(x, \text{Sub}(n, 17, n))
+\]</span></p>
+<p>可以证明这个公式在 PM 中是可以证明的。基于分离规则，如果 <span
+class="math inline">\(A\)</span> 可证，那么必然会导致 <span
+class="math inline">\(G\)</span> 也可证，但是 <span
+class="math inline">\(G\)</span> 实际上不可证。因此，如果 PM 一致，则
+<span class="math inline">\(A\)</span> 在 PM 中是不可证的。</p>
+<p>因此，假设通过一串推理步骤能非形式的证明 <span
+class="math inline">\(A\)</span>
+这个元数学命题，并且如果这一串步骤能映射为 PM
+中构成证明的公式序列，那么公式 <span class="math inline">\(A\)</span>
+本身在 PM 中就是可证的。但正如我们刚看到的，如果 PM
+是一致的，则这是不可能的。所以我们被迫得出结论：<strong>如果 PM
+是一致的，那么它的一致性是无法用任何可被映射到 PM
+自身的元数学推理来证明的。</strong></p>
+<blockquote>
+<p>这个哥德尔分析的辉煌结果不应被曲解：它并未排除 PM
+一致性的元数学证明，它排除的是能被映射到 PM 内的一致性证明。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/01/27/math/2023-01-27-%E5%93%A5%E5%BE%B7%E5%B0%94%E8%AF%81%E6%98%8E/" title="哥德尔证明">https://aquietzero.github.io/2023/01/27/math/2023-01-27-哥德尔证明/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/14/reading/realtime-collision-detection/index/" rel="prev" title="Real-Time Collision Detection">
+                  <i class="fa fa-angle-left"></i> Real-Time Collision Detection
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/02/28/reading/2023-02-28-%E9%9B%86%E5%BC%82%E7%92%A7%E4%B9%8B%E5%A4%A7%E6%88%90/" rel="next" title="集异璧之大成">
+                  集异璧之大成 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

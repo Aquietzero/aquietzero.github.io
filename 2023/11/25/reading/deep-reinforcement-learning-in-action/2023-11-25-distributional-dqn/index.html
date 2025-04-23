@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Most environments we wish to apply reinforcement learning to involve some amount of randomness or unpredictability, where the rewards we observe for a given state-action pair have some variance. In or">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Distributional DQN - Getting the full story">
+<meta property="og:url" content="https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Most environments we wish to apply reinforcement learning to involve some amount of randomness or unpredictability, where the rewards we observe for a given state-action pair have some variance. In or">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-11-25-distributional-dqn/update-dist.png">
+<meta property="article:published_time" content="2023-11-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2023-11-25-distributional-dqn/update-dist.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/","path":"2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/","title":"Distributional DQN - Getting the full story"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Distributional DQN - Getting the full story | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#probability-and-statistics"><span class="nav-number">1.</span> <span class="nav-text">Probability and statistics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#priors-and-posteriors"><span class="nav-number">1.1.</span> <span class="nav-text">Priors and posteriors</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-bellman-equation"><span class="nav-number">2.</span> <span class="nav-text">The Bellman equation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-distributional-bellman-equation"><span class="nav-number">2.1.</span> <span class="nav-text">The distributional Bellman
+equation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#distributional-q-learning"><span class="nav-number">3.</span> <span class="nav-text">Distributional Q-learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#representing-a-probability-distribution-in-python"><span class="nav-number">3.1.</span> <span class="nav-text">Representing
+a probability distribution in Python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#implementing-the-dist-dqn"><span class="nav-number">3.2.</span> <span class="nav-text">Implementing the Dist-DQN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Distributional DQN - Getting the full story | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Distributional DQN - Getting the full story
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-11-25 00:00:00" itemprop="dateCreated datePublished" datetime="2023-11-25T00:00:00+08:00">2023-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Most environments we wish to apply reinforcement learning to
+<em>involve some amount of randomness or unpredictability</em>, where
+the rewards we observe for a given state-action pair have some variance.
+In ordinary Q-learning, which we might call <strong>expected-value
+Q-learning</strong>, we only learn the average of the noisy set of
+observed rewards. <strong>Distributional Q-learning</strong> seeks to
+get a more accurate picture of the distribution of observed rewards.</p>
+<p><img
+src="/assets/images/2023-11-25-distributional-dqn/dqn-vs-distributional-dqn.png" /></p>
+<h1 id="probability-and-statistics">Probability and statistics</h1>
+<p>The two major camps in probability theory are called
+<strong>frequentists</strong> and <strong>Bayesians</strong>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Frequentist</th>
+<th>Bayesian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Probabilities are frequencies of individual outcomes</td>
+<td>Probabilities are degrees of belief</td>
+</tr>
+<tr>
+<td>Computes the probability of the data given a model</td>
+<td>Computes the probability of a model given the data</td>
+</tr>
+<tr>
+<td>Uses hypothesis testing</td>
+<td>Uses parameter estimation or model comparison</td>
+</tr>
+<tr>
+<td>Is computationally easy</td>
+<td>Is (usually) computationally difficult</td>
+</tr>
+</tbody>
+</table>
+<h2 id="priors-and-posteriors">Priors and posteriors</h2>
+<p>In the Bayesian framework, probabilities represent beliefs, and
+beliefs are always tentative in situations when new information can
+become available, so a <strong>prior probability distribution</strong>
+is just the distribution you start with before receiving some new
+information. After some new information is received, the updated
+distribution is now called the <strong>posterior probability
+distribution</strong>.</p>
+<p>The beliefs are continually updated as a succession of prior
+distributions to posterior distributions, and this process is
+generically called <strong>Bayesian inference</strong>.</p>
+<figure>
+<img
+src="/assets/images/2023-11-25-distributional-dqn/bayesian-inference.png"
+alt="Bayesian inference is the process of starting with a prior distribution, receiving some new information, and using that to update the prior into a new, more informed distribution called the posterior distribution." />
+<figcaption aria-hidden="true">Bayesian inference is the process of
+starting with a prior distribution, receiving some new information, and
+using that to update the prior into a new, more informed distribution
+called the posterior distribution.</figcaption>
+</figure>
+<p>Bayesian inference is the process of starting with a prior
+distribution, receiving some new information, and using that to update
+the prior into a new, more informed distribution called the posterior
+distribution.</p>
+<h1 id="the-bellman-equation">The Bellman equation</h1>
+<p>The Bellman equation tells us how to update the Q function when
+rewards are observed.</p>
+<p><span class="math display">\[
+Q_\pi(s_t, a_t) \gets r_t + \gamma \cdot V_\pi(s_{t+1})
+\]</span></p>
+<p>where <span class="math inline">\(V_\pi(s_{t+1}) = \max
+[Q_\pi(s_{t+1}, a)]\)</span>. <em>If we use neural networks to
+approximate the Q function, we try to minimize the error between the
+predicted <span class="math inline">\(Q_\pi(s_t, a_t)\)</span> on the
+left side of the Bellman equation and the quantity on the right side by
+updating the neural network’s parameters.</em></p>
+<h2 id="the-distributional-bellman-equation">The distributional Bellman
+equation</h2>
+<p>The Bellman equation implicitly assumes that the environment is
+deterministic and thus that observed rewards are deterministic (i.e. the
+observed reward will be always the same if you take the same action in
+the same state). <em>But sometimes some amount of randomness is
+involved</em>. In this case, we can make the deterministic variable
+<span class="math inline">\(r_t\)</span> into a random variable <span
+class="math inline">\(R(s_t, a)\)</span> that has some underlying
+probability distribution. If there is randomness in how states evolve
+into new states, the Q function must be a random variable as well. The
+original Bellman equation can now be represented as</p>
+<p><span class="math display">\[
+Q(s_t, a_t) \gets \mathbb{E}[R(s_t, a)] + \gamma \cdot
+\mathbb{E}[Q(S_{t+1}, A_{t+1})]
+\]</span></p>
+<p>If we get rid of the expectation operator, we get a full
+distributional Bellman equation:</p>
+<p><span class="math display">\[
+Z(s_t, a_t) \gets R(s_t, a) + \gamma \cdot Z(S_{t+1}, A_{t+1})
+\]</span></p>
+<p>Here we use <span class="math inline">\(Z\)</span> to denote the
+distributional Q value function (which will also be referred to as the
+<strong>value distribution</strong>).</p>
+<h1 id="distributional-q-learning">Distributional Q-learning</h1>
+<h2 id="representing-a-probability-distribution-in-python">Representing
+a probability distribution in Python</h2>
+<p>A discrete probability distribution over rewards can be represented
+by two numpy arrays. One numpy array will be the possible outcomes, and
+the other will be an equal-sized array storing the probabilities for
+each associated outcome.</p>
+<p>Though <span class="math inline">\(Z(s, a)\)</span> should not be
+restricted by the outcome range, our array have to be limited by a
+minimum and maximum value.</p>
+<p>In Dist-DQN learning, we use whatever distribution the Dist-DQN
+returns for the subsequent state, <span
+class="math inline">\(s_{t+1}\)</span>, as a prior distribution, and we
+update the prior distribution with the single observed reward, <span
+class="math inline">\(r_t\)</span>, such that a little bit of the
+distribution gets redistributed around the observed <span
+class="math inline">\(r_t\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2023-11-25-distributional-dqn/uniform-distribution-changes.png"
+alt="This figure shows how a uniform distribution changes with lower or higher values for gamma (the discount factor)" />
+<figcaption aria-hidden="true">This figure shows how a uniform
+distribution changes with lower or higher values for gamma (the discount
+factor)</figcaption>
+</figure>
+<p>This figure shows how a uniform distribution changes with lower or
+higher values for gamma (the discount factor)</p>
+<p>Once we have the distribution, we have</p>
+<p><span class="math display">\[
+\mathrm{d}z = \frac{v_{\max} - v_{\min}}{N - 1}
+\]</span></p>
+<p>as the “bar width”, then we can use it to find the closest support
+element index value by</p>
+<p><span class="math display">\[
+b_j = \bigg\lfloor\frac{r - v_{\min}}{\mathrm{d}z}\bigg\rfloor
+\]</span></p>
+<p>as the “bar index”, where <span class="math inline">\(r\)</span> is
+the reward.</p>
+<p>Once we find the index value of the support element corresponding to
+the observed reward, we want to redistribute some of the probability
+mass to that support and the nearby support elements. <em>We will simply
+take some of the probability mass from the neighbors on the left and
+right and add it to the element that corresponds to the observed
+reward.</em></p>
+<figure>
+<img src="/assets/images/2023-11-25-distributional-dqn/update-dist.png"
+alt="The update_dist function redistributes probability from neighbors toward the observed reward value." />
+<figcaption aria-hidden="true">The <code>update_dist</code> function
+redistributes probability from neighbors toward the observed reward
+value.</figcaption>
+</figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">update_dist</span>(<span class="params">r, support, probs, lim=(<span class="params">-<span class="number">10.</span>, <span class="number">10.</span></span>), gamma=<span class="number">0.8</span></span>):</span><br><span class="line">    nsup = probs.shape[<span class="number">0</span>]</span><br><span class="line">    vmin, vmax = lim[<span class="number">0</span>], lim[<span class="number">1</span>]</span><br><span class="line">    dz = (vmax - vmin) / (nsup - <span class="number">1.</span>)</span><br><span class="line">    bj = np.<span class="built_in">round</span>((r - vmin) / dz)</span><br><span class="line">    bj = <span class="built_in">int</span>(np.clip(bj, <span class="number">0</span>, nsup - <span class="number">1</span>))</span><br><span class="line">    m = probs.clone()</span><br><span class="line">    j = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(bj, <span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        m[i] += np.power(gamma, j) * m[i - <span class="number">1</span>]</span><br><span class="line">        j += <span class="number">1</span></span><br><span class="line">    j = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(bj, nsup - <span class="number">1</span>, <span class="number">1</span>):</span><br><span class="line">        m[i] += np.power(gamma, j) * m[i - <span class="number">1</span>]</span><br><span class="line">        j += <span class="number">1</span></span><br><span class="line">    m /= m.<span class="built_in">sum</span>()</span><br><span class="line">    <span class="keyword">return</span> m</span><br></pre></td></tr></table></figure>
+<p><img
+src="/assets/images/2023-11-25-distributional-dqn/update-dist2.png" /></p>
+<p>The left graph shows the distribution after a 2 reward is received.
+The right graph shows the distribution update can actually expressed the
+2-modal distribution.</p>
+<h2 id="implementing-the-dist-dqn">Implementing the Dist-DQN</h2>
+<p>In the game Freeway, the Dist-DQN will take a 128-element state
+vector, pass it through a couple of dense feedforward layers, and then
+it will use a <code>for</code> loop to multiply the last layer by 3
+separate matrices to get 3 separate distribution vectors. (Since in game
+Freeway there are 3 actions).</p>
+<p>Then we collect these 3 output distributions into a single 3 x 51
+matrix and return that as the final output of the Dist-DQN. Thus, we can
+get the individual action-value distributions for a particular action by
+indexing a particular row of the output matrix.</p>
+<p><img
+src="/assets/images/2023-11-25-distributional-dqn/distributional-dqn.png" /></p>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>The advantages of distributional Q-learning include improved
+performance and a way to utilize risk-sensitive policies.</li>
+<li>Prioritized replay can speed learning by increasing the proportion
+of highly informative experiences in the experience replay buffer.</li>
+<li>The Bellman equation gives us a precise way to update a Q
+function.</li>
+<li>The OpenAI Gym includes alternative environments that produce RAM
+states, rather than raw video frames. The RAM states are easier to learn
+since they are usually of much lower dimensionality.</li>
+<li>Random variables are variables that can take on a set of outcomes
+weighted by an underlying probability distribution.</li>
+<li>The entropy of a probability distribution describes how much
+information it contains.</li>
+<li>The KL divergence and cross-entropy can be used to measure the loss
+between two probability distributions.</li>
+<li>The support of a probability distribution is the set of values that
+have nonzero probability.</li>
+<li>Quantile regression is a way to learn a highly flexible discrete
+distribution by learning the set of supports rather than the set of
+probabilities.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/" title="Distributional DQN - Getting the full story">https://aquietzero.github.io/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/" rel="prev" title="Tackling more complex problems with actor-critic methods">
+                  <i class="fa fa-angle-left"></i> Tackling more complex problems with actor-critic methods
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-curiosity-driven-exploration/" rel="next" title="Curiosity-driven exploration">
+                  Curiosity-driven exploration <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

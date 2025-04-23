@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Spatial partitioning techniques provide broad-phase processing by dividing space into regions and testing if objects overlap the same region of space. Uniform Grids A very effective space subdivision">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spatial Partitioning">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Spatial partitioning techniques provide broad-phase processing by dividing space into regions and testing if objects overlap the same region of space. Uniform Grids A very effective space subdivision">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-04-10-spatial-partitioning/2d-grid.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-04-10-spatial-partitioning/quad-tree.png">
+<meta property="article:published_time" content="2022-04-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-04-10-spatial-partitioning/2d-grid.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/","path":"2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/","title":"Spatial Partitioning"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spatial Partitioning | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#uniform-grids"><span class="nav-number">1.</span> <span class="nav-text">Uniform Grids</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cell-size-issues"><span class="nav-number">1.1.</span> <span class="nav-text">Cell Size Issues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#grids-as-arrays-of-linked-lists"><span class="nav-number">1.2.</span> <span class="nav-text">Grids as Arrays of Linked
+Lists</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hashed-storage-and-infinite-grids"><span class="nav-number">1.3.</span> <span class="nav-text">Hashed Storage and Infinite
+Grids</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#storing-static-data"><span class="nav-number">1.4.</span> <span class="nav-text">Storing Static Data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#implicit-grids"><span class="nav-number">1.5.</span> <span class="nav-text">Implicit Grids</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uniform-grid-object-object-test"><span class="nav-number">1.6.</span> <span class="nav-text">Uniform Grid Object-Object
+Test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#one-test-at-a-time"><span class="nav-number">1.6.1.</span> <span class="nav-text">One Test at a Time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#all-tests-at-a-time"><span class="nav-number">1.6.2.</span> <span class="nav-text">All Tests at a Time</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hierarchical-grids"><span class="nav-number">2.</span> <span class="nav-text">Hierarchical Grids</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-hgrid-implementation"><span class="nav-number">2.1.</span> <span class="nav-text">Basic Hgrid Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adding-an-object"><span class="nav-number">2.1.1.</span> <span class="nav-text">Adding an Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#removing-an-object"><span class="nav-number">2.1.2.</span> <span class="nav-text">Removing an Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#checking-an-object-for-collision"><span class="nav-number">2.1.3.</span> <span class="nav-text">Checking an Object for
+Collision</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#trees"><span class="nav-number">3.</span> <span class="nav-text">Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#octrees-and-quadtrees"><span class="nav-number">3.1.</span> <span class="nav-text">Octrees (and Quadtrees)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#octree-object-assignment"><span class="nav-number">3.1.1.</span> <span class="nav-text">Octree Object Assignment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#octree-object-insertion"><span class="nav-number">3.1.2.</span> <span class="nav-text">Octree Object Insertion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#octree-object-collision-test"><span class="nav-number">3.1.3.</span> <span class="nav-text">Octree Object Collision Test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loose-octrees"><span class="nav-number">3.1.4.</span> <span class="nav-text">Loose Octrees</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k-d-trees"><span class="nav-number">4.</span> <span class="nav-text">k-d Trees</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hybrid-schemes"><span class="nav-number">4.1.</span> <span class="nav-text">Hybrid Schemes</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ray-and-directed-line-segment-traversals"><span class="nav-number">5.</span> <span class="nav-text">Ray and Directed Line
+Segment Traversals</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#k-d-tree-intersection-test"><span class="nav-number">5.1.</span> <span class="nav-text">k-d Tree Intersection Test</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uniform-grid-intersection-test"><span class="nav-number">5.2.</span> <span class="nav-text">Uniform Grid Intersection
+Test</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sort-and-sweep-methods"><span class="nav-number">6.</span> <span class="nav-text">Sort and Sweep Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sorted-linked-list-implementation"><span class="nav-number">6.1.</span> <span class="nav-text">Sorted Linked-list
+Implementation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cells-and-portals"><span class="nav-number">7.</span> <span class="nav-text">Cells and Portals</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spatial Partitioning | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spatial Partitioning
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-08 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-08T00:00:00+08:00">2022-04-08</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>17 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Spatial partitioning techniques provide broad-phase processing by
+dividing space into regions and testing if objects overlap the same
+region of space.</p>
+<h1 id="uniform-grids">Uniform Grids</h1>
+<p>A very effective space subdivision scheme is to overlay space with a
+regular grid. The grid divides space into a number of regions, or grid
+cells, or equal size. Each object is then associated with the cells it
+overlaps.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/object-and-grids.png"
+alt="Issues related to cell size. (a) A grid that is too fine. (b) A grid that is too coarse (with respect to object size). (c) A grid that is too coarse (with respect to object complexity). (d) A grid that is both too fine and too coarse." />
+<figcaption aria-hidden="true">Issues related to cell size. (a) A grid
+that is too fine. (b) A grid that is too coarse (with respect to object
+size). (c) A grid that is too coarse (with respect to object
+complexity). (d) A grid that is both too fine and too
+coarse.</figcaption>
+</figure>
+<h2 id="cell-size-issues">Cell Size Issues</h2>
+<ul>
+<li><strong>The grid is too fine.</strong> If the cells are too small, a
+large number of cells must be updated with associativity information for
+the object, which will take both extra time and space.</li>
+<li><strong>The grid is too coarse (with respect to object
+size).</strong> If the objects are small and the grid cells are large,
+there will be many objects in each cell.</li>
+<li><strong>The grid is too coarse (with respect to object
+complexity).</strong> In this case, the grid cell matches the objects
+well in size. However, the object is much too complex, affecting the
+pairwise object comparison.</li>
+<li><strong>The grid is both too fine and too coarse.</strong> If the
+objects are of greatly varying sizes, the cells can be too large for the
+smaller objects while too small for th largest objects.</li>
+</ul>
+<p>In ray tracing a popular method for determining the grid dimension
+has been the <span class="math inline">\(n^{1/3}\)</span> rule: given
+<span class="math inline">\(n\)</span> objects, divide space into a
+<span class="math inline">\(k \times k \times k\)</span> grid, with
+<span class="math inline">\(k = n^{1/3}\)</span>. The ratio of cells to
+objects is referred to as the <strong>grid density</strong>.</p>
+<h2 id="grids-as-arrays-of-linked-lists">Grids as Arrays of Linked
+Lists</h2>
+<p>The natural way of storing objects in a grid is to allocate an array
+of corresponding dimension, mapping grid cells to array elements
+one-to-one. To handle the case of multiple objects ending up in a given
+cell, each array element would point to a linked list of objects, or be
+NULL if empty.</p>
+<aside>
+<p>💡 A drawback with using a dense array of this type is that for large
+grids just storing the list headers in each grid cell becomes
+projibitive in terms of memory requirements.</p>
+</aside>
+<h2 id="hashed-storage-and-infinite-grids">Hashed Storage and Infinite
+Grids</h2>
+<p>The most effective alternative to using a dense array to store the
+grid is to map each cell into a hash table of a fixed set of <span
+class="math inline">\(n\)</span> buckets. In this scheme, the buckets
+contain the linked lists of objects.</p>
+<figure>
+<img src="/assets/images/2022-04-10-spatial-partitioning/2d-grid.png"
+alt="A (potentially infinite) 2D grid is mapped via a hash function into a small number of hash buckets." />
+<figcaption aria-hidden="true">A (potentially infinite) 2D grid is
+mapped via a hash function into a small number of hash
+buckets.</figcaption>
+</figure>
+<p>A (potentially infinite) 2D grid is mapped via a hash function into a
+small number of hash buckets.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Cell position</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Cell</span> &#123;</span><br><span class="line">    <span class="built_in">Cell</span>(int32 px, int32 py, int32 pz) &#123; x = px; y = py; z = pz; &#125;</span><br><span class="line">    int32 x, y, z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NUM_BUCKETS 1024</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Computes hash bucket index in range [0, NUM_BUCKETS-1]</span></span><br><span class="line"><span class="function">int32 <span class="title">ComputeHashBucketIndex</span><span class="params">(Cell cellPos)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> int32 h1 = <span class="number">0x8da6b343</span>; <span class="comment">// Large multiplicative constants</span></span><br><span class="line">    <span class="type">const</span> int32 h2 = <span class="number">0xd8163841</span>; <span class="comment">// here arbitrarily chosen primes</span></span><br><span class="line">    <span class="type">const</span> int32 h3 = <span class="number">0xcb1ab31f</span>;</span><br><span class="line">    int32 n = h1 * cellPos.x + h2 * cellPos.y + h3 * cellPos.z;</span><br><span class="line">    n = n % NUM_BUCKETS;</span><br><span class="line">    <span class="keyword">if</span> (n &lt; <span class="number">0</span>) n += NUM_BUCKETS;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Although the world may consist of an infinite amount of cells, only a
+finite number of them are overlapped by objects at a given time. Thus,
+the storage required for a hashed grid is related to the number of
+objects and is independent of the grid size.</p>
+<h2 id="storing-static-data">Storing Static Data</h2>
+<p>When the grid is static, the need for a linked list can be removed
+and all cell data can be stored in a single contiguous array.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/grid-sorting.png"
+alt="(a) A grid storing static data as lists.(b)The same grid with the static data stored into an array." />
+<figcaption aria-hidden="true">(a) A grid storing static data as
+lists.(b)The same grid with the static data stored into an
+array.</figcaption>
+</figure>
+<ol type="a">
+<li>A grid storing static data as lists.(b)The same grid with the static
+data stored into an array.</li>
+</ol>
+<h2 id="implicit-grids">Implicit Grids</h2>
+<p>As the Cartesian product of two or more arrays, the grid is now
+presented by two arrays (three in 3D), wherein one array corresponds to
+the grid rows and the other to the grid columns. An object is inserted
+into the grid by adding it to the lists of the grid cells it overlaps,
+for both the row and column array.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/grid-and-linked-lists.png"
+alt="A 4 × 5 grid implicitly defined as the intersection of 9 (4 + 5) linked lists. Five objects have been inserted into the lists and their implied positions in the grid are indicated." />
+<figcaption aria-hidden="true">A 4 × 5 grid implicitly defined as the
+intersection of 9 (4 + 5) linked lists. Five objects have been inserted
+into the lists and their implied positions in the grid are
+indicated.</figcaption>
+</figure>
+<p>A 4 × 5 grid implicitly defined as the intersection of 9 (4 + 5)
+linked lists. Five objects have been inserted into the lists and their
+implied positions in the grid are indicated.</p>
+<h2 id="uniform-grid-object-object-test">Uniform Grid Object-Object
+Test</h2>
+<p>Grid cell sizes are usually constrained to be larger than the largest
+object. This way, an object is guaranteed to overlap at most the
+immediately neighboring cells.</p>
+<h3 id="one-test-at-a-time">One Test at a Time</h3>
+<p>Consider the case in which objects are associated with a single cell
+only. When a given object is associated with its cell, in addition to
+testing agiasnt the objects associated with that cell additional
+neighboring cells must also be tested. Which cells have to be tested
+depends on how objects can overlap into other cells and what feature has
+been used to associate an object with its cell. The choice of feature
+generally stands between:</p>
+<ul>
+<li>the object bounding sphere center.</li>
+<li>the minimum (top leftmost) corner of the AABB.</li>
+</ul>
+<p><strong>If objects have been placed with respect to their
+centers</strong>, any object in the neighboring cells could overlap a
+cell boundary of this cell and be in collision with the current
+object.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Objects placed in single cell based on their bounding sphere center.</span></span><br><span class="line"><span class="comment">// Checking object’s cell and all 8 neighboring grid cells:</span></span><br><span class="line">check object’s cell</span><br><span class="line">check northwest neighbor cell</span><br><span class="line">check north neighbor cell</span><br><span class="line">check northeast neighbor cell</span><br><span class="line">check west neighbor cell</span><br><span class="line">check east neighbor cell</span><br><span class="line">check southwest neighbor cell</span><br><span class="line">check south neighbor cell</span><br><span class="line">check southeast neighbor cell</span><br></pre></td></tr></table></figure>
+<p><strong>If instead the minimum corner of the AABB has been
+used</strong>, most neighboring cells have to be tested only if the
+current object actually overlaps into them.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Objects placed in single cell based on AABB minimum corner vertex.</span></span><br><span class="line"><span class="comment">// Checking object’s &quot;minimum corner&quot; cell and up to all 8 neighboring grid cells: check object’s &quot;minimum corner&quot; cell</span></span><br><span class="line"><span class="function">check north neighbor cell</span></span><br><span class="line"><span class="function">check northwest neighbor cell</span></span><br><span class="line"><span class="function">check west neighbor cell</span></span><br><span class="line"><span class="function"><span class="title">if</span> <span class="params">(object overlaps east cell border)</span> </span>&#123;</span><br><span class="line">    check northeast neighbor cell</span><br><span class="line">    check east neighbor cell</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (object overlaps south cell border) &#123;</span><br><span class="line">    <span class="function">check southwest neighbor cell</span></span><br><span class="line"><span class="function">    check south neighbor cell</span></span><br><span class="line"><span class="function">    <span class="title">if</span> <span class="params">(object overlaps east cell border)</span></span></span><br><span class="line"><span class="function">        check southeast neighbor cell</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><strong>If objects have been placed in all cells they overlap the
+single object test would have to check only those exact cells the AABB
+overlaps</strong>, as all colliding objects are guaranteed to be in
+those cells.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Objects placed in all cells overlapped by their AABB.</span></span><br><span class="line"><span class="comment">// Checking object’s &quot;minimum corner&quot; cell and up to 3 neighboring grid cells:</span></span><br><span class="line">check object’s <span class="string">&quot;minimum corner&quot;</span> <span class="function">cell</span></span><br><span class="line"><span class="function"><span class="title">if</span> <span class="params">(object overlaps east cell border)</span></span></span><br><span class="line"><span class="function">    check east neighbor cell</span></span><br><span class="line"><span class="function"><span class="title">if</span> <span class="params">(object overlaps south cell border)</span> </span>&#123;</span><br><span class="line">    <span class="function">check south neighbor cell</span></span><br><span class="line"><span class="function">    <span class="title">if</span> <span class="params">(object overlaps east cell border)</span></span></span><br><span class="line"><span class="function">        check southeast neighbor cell</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/object-and-its-related-grid.png"
+alt="Objects A and B are assigned to a cell based on the location of their topleft-hand corners. In this case, overlap may occur in a third cell. Thus, to detect intersection between objects cells must be tested against their NE or SW neighbor cells." />
+<figcaption aria-hidden="true">Objects <em>A</em> and <em>B</em> are
+assigned to a cell based on the location of their topleft-hand corners.
+In this case, overlap may occur in a third cell. Thus, to detect
+intersection between objects cells must be tested against their NE or SW
+neighbor cells.</figcaption>
+</figure>
+<p>Objects <em>A</em> and <em>B</em> are assigned to a cell based on the
+location of their topleft-hand corners. In this case, overlap may occur
+in a third cell. Thus, to detect intersection between objects cells must
+be tested against their NE or SW neighbor cells.</p>
+<h3 id="all-tests-at-a-time">All Tests at a Time</h3>
+<p>If instead of testing a single object at a time all objects are
+tested at the same time, the single-cell placement case can be optimized
+utilizing the fact that object pair checking is commutative.</p>
+<aside>
+<p>💡 All neighbors now do not have to be checked. It is sufficient to
+check half the neighbors and let the remaining half of directionally
+opposing tests be covered by the communicativity relation.</p>
+</aside>
+<p><strong>If objects have been placed with respect to their
+centers</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Objects placed in single cell based on their bounding sphere center.</span></span><br><span class="line"><span class="comment">// All objects are checked for collisions at the same time, so collisions</span></span><br><span class="line"><span class="comment">// in the opposite direction will be handled when checking the objects // existing in those cells.</span></span><br><span class="line">**check object’s cell</span><br><span class="line">check east neighbor cell</span><br><span class="line">check southwest neighbor cell</span><br><span class="line">check south neighbor cell</span><br><span class="line">check southeast neighbor cell**</span><br></pre></td></tr></table></figure>
+<p>The case in which <strong>objects are placed in a single cell based
+on the minimum corner point</strong> can be similarly simplified.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Objects placed in single cell based on AABB minimum corner vertex.</span></span><br><span class="line"><span class="comment">// All objects are checked for collisions at the same time, so collisions // in the opposite direction will be handled when checking the objects</span></span><br><span class="line"><span class="comment">// existing in those cells.</span></span><br><span class="line">check object’s <span class="string">&quot;minimum corner&quot;</span> <span class="function">cell</span></span><br><span class="line"><span class="function">check southwest neighbor cell</span></span><br><span class="line"><span class="function"><span class="title">if</span> <span class="params">(object overlaps east cell border)</span></span></span><br><span class="line"><span class="function">    check east neighbor cell</span></span><br><span class="line"><span class="function"><span class="title">if</span> <span class="params">(object overlaps south cell border)</span> </span>&#123;</span><br><span class="line">    <span class="function">check south neighbor cell</span></span><br><span class="line"><span class="function">    <span class="title">if</span> <span class="params">(object overlaps east cell border)</span></span></span><br><span class="line"><span class="function">        check southeast neighbor cell</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+<h1 id="hierarchical-grids">Hierarchical Grids</h1>
+<p>The most significant problem with uniform grids is their inability to
+deal with objects of greatly varying sizes in a graceful way.
+<strong>The size problem can effectively be addressed by the use of
+hierarchical grids (or hgrids), a grid structure particularly well
+suited to holding dynamically moving objects.</strong></p>
+<p>Given a hierarchy containing <span class="math inline">\(n\)</span>
+levels of grids and letting <span class="math inline">\(r_k\)</span>
+represent the size of the grid cels at level <span
+class="math inline">\(k\)</span> in the hierarchy, the grids are
+arranged in increasing cell size order, with <span
+class="math inline">\(r_1 &lt; r_2 &lt; \cdots &lt; r_n\)</span>.</p>
+<p>To minimize the number of neighboring cells that have to be tested
+for collisions objects are inserted into the hgrid at the level where
+the cells are large enough to contain the bounding volume of the object.
+Given an object <span class="math inline">\(P\)</span>, this level <span
+class="math inline">\(L\)</span> is denoted <span
+class="math inline">\(L = \text{Level}(P)\)</span>. This way, the object
+is guaranteed to overlap at most four cells (or eight, for a 3D
+grid).</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/1d-hierarchical-grid.png"
+alt="A small 1D hierarchical grid. Six objects, A through F, have each been inserted in the cell containing the object center point, on the appropriate grid level. The shaded cells are those that must be tested when performing a collision check for object C." />
+<figcaption aria-hidden="true">A small 1D hierarchical grid. Six
+objects, <em>A</em> through <em>F</em>, have each been inserted in the
+cell containing the object center point, on the appropriate grid level.
+The shaded cells are those that must be tested when performing a
+collision check for object <em>C</em>.</figcaption>
+</figure>
+<p>A small 1D hierarchical grid. Six objects, <em>A</em> through
+<em>F</em>, have each been inserted in the cell containing the object
+center point, on the appropriate grid level. The shaded cells are those
+that must be tested when performing a collision check for object
+<em>C</em>.</p>
+<p>Let the cells at level 1 just encompass the smallest objects. Then
+successively double the cell size so that cells of level <span
+class="math inline">\(k + 1\)</span> are twice as wide as cells of level
+<span class="math inline">\(k\)</span>. Repeat the doubling process
+until the highest-level cells are large enough to encompass the largest
+objects.</p>
+<h2 id="basic-hgrid-implementation">Basic Hgrid Implementation</h2>
+<p>The minimal structure of hgrid is as below:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">HGrid</span> &#123;</span><br><span class="line">    uint32 occupiedLevelsMask; <span class="comment">// Initially zero (Implies max 32 hgrid levels) int objectsAtLevel[HGRID_MAX_LEVELS]; // Initially all zero</span></span><br><span class="line">    Object *objectBucket[NUM_BUCKETS]; <span class="comment">// Initially all NULL</span></span><br><span class="line">    <span class="type">int</span> timeStamp[NUM_BUCKETS]; <span class="comment">// Initially all zero</span></span><br><span class="line">    <span class="type">int</span> tick;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>It is assumed that objects are inserted into the hgrid based on their
+bounding spheres. Let the object representation contain the following
+variables.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Object</span> &#123;</span><br><span class="line">    Object *pNextObject; <span class="comment">// Embedded link to next hgrid object</span></span><br><span class="line">    Point pos; <span class="comment">// x, y (and z) position for sphere (or top left AABB corner))</span></span><br><span class="line">    <span class="type">float</span> radius; <span class="comment">// radius for bounding sphere (or width of AABB)</span></span><br><span class="line">    <span class="type">int</span> bucket; <span class="comment">// Index of hash bucket object is in</span></span><br><span class="line">    <span class="type">int</span> level; <span class="comment">// Grid level for the object</span></span><br><span class="line">    ... <span class="comment">// Object data</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="adding-an-object">Adding an Object</h3>
+<p>Adding an object into the hgrid can be done as follows.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AddObjectToHGrid</span><span class="params">(HGrid *grid, Object *obj)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Find lowest level where object fully fits inside cell, taking RATIO into account</span></span><br><span class="line">    <span class="type">int</span> level;</span><br><span class="line">    <span class="type">float</span> size = MIN_CELL_SIZE, diameter = <span class="number">2.0f</span> * obj-&gt;radius;</span><br><span class="line">    <span class="keyword">for</span> (level = <span class="number">0</span>; size * SPHERE_TO_CELL_RATIO &lt; diameter; level++)</span><br><span class="line">        size *= CELL_TO_CELL_RATIO;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Assert if object is larger than largest grid cell</span></span><br><span class="line">    <span class="built_in">assert</span>(level &lt; HGRID_MAX_LEVELS);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add object to grid square, and remember cell and level numbers,</span></span><br><span class="line">    <span class="comment">// treating level as a third dimension coordinate</span></span><br><span class="line">    <span class="function">Cell <span class="title">cellPos</span><span class="params">((<span class="type">int</span>)(obj-&gt;pos.x / size), (<span class="type">int</span>)(obj-&gt;pos.y / size), level)</span></span>;</span><br><span class="line">    <span class="type">int</span> bucket = <span class="built_in">ComputeHashBucketIndex</span>(cellPos);</span><br><span class="line">    obj-&gt;bucket= bucket;</span><br><span class="line">    obj-&gt;level = level;</span><br><span class="line">    obj-&gt;pNextObject = grid-&gt;objectBucket[bucket];</span><br><span class="line">    grid-&gt;objectBucket[bucket] = obj;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Mark this level as having one more object. Also indicate level is in use</span></span><br><span class="line">    grid-&gt;objectsAtLevel[level]++;</span><br><span class="line">    grid-&gt;occupiedLevelsMask |= (<span class="number">1</span> &lt;&lt; level);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="removing-an-object">Removing an Object</h3>
+<p>Removing an object from the hgrid can be done in a corresponding
+manner.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">RemoveObjectFromHGrid</span><span class="params">(HGrid *grid, Object *obj)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// One less object on this grid level.</span></span><br><span class="line">    <span class="comment">// Mark level as unused if no objects left.</span></span><br><span class="line">    <span class="keyword">if</span> (--grid-&gt;objectsAtLevel[obj-&gt;level] == <span class="number">0</span>)</span><br><span class="line">        grid-&gt;occupiedLevelsMask &amp;= ∼(<span class="number">1</span> &lt;&lt; obj-&gt;level);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Now scan through list and unlink object ’obj’</span></span><br><span class="line">    <span class="type">int</span> bucket= obj-&gt;bucket;</span><br><span class="line">    Object *p = grid-&gt;objectBucket[bucket];</span><br><span class="line">    <span class="comment">// Special-case updating list header when object is first in list</span></span><br><span class="line">    <span class="keyword">if</span> (p == obj) &#123;</span><br><span class="line">        grid-&gt;objectBucket[bucket] = obj-&gt;pNextObject;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Traverse rest of list, unlinking ’obj’ when found</span></span><br><span class="line">    <span class="keyword">while</span> (p) &#123;</span><br><span class="line">        <span class="comment">// Keep q as trailing pointer to previous element</span></span><br><span class="line">        Object *q = p;</span><br><span class="line">        p = p-&gt;pNextObject;</span><br><span class="line">        <span class="keyword">if</span> (p == obj) &#123;</span><br><span class="line">            q-&gt;pNextObject = p-&gt;pNextObject;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="number">0</span>); <span class="comment">// No such object in hgrid </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="checking-an-object-for-collision">Checking an Object for
+Collision</h3>
+<p>Checking an object for collision against objects in the hgrid can be
+done as follows. It is assume that nothing is known about the number of
+objects tested at a time, and thus all grid levels are traversed.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Test collisions between object and all objects in hgrid</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CheckObjAgainstGrid</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    HGrid *grid,</span></span></span><br><span class="line"><span class="params"><span class="function">    Object *obj,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">void</span> (*pCallbackFunc)(Object *pA, Object *pB)</span></span></span><br><span class="line"><span class="params"><span class="function">)</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> size = MIN_CELL_SIZE;</span><br><span class="line">    <span class="type">int</span> startLevel = <span class="number">0</span>;</span><br><span class="line">    uint32 occupiedLevelsMask = grid-&gt;occupiedLevelsMask;</span><br><span class="line">    Point pos = obj-&gt;pos;</span><br><span class="line">    <span class="comment">// If all objects are tested at the same time, the appropriate starting</span></span><br><span class="line">    <span class="comment">// grid level can be computed as:</span></span><br><span class="line">    <span class="comment">// float diameter = 2.0f * obj-&gt;radius;</span></span><br><span class="line">    <span class="comment">// for ( ; size * SPHERE_TO_CELL_RATIO &lt; diameter; startLevel++)</span></span><br><span class="line">    <span class="comment">//     size *= CELL_TO_CELL_RATIO;</span></span><br><span class="line">    <span class="comment">//     occupiedLevelsMask &gt;&gt;= 1;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// For each new query, increase time stamp counter</span></span><br><span class="line">    grid-&gt;tick++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (</span><br><span class="line">        <span class="type">int</span> level = startLevel;</span><br><span class="line">        level &lt; HGRID_MAX_LEVELS;</span><br><span class="line">        size *= CELL_TO_CELL_RATIO, occupiedLevelsMask &gt;&gt;= <span class="number">1</span>, level++</span><br><span class="line">    ) &#123;</span><br><span class="line">        <span class="comment">// If no objects in rest of grid, stop now</span></span><br><span class="line">        <span class="keyword">if</span> (occupiedLevelsMask == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// If no objects at this level, go on to the next level</span></span><br><span class="line">        <span class="keyword">if</span> ((occupiedLevelsMask &amp; <span class="number">1</span>) == <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Compute ranges [x1..x2, y1..y2] of cells overlapped on this level. To</span></span><br><span class="line">        <span class="comment">// make sure objects in neighboring cells are tested, by increasing range by</span></span><br><span class="line">        <span class="comment">// the maximum object overlap: size * SPHERE_TO_CELL_RATIO</span></span><br><span class="line">        <span class="type">float</span> delta = obj-&gt;radius + size * SPHERE_TO_CELL_RATIO + EPSILON;</span><br><span class="line">        <span class="type">float</span> ooSize = <span class="number">1.0f</span> / size;</span><br><span class="line">        <span class="type">int</span> x1 = (<span class="type">int</span>)<span class="built_in">floorf</span>((pos.x - delta) * ooSize);</span><br><span class="line">        <span class="type">int</span> y1 = (<span class="type">int</span>)<span class="built_in">floorf</span>((pos.y - delta) * ooSize);</span><br><span class="line">        <span class="type">int</span> x2 = (<span class="type">int</span>)<span class="built_in">ceilf</span>((pos.x + delta) * ooSize);</span><br><span class="line">        <span class="type">int</span> y2 = (<span class="type">int</span>)<span class="built_in">ceilf</span>((pos.y + delta) * ooSize);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Check all the grid cells overlapped on current level</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> x = x1; x &lt;= x2; x++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> y = y1; y &lt;= y2; y++) &#123;</span><br><span class="line">                <span class="comment">// Treat level as a third dimension coordinate</span></span><br><span class="line">                <span class="function">Cell <span class="title">cellPos</span><span class="params">(x, y, level)</span></span>;</span><br><span class="line">                <span class="type">int</span> bucket = <span class="built_in">ComputeHashBucketIndex</span>(cellPos);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Has this hash bucket already been checked for this object?</span></span><br><span class="line">                <span class="keyword">if</span> (grid-&gt;timeStamp[bucket] == grid-&gt;tick) <span class="keyword">continue</span>;</span><br><span class="line">                grid-&gt;timeStamp[bucket] = grid-&gt;tick;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Loop through all objects in the bucket to find nearby objects</span></span><br><span class="line">                Object *p = grid-&gt;objectBucket[bucket];</span><br><span class="line">                <span class="keyword">while</span> (p) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (p != obj) &#123;</span><br><span class="line">                        <span class="type">float</span> dist2 = <span class="built_in">Sqr</span>(pos.x - p-&gt;pos.x) + <span class="built_in">Sqr</span>(pos.y - p-&gt;pos.y);</span><br><span class="line">                        <span class="keyword">if</span> (dist2 &lt;= <span class="built_in">Sqr</span>(obj-&gt;radius + p-&gt;radius + EPSILON))</span><br><span class="line">                            <span class="built_in">pCallbackFunc</span>(obj, p); <span class="comment">// Close, call callback function </span></span><br><span class="line">                    &#125;</span><br><span class="line">                    p = p-&gt;pNextObject;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="comment">// end for level</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="trees">Trees</h1>
+<p>Trees form good representations for spatial partitioning.</p>
+<h2 id="octrees-and-quadtrees">Octrees (and Quadtrees)</h2>
+<p>The archetypal tree-based spatial partitioning method is the
+<strong>octree</strong>. It is <strong>an axis-aligned hierarchical
+partitioning</strong> of a volume of 3D world space.</p>
+<ul>
+<li>Each parent node has eight children.</li>
+<li>Each node has a finite volume associated with it.</li>
+<li>The root node volume is taken to be the smallest AABB fully
+enclosing the world. The volume is then subdivided into eight smaller
+equal-size subcubes.</li>
+</ul>
+<p>The octree node data structure is as below.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Octree node data structure</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    Point center; <span class="comment">// Center point of octree node (not strictly needed)</span></span><br><span class="line">    <span class="type">float</span> halfWidth; <span class="comment">// Half the width of the node volume (not strictly needed)</span></span><br><span class="line">    Node *pChild[<span class="number">8</span>]; <span class="comment">// Pointers to the eight children nodes</span></span><br><span class="line">    Object *pObjList; <span class="comment">// Linked list of objects contained at this node</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="octree-object-assignment">Octree Object Assignment</h3>
+<p>Octrees may be built to contain either static or dynamic data.</p>
+<ul>
+<li>The data may be the primitives forming the world environment.</li>
+<li>The data may by the moving entities in the world.</li>
+</ul>
+<figure>
+<img src="/assets/images/2022-04-10-spatial-partitioning/quad-tree.png"
+alt="A quad tree node with the first level of subdivision shown in black dotted lines, and the following level of subdivision in gray dashed lines. Dark gray objects overlap the first- level dividing planes and become stuck at the current level. Medium gray objects propagate one level down before becoming stuck. Here, only the white objects descend two levels." />
+<figcaption aria-hidden="true">A quad tree node with the first level of
+subdivision shown in black dotted lines, and the following level of
+subdivision in gray dashed lines. Dark gray objects overlap the first-
+level dividing planes and become stuck at the current level. Medium gray
+objects propagate one level down before becoming stuck. Here, only the
+white objects descend two levels.</figcaption>
+</figure>
+<p>A quad tree node with the first level of subdivision shown in black
+dotted lines, and the following level of subdivision in gray dashed
+lines. Dark gray objects overlap the first- level dividing planes and
+become stuck at the current level. Medium gray objects propagate one
+level down before becoming stuck. Here, only the white objects descend
+two levels.</p>
+<p>The process of building an octree is as below.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Preallocates an octree down to a specific depth</span></span><br><span class="line"><span class="function">Node *<span class="title">BuildOctree</span><span class="params">(Point center, <span class="type">float</span> halfWidth, <span class="type">int</span> stopDepth)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (stopDepth &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Construct and fill in ’root’ of this subtree</span></span><br><span class="line">        Node *pNode = <span class="keyword">new</span> Node;</span><br><span class="line">        pNode-&gt;center = center;</span><br><span class="line">        pNode-&gt;halfWidth = halfWidth;</span><br><span class="line">        pNode-&gt;pObjList = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="comment">// Recursively construct the eight children of the subtree</span></span><br><span class="line">        Point offset;</span><br><span class="line">        <span class="type">float</span> step = halfWidth * <span class="number">0.5f</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) &#123;</span><br><span class="line">            offset.x = ((i &amp; <span class="number">1</span>) ? step : -step);</span><br><span class="line">            offset.y = ((i &amp; <span class="number">2</span>) ? step : -step);</span><br><span class="line">            offset.z = ((i &amp; <span class="number">4</span>) ? step : -step);</span><br><span class="line">            pNode-&gt;pChild[i] = <span class="built_in">BuildOctree</span>(center + offset, step, stopDepth - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The structure of the object is as follows.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Object</span> &#123;</span><br><span class="line">    Point center; <span class="comment">// Center point for object</span></span><br><span class="line">    <span class="type">float</span> radius; <span class="comment">// Radius of object bounding sphere</span></span><br><span class="line">    ...</span><br><span class="line">    Object *pNextObject; <span class="comment">// Pointer to next object when linked into list</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="octree-object-insertion">Octree Object Insertion</h3>
+<p>The code for inserting an object is as follows.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">InsertObject</span><span class="params">(Node *pTree, Object *pObject)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> index = <span class="number">0</span>, straddle = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// Compute the octant number [0..7] the object sphere center is in</span></span><br><span class="line">    <span class="comment">// If straddling any of the dividing x, y, or z planes, exit directly</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">        <span class="type">float</span> delta = pObject-&gt;center[i] - pTree-&gt;center[i];</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">Abs</span>(delta) &lt; pTree-&gt;halfWidth + pObject-&gt;radius) &#123;</span><br><span class="line">            straddle = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (delta &gt; <span class="number">0.0f</span>) index |= (<span class="number">1</span> &lt;&lt; i); <span class="comment">// ZYX</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!straddle &amp;&amp; pTree-&gt;pChild[index]) &#123;</span><br><span class="line">        <span class="comment">// Fully contained in existing child node; insert in that subtree</span></span><br><span class="line">        <span class="built_in">InsertObject</span>(pTree-&gt;pChild[index], pObject);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Straddling, or no child node to descend into, so</span></span><br><span class="line">        <span class="comment">// link object into linked list at this node</span></span><br><span class="line">        pObject-&gt;pNextObject = pTree-&gt;pObjList;</span><br><span class="line">        pTree-&gt;pObjList = pObject;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="octree-object-collision-test">Octree Object Collision Test</h3>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Tests all objects that could possibly overlap due to cell ancestry and coexistence</span></span><br><span class="line"><span class="comment">// in the same cell. Assumes objects exist in a single cell only, and fully inside it</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TestAllCollisions</span><span class="params">(Node *pTree)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Keep track of all ancestor object lists in a stack</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> MAX_DEPTH = <span class="number">40</span>;</span><br><span class="line">    <span class="type">static</span> Node *ancestorStack[MAX_DEPTH];</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> depth = <span class="number">0</span>; <span class="comment">// ’Depth == 0’ is invariant over calls</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check collision between all objects on this level and all</span></span><br><span class="line">    <span class="comment">// ancestor objects. The current level is included as its own</span></span><br><span class="line">    <span class="comment">// ancestor so all necessary pairwise tests are done ancestorStack[depth++] = pTree;</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> n = <span class="number">0</span>; n &lt; depth; n++) &#123;</span><br><span class="line">        Object *pA, *pB;</span><br><span class="line">        <span class="keyword">for</span> (pA = ancestorStack[n]-&gt;pObjList; pA; pA = pA-&gt;pNextObject) &#123;</span><br><span class="line">            <span class="keyword">for</span> (pB = pTree-&gt;pObjList; pB; pB = pB-&gt;pNextObject) &#123;</span><br><span class="line">                <span class="comment">// Avoid testing both A-&gt;B and B-&gt;A</span></span><br><span class="line">                <span class="keyword">if</span> (pA == pB) <span class="keyword">break</span>;</span><br><span class="line">                <span class="comment">// Now perform the collision test between pA and pB in some manner</span></span><br><span class="line">                <span class="built_in">TestCollision</span>(pA, pB);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Recursively visit all existing children</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">        <span class="keyword">if</span> (pTree-&gt;pChild[i])</span><br><span class="line">            <span class="built_in">TestAllCollisions</span>(pTree-&gt;pChild[i]);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Remove current node from ancestor stack before returning</span></span><br><span class="line">    depth--;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="loose-octrees">Loose Octrees</h3>
+<p>An effective way of dealing with straddling objects is to expand the
+node volumes by some amount to make them partially overlapping. The
+resulting relaxed octrees have been dubbed <strong>loose
+octrees</strong>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/loose-octrees.png"
+alt="(a) The cross section of a regular octree, shown as a quad tree.(b) Expanding the nodes of the octree, here by half the node width in all directions, turns the tree into a loose octree. (The loose nodes are offset and shown in different shades of gray to better show their boundaries. The original octree nodes are shown as dashed lines.)" />
+<figcaption aria-hidden="true">(a) The cross section of a regular
+octree, shown as a quad tree.(b) Expanding the nodes of the octree, here
+by half the node width in all directions, turns the tree into a loose
+octree. (The loose nodes are offset and shown in different shades of
+gray to better show their boundaries. The original octree nodes are
+shown as dashed lines.)</figcaption>
+</figure>
+<h1 id="k-d-trees"><em>k</em>-d Trees</h1>
+<p>A generalization of octrees and quadtrees can be found in the
+k-dimensional tree, or k-d tree. Here, <span
+class="math inline">\(k\)</span> represents the number of dimensions
+subdivided, which does not have to match the dimensionality of the space
+used.</p>
+<p>Instead of simultaneously dividing space in two or three dimensions,
+the k-d tree divides space along one dimension at a time. One level of
+an octree can be seen as a three-level k-d tree split along x, then y,
+then z.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/2d-k-d-tree.png"
+alt="A 2D k-d tree.(a)The spatial decomposition. (b) The k-d tree layout." />
+<figcaption aria-hidden="true">A 2D <em>k</em>-d tree.(a)The spatial
+decomposition. (b) The <em>k</em>-d tree layout.</figcaption>
+</figure>
+<p>A 2D <em>k</em>-d tree.(a)The spatial decomposition. (b) The
+<em>k</em>-d tree layout.</p>
+<p>Usage of k-d tree</p>
+<ul>
+<li>whenever quadtrees or octrees are used.</li>
+<li>point location (given a point, locate the region it is in).</li>
+<li>nearest neighbor (find the point in a set of points the query point
+is closed to).</li>
+<li>range search (locate all points within a given region).</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">KDNode</span> &#123;</span><br><span class="line">    KDNode *child[<span class="number">2</span>]; <span class="comment">// 0 = near, 1 = far</span></span><br><span class="line">    <span class="type">int</span> splitType; <span class="comment">// Which axis split is along (0, 1, 2, ...)</span></span><br><span class="line">    <span class="type">float</span> splitValue; <span class="comment">// Position of split along axis</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Visit k-d tree nodes overlapped by sphere. Call with volNearPt = s-&gt;c</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">VisitOverlappedNodes</span><span class="params">(KDNode *pNode, Sphere *s, Point &amp;volNearPt)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pNode == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Visiting current node, perform work here</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Figure out which child to recurse into first (0 = near, 1 = far)</span></span><br><span class="line">    <span class="type">int</span> first = s-&gt;c[pNode-&gt;splitType] &gt; pNode-&gt;splitValue;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Always recurse into the subtree the sphere center is in</span></span><br><span class="line">    <span class="built_in">VisitOverlappedNodes</span>(pNode-&gt;child[first], s, volNearPt);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Update (by clamping) nearest point on volume when traversing far side.</span></span><br><span class="line">    <span class="comment">// Keep old value on the local stack so it can be restored later</span></span><br><span class="line">    <span class="type">float</span> oldValue = volNearPt[pNode-&gt;splitType];</span><br><span class="line">    volNearPt[pNode-&gt;splitType] = pNode-&gt;splitValue;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// If sphere overlaps the volume of the far node, recurse that subtree too</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">SqDistPointPoint</span>(volNearPt, s-&gt;c) &lt; s-&gt;r * s-&gt;r)</span><br><span class="line">        <span class="built_in">VisitOverlappedNodes</span>(pNode-&gt;child[first ∧ <span class="number">1</span>], s, volNearPt);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Restore component of nearest pt on volume when returning</span></span><br><span class="line">    volNearPt[pNode-&gt;splitType] = oldValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="hybrid-schemes">Hybrid Schemes</h2>
+<p>Hybrid schemes are the combination of using different techniques and
+strategies to divide the scene into multiple layers. For instance, after
+having initially assigned objects or geometry primitives to a uniform
+grid, the data in each nonempty grid cell could be further organized in
+a tree structure.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/hybrid-schemes.png"
+alt="(a) A grid of trees, each grid cell containing a separate tree. (b) A grid indexing into a single tree hierarchy, each grid cell pointing into the tree at which point traversal should start." />
+<figcaption aria-hidden="true">(a) A grid of trees, each grid cell
+containing a separate tree. (b) A grid indexing into a single tree
+hierarchy, each grid cell pointing into the tree at which point
+traversal should start.</figcaption>
+</figure>
+<ol type="a">
+<li>A grid of trees, each
+gridcellcontainingaseparatetree.(b)Agridindexing into a single tree
+hierarchy, each grid cell pointing into the tree at which point
+traversal should start.</li>
+</ol>
+<h1 id="ray-and-directed-line-segment-traversals">Ray and Directed Line
+Segment Traversals</h1>
+<p>Particularly common in many applications, games in particular, are
+line pick tests. These are queries involving rays or directed line
+segments.</p>
+<h2 id="k-d-tree-intersection-test">k-d Tree Intersection Test</h2>
+<p>The basic idea behind intersecting a ray or directed line segment
+with a k-d tree is straightforward. The segment <span
+class="math inline">\(S(t) = A + t\textbf{d}\)</span> is intersected
+against the node’s splitting plane, and the <span
+class="math inline">\(t\)</span> value of intersection is computed. It
+<span class="math inline">\(t\)</span> is within the interval of the
+segment, <span class="math inline">\(0 \leq t \leq
+t_\text{max}\)</span>, the segment straddles the plane and both children
+of the tree are recursively descended.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Visit all k-d tree nodes intersected by segment S = a + t * d, 0 &lt;= t &lt; tmax</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">VisitNodes</span><span class="params">(KDNode *pNode, Point a, Vector d, <span class="type">float</span> tmax)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pNode == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Visiting current node, perform actual work here</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Figure out which child to recurse into first (0 = near, 1 = far)</span></span><br><span class="line">    <span class="type">int</span> dim = pNode-&gt;splitType;</span><br><span class="line">    <span class="type">int</span> first = a[dim] &gt; pNode-&gt;splitValue;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (d[dim] == <span class="number">0.0f</span>) &#123;</span><br><span class="line">        <span class="comment">// Segment parallel to splitting plane, visit near side only</span></span><br><span class="line">        <span class="built_in">VisitNodes</span>(pNode-&gt;child[first], a, d, tmax);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Find t value for intersection between segment and split plane</span></span><br><span class="line">        <span class="type">float</span> t = (pNode-&gt;splitValue - a[dim]) / d[dim];</span><br><span class="line">        <span class="comment">// Test if line segment straddles splitting plane</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0.0f</span> &lt;= t &amp;&amp; t &lt; tmax) &#123;</span><br><span class="line">            <span class="comment">// Yes, traverse near side first, then far side</span></span><br><span class="line">            <span class="built_in">VisitNodes</span>(pNode-&gt;child[first], a, d, t);</span><br><span class="line">            <span class="built_in">VisitNodes</span>(pNode-&gt;child[first ∧ <span class="number">1</span>], a + t * d, d, tmax - t);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// No, so just traverse near side</span></span><br><span class="line">            <span class="built_in">VisitNodes</span>(pNode-&gt;child[first], a, d, tmax);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="uniform-grid-intersection-test">Uniform Grid Intersection
+Test</h2>
+<p>The traversal method used must enforce 6-connectivity of the cells
+visited along the line. Cells in 3D are said to be 6-connected if they
+share faces only with other cells. If cells are also allowed to share
+edges, they are considered 18 connected. A cell is 26-connected if it
+can share a face, edge, or vertex with another cell.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/uniform-grid-intersection-test.png"
+alt="Cell connectivity for a 2D line. (a) An 8-connected line. (b) A 4-connected line. In 3D, the corresponding lines would be 26-connected and 6-connected, respectively." />
+<figcaption aria-hidden="true">Cell connectivity for a 2D line. (a) An
+8-connected line. (b) A 4-connected line. In 3D, the corresponding lines
+would be 26-connected and 6-connected, respectively.</figcaption>
+</figure>
+<p>Cell connectivity for a 2D line. (a) An 8-connected line. (b) A
+4-connectedline. In 3D, the corresponding lines would be 26-connected
+and 6-connected, respectively.</p>
+<h1 id="sort-and-sweep-methods">Sort and Sweep Methods</h1>
+<p>A drawback of inserting objects into the fixed spatial subdivisions
+that grids and octrees represent is having to deal with the added
+complications of objects straddling multiple partitions. An alternative
+approach is to instead maintain the objects in some sort of sorted
+spatial ordering. One way of spatially sorting the objects is the sort
+and sweep method.</p>
+<h2 id="sorted-linked-list-implementation">Sorted Linked-list
+Implementation</h2>
+<p>To maintain the axis-sorted lists of projection interval extents, two
+types of structures are required: one that is the linked-list element
+corresponding to the minimum or maximum interval values and another one
+to link the two entries.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">AABB</span> &#123;</span><br><span class="line">    Elem min; <span class="comment">// Element containing the three minimum interval values</span></span><br><span class="line">    Elem max; <span class="comment">// Element containing the three maximum interval values</span></span><br><span class="line">    Object *pObj; <span class="comment">// Pointer to the actual object contained in the AABB</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Elem</span> &#123;</span><br><span class="line">    Elem *pLeft[<span class="number">3</span>]; <span class="comment">// Pointers to the previous linked list element (one for each axis)</span></span><br><span class="line">    Elem *pRight[<span class="number">3</span>]; <span class="comment">// Pointers to the next linked list element (one for each axis)</span></span><br><span class="line">    <span class="type">float</span> value[<span class="number">3</span>]; <span class="comment">// All min or all max coordinate values (one for each axis)</span></span><br><span class="line">    <span class="type">int</span> minmax:<span class="number">1</span>; <span class="comment">// All min values or all max values?</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="cells-and-portals">Cells and Portals</h1>
+<p>This method was developed for rendering architectural walkthrough
+systems. The cells-and-portals method exploits the occluded nature of
+these scenes to reduce the amount of geometry that has to be rendered.
+The method proceeds by dividing the world into regions (cells) and the
+boundaries that connect them (portals). Rooms in the scene would
+correspond to cells, and doorways and windows to portals.</p>
+<figure>
+<img
+src="/assets/images/2022-04-10-spatial-partitioning/cells-and-portals.png"
+alt="A simple portalized world with five cells (numbered) and five portals (dashed). The shaded region indicates what can be seen from a given viewpoint. Thus, here only cells 2, 3, and 5 must be rendered." />
+<figcaption aria-hidden="true">A simple portalized world with five cells
+(numbered) and five portals (dashed). The shaded region indicates what
+can be seen from a given viewpoint. Thus, here only cells 2, 3, and 5
+must be rendered.</figcaption>
+</figure>
+<p>A simple portalized world with five cells (numbered) and five portals
+(dashed). The shaded region indicates what can be seen from a given
+viewpoint. Thus, here only cells 2, 3, and 5 must be rendered.</p>
+<p>Rendering a scene partitioned into cells and portals starts with
+drawing the geometry for the cell containing the camera. After this cell
+has been rendered, the rendering function is called recursively for
+adjoining cells whose portals are visible to the camera. During
+recursion, new portals encountered are clipped against the current
+portal, narrowing the view into the scene. Recursion stops when either
+the clipped portal becomes empty, or when no unvisited neighboring cells
+are available.</p>
+<p>The following pseudocode illustrates an implementation of this
+rendering procedure.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="built_in">RenderCell</span>(ClipRegion r, Cell *c) &#123;</span><br><span class="line">    <span class="comment">// If the cell has not already been visited this frame...</span></span><br><span class="line">    <span class="keyword">if</span> (c-&gt;lastFrameVisited != currentFrameNumber) &#123;</span><br><span class="line">        <span class="comment">// ...timestamp it to make sure it is not visited several</span></span><br><span class="line">        <span class="comment">// times due to multiple traversal paths through the cells c-&gt;lastFrameVisited = currentFrameNumber;</span></span><br><span class="line">        <span class="comment">// Recursively visit all connected cells with visible portals</span></span><br><span class="line">        <span class="keyword">for</span> (Portal *pl = c-&gt;pPortalList; pl != <span class="literal">NULL</span>; pl = pl-&gt;pNextPortal) &#123;</span><br><span class="line">            <span class="comment">// Clip the portal region against the current clipping region</span></span><br><span class="line">            ClipRegion visiblePart = <span class="built_in">ProjectAndIntersectRegion</span>(r, pl-&gt;boundary);</span><br><span class="line">            <span class="comment">// If portal is not completely clipped its contents must be partially</span></span><br><span class="line">            <span class="comment">// visible, so recursively render other side through the reduced portal</span></span><br><span class="line">            <span class="keyword">if</span> (!<span class="built_in">EmptyRegion</span>(visiblePart))</span><br><span class="line">                <span class="built_in">RenderCell</span>(visiblePart, pl-&gt;pAdjoiningCell);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Now render all polygons (done last, for back-to-front rendering)</span></span><br><span class="line">        <span class="keyword">for</span> (Polygon *p = c.pPolygonList; p != <span class="literal">NULL</span>; p = p-&gt;pNextPolygon)</span><br><span class="line">            <span class="built_in">RenderPolygon</span>(p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/" title="Spatial Partitioning">https://aquietzero.github.io/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/" rel="prev" title="Bounding Volume Hierarchies">
+                  <i class="fa fa-angle-left"></i> Bounding Volume Hierarchies
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/" rel="next" title="A Math and Geometry Primer">
+                  A Math and Geometry Primer <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

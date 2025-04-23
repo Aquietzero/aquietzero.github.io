@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="#深度学习 #训练 #数据集 #损失函数 #优化器  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合 const output &#x3D; Model(input) 层：大模型的基本计算单元，包含权重矩阵（\(\textbf{W}\)）和偏置（\(\textbf{b}\)），然后通过激活函数处理输出 const Layer &#x3D; (X) &#x3D;&gt; &amp;#123;    const">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 03 - 深度学习">
+<meta property="og:url" content="https://aquietzero.github.io/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="#深度学习 #训练 #数据集 #损失函数 #优化器  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合 const output &#x3D; Model(input) 层：大模型的基本计算单元，包含权重矩阵（\(\textbf{W}\)）和偏置（\(\textbf{b}\)），然后通过激活函数处理输出 const Layer &#x3D; (X) &#x3D;&gt; &amp;#123;    const">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-04-02-AI%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0.png">
+<meta property="article:published_time" content="2025-04-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.518Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2025-04-02-AI%E5%AD%A6%E4%B9%A0-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E4%BA%8C%E6%AC%A1%E5%87%BD%E6%95%B0.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/","path":"2025/04/02/computer/AI学习/深度学习/","title":"AI学习时间 03 - 深度学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 03 - 深度学习 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">复习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">深度学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">建模方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">另一个例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E6%96%B9%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">传统方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">深度学习方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">6.</span> <span class="nav-text">训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">6.1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.2.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">6.3.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8"><span class="nav-number">6.4.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="nav-number">6.5.</span> <span class="nav-text">训练过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E6%97%B6%E5%88%BB"><span class="nav-number">8.</span> <span class="nav-text">实践时刻</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 03 - 深度学习 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 03 - 深度学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-04-02 00:00:00" itemprop="dateCreated datePublished" datetime="2025-04-02T00:00:00+08:00">2025-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/04/02/computer/AI学习/深度学习/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><div class="theme-color-blue" data-markdown="1">
+<p><code>#深度学习</code> <code>#训练</code> <code>#数据集</code>
+<code>#损失函数</code> <code>#优化器</code></p>
+</div>
+<h1 id="复习">复习</h1>
+<ul>
+<li><p><strong>大模型</strong>：一个将输入转换为输出的函数，本质是一系列向量变换的组合</p>
+<p><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> output = <span class="title class_">Model</span>(input)</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>层</strong>：大模型的基本计算单元，包含权重矩阵（<span
+class="math inline">\(\textbf{W}\)</span>）和偏置（<span
+class="math inline">\(\textbf{b}\)</span>），然后通过激活函数处理输出</p>
+<p><figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Layer</span> = (<span class="params">X</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> Y = <span class="title function_">activate</span>(W * X + b)</span><br><span class="line">    <span class="keyword">return</span> Y</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>参数</strong>：大模型的参数就是权重矩阵（<span
+class="math inline">\(\textbf{W}\)</span>）和偏置（<span
+class="math inline">\(\textbf{b}\)</span>），参数量决定了模型的规模和能力</p></li>
+</ul>
+<h1 id="深度学习">深度学习</h1>
+<p>深度学习是一种<strong>建模方法</strong>，里面有两个重要部分：</p>
+<ul>
+<li><strong>深度</strong>：是指这个模型有很多层</li>
+<li><strong>学习</strong>：是指这个模型可以通过数据来学习</li>
+</ul>
+<h1 id="建模方法">建模方法</h1>
+<p>传统的建模方法</p>
+<pre class="mermaid">graph LR
+    Rules[规则] --> Model[传统编程方法]
+    Data[数据] --> Model
+    Model --> Answer[回答]</pre>
+<p>深度学习的建模方法</p>
+<pre class="mermaid">graph LR
+    Data[数据] --> Model
+    Answer[回答] --> Model[深度学习模型]
+    Model --> Rules[规则]</pre>
+<blockquote>
+<p>那这个规则是什么？</p>
+</blockquote>
+<h1 id="例子">例子</h1>
+<p>之前提到大模型实际上是一个函数，而这个函数的输入是一个向量，输出也是一个向量。</p>
+<ul>
+<li><p>假设有一张动物的图片，我们希望有一个模型来识别这个图片里的动物，那么对于这个模型来说，输入就是这张图片，输出就是这个图片里的动物的名称。
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">animal</span>: <span class="title class_">String</span> = <span class="title class_">ClassifierModel</span>(<span class="attr">image</span>: <span class="title class_">Image</span>)</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">String</span> = <span class="title class_">Number</span>[]</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Image</span> = <span class="title class_">Number</span>[][][]</span><br></pre></td></tr></table></figure></p></li>
+<li><p>假设输入一个上文，我们希望大语言模型给出这个问题的回答，当然，大语言模型是一个字一个字回答的，所以对于大语言模型来说，输入是上文（一个句子），输出是一个字。
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">answer</span>: <span class="title class_">String</span> = <span class="title class_">LargeLanguageModel</span>(<span class="attr">context</span>: <span class="title class_">String</span>)</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">String</span> = <span class="title class_">Number</span>[]</span><br></pre></td></tr></table></figure></p></li>
+<li><p>假如我们希望有一个模型来帮我们下棋，它主要是为了帮我们寻找下一步棋的最佳位置，那么对于这个模型来说，输入是当前的棋盘状态，输出是下一步棋的最佳位置。
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">bestPosition</span>: <span class="title class_">Position</span> = <span class="title class_">PlayerModel</span>(<span class="attr">board</span>: <span class="title class_">Board</span>)</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Position</span> = <span class="title class_">Number</span>[]</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Board</span> = <span class="title class_">Number</span>[][][]</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<p>通过这三个例子我们可以看到，这个所谓的“规则”，实际上已经<strong>隐含在了模型里面</strong>，我们把问题抛给模型，模型就给我们答案。模型内部帮我们解决了问题。再深一层考虑，这个模型内化的规则，并不是一个显式的规则，而是一个隐式的规则，我们只能通过某些手段观测，但很难对其做出解释。</p>
+<h1 id="另一个例子">另一个例子</h1>
+<blockquote>
+<p>考虑一个场景：我们希望有一个模型来帮我们判断一个句子是否是一个疑问句</p>
+</blockquote>
+<h2 id="传统方法">传统方法</h2>
+<p>按照常规思路来考虑，要判断一个句子是否为一个问句，我们实际上只需要判断句子末尾是不是问号就可以了，如果使用传统的编程方法，我们可以这样实现。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">sentence</span>: <span class="title class_">String</span>): <span class="function"><span class="params">Boolean</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> sentence[sentence.<span class="property">length</span> - <span class="number">1</span>] === <span class="string">&#x27;？&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="深度学习方法">深度学习方法</h2>
+<p>但我们现在开始用深度学习的思路来建模。对于这个模型来说，输入是一个句子，输出是一个布尔值。而布尔值也可以看成是一个向量，我们按照下面的方式来定义输出。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">False</span> = [<span class="number">0</span>]</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">True</span> = [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<p>而输入的句子，也是一个向量。我们先定一个单词表，这个单词表的
+<code>key</code> 为中文字以及标点符号，<code>value</code>
+为一个数字。然后我们把句子中的每个字都转换成数字，然后把这些数字拼接起来，就得到了一个向量。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="variable constant_">DICTIONARY</span> = &#123;</span><br><span class="line">    <span class="string">&#x27;你&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;好&#x27;</span>: <span class="number">2</span>,</span><br><span class="line">    <span class="string">&#x27;吗&#x27;</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="string">&#x27;？&#x27;</span>: <span class="number">4</span>,</span><br><span class="line">    <span class="string">&#x27;。&#x27;</span>: <span class="number">5</span>,</span><br><span class="line">    <span class="string">&#x27;！&#x27;</span>: <span class="number">6</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么“你好。”这句话就是 <code>[1, 2, 5]</code>，而“你好吗？”这句话就是
+<code>[1, 2, 3, 4]</code>。</p>
+<p>这时候我们所希望模型的行为是这样的：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="title class_">Model</span>(<span class="string">&#x27;你好。&#x27;</span>) = <span class="title class_">False</span></span><br><span class="line"><span class="title class_">Model</span>(<span class="string">&#x27;你好吗？&#x27;</span>) = <span class="title class_">True</span></span><br></pre></td></tr></table></figure>
+<p>更进一步，我们实际上希望得到的是：</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="title class_">Model</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>]) = [<span class="number">0</span>]</span><br><span class="line"><span class="title class_">Model</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]) = [<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<p>所以从形状上来说，我们需要一个“运算”，将一个多个元素的数组，变成一个元素的数组。而矩阵乘法可以做到这一点，对于形状分别为
+<span class="math inline">\(a \times b\)</span> 和 <span
+class="math inline">\(b \times c\)</span> 的矩阵，它们的矩阵乘法结果为
+<span class="math inline">\(a \times c\)</span>
+。所以在这个场景里，我们需要一个 <span class="math inline">\(1 \times
+n\)</span> 的矩阵，与 <span class="math inline">\(n \times 1\)</span>
+的矩阵相乘，结果为 <span class="math inline">\(1 \times 1\)</span>
+的矩阵。</p>
+<p>我们先固定输入的维度上限，为了方便，我们就假设上限长度是
+5，如果不足的话就补全 0，对于上面两个输入来说，会转化为</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Size(1 x n)</span></span><br><span class="line"><span class="comment">// &#x27;你好。&#x27;</span></span><br><span class="line"><span class="keyword">const</span> x1 = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>]</span><br><span class="line"><span class="comment">// &#x27;你好吗？&#x27;</span></span><br><span class="line"><span class="keyword">const</span> x2 = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+<p>基于上述讨论，我们假设我们需要求的矩阵参数为</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Size(n x 1)</span></span><br><span class="line"><span class="keyword">const</span> W = [</span><br><span class="line">  w1,</span><br><span class="line">  w2,</span><br><span class="line">  w3,</span><br><span class="line">  w4,</span><br><span class="line">  w5</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>用参数乘以输入，可以看到</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Size(1 x n) x Size(n x 1) = Size(1 x 1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#x27;你好。&#x27;</span></span><br><span class="line"><span class="keyword">const</span> y1 = [</span><br><span class="line">  w1,</span><br><span class="line">  w2,</span><br><span class="line">  w3,</span><br><span class="line">  w4,</span><br><span class="line">  w5</span><br><span class="line">] * [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>] = w3 + 2w4 + 5w5</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#x27;你好吗？&#x27;</span></span><br><span class="line"><span class="keyword">const</span> y2 = [</span><br><span class="line">  w1,</span><br><span class="line">  w2,</span><br><span class="line">  w3,</span><br><span class="line">  w4,</span><br><span class="line">  w5</span><br><span class="line">] * [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] = w2 + 2w3 + 3w4 + 4w5</span><br></pre></td></tr></table></figure>
+<p>这时候，聪明的同学可能会发现，0 起到了“掩码”的作用，乘以一个 0
+之后就忽略了对应元素了，在我们这个场景下，我们希望判断句子最后一位是不是问号，那么其实我们可以忽略前面所有的元素，也就是一个理想的参数应该是</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> W = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<p>这样，每个输入乘上这个参数，就能得到最后一个字符对应的 id。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// &#x27;你好。&#x27;</span></span><br><span class="line"><span class="keyword">const</span> y1 = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>] * [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>] = [<span class="number">5</span>]</span><br><span class="line"><span class="comment">// &#x27;你好吗？&#x27;</span></span><br><span class="line"><span class="keyword">const</span> y2 = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>] * [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] = [<span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+<p>经过这步处理，我们便把最后一个元素取出来了，此时我们需要对其进行“判断”，如果是
+4，那就是问号结尾，如果不是，就不是。但因为单词表里，问号对应的 id 是 4,
+小于 4 的 id 和大于 4 的 id 我们都要判断为
+<code>False</code>，<strong>这样一个函数并不能是一个线性函数</strong>（想想为什么）。</p>
+<p>考虑下面这个二次函数，其特点是 <span class="math inline">\(f(4) =
+1\)</span>，当 <span class="math inline">\(x \neq 4\)</span>
+的时候，<span class="math inline">\(f(x) &lt;
+1\)</span>，更进一步，如果我们对这个函数值进行向下取整的话，有</p>
+<p><span class="math display">\[
+\begin{cases}
+\lfloor f(x) \rfloor = 1, x = 4 \\
+\lfloor f(x) \rfloor &lt; 1, x \neq 4
+\end{cases}
+\]</span></p>
+<p>下面是其函数图像，这个图像的具体方程为 <span
+class="math inline">\(f(x) = -(x - 4)^2 + 1\)</span>。</p>
+<figure>
+<img src="/assets/images/2025-04-02-AI学习-深度学习/二次函数.png"
+alt="二次函数作为激活函数" />
+<figcaption aria-hidden="true">二次函数作为激活函数</figcaption>
+</figure>
+<p>这样做的好处是，这个函数是一个连续函数，我们可以很方便用这个函数来模拟“概率”，越趋近于
+1，就表明得到该结果的概率越大，否则就越小。这里是为了方便，用了大家熟悉的二次函数，更好的模拟是采用高斯分布函数，可以通过调节高斯分布的方差和标准差来使得钟形曲线极值为
+1，中轴线对应的 x 值为 4。</p>
+<p>回到例子中，这样我们得到一个“完美的”模型，其定义如下。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span> &#123;</span><br><span class="line">    <span class="attr">W</span>: <span class="title class_">Number</span>[] = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">    <span class="attr">activate</span>: <span class="function">(<span class="params"><span class="attr">x</span>: <span class="title class_">Number</span></span>) =&gt;</span> <span class="title class_">Number</span> = <span class="function">(<span class="params">x</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> -(x - <span class="number">4</span>) ** <span class="number">2</span> + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">forward</span>(<span class="attr">x</span>: <span class="title class_">Number</span>[]): <span class="title class_">Number</span>[] &#123;</span><br><span class="line">        <span class="keyword">const</span> y = <span class="variable language_">this</span>.<span class="property">W</span> * x</span><br><span class="line">        <span class="keyword">return</span> [<span class="variable language_">this</span>.<span class="title function_">activate</span>(y)]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个例子的一个启示是，我们<strong>好像把一个和数学没太大关系的问题，转化为矩阵运算了</strong>，而事实上，很多问题都可以被抽象为矩阵运算来建模。这个例子想说明另的一个问题是，模型的规则被内化在
+<code>W</code> 和 <code>activate</code>
+函数中了，我们无法直接观察到这个模型的规则，只能通过模型的输出来观察到模型的规则。我们直接交给模型的是我们的数据，以及我们希望得到的结果，而模型自己学习这两个参数。在这个例子里，这两者还是通过我们<strong>思考</strong>出来的，而实际上，这两者是可以<strong>学习</strong>出来的。</p>
+<h1 id="训练">训练</h1>
+<p>有了上面的认识基础，我们就可以将目光聚焦在以下问题：如何得到
+<code>W</code> 和 <code>activate</code> 函数？<strong>训练</strong>
+就是得到这两者的过程。</p>
+<p>与人学习技能的“训练”进行类比，实际上这是一个“试错”的过程，我们在学习新技能的时候，会不断进行尝试，导师给我们反馈，我们根据反馈来调整自己的技能，直到我们达到我们的目标。而在深度学习中，我们也会不断进行尝试，我们根据尝试的结果来调整我们的模型，直到我们的模型达到我们的目标。</p>
+<p>我们可以把这个过程分为以下几个步骤：</p>
+<ol type="1">
+<li>我们需要一个<strong>模型</strong>，这个模型可以接受输入，然后输出一个结果</li>
+<li>我们需要一个<strong>损失函数</strong>，这个损失函数可以接受模型的输出和我们期望的输出，然后输出一个损失值</li>
+<li>我们需要一个<strong>优化器</strong>，这个优化器可以接受损失函数的输出，然后输出一个新的模型</li>
+<li>我们需要一个<strong>数据集</strong>，这个数据集包含了我们希望模型学习的样本</li>
+</ol>
+<pre class="mermaid">graph LR
+    Data[训练数据] --> Model[模型]
+    Model --> Output[模型输出]
+    Target[期望输出] --> Loss[损失函数]
+    Output --> Loss
+    Loss --> Optimizer[优化器]
+    Optimizer -->|更新参数| Model</pre>
+<h2 id="数据集">数据集</h2>
+<p>继续沿用上面的例子，我们的数据集就是一些句子，以及这些句子的期望输出（是否为问号结尾）。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> dataset = [</span><br><span class="line">    [<span class="string">&#x27;你好。&#x27;</span>, <span class="title class_">False</span>],</span><br><span class="line">    [<span class="string">&#x27;你好吗？&#x27;</span>, <span class="title class_">True</span>],</span><br><span class="line">    [<span class="string">&#x27;你好吗。&#x27;</span>, <span class="title class_">False</span>],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>经过向量化预处理，真正输入模型的是这样的训练数对。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> preprocessedDataset = [</span><br><span class="line">    [[<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>], [<span class="number">0</span>]],</span><br><span class="line">    [[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">1</span>]],</span><br><span class="line">    [[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>], [<span class="number">0</span>]],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="模型">模型</h2>
+<p>从上面的例子出发，我们的模型可以是一个很简单的一层模型，其定义如下。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span> &#123;</span><br><span class="line">    <span class="attr">W</span>: <span class="title class_">Number</span>[]</span><br><span class="line">    <span class="attr">activate</span>: (<span class="attr">x</span>: <span class="title class_">Number</span>): <span class="title class_">Number</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，模型还需要一些工具函数，比如把输入字符串转化为向量的函数，这个函数就是逐字进行字典查询，得到那个字对应的
+id，然后组成一个向量，如果长度不够 5，则往前面补充
+0。对于布尔值，也需要转化为 <code>[0]</code> 或者 <code>[1]</code>。</p>
+<h2 id="损失函数">损失函数</h2>
+<p>损失函数指导优化器的优化方向，其思路其实很简单，假设目前模型的行为是</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> model = <span class="keyword">new</span> <span class="title class_">Model</span>()</span><br><span class="line"><span class="keyword">const</span> output = model.<span class="title function_">forward</span>(<span class="string">&#x27;你好。&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>那么我们希望模型的输出是 <code>[0]</code>，如果此时模型输出了
+<code>[1]</code>，那就是误判了，我们希望损失函数有比较大的差值，如果模型确实输出
+<code>[0]</code>，那么我们希望损失函数几乎没有差值。从这个角度来看，我们可以把损失函数定义为</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Loss</span> = (<span class="attr">output</span>: <span class="title class_">Number</span>, <span class="attr">target</span>: <span class="title class_">Number</span>): <span class="function"><span class="params">Number</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> output - target</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种定义的直观理解就是，如果实际输出离期望输出越大，那么误差就越大。</p>
+<h2 id="优化器">优化器</h2>
+<p>优化器的作用是根据损失函数的输出，来更新模型的参数。优化器的思路也很简单，我们可以把模型的参数看成是一个向量，我们希望这个向量的每个元素都尽可能地接近期望的输出。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Optimizer</span> = (<span class="attr">model</span>: <span class="title class_">Model</span>, <span class="attr">loss</span>: <span class="title class_">Number</span>): <span class="function"><span class="params">Model</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> newModel = <span class="keyword">new</span> <span class="title class_">Model</span>()</span><br><span class="line">    newModel.<span class="property">W</span> = model.<span class="property">W</span> - loss</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际情况下，只要不是线性关系的话（实际也不是），我们不太可能一步到位直接把参数调整正确，此时我们需要每次改一点点，而这个改动的比率就称为<strong>学习率（learning
+rate）</strong>。</p>
+<figure class="highlight ts"><figcaption><span>&#123;3&#125;</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Optimizer</span> = (<span class="attr">model</span>: <span class="title class_">Model</span>, <span class="attr">loss</span>: <span class="title class_">Number</span>): <span class="function"><span class="params">Model</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> newModel = <span class="keyword">new</span> <span class="title class_">Model</span>()</span><br><span class="line">    newModel.<span class="property">W</span> = model.<span class="property">W</span> - learningRate * loss</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="训练过程">训练过程</h2>
+<p>训练过程就是不断地进行尝试，直到模型的输出接近期望输出。当然，这里需要一个终止条件，那就是误差在我们允许的范围内，我们就可以不继续进行优化了。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> train = (<span class="attr">dataset</span>: [<span class="title class_">String</span>, <span class="title class_">Boolean</span>][]): <span class="function"><span class="params">Model</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> model = <span class="keyword">new</span> <span class="title class_">Model</span>()</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> [input, target] <span class="keyword">of</span> dataset) &#123;</span><br><span class="line">        <span class="comment">// 使用当前模型计算输出</span></span><br><span class="line">        <span class="keyword">const</span> output = model.<span class="title function_">forward</span>(input)</span><br><span class="line">        <span class="comment">// 计算损失</span></span><br><span class="line">        <span class="keyword">const</span> loss = <span class="title class_">Loss</span>(output, target)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果误差已经很小，就可以结束训练了</span></span><br><span class="line">        <span class="keyword">if</span> (loss &lt; <span class="variable constant_">LOSS_THRESHOLD</span>) &#123;</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据损失优化模型</span></span><br><span class="line">        <span class="keyword">const</span> newModel = <span class="title class_">Optimizer</span>(model, loss)</span><br><span class="line">        <span class="comment">// 下一个循环使用新的模型</span></span><br><span class="line">        model = newModel</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>深度学习</strong>：一种建模方式，通过多层网络来表征模型，然后每层网络的参数都是可以通过学习得到的。</li>
+<li><strong>训练</strong>：通过不断地尝试，来得到模型的参数。</li>
+<li><strong>数据集</strong>：包含了我们希望模型学习的样本。</li>
+<li><strong>损失函数</strong>：接受模型的输出和我们期望的输出，然后输出一个损失值。</li>
+<li><strong>优化器</strong>：接受损失函数的输出，然后输出一个新的模型。</li>
+</ul>
+<h1 id="实践时刻">实践时刻</h1>
+<ul>
+<li>思考一下如何建模布尔运算</li>
+<li>思考如何训练出一个能做布尔运算的模型</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/04/02/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" title="AI学习时间 03 - 深度学习">https://aquietzero.github.io/2025/04/02/computer/AI学习/深度学习/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/03/25/computer/AI%E5%AD%A6%E4%B9%A0/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="prev" title="AI学习时间 02 - 大语言模型">
+                  <i class="fa fa-angle-left"></i> AI学习时间 02 - 大语言模型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/04/15/computer/AI%E5%AD%A6%E4%B9%A0/%E8%AE%AD%E7%BB%83/" rel="next" title="AI学习时间 04 - 训练">
+                  AI学习时间 04 - 训练 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

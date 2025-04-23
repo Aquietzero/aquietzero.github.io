@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Convex objects have certain properties that make them highly suitable for use in collision detection tests.  The existence of a separating plane for nonintersecting convex objects. The distance betwee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Convexity-based Methods">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Convex objects have certain properties that make them highly suitable for use in collision detection tests.  The existence of a separating plane for nonintersecting convex objects. The distance betwee">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-04-13-convexity-based-methods/cw-algo.png">
+<meta property="article:published_time" content="2022-04-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-04-13-convexity-based-methods/cw-algo.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/","path":"2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/","title":"Convexity-based Methods"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Convexity-based Methods | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#boundary-based-collision-detection"><span class="nav-number">1.</span> <span class="nav-text">Boundary-based Collision
+Detection</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#closest-features-algorithms"><span class="nav-number">2.</span> <span class="nav-text">Closest-features Algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-v-clip-algorithm"><span class="nav-number">2.1.</span> <span class="nav-text">The V-Clip Algorithm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hierarchical-polyhedron-representations"><span class="nav-number">3.</span> <span class="nav-text">Hierarchical Polyhedron
+Representations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-dobkin-kirkpatrick-hierarchy"><span class="nav-number">3.1.</span> <span class="nav-text">The Dobkin-Kirkpatrick
+Hierarchy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linear-and-quadratic-programming"><span class="nav-number">4.</span> <span class="nav-text">Linear and Quadratic
+Programming</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#linear-programming"><span class="nav-number">4.1.</span> <span class="nav-text">Linear Programming</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fourier-motzkin-elimination"><span class="nav-number">4.1.1.</span> <span class="nav-text">Fourier-Motzkin Elimination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#seidels-algorithm"><span class="nav-number">4.1.2.</span> <span class="nav-text">Seidel&#39;s Algorithm</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-gilbert-johnson-keerthi-algorithm"><span class="nav-number">5.</span> <span class="nav-text">The
+Gilbert-Johnson-Keerthi Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-algorithm"><span class="nav-number">5.1.</span> <span class="nav-text">The Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#finding-the-point-of-minimum-norm-in-a-simplex"><span class="nav-number">5.2.</span> <span class="nav-text">Finding the
+Point of Minimum Norm in a Simplex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hill-climbing-for-extreme-vertices"><span class="nav-number">5.3.</span> <span class="nav-text">Hill Climbing for Extreme
+Vertices</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gjk-for-moving-objects"><span class="nav-number">5.4.</span> <span class="nav-text">GJK for Moving Objects</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-chung-wang-separating-vector-algorithm"><span class="nav-number">6.</span> <span class="nav-text">The Chung-Wang
+Separating-vector Algorithm</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Convexity-based Methods | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Convexity-based Methods
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-13 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-13T00:00:00+08:00">2022-04-13</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Convex objects have certain properties that make them highly suitable
+for use in collision detection tests.</p>
+<ul>
+<li>The existence of a separating plane for nonintersecting convex
+objects.</li>
+<li>The distance between two points — one from each object — is at a
+local minimum. The distance is also a global minimum.</li>
+</ul>
+<p>Concave objects do not share these characteristics.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/convex-objects.png"
+alt="(a)For two convex objects a local minimum distance between two points is always a global minimum. (b) For two concave objects the local minimum distance between two points (in gray) is not necessarily a global minimum (in black)." />
+<figcaption aria-hidden="true">(a)For two convex objects a local minimum
+distance between two points is always a global minimum. (b) For two
+concave objects the local minimum distance between two points (in gray)
+is not necessarily a global minimum (in black).</figcaption>
+</figure>
+<p>(a)For two convex objects a local minimum distance between two points
+is always a global minimum. (b) For two concave objects the local
+minimum distance between two points (in gray) is not necessarily a
+global minimum (in black).</p>
+<h1 id="boundary-based-collision-detection">Boundary-based Collision
+Detection</h1>
+<p>Assuming the polyhedra are both in the same frame of reference
+(accomplished by, for example, transforming <span
+class="math inline">\(Q\)</span> into the space of <span
+class="math inline">\(P\)</span>), their intersection can be determined
+as follows.</p>
+<ol type="1">
+<li>Intersect each edge of <span class="math inline">\(P\)</span>
+against polyhedron <span class="math inline">\(Q\)</span>. If an edge
+lies partly or fully inside <span class="math inline">\(Q\)</span>, stop
+and report the polyhedra as intersecting.</li>
+<li>Conversely, intersect each edge of <span
+class="math inline">\(Q\)</span> against polyhedron <span
+class="math inline">\(P\)</span>. If an edge lies partly or fully inside
+<span class="math inline">\(P\)</span>, stop and report <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(Q\)</span> as intersecting.</li>
+<li>Finally, to deal with the degenerate case of identical objects (such
+as cubes) passing through each other with their faces aligned, test the
+centroid of each face of <span class="math inline">\(Q\)</span> against
+all faces of <span class="math inline">\(P\)</span>. If a centroid is
+found contained in <span class="math inline">\(P\)</span>, stop and
+return intersection.</li>
+<li>Return non-intersection.</li>
+</ol>
+<p>For the first two steps, testing against edges are quite expensive,
+it can be changed to follows:</p>
+<ol type="1">
+<li>Test each vertex <span class="math inline">\(Q\)</span> against all
+faces of <span class="math inline">\(P\)</span>. If any vertex is found
+to lie inside all faces of <span class="math inline">\(P\)</span>, stop
+and return the polyhedra as intersecting.</li>
+<li>Repeat the previous step, but now testing each vertex of <span
+class="math inline">\(P\)</span> against the faces of <span
+class="math inline">\(Q\)</span>.</li>
+</ol>
+<h1 id="closest-features-algorithms">Closest-features Algorithms</h1>
+<p>For polyhedra, rather than tracking the closest points and using the
+closest points of the previous frame as a starting point a better
+approach is to trach the closest features (vertices, edges, or faces)
+from frame to frame. <strong>A pair of features, one from each of the
+two disjoint polyhedra, are said to be the closest features if they
+contain a pair of closest points for the polyhedra.</strong></p>
+<h2 id="the-v-clip-algorithm">The V-Clip Algorithm</h2>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/vclip-algo.png"
+alt="Two nonintersecting 2D polyhedra A and B. Indicated is the vertex-face feature pair V and F, constituting the closest pair of features and containing the closest pair of points, PA and PB, between the objects." />
+<figcaption aria-hidden="true">Two nonintersecting 2D polyhedra
+<em>A</em> and <em>B</em>. Indicated is the vertex-face feature pair
+<em>V</em> and <em>F</em>, constituting the closest pair of features and
+containing the closest pair of points, <em>PA</em> and <em>PB</em>,
+between the objects.</figcaption>
+</figure>
+<p>Two nonintersecting 2D polyhedra <em>A</em> and <em>B</em>. Indicated
+is the vertex-face feature pair <em>V</em> and <em>F</em>, constituting
+the closest pair of features and containing the closest pair of points,
+<em>PA</em> and <em>PB</em>, between the objects.</p>
+<aside>
+<p>💡 <strong>Theorem</strong>: Let <span
+class="math inline">\(F_A\)</span> and <span
+class="math inline">\(F_B\)</span> be a pair of features from two
+disjoint convex polyhedra, <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span>, and let <span
+class="math inline">\(VR(F_A)\)</span> and <span
+class="math inline">\(VR(F_B)\)</span> denote their Voronoi regions. Let
+<span class="math inline">\(P_A \in F_A\)</span> and <span
+class="math inline">\(P_B \in F_B\)</span> be a pair of closest points
+between the features. Then, if <span class="math inline">\(P_A \in
+VR(F_B)\)</span> and <span class="math inline">\(P_B \in
+VR(F_A)\)</span>, <span class="math inline">\(F_A\)</span> and <span
+class="math inline">\(F_B\)</span> are a globally closest pair of
+features and <span class="math inline">\(P_A\)</span> and <span
+class="math inline">\(P_B\)</span> are a globally closest pair of points
+between <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> (albeit not necessarily unique).</p>
+</aside>
+<p>V-Clip starts with two features, one from each input polyhedron. At
+each iteration of the algorithm, the features are tested to see if they
+meet the conditions of the theorem for being a closest pair of features.
+If so, the algorithm terminates, returning a result of nonintersection
+along with the pair of closest features. If the conditions are not met,
+V-Clip updates one of the features to a neighboring feature, where the
+neighbors of a feature are defined as follows.</p>
+<ul>
+<li>The neighbors of a vertex are the edges incident to the vertex.</li>
+<li>The neighbors of a face are the edges bounding the face.</li>
+<li>The neighbors of an edge are the two vertices and the two faces
+incident to the edge.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/feature-pair-transition-chart.png"
+alt="Feature pair transition chart in which solid arrows indicate strict decrease of interfeature distance and dashed arrows indicate no change." />
+<figcaption aria-hidden="true">Feature pair transition chart in which
+solid arrows indicate strict decrease of interfeature distance and
+dashed arrows indicate no change.</figcaption>
+</figure>
+<p>Feature pair transition chart in which solid arrows indicate strict
+decrease of interfeature distance and dashed arrows indicate no
+change.</p>
+<h1 id="hierarchical-polyhedron-representations">Hierarchical Polyhedron
+Representations</h1>
+<p>Most well known of the nested polyhedron representations is the
+Dobkin-Kirkpatrick hierarchy. The Dobkin-Kirkpatrick hierarchy can be
+used for queries such as finding an extreme vertex in a given direction,
+locating the point on a polyhedron closest to a given point, or
+determining the intersection of two polyhedra.</p>
+<h2 id="the-dobkin-kirkpatrick-hierarchy">The Dobkin-Kirkpatrick
+Hierarchy</h2>
+<p>The Dobkin-Kirkpatrick (DK) hierarchy of a d-dimensional polyhedron
+<span class="math inline">\(P\)</span> is a sequence <span
+class="math inline">\(P_0, P_1, \dots, P_k\)</span> of nested
+increasingly smaller polytopal approximations of <span
+class="math inline">\(P\)</span>, where <span class="math inline">\(P =
+P_0\)</span> and <span class="math inline">\(P_{i+1}\)</span> is
+obtained from <span class="math inline">\(P_i\)</span> by deletion of a
+subset of the vertices of <span class="math inline">\(P_i\)</span>. The
+subset of vertices is selected to form a maximal set of independent
+vertices (that is, such that no two vertices in the set are adjacent to
+each other). The construction of the hierarchy stops with the innermost
+polyhedron <span class="math inline">\(P_k\)</span> being a d-simplex (a
+tetrahedron in 3D).</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Given a set s of vertices, compute a maximal set of independent vertices</span></span><br><span class="line"><span class="function">Set <span class="title">IndependentSet</span><span class="params">(Set s)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Initialize i to the empty set</span></span><br><span class="line">    Set i = <span class="built_in">EmptySet</span>();</span><br><span class="line">    <span class="comment">// Loop over all vertices in the input set</span></span><br><span class="line">    <span class="keyword">for</span> (all vertices v in s) &#123;</span><br><span class="line">        <span class="comment">// If unmarked and has 8 or fewer neighboring vertices...</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">Marked</span>(v) &amp;&amp; <span class="built_in">Degree</span>(v) &lt;= <span class="number">8</span>) &#123;</span><br><span class="line">            <span class="comment">// Add v to the independent set and mark all of v’s neighbors</span></span><br><span class="line">            i.<span class="built_in">Add</span>(v);</span><br><span class="line">            s.<span class="built_in">MarkAllVerticesAdjacentToVertex</span>(v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>An example of constructing the DK hierarchy of a polygon.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/dk-hierarchy.png"
+alt="The Dobkin–Kirkpatrick hierarchy of the convex polygon P = P0." />
+<figcaption aria-hidden="true">The Dobkin–Kirkpatrick hierarchy of the
+convex polygon <em>P</em> = <em>P</em>0.</figcaption>
+</figure>
+<p>Given a DK hierarchy, many different queries can be answered in an
+efficient manner.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/supporting-plane.png"
+alt="The supporting plane H, for (a) P2 and (b) P1, through the point on the polyhedron closest to a query point S." />
+<figcaption aria-hidden="true">The supporting plane <em>H</em>, for (a)
+<em>P</em>2 and (b) <em>P</em>1, through the point on the polyhedron
+closest to a query point <em>S</em>.</figcaption>
+</figure>
+<p>The supporting plane <em>H</em>, for (a) <em>P</em>2 and (b)
+<em>P</em>1, through the point on the poly- hedron closest to a query
+point <em>S</em>.</p>
+<p>Starting at the innermost polyhedra <span
+class="math inline">\(P_i\)</span>, <span class="math inline">\(i =
+2\)</span>, the closest point <span class="math inline">\(R_i\)</span>
+on <span class="math inline">\(P_i\)</span> to <span
+class="math inline">\(S\)</span> is found through straightforward
+calculation. If <span class="math inline">\(R_i = S\)</span>, then <span
+class="math inline">\(S\)</span> is contained in <span
+class="math inline">\(P\)</span> and the algorithm stops. Otherwise,
+knowing <span class="math inline">\(R_i\)</span>, the closest point for
+<span class="math inline">\(P_{i-1}\)</span> is found as follows. Let
+<span class="math inline">\(H\)</span> be the supporting plane for <span
+class="math inline">\(P_i\)</span> through <span
+class="math inline">\(R_i\)</span>. <span class="math inline">\(P_{i -
+1}\)</span> can now be described as consisting of the part in front of
+<span class="math inline">\(H\)</span> and the part behind <span
+class="math inline">\(H\)</span></p>
+<p><span class="math display">\[
+P_{i-1} = (P_{i-1} \cap H^+)\cup(P_{i-1} \cap H^-)
+\]</span></p>
+<ul>
+<li>The closest point between <span class="math inline">\(P_{i-1} \cap
+H^-\)</span> and <span class="math inline">\(S\)</span> is directly
+given by <span class="math inline">\(R_i\)</span>.</li>
+<li>Since <span class="math inline">\(P_{i-1} \cap H^+\)</span> is
+defined by one vertex and two edges, the closest point between <span
+class="math inline">\(P_{i-1} \cap H^+\)</span> and <span
+class="math inline">\(S\)</span> is computed in constant time.</li>
+</ul>
+<h1 id="linear-and-quadratic-programming">Linear and Quadratic
+Programming</h1>
+<p>Collision detection problems can be expressed as linear and quadratic
+programming problems.</p>
+<h2 id="linear-programming">Linear Programming</h2>
+<p>The <strong>linear programming problem</strong> is the problem of
+optimizing (maximizing or minimizing) a linear function with respect to
+a finite set of linear constraints. The linear function to be optimized
+is called the <strong>objective function</strong>.</p>
+<p>Without loss of generality, linear programming (LP) problems are here
+restricted to maximization of the objective function and to involve
+constraints of the form <span class="math inline">\(f(x_1, x_2, \dots,
+x_n) \leq c\)</span> only.</p>
+<p>A linear inequality of <span class="math inline">\(n\)</span>
+variables geometrically defines a halfspace in <span
+class="math inline">\(\mathbb{R}^n\)</span>. The region of feasible
+solutions defined by a set of <span class="math inline">\(m\)</span>
+inequalities therefore corresponds to a convex polyhedron <span
+class="math inline">\(P\)</span>, <span class="math inline">\(P = H_1
+\cap H_2 \cap \cdots \cap H_m\)</span>. Note also that the objective
+function can be seen as a dot product between the vectors <span
+class="math inline">\(\textbf{x} = (x_1, x_2, \dots, x_n)\)</span> and
+<span class="math inline">\(\textbf{c} = (c_1, c_2, \dots,
+c_n)\)</span>. <strong>The LP problem is therefore geometrically
+equivalent to that of finding a supporting point <span
+class="math inline">\(\textbf{x}\)</span> of <span
+class="math inline">\(P\)</span> in direction <span
+class="math inline">\(\textbf{c}\)</span>.</strong></p>
+<aside>
+<p>💡 The intersection problem can be expressed as an LP problem in the
+following way. Let the two polyhedra be given in terms of their
+vertices. Now a linear programming problem can be set up to determine
+whether there exist coefficients for a plane such that it forms a
+separating plane for the two polyhedra.</p>
+</aside>
+<h3 id="fourier-motzkin-elimination">Fourier-Motzkin Elimination</h3>
+<p>It operates by successive rewrites of the system, eliminating one
+variable from the system on each rewrite. When only one variable is
+left, the system is trivially consistent if the largest lower bound for
+the variable is less than the smallest upper bound for the variable.</p>
+<h3 id="seidels-algorithm">Seidel's Algorithm</h3>
+<p>A simple method for solving linear programming problems in <span
+class="math inline">\(d\)</span> variables and <span
+class="math inline">\(m\)</span> inequality constraints is Seidel’s
+algorithm. Seidel’s algorithm has an expected running time of <span
+class="math inline">\(O(d!m)\)</span>. Although the algorithm is not
+practical for large <span class="math inline">\(d\)</span> it is quite
+efficient for small <span class="math inline">\(d\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/two-triangles.png"
+alt="The two triangles A = (1,0), (5,−1), (4,3) and B = (0,0), (4,1), (1,4) defined as the intersection of three halfspaces each." />
+<figcaption aria-hidden="true">The two triangles <em>A</em> = (1,0),
+(5,−1), (4,3) and <em>B</em> = (0,0), (4,1), (1,4) defined as the
+intersection of three halfspaces each.</figcaption>
+</figure>
+<p>The two triangles <em>A</em> = (1,0), (5,−1), (4,3) and <em>B</em> =
+(0,0), (4,1), (1,4) defined as the intersection of three halfspaces
+each.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/seidels-algo.png"
+alt="At top left, the six halfspaces from the two triangles given above. Remaining illustrations show Seidel’s algorithm applied to these six halfspaces. The feasible region is shown in light gray and the current halfspace is shown in thick black. Arrows indicate the 1D constraints in the recursive call." />
+<figcaption aria-hidden="true">At top left, the six halfspaces from the
+two triangles given above. Remaining illustrations show Seidel’s
+algorithm applied to these six halfspaces. The feasible region is shown
+in light gray and the current halfspace is shown in thick black. Arrows
+indicate the 1D constraints in the recursive call.</figcaption>
+</figure>
+<p>At top left, the six halfspaces from the two triangles given above.
+Remaining illustrations show Seidel’s algorithm applied to these six
+halfspaces. The feasible region is shown in light gray and the current
+halfspace is shown in thick black. Arrows indicate the 1D constraints in
+the recursive call.</p>
+<h1 id="the-gilbert-johnson-keerthi-algorithm">The
+Gilbert-Johnson-Keerthi Algorithm</h1>
+<p>The GJK algorithm is one of the most effective methods for
+determining intersection between two polyhedra. GJK is an iterative and
+simplex-based descent algorithm that given two sets of vertices as
+inputs finds the Euclidean distance between the convex hulls of these
+sets.</p>
+<h2 id="the-algorithm">The Algorithm</h2>
+<p>The algorithm is based on the fact that the separation distance
+between two polyhedra <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> is equivalent to the distance between
+their Minkowski difference <span class="math inline">\(C = A \ominus
+B\)</span> and the origin. The key point of the GJK algorithm is that it
+does not explicitly compute the Minkowski difference <span
+class="math inline">\(C\)</span>. It only samples the Minkowski
+difference point set using a support mapping of <span
+class="math inline">\(C = A \ominus B\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/distance-between-a-b.png"
+alt="The distance between A and B is equivalent to the distance between their Minkowski difference and the origin." />
+<figcaption aria-hidden="true">The distance between <em>A</em> and
+<em>B</em> is equivalent to the distance between their Minkowski
+difference and the origin.</figcaption>
+</figure>
+<p>The distance between <em>A</em> and <em>B</em> is equivalent to the
+distance between their Minkowski difference and the origin.</p>
+<p>A support mapping is a function <span
+class="math inline">\(s_A(\textbf{d})\)</span> that maps a given
+direction <span class="math inline">\(\textbf{d}\)</span> into a
+supporting point for the convex object <span
+class="math inline">\(A\)</span> in that direction. Because the support
+mapping function is the maximum over a linear function, the support
+mapping for <span class="math inline">\(C, s_{A \ominus
+B}(\textbf{d})\)</span>, can be expressed in terms of the support
+mappings for <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> as <span class="math inline">\(s_{A
+\ominus B}(\textbf{d}) = s_A(\textbf{d}) - s_B(-\textbf{d})\)</span>.
+Thus, points from the Minkowski difference can be computed, on demand,
+from supporting points of the individual polyhedra <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>.</p>
+<p>The GJK Algorithm is stated as follows:</p>
+<ol type="1">
+<li>Initialize the simplex set <span class="math inline">\(Q\)</span> to
+one or more points (up to <span class="math inline">\(d + 1\)</span>
+points, where <span class="math inline">\(d\)</span> is the dimension)
+from the Minkowski difference of <span class="math inline">\(A\)</span>
+and <span class="math inline">\(B\)</span>.</li>
+<li>Compute the point <span class="math inline">\(P\)</span> of minimum
+norm in <span class="math inline">\(CH(Q)\)</span>.</li>
+<li>If <span class="math inline">\(P\)</span> is the origin itself, the
+origin is clearly contained in the Minkowski difference of <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>. Stop and return <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> as intersecting.</li>
+<li>Reduce <span class="math inline">\(Q\)</span> to the smallest subset
+<span class="math inline">\(Q&#39;\)</span> of <span
+class="math inline">\(Q\)</span> such that <span class="math inline">\(P
+\in CH(Q&#39;)\)</span>. That is, remove any points from <span
+class="math inline">\(Q\)</span> not determining the subsimple of <span
+class="math inline">\(Q\)</span> in which <span
+class="math inline">\(P\)</span> lies.</li>
+<li>Let <span class="math inline">\(V = s_{A \ominus B}(-P) = s_A(-P) -
+s_B(P)\)</span> be a supporting point in direction <span
+class="math inline">\(-P\)</span>.</li>
+<li>If <span class="math inline">\(V\)</span> is no more extremal in
+direction <span class="math inline">\(-P\)</span> than <span
+class="math inline">\(P\)</span> itself, stop and return <span
+class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> as not intersecting. The length of the
+vector from the origin to <span class="math inline">\(P\)</span> is the
+separation distance of <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>.</li>
+<li>Add <span class="math inline">\(V\)</span> to <span
+class="math inline">\(Q\)</span> and go to 2.</li>
+</ol>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/gjk-algo.png"
+alt="GJK finding the point on a polygon closest to the origin." />
+<figcaption aria-hidden="true">GJK finding the point on a polygon
+closest to the origin.</figcaption>
+</figure>
+<p>GJK finding the point on a polygon closest to the origin.</p>
+<h2 id="finding-the-point-of-minimum-norm-in-a-simplex">Finding the
+Point of Minimum Norm in a Simplex</h2>
+<p>Determining the point <span class="math inline">\(P\)</span> of
+minimum norm in <span class="math inline">\(CH(Q)\)</span> for a simplex
+set <span class="math inline">\(Q = \{Q_1, Q_2, \dots, Q_k\}, k \in [1,
+4]\)</span> can be done by the distance subalgorithm (Johnson’s
+algorithm). The distance algorithm reduces the problem to considering
+all subsets of <span class="math inline">\(Q\)</span> separately. For
+<span class="math inline">\(k = 4\)</span> there are 15 subsets.</p>
+<ul>
+<li>4 vertices <span class="math inline">\((Q_1, Q_2, Q_3,
+Q_4)\)</span></li>
+<li>6 edges <span class="math inline">\((Q_1Q_2, Q_1Q_3, Q_1Q_4, Q_2Q_3,
+Q_2Q_4, Q_3Q_4)\)</span></li>
+<li>4 faces <span class="math inline">\((Q_1Q_2Q_3, Q_1Q_2Q_4,
+Q_1Q_3Q_4, Q_2Q_3Q_4)\)</span></li>
+<li>interior <span class="math inline">\((Q_1Q_2Q_3Q_4)\)</span></li>
+</ul>
+<p>Once a feature has been located, the point of minimum norm on the
+feature is given by the orthogonal projection of the origin onto the
+feature.</p>
+<h2 id="hill-climbing-for-extreme-vertices">Hill Climbing for Extreme
+Vertices</h2>
+<p>One of the most expensive steps of the GJK algorithm is finding an
+extreme vertex in a given direction. Trivially, extreme vertices can be
+located in <span class="math inline">\(O(n)\)</span> time by searching
+over all <span class="math inline">\(n\)</span> vertices. A better
+approach relis on having a data structure listing all adjacent vertex
+neighbors for each vertex. Then an extreme vertex can be found through a
+simple hill-climbing algorithm, greedily visiting more and more extreme
+vertices until no vertex more extreme can be found.</p>
+<figure>
+<img
+src="/assets/images/2022-04-13-convexity-based-methods/hill-climbing-for-extreme-vertices.png"
+alt="(a) Hill climbing from V to the most extreme vertex E (in direction d) using adjacent vertices only. (b) Accelerated hill climbing using additional (artificial adjacency) information." />
+<figcaption aria-hidden="true">(a) Hill climbing from <em>V</em> to the
+most extreme vertex <em>E</em> (in direction <strong>d</strong>) using
+adjacent vertices only. (b) Accelerated hill climbing using additional
+(artificial adjacency) information.</figcaption>
+</figure>
+<p>For larger polyhedra, the hill climbing can be sped up by adding one
+or more artificial neighbors to the adjacency list for a vertex. By
+linking to vertices at a greater distance away from the current vertex,
+the hill-climbing algorithm is likely to make faster progress toward the
+most extreme vertex when moving through these artificial vertices.</p>
+<h2 id="gjk-for-moving-objects">GJK for Moving Objects</h2>
+<p>Consider two polyhedra <span class="math inline">\(P\)</span> and
+<span class="math inline">\(Q\)</span>, with movements given by the
+vectors <span class="math inline">\(\textbf{t}_1\)</span> and <span
+class="math inline">\(\textbf{t}_2\)</span>, respectively. To simplify
+the collision test, the problem is recast so that <span
+class="math inline">\(Q\)</span> is stationary. The relative movement of
+<span class="math inline">\(P\)</span> (with respect to <span
+class="math inline">\(Q\)</span>) is now given by <span
+class="math inline">\(\textbf{t} = \textbf{t}_1 - \textbf{t}_2\)</span>.
+Let <span class="math inline">\(V_i\)</span> be the vertices of <span
+class="math inline">\(P\)</span> in its initial position. <span
+class="math inline">\(V_i + \textbf{t}\)</span> describes the location
+of the vertices of <span class="math inline">\(P\)</span> at the end of
+its translational motion.</p>
+<p>Determining if <span class="math inline">\(P\)</span> collides with
+<span class="math inline">\(Q\)</span> during its translational motion
+is therefore as simple as passing GJK the vertices of <span
+class="math inline">\(P\)</span> at both the start and end of <span
+class="math inline">\(P\)</span>’s motion.</p>
+<h1 id="the-chung-wang-separating-vector-algorithm">The Chung-Wang
+Separating-vector Algorithm</h1>
+<p>The CW algorithm operates on the vertices of the polyhedra. At each
+iteration <span class="math inline">\(i\)</span>, the main algorithm
+computes the two vertices <span
+class="math inline">\(\textbf{p}_i\)</span> and <span
+class="math inline">\(\textbf{q}_i\)</span> (<span
+class="math inline">\(\textbf{p}_i \in P, \textbf{q}_i \in Q\)</span>)
+most extreme with resepect to the current candidate separating-vector
+<span class="math inline">\(\textbf{s}_i\)</span>. If this pair of
+vertices indicates object separation along <span
+class="math inline">\(\textbf{s}_i\)</span>, the algorithm exits with no
+intersection. Otherwise, the algorithm computes a new candidate
+separating vector by reflecting <span
+class="math inline">\(\textbf{s}_i\)</span> about the perpendicular to
+the line through to <span class="math inline">\(\textbf{p}_i\)</span>
+and <span class="math inline">\(\textbf{q}_i\)</span>. The algorithm is
+described as below:</p>
+<ol type="1">
+<li>Start with some candidate separating vector <span
+class="math inline">\(\textbf{s}_0\)</span> and let <span
+class="math inline">\(i = 0\)</span>.</li>
+<li>Find extreme vertices <span
+class="math inline">\(\textbf{p}_i\)</span> of <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(\textbf{q}_i\)</span> of <span
+class="math inline">\(Q\)</span> such that <span
+class="math inline">\(\textbf{p}_i \cdot \textbf{s}_i\)</span> and <span
+class="math inline">\(\textbf{q}_i \cdot -\textbf{s}_i\)</span> are
+maximized.</li>
+<li>If <span class="math inline">\(\textbf{p}_i \cdot \textbf{s}_i &lt;
+\textbf{q}_i \cdot -\textbf{s}_i\)</span>, then <span
+class="math inline">\(\textbf{s}_i\)</span> is a separating axis. Exit
+reporting no intersection.</li>
+<li>Otherwise, compute a new separating vector as <span
+class="math inline">\(\textbf{s}_{i+1} = \textbf{s}_i - 2(\textbf{r}_i
+\cdot \textbf{s}_i) \textbf{r}_i\)</span>, where <span
+class="math inline">\(\textbf{r}_i = (\textbf{q}_i - \textbf{p}_i)/ \|
+\textbf{q}_i - \textbf{p}_i\|\)</span>.</li>
+<li>Let <span class="math inline">\(i = i + 1\)</span> and go to 2.</li>
+</ol>
+<figure>
+<img src="/assets/images/2022-04-13-convexity-based-methods/cw-algo.png"
+alt="(a) The first iteration of the CW algorithm for polygons P and Q. (b) A separating vector is found in the second iteration." />
+<figcaption aria-hidden="true">(a) The first iteration of the CW
+algorithm for polygons P and Q. (b) A separating vector is found in the
+second iteration.</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/" title="Convexity-based Methods">https://aquietzero.github.io/2022/04/13/reading/realtime-collision-detection/2022-04-13-convexity-based-methods/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/11/reading/realtime-collision-detection/2022-04-11-a-math-and-geometry-primer/" rel="prev" title="A Math and Geometry Primer">
+                  <i class="fa fa-angle-left"></i> A Math and Geometry Primer
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/13/reading/realtime-collision-detection/2022-04-13-bsp-tree-hierarchies/" rel="next" title="BSP Tree Hierarchies">
+                  BSP Tree Hierarchies <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

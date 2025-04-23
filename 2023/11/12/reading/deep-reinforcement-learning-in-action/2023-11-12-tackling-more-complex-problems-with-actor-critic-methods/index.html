@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="The REINFORCE algorithm is generally implemented as an episodic algorithm, meaning that we only apply it to update our model parameters after the agent has completed an entire episode. The policy is a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tackling more complex problems with actor-critic methods">
+<meta property="og:url" content="https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="The REINFORCE algorithm is generally implemented as an episodic algorithm, meaning that we only apply it to update our model parameters after the agent has completed an entire episode. The policy is a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/","path":"2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/","title":"Tackling more complex problems with actor-critic methods"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tackling more complex problems with actor-critic methods | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#combining-the-value-and-policy-function"><span class="nav-number">1.</span> <span class="nav-text">Combining the value and
+policy function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#distributed-training"><span class="nav-number">2.</span> <span class="nav-text">Distributed training</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#advantage-actor-critic"><span class="nav-number">3.</span> <span class="nav-text">Advantage actor-critic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#coding-an-actor-critic-model"><span class="nav-number">3.1.</span> <span class="nav-text">Coding an actor-critic model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#example-for-cartpole"><span class="nav-number">3.2.</span> <span class="nav-text">Example for CartPole</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#n-step-actor-critic"><span class="nav-number">4.</span> <span class="nav-text">N-step actor-critic</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tackling more complex problems with actor-critic methods | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tackling more complex problems with actor-critic methods
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-11-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-11-12T00:00:00+08:00">2023-11-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>The REINFORCE algorithm is generally implemented as an
+<strong>episodic algorithm</strong>, meaning that we only apply it to
+update our model parameters after the agent has completed an entire
+episode. The policy is a function, <span class="math inline">\(\pi: S
+\to P(a)\)</span>, it takes a state and returns a probability
+distribution over actions.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/policy-network.png" /></p>
+<p>At the end of the episode, we compute the <strong>return</strong> of
+the episode, which is the sum of the discounted rewards in the episode.
+The return is calculated as</p>
+<p><span class="math display">\[
+R = \sum_t \gamma_t \cdot r_t
+\]</span></p>
+<p>The loss function we minimize is defined as below</p>
+<p><span class="math display">\[
+\text{Loss} = -\log(P(a|S)) \cdot R
+\]</span></p>
+<p>So with REINFORCE we just keep sampling episodes from the agent and
+environment, and periodically update the policy parameters by minimizing
+this loss. By sampling a full episode, we get a pretty good idea of the
+true value of an action because we can see its downstream effects rather
+than just its immediate effect. But not all environments are episodic,
+and sometimes we want to be able to make updates in an incremental or
+<strong>online</strong> faction.</p>
+<p><strong>Distributed advantage actor-critic (DA2C)</strong> is a new
+kind of policy gradient method that will have the online-learning
+advantages of DQN without a replay buffer. It will also have the
+advantages of policy methods where we can directly sample actions from
+the probability distribution over actions.</p>
+<h1 id="combining-the-value-and-policy-function">Combining the value and
+policy function</h1>
+<p>Q-learning uses a trainable function to directly model the value (the
+expected reward) of an action, given a state. On the other hand, the
+advantage of direct policy learning is that we get a true conditional
+probability distribution over actions, <span
+class="math inline">\(P(a|S)\)</span>, that we can directly sample from
+to take an action.</p>
+<p>We can combine these two approaches to get the advantages of both. In
+building such a combined value-policy learning algorithm, we will start
+the policy learner as the foundation. There are two challenges we want
+to overcome to increase the robustness of the policy learner:</p>
+<ul>
+<li>We want to <em>improve the sample efficiency</em> by updating more
+frequently.</li>
+<li>We want to <em>decrease the variance of the reward</em> we used to
+update our model.</li>
+</ul>
+<p>The idea behind a combined value-policy algorithm is to use the value
+learner to reduce the variance in the rewards that are used to train the
+policy. That is, instead of minimizing the REINFORCE loss that included
+direct reference to the observed return <span
+class="math inline">\(R\)</span> from an episode, we instead add a
+baseline value such that the loss is now</p>
+<p><span class="math display">\[
+\text{Loss} = -\underbrace{\log(\pi(a|S))}_{\substack{\text{Log
+probability of} \\ \text{action given state}}} \cdot (R -
+\underbrace{V_\pi(S)}_{\substack{\text{state} \\ \text{value}}})
+\]</span></p>
+<p>The quantity <span class="math inline">\(R - V_\pi(S)\)</span> is
+actually the <strong>advantage</strong> of taking action <span
+class="math inline">\(a\)</span> under state <span
+class="math inline">\(S\)</span>.</p>
+<p>Algorithms of this sort are called <strong>actor-critic
+methods</strong>, where “actor” refers to the policy, because that’s
+where the actions are generated, and “critic” refers to the value
+function, because that’s what tells the actor how good its actions are.
+Since we are using <span class="math inline">\(R - V_\pi(S)\)</span>
+rather than just <span class="math inline">\(V(S)\)</span>, this is
+called <strong>advantage actor-critic</strong>.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/ac-method.png" /></p>
+<p>Q-learning falls under the category of value methods, since we
+attempt to learn action values, whereas policy gradient methods like
+REINFORCE directly attempt to learn the best actions to take. We can
+combine these two techniques into what’s called an actor-critic
+architecture.</p>
+<aside>
+<p>💡 When we say an algorithm bootstraps, we mean it can make a
+prediction from a prediction.</p>
+</aside>
+<p>Bootstrapping introduces a source of <strong>bias</strong>. Bias is a
+systematic deviation from the true value of something. On the other
+hand, making predictions from predictions introduces a kind of
+self-consistency that results in lower <strong>variance</strong>.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/bias-and-variance.png" /></p>
+<p>The bias-variance tradeoff is a fundamental machine learning concept
+that says any machine learning model will have some degree of systematic
+deviation from the true data distribution and some degree of variance.
+You can try to reduce the variance of your model, but it will always
+come at the cost of increased bias.</p>
+<p>We want to combine the potentially high-bias, low-variance value
+prediction with the potentially low-bias, high-variance policy
+prediction to get something with moderate bias and variance —— something
+that will work well in the online setting.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/ac-method-overview.png" /></p>
+<p>The general overview of actor-critic models. First, the actor
+predicts the best action and chooses the action to take, which generates
+a new state. The critic network computes the value of the old state and
+the new state. The relative value of <span
+class="math inline">\(S_{t+1}\)</span> is called its advantage, and this
+is the signal used to reinforce the action that was taken by the
+actor.</p>
+<h1 id="distributed-training">Distributed training</h1>
+<p>Batch training is necessary because the gradients, if we trained with
+single pieces of data at a time, would have too much variance, and the
+parameters would never converge on their optimal values. We need to
+average out the noise in a batch of data to get the real signal before
+updating the model parameters.</p>
+<p>This is why we had to use an experience replay buffer with DQN.
+Having a sufficiently large replay buffer requires a lot of memory, and
+in some cases a replay buffer is impractical.</p>
+<p>In many complex games it is common to use recurrent neural networks
+like LSTM or GRU. These RNNs can keep an internal state that can store
+traces of the past. But experiences replay doesn’t work with an RNN
+unless the replay buffer stores entire trajectories or full episodes,
+because the RNN is designed to process sequential data.</p>
+<p>One way to use RNNs without an experience replay is to run multiple
+copies of the agent in parallel, each with separate instantiations of
+the environment. By distributing multiple independent agents across
+different CPU processes, we can collect a varied set of experiences and
+therefore get a sample of gradients that we can average together to get
+a lower variance mean gradient.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/batch-learning-and-distributed-learning.png" /></p>
+<p>The most common form of training a deep learning model is to feed a
+batch of data together into the model to return a batch of predictions.
+Then we compute the loss for each prediction and average or sum all the
+losses before back-propagating and updating the model parameters. This
+averages out the variability present across all the experiences.
+Alternatively, we can run multiple models with each taking a single
+experience and making a single prediction, backpropagate through each
+model to get the gradients, and then sum or average the gradients before
+making any parameter updates.</p>
+<h1 id="advantage-actor-critic">Advantage actor-critic</h1>
+<p>Though the actor and critic as two separate functions, but we can
+combine them into a single neural network with two output “heads”. The
+neural network will return two different vectors: one for the policy and
+one for the value. This allows for some parameter sharing between the
+policy and value that can make things more efficient, since some of the
+information needed to compute values is also useful for predicting the
+best action for the policy.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># pseudocode for online advantage actor-critic</span></span><br><span class="line">gamma = <span class="number">0.9</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> epochs:</span><br><span class="line">    state = environment.get_state()</span><br><span class="line">    <span class="comment"># predicts the value of the state</span></span><br><span class="line">    value = critic(state)</span><br><span class="line">    <span class="comment"># predicts the probability distribution over actions given the state</span></span><br><span class="line">    policy = actor(state)</span><br><span class="line">    <span class="comment"># sample an action</span></span><br><span class="line">    action = policy.sample()</span><br><span class="line">    next_state, reward = environment.take_action(action)</span><br><span class="line">    <span class="comment"># predicts the value of next state</span></span><br><span class="line">    value_next = critic(next_state)</span><br><span class="line">    advantage = reward + (gamma * value_next - value)</span><br><span class="line">    loss = -<span class="number">1</span> * policy.logprob(action) * advantage</span><br><span class="line">    minimize(loss)</span><br></pre></td></tr></table></figure>
+<p>The advantage function <strong>bootstraps</strong> because it
+computes a value for the current state and action based on predictions
+for a future state. The full advantage expression, <span
+class="math inline">\(A = r_{t+1} + \gamma \cdot v(s_{t + 1}) -
+v(s_t)\)</span>, is used when we do online or N-step learning.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/bootstraps.png" /></p>
+<p>N-step learning accumulate rewards over N steps and then compute our
+loss and back-propagate.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/ac-model.png" /></p>
+<p>An actor-critic model produces a state value and action
+probabilities, which are used to compute an advantage value and this is
+the quantity that is used to train the model rather than raw rewards as
+with just Q-learning.</p>
+<h2 id="coding-an-actor-critic-model">Coding an actor-critic model</h2>
+<ol type="1">
+<li>Set up our actor-critic model, a two-headed model. The model accepts
+a state as input. The actor head is just like the policy network which
+produces a probability distribution over the actions. The critic outputs
+a single number representing the state value. The actor is denoted <span
+class="math inline">\(\pi(s)\)</span> and the critic is denoted <span
+class="math inline">\(v(s)\)</span>.</li>
+<li>While we’re in current episode
+<ol type="1">
+<li>Define the discount factor: <span
+class="math inline">\(\gamma\)</span>.</li>
+<li>Start a new episode, in initial state <span
+class="math inline">\(s_t\)</span>.</li>
+<li>Compute the value <span class="math inline">\(v(s_t)\)</span> and
+store it in the list.</li>
+<li>Compute <span class="math inline">\(\pi(s_t)\)</span>, store it in
+the list, sample, and take action <span
+class="math inline">\(a_t\)</span>. Receive the new state <span
+class="math inline">\(s_{t+1}\)</span>and the reward <span
+class="math inline">\(r_{t+1}\)</span>. Store the reward in the
+list.</li>
+</ol></li>
+<li>Train
+<ol type="1">
+<li>Initialize <span class="math inline">\(R=0\)</span>. Loop through
+the rewards in reverse order to generate returns: <span
+class="math inline">\(R = r_i + \gamma \cdot R\)</span>.</li>
+<li>Minimize the actor loss: <span class="math inline">\(-1 \cdot
+\gamma_t \cdot (R - v(s_t)) \cdot \pi(a|s)\)</span>.</li>
+<li>Minimize the critic loss: <span class="math inline">\((R -
+v)^2\)</span>.</li>
+</ol></li>
+<li>Repeat for a new episode.</li>
+</ol>
+<h2 id="example-for-cartpole">Example for CartPole</h2>
+<p>This is an overview of the architecture for our two-headed
+actor-critic model. It has two shared linear layers and a branching
+point where the output of the first two layers is sent to a log-softmax
+layer of the actor head and also to a ReLU layer of the critic head
+before finally passing through a tanh layer, which is an activation
+function that restricts output between –1 and 1. This model returns a
+2-tuple of tensors rather than a single tensor. <strong>Notice that the
+critic head is detached (indicated by the dotted line), which means we
+do not backpropagate from the critic head into the actor head or the
+beginning of the model.</strong> Only the actor back-propagates through
+the beginning of the model.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/two-heads-model.png" /></p>
+<p>Within each process, an episode of the game is run using the shared
+model. The loss is computed within each process, but the optimizer acts
+to update the shared actor-critic model that is used by each
+process.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/ac-in-process.png" /></p>
+<p>Each worker will update the shared model parameters asynchronously,
+whenever it is done running an episode.</p>
+<p><img
+src="/assets/images/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/run-ac-method.png" /></p>
+<p>The actor and critic have a bit of an adversarial relationship since
+the actions that the agent take affect the loss of the critic, and the
+critic makes predictions of state values that get incorporated into the
+return that affects the training loss of the actor. Hence, the overall
+loss plot may look chaotic despite the fact that the agent is indeed
+increasing in performance.</p>
+<aside>
+<p>💡 While using an adversarial training like this, the loss will be
+largely uninformative.</p>
+</aside>
+<h1 id="n-step-actor-critic">N-step actor-critic</h1>
+<p>In Monte Carlo method, we ran a full episode before updating the
+model parameters. While that makes sense for a simple game, usually we
+want to be able to make more frequent updates.</p>
+<p>With Monte Carlo full-episode learning, we don’t take advantage of
+bootstrapping, since there’s nothing to bootstrap. But with 1-step
+online learning, a lot of bias may be introduced.</p>
+<p>With bootstrapping, we’re making a prediction from a prediction, so
+the predictions will be better if you’re able to collect more data
+before making them. And we like bootstrapping because it improves sample
+efficiency.</p>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>Q-learning learns to predict the discounted rewards given a state
+and action.</li>
+<li>Policy methods learn a probability distribution over actions given a
+state.</li>
+<li>Actor-critic models combine a Q-learner with a policy learner.</li>
+<li>Advantage actor-critic learns to compute advantages by comparing the
+expected value of an action to the reward that was actually observed, so
+if an action is expected to result in a –1 reward but actually results
+in a +10 reward, its advantage will be higher than an action that is
+expected to result in +9 and actually results in +10.</li>
+<li>Multiprocessing is running code on multiple different processors
+that can operate simultaneously and independently.</li>
+<li>Multithreading is like multitasking; it allows you to run multiple
+tasks faster by letting the operating system quickly switch between
+them. When one task is idle (perhaps waiting for a file to download),
+the operating system can continue working on another task.</li>
+<li>Distributed training works by simultaneously running multiple
+instances of the environment and a single shared instance of the DRL
+model; after each time step we compute losses for each individual model,
+collect the gradients for each copy of the model, and then sum or
+average them together to update the shared parameters. This lets us do
+mini-batch training without an experience replay buffer.</li>
+<li>N-step learning is in between fully online learning, which trains 1
+step at a time, and fully Monte Carlo learning, which only trains at the
+end of an episode. N-step learning thus has the advantages of both: the
+efficiency of 1-step learning and the accuracy of Monte Carlo.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/" title="Tackling more complex problems with actor-critic methods">https://aquietzero.github.io/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/" rel="prev" title="Learning to pick the best policy: Policy gradient methods">
+                  <i class="fa fa-angle-left"></i> Learning to pick the best policy: Policy gradient methods
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/25/reading/deep-reinforcement-learning-in-action/2023-11-25-distributional-dqn/" rel="next" title="Distributional DQN - Getting the full story">
+                  Distributional DQN - Getting the full story <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

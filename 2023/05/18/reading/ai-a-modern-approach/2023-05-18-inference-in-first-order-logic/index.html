@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Propositional vs. First-Order Inference One way to do first-order inference is to convert the first-order knowledge base to propositional logic and use propositional inference. The rule of Universal I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inference in First-Order Logic">
+<meta property="og:url" content="https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Propositional vs. First-Order Inference One way to do first-order inference is to convert the first-order knowledge base to propositional logic and use propositional inference. The rule of Universal I">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.526Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="方法论">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="逻辑">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/","path":"2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/","title":"Inference in First-Order Logic"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Inference in First-Order Logic | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#propositional-vs.-first-order-inference"><span class="nav-number">1.</span> <span class="nav-text">Propositional vs.
+First-Order Inference</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#reduction-to-propositional-inference"><span class="nav-number">1.1.</span> <span class="nav-text">Reduction to Propositional
+Inference</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unification-and-frist-order-inference"><span class="nav-number">2.</span> <span class="nav-text">Unification and
+Frist-Order Inference</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#unification"><span class="nav-number">2.1.</span> <span class="nav-text">Unification</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#storage-and-retrieval"><span class="nav-number">2.2.</span> <span class="nav-text">Storage and Retrieval</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#forward-chaining"><span class="nav-number">3.</span> <span class="nav-text">Forward Chaining</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#first-order-definite-clauses"><span class="nav-number">3.1.</span> <span class="nav-text">First-Order Definite Clauses</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-simple-forward-chaining-algorithm"><span class="nav-number">3.2.</span> <span class="nav-text">A Simple Forward-Chaining
+Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#an-example"><span class="nav-number">3.2.1.</span> <span class="nav-text">An example</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Inference in First-Order Logic | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Inference in First-Order Logic
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-05-18 00:00:00" itemprop="dateCreated datePublished" datetime="2023-05-18T00:00:00+08:00">2023-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="propositional-vs.-first-order-inference">Propositional vs.
+First-Order Inference</h1>
+<p>One way to do first-order inference is to convert the first-order
+knowledge base to propositional logic and use propositional
+inference.</p>
+<p>The rule of <strong>Universal Instantiation (UI)</strong> says that
+we can infer any sentence obtained by substituting a <strong>ground
+term</strong> for a universally quantified variable.</p>
+<p>Let <span class="math inline">\(\text{SUBST}(\theta, \alpha)\)</span>
+denote the result of applying the substitution <span
+class="math inline">\(\theta\)</span> to the sentence <span
+class="math inline">\(\alpha\)</span>. Then the UI rule is written</p>
+<p><span class="math display">\[
+\frac{\forall v \ \alpha}{\text{SUBST}(\{ v / g\}, \alpha)}
+\]</span></p>
+<p>for any variable <span class="math inline">\(v\)</span> and the
+ground term <span class="math inline">\(g\)</span>.</p>
+<p>For example, from</p>
+<p><span class="math display">\[
+\forall x \ \text{King}(x) \land \text{Greedy}(x) \implies
+\text{Evil}(x)
+\]</span></p>
+<p>we can infer</p>
+<p><span class="math display">\[
+\text{King}(John) \land \text{Greedy}(John) \implies \text{Evil}(John)
+\]</span></p>
+<p>Similarly, the rule of <strong>Existential Instantiation</strong>
+replace an existentially quantified variable with a single new constant
+symbol. The formal statement is as follows: for any sentence <span
+class="math inline">\(\alpha\)</span>, variable <span
+class="math inline">\(v\)</span>, and constant symbol <span
+class="math inline">\(k\)</span> that does not appear elsewhere in the
+knowledge base,</p>
+<p><span class="math display">\[
+\frac{\exists v \ \alpha}{\text{SUBST}(\{ v / k\}, \alpha)}
+\]</span></p>
+<p>for example, from</p>
+<p><span class="math display">\[
+\exists x \ \text{Crown}(x) \land \text{OnHead}(x, John)
+\]</span></p>
+<p>we can infer</p>
+<p><span class="math display">\[
+\text{Crown}(C_1) \land \text{OnHead}(C_1, John)
+\]</span></p>
+<p>as long as <span class="math inline">\(C_1\)</span> does not appear
+elsewhere in the knowledge base.</p>
+<aside>
+<p>💡 Whereas Universal Instantiation can be applied many times to the
+same axiom to produce many different consequences, Existential
+Instantiation need only be applied once, and then the existentially
+quantified sentence can be discarded.</p>
+</aside>
+<h2 id="reduction-to-propositional-inference">Reduction to Propositional
+Inference</h2>
+<p>Any first-order knowledge base can be converted into a propositional
+knowledge base. An existentially quantified sentence can be replaced by
+one instantiation, a universally quantitified sentence can be replaced
+by the set of all possible instantiations.</p>
+<p>For example, suppose the knowledge base contains the following
+sentences:</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \forall x \ \text{King}(x) \land \text{Greedy}(x) \implies
+\text{Evil}(x) \\
+&amp; \text{King}(John) \\
+&amp; \text{Greedy}(John) \\
+&amp; \text{Brother}(Richard, John)
+\end{align*}
+\]</span></p>
+<p>the only objects are <span class="math inline">\(John\)</span> and
+<span class="math inline">\(Richard\)</span>. Applying UI to the first
+sentence using all possible substitutions, <span
+class="math inline">\(\{x / John\}\)</span> and <span
+class="math inline">\(\{ x / Richard \}\)</span> gives</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \text{King}(John) \land \text{Greedy}(John) \implies
+\text{Evil}(John) \\
+&amp; \text{King}(Richard) \land \text{Greedy}(Richard) \implies
+\text{Evil}(Richard)
+\end{align*}
+\]</span></p>
+<p>next replace ground atomic sentences, such as <span
+class="math inline">\(King(John)\)</span>, with proposition symbols,
+such as <span class="math inline">\(JoinIsKing\)</span>. Finally, apply
+any of the complete propositional algorithms to obtain conclusions such
+as <span class="math inline">\(JohnIsEvil\)</span>, which is equivalent
+to <span class="math inline">\(Evil(John)\)</span>.</p>
+<aside>
+<p>💡 The question of entailment for fisrt-order logic is
+<strong>semidecidable</strong> —— that is, algorithms exists that say
+yes to every entailed sentence, but no algorithm exists says no to every
+nonentailed sentence.</p>
+</aside>
+<h1 id="unification-and-frist-order-inference">Unification and
+Frist-Order Inference</h1>
+<p>Generalized Modus Ponens: For atomic sentences <span
+class="math inline">\(p_i, p_i&#39;\)</span> and <span
+class="math inline">\(q\)</span>, where there is a substitution <span
+class="math inline">\(\theta\)</span> such that <span
+class="math inline">\(\text{SUBST}(\theta, p_i&#39;) =
+\text{SUBST}(\theta, p_i)\)</span>, for all <span
+class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[
+\frac{p_1&#39;, p_2&#39;, \dots, p_n&#39;, (p_1 \land p_2 \land \dots
+\land p_n \implies q)}{\text{SUBST}(\theta, q)}
+\]</span></p>
+<p>For example</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+p_1&#39; = King(John) &amp; p_1 = King(x) \\
+p_2&#39; = Greedy(y) &amp; p_2 = Greedy(x) \\
+\theta = \{ x/John, y/John\} &amp; q = Evil(x) \\
+\text{SUBST}(\theta, q) = Evil(John)
+\end{array}
+\]</span></p>
+<p>Generalized Modus Ponens is a <strong>lifted</strong> version of
+Modus Ponens —— it raises Modus Ponens from ground (variable free)
+propositional logic to first-order logic. The key advantage of lifted
+inference rules over propositionalization is that they make only those
+substitutions that are required to allow particular inferences to
+proceed.</p>
+<h2 id="unification">Unification</h2>
+<p>Lifted inference rules require finding substitutions that make
+different logical expressions look identical. This process is called
+<strong>unification</strong> and is a key component of all first-order
+inference algorithms. The <span
+class="math inline">\(\text{UNIFY}\)</span> algorithm takes two
+sentences and returns a <strong>unifier</strong> for them.</p>
+<p><span class="math display">\[
+\text{UNIFY}(p, q) = \theta \text{ where } \text{SUBST}(\theta, p) =
+\text{SUBST}(\theta, q)
+\]</span></p>
+<p>We said that <span class="math inline">\(\text{UNIFY}\)</span> should
+return a substitution that makes the two arguments look the same. But
+there could be more than one such unifier. Every unifiable pair of
+expressions has a single <strong>most general unifier (MGU)</strong>
+that is unique up to renaming and substitution of variables.</p>
+<p>The process of computing the most general unifiers is simple:
+recursively explore the two expressions simultaneously “side by side”,
+building up a unifier along the way, but failing if two corresponding
+points in the structures do not match.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Unification Algorithm</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Unify</span>(<span class="params">x, y, θ</span>): <span class="title class_">Substitution</span> | <span class="title class_">Failure</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (θ === <span class="title class_">Failure</span>) <span class="keyword">return</span> <span class="title class_">Failure</span></span><br><span class="line">    <span class="keyword">if</span> (x === y) <span class="keyword">return</span> θ</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">IsVariable</span>(x)) <span class="keyword">return</span> <span class="title class_">UnifyVar</span>(x, y, θ)</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">IsVariable</span>(y)) <span class="keyword">return</span> <span class="title class_">UnifyVar</span>(y, x, θ)</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">IsCompound</span>(x) &amp;&amp; <span class="title class_">IsCompound</span>(y)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Unify</span>(<span class="title class_">Args</span>(x), <span class="title class_">Args</span>(y), <span class="title class_">Unify</span>(<span class="title class_">Op</span>(x), <span class="title class_">Op</span>(y), θ))</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="title class_">IsList</span>(x) &amp;&amp; <span class="title class_">IsList</span>(y)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Unify</span>(<span class="title class_">Rest</span>(x), <span class="title class_">Rest</span>(y), <span class="title class_">Unify</span>(<span class="title class_">First</span>(x), <span class="title class_">First</span>(y), θ))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Failure</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">UnifyVar</span>(<span class="params"><span class="keyword">var</span>, x, θ</span>): <span class="title class_">Substitution</span> &#123;</span><br><span class="line">    <span class="comment">// &#123; var/val &#125; ∈ θ for some val</span></span><br><span class="line">    <span class="keyword">let</span> subst = θ.<span class="title function_">find</span>(<span class="keyword">var</span>)</span><br><span class="line">    <span class="keyword">if</span> (subst) <span class="keyword">return</span> <span class="title class_">Unify</span>(subst.<span class="property">val</span>, x, θ)</span><br><span class="line">    <span class="comment">// &#123; x/val &#125; ∈ θ for some val</span></span><br><span class="line">    subst = θ.<span class="title function_">find</span>(x)</span><br><span class="line">    <span class="keyword">if</span> (subst) <span class="keyword">return</span> <span class="title class_">Unify</span>(<span class="keyword">var</span>, subst.<span class="property">val</span>, θ)</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">OccurCheck</span>(<span class="keyword">var</span>, x)) <span class="keyword">return</span> <span class="title class_">Failure</span></span><br><span class="line">    <span class="comment">// add &#123; var/x &#125; to θ</span></span><br><span class="line">    <span class="keyword">return</span> θ.<span class="title function_">add</span>([<span class="keyword">var</span>, x])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The arguments <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> can be any expression: a constant or
+variable, or a compound expression such as a complex sentence or term,
+or a list of expressions. The argument <span
+class="math inline">\(\theta\)</span> is a substitution, initially the
+empty substitution, but with <span class="math inline">\(\{ var /
+val\}\)</span> pairs added to it as we recurse through the inputs,
+comparing the expressions element by element. In a compound expression
+such as <span class="math inline">\(F(A, B)\)</span>, <span
+class="math inline">\(OP(x)\)</span> field picks out the function symbol
+<span class="math inline">\(F\)</span> and <span
+class="math inline">\(ARGS(x)\)</span> field picks out the argument list
+<span class="math inline">\((A, B)\)</span></p>
+<h2 id="storage-and-retrieval">Storage and Retrieval</h2>
+<p>Underlying the <span class="math inline">\(\text{TELL}\)</span>,
+<span class="math inline">\(\text{ASK}\)</span>, and <span
+class="math inline">\(\text{ASKVARS}\)</span> functions used to inform
+and interrogate a knowledge base are the more primitive <span
+class="math inline">\(\text{STORE}\)</span> and <span
+class="math inline">\(\text{FETCH}\)</span> functions. <span
+class="math inline">\(\text{STORE}(s)\)</span> stores a sentence <span
+class="math inline">\(s\)</span> into the knowledge base and <span
+class="math inline">\(\text{FETCH}(q)\)</span> returns all unifiers such
+that the query <span class="math inline">\(q\)</span> unifies with some
+sentence in the knowledge base.</p>
+<h1 id="forward-chaining">Forward Chaining</h1>
+<p>Those logical sentences that cannot be stated as a definite clause
+cannot be handled by this approach.</p>
+<h2 id="first-order-definite-clauses">First-Order Definite Clauses</h2>
+<p>First-order definite clauses are disjunctions of literals of which
+<em>exactly one is positive</em>. That means a definite clause is either
+atomic, or is an implication whose antecedent is a conjunction of
+positive literals and whose consequent is a single positive literal.
+Existential quantifiers are not allowed, and universal quantifiers are
+left implicit: if you see an <em>x</em> in a definite clause, that means
+there is an implicit <span class="math inline">\(\forall x\)</span>
+**quantifier. For example</p>
+<p><span class="math display">\[
+King(x) \land Greedy(x) \implies Evil(x)
+\]</span></p>
+<p>The literals <span class="math inline">\(King(John)\)</span> and
+<span class="math inline">\(Greedy(y)\)</span> is interpreted as
+“everyone is greedy” (the universal quantifier is implicit).</p>
+<h2 id="a-simple-forward-chaining-algorithm">A Simple Forward-Chaining
+Algorithm</h2>
+<p>Starting from the known facts. The process repeats until the query is
+answered (assuming that just one answer is required) or no new facts are
+added.</p>
+<figure>
+<img
+src="/assets/images/2023-05-18-inference-in-first-order-logic/an-inefficient-forward-chaning-algo.png"
+alt="A conceptually straightforward, but inefficient, forward-chaining algorithm. On each iteration, it adds to KB all the atomic sentences that can be inferred in one step from the implication sentences and the atomic sentences already in KB. The function STANDARDIZE-VARIABLES replaces all variables in its arguments with new ones that have not been used before." />
+<figcaption aria-hidden="true">A conceptually straightforward, but
+inefficient, forward-chaining algorithm. On each iteration, it adds to
+KB all the atomic sentences that can be inferred in one step from the
+implication sentences and the atomic sentences already in KB. The
+function STANDARDIZE-VARIABLES replaces all variables in its arguments
+with new ones that have not been used before.</figcaption>
+</figure>
+<p>On each iteration, it adds to KB all the atomic sentences that can be
+inferred in one step from the implication sentences and the atomic
+sentences already in KB. The function <code>STANDARDIZE-VARIABLES</code>
+replaces all variables in its arguments with new ones that have not been
+used before.</p>
+<h3 id="an-example">An example</h3>
+<p>Let us put definite clauses to work in representing the following
+problem:</p>
+<blockquote>
+<p>The law says that it is a crime for an American to sell weapons to
+hostile nations. The country Nono, an enemy of America, has some
+missiles, and all of its missiles were sold to it by Colonel West, who
+is American.</p>
+</blockquote>
+<p><span class="math display">\[
+\begin{align}
+&amp; \text{American}(x) \land \text{Weapon}(y) \land \text{Sells}(x,
+y,z ) \land \text{Hostile}(z) \implies \text{Criminal}(x) \\
+&amp; \text{Owns}(Nono, M_1) \\
+&amp; \text{Missle}(M_1) \\
+&amp; \text{Missle}(x) \land \text{Owns}(Nono, x) \implies
+\text{Sells}(West, x, Nono) \\
+&amp; \text{Missile}(x) \implies \text{Weapon}(x) \\
+&amp; \text{Enemy}(x, America) \implies \text{Hostile}(x) \\
+&amp; \text{American}(West) \\
+&amp; \text{Enemy}(Nono, America)
+\end{align} \\
+\]</span></p>
+<ul>
+<li>On the first iteration, rule (1) has unsatisfied premises.
+<ul>
+<li>Rule (4) is satisfied with <span
+class="math inline">\(\{x/M_1\}\)</span>, and <span
+class="math inline">\(\text{Sells}(West, M_1, Nono)\)</span> is
+added.</li>
+<li>Rule (5) is satisfied with <span
+class="math inline">\(\{x/M_1\}\)</span>, and <span
+class="math inline">\(\text{Weapon}(M_1)\)</span> is added.</li>
+<li>Rule (6) is satisfied with <span
+class="math inline">\(\{x/Nono\}\)</span>, and <span
+class="math inline">\(\text{Hostile}(Nono)\)</span> is added.</li>
+</ul></li>
+<li>On the second iteration, rule (1) is satisfied with <span
+class="math inline">\(\{ x/West, y/M_1, z/Nono\}\)</span>, and the
+inference <span class="math inline">\(\text{Criminal}(West)\)</span> is
+added.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2023-05-18-inference-in-first-order-logic/proof-tree.png"
+alt="The proof tree of the above example. The initial facts appear at the bottom level, facts inferred on the first iteration in the middle level, and facts inferred on the second iteration at the top level." />
+<figcaption aria-hidden="true">The proof tree of the above example. The
+initial facts appear at the bottom level, facts inferred on the first
+iteration in the middle level, and facts inferred on the second
+iteration at the top level.</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/" title="Inference in First-Order Logic">https://aquietzero.github.io/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/" rel="tag"># 方法论</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E9%80%BB%E8%BE%91/" rel="tag"># 逻辑</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/" rel="prev" title="Logical Agents">
+                  <i class="fa fa-angle-left"></i> Logical Agents
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/" rel="next" title="Quantifying Uncertainty">
+                  Quantifying Uncertainty <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

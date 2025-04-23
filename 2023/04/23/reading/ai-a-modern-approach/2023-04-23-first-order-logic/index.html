@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="First-order logic is also called first-order predicate calculus, it may be abbreviated as FOL or FOPC. Representation Languages What programming languages lack is a general mechanism for deriving fact">
+<meta property="og:type" content="article">
+<meta property="og:title" content="First-Order Logic">
+<meta property="og:url" content="https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="First-order logic is also called first-order predicate calculus, it may be abbreviated as FOL or FOPC. Representation Languages What programming languages lack is a general mechanism for deriving fact">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.526Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="方法论">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="逻辑">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/","path":"2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/","title":"First-Order Logic"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>First-Order Logic | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#representation-languages"><span class="nav-number">1.</span> <span class="nav-text">Representation Languages</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#combining-the-best-of-formal-and-natural-languages"><span class="nav-number">1.1.</span> <span class="nav-text">Combining
+the Best of Formal and Natural Languages</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#syntax-and-semantics-of-first-order-logic"><span class="nav-number">2.</span> <span class="nav-text">Syntax and Semantics
+of First-Order Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#models-for-first-order-logic"><span class="nav-number">2.1.</span> <span class="nav-text">Models for First-Order Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#symbols-and-interpretations"><span class="nav-number">2.2.</span> <span class="nav-text">Symbols and Interpretations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#terms"><span class="nav-number">2.3.</span> <span class="nav-text">Terms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#atomic-sentences"><span class="nav-number">2.4.</span> <span class="nav-text">Atomic Sentences</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#complex-sentences"><span class="nav-number">2.5.</span> <span class="nav-text">Complex Sentences</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#quantifiers"><span class="nav-number">2.6.</span> <span class="nav-text">Quantifiers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#universal-quantifier"><span class="nav-number">2.6.1.</span> <span class="nav-text">Universal Quantifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#existential-quantification"><span class="nav-number">2.6.2.</span> <span class="nav-text">Existential Quantification</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nested-quantifiers"><span class="nav-number">2.6.3.</span> <span class="nav-text">Nested Quantifiers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#connections-between-universal-and-existential-quantifier"><span class="nav-number">2.6.4.</span> <span class="nav-text">Connections
+between Universal and Existential Quantifier</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#equality"><span class="nav-number">2.7.</span> <span class="nav-text">Equality</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#database-semantics"><span class="nav-number">2.8.</span> <span class="nav-text">Database Semantics</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#using-first-order-logic"><span class="nav-number">3.</span> <span class="nav-text">Using First-Order Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#assertions-and-queries-in-fisrt-order-logic"><span class="nav-number">3.1.</span> <span class="nav-text">Assertions and
+Queries in Fisrt-Order Logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-kinship-domain"><span class="nav-number">3.2.</span> <span class="nav-text">The Kinship Domain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#numbers"><span class="nav-number">3.3.</span> <span class="nav-text">Numbers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sets"><span class="nav-number">3.4.</span> <span class="nav-text">Sets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-wumpus-world"><span class="nav-number">3.5.</span> <span class="nav-text">The Wumpus World</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#knowledge-engineering-in-first-order-logic"><span class="nav-number">4.</span> <span class="nav-text">Knowledge
+Engineering in First-Order Logic</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#the-knowledge-engineering-process"><span class="nav-number">4.1.</span> <span class="nav-text">The Knowledge Engineering
+Process</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#identify-the-questions"><span class="nav-number">4.1.1.</span> <span class="nav-text">1. Identify the questions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#assemble-the-relevant-knowledge"><span class="nav-number">4.1.2.</span> <span class="nav-text">2. Assemble the relevant
+knowledge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#decide-on-a-vocabulary-of-predicates-functions-and-constants"><span class="nav-number">4.1.3.</span> <span class="nav-text">3.
+Decide on a vocabulary of predicates, functions, and constants</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#encode-general-knowledge-about-the-domain"><span class="nav-number">4.1.4.</span> <span class="nav-text">4. Encode general
+knowledge about the domain</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#encode-a-description-of-the-problem-instance"><span class="nav-number">4.1.5.</span> <span class="nav-text">5. Encode a
+description of the problem instance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pose-queries-to-the-inference-procedure-and-get-answers"><span class="nav-number">4.1.6.</span> <span class="nav-text">6. Pose
+queries to the inference procedure and get answers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug-and-evaluate-the-knowledge-base"><span class="nav-number">4.1.7.</span> <span class="nav-text">7. Debug and evaluate the
+knowledge base</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="First-Order Logic | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          First-Order Logic
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-04-23 00:00:00" itemprop="dateCreated datePublished" datetime="2023-04-23T00:00:00+08:00">2023-04-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>First-order logic is also called <strong>first-order predicate
+calculus</strong>, it may be abbreviated as <strong>FOL</strong> or
+<strong>FOPC</strong>.</p>
+<h1 id="representation-languages">Representation Languages</h1>
+<p>What programming languages lack is a general mechanism for deriving
+facts from other facts; each update to a data structure is done by a
+domain-specific procedure whose details are derived by the programmer
+from his or her own knowledge of the domain. This procedural approach
+can be contrasted with the <strong>declarative</strong> nature of
+propositional logic, in which knowledge and inference are separate, and
+inference is entirely domain independent.</p>
+<p>Propositional logic</p>
+<ol type="1">
+<li>It is a declarative language because its semantics is based on a
+truth relation between sentences and possible worlds.</li>
+<li>It also has sufficient expressive power to deal with partial
+information, using disjunction and negation.</li>
+<li>It has a third property that is desirable in representation
+languages, namely, <strong>compositionality</strong>. In a compositional
+language, the meaning of a sentence is a function of the meaning of its
+parts.</li>
+</ol>
+<p>However, propositional logic, as a factored representation, lacks the
+expressive power to concisely describe an environment with many
+objects.</p>
+<h2 id="combining-the-best-of-formal-and-natural-languages">Combining
+the Best of Formal and Natural Languages</h2>
+<p>When we look at the syntax of natural language, the most obvious
+elements are nouns and noun phrases that refer to
+<strong>objects</strong> and verbs and verb phrases along with
+adjectives and adverbs that refer to <strong>relations</strong> among
+objects. Some of these relations are <strong>functions</strong> ——
+relations in which there is only one “value” for a given “input”.</p>
+<p>The primary difference between propositional and first-order logic
+lies in the <strong>ontological commitment</strong> made by each
+language —— that is, what it assumes about the nature of reality.</p>
+<figure>
+<img
+src="/assets/images/2023-04-23-first-order-logic/formal-languages.png"
+alt="Formal languages and their ontological and epistemological commitments." />
+<figcaption aria-hidden="true">Formal languages and their ontological
+and epistemological commitments.</figcaption>
+</figure>
+<p>Formal languages and their ontological and epistemological
+commitments.</p>
+<p>Various special-purpose logics make still further ontological
+commitments; for example, <strong>temporal logic</strong> assumes that
+facts hold at particular times and that those times are ordered.
+<strong>Higher-order logic</strong> views the relations and functions
+referred to by first-order logic as objects in themselves.</p>
+<p>A logic can also be characterized by its <strong>epistemological
+commitments</strong> —— the possible states of knowledge that it allows
+with respect to each fact. In both propositional and first-order logic,
+a sentence represents a fact and the agent either believes the sentence
+to be true, believes it to be false, or has no opinion. These logics
+therefore have three possible states of knowledge regarding any
+sentence.</p>
+<p>Systems using <strong>probability theory</strong>, can have any
+degree of belief, or subjective likelihood, ranging from 0 (total
+disbelief) to 1 (total belief).</p>
+<h1 id="syntax-and-semantics-of-first-order-logic">Syntax and Semantics
+of First-Order Logic</h1>
+<h2 id="models-for-first-order-logic">Models for First-Order Logic</h2>
+<p>In propositional logic, models link proposition symbols to predefined
+truth values. In first-order logic, the <strong>domain</strong> of a
+model is the set of objects or <strong>domain elements</strong> it
+contains. The domain is required to be nonempty —— every possible world
+must contain at least one object.</p>
+<p>The objects in the model may be related in various ways. A
+<strong>relation</strong> is just the set of tuples of objects that are
+related.</p>
+<p>Strictly speaking, models in first-order logic require <strong>total
+functions</strong>, that is, there must be a value for every input
+tuple.</p>
+<h2 id="symbols-and-interpretations">Symbols and Interpretations</h2>
+<p>The basic syntactic elements of first-order logic are the symbols
+that stand for objects, relations, and functions. The symbols,
+therefore, come in three kinds: <strong>constant symbols</strong>, which
+stand for objects; <strong>predicate symbols</strong>, which stand for
+relations; and <strong>function symbols</strong>, which stand for
+functions.</p>
+<p><span class="math display">\[
+\begin{align}
+\text{Sentence} &amp;\to \text{AtomicSentence} \
+|\  \text{ComplexSentence} \\
+\text{AtomicSentence} &amp;\to \text{Predicate} \ |\
+\text{Predicate(Term, ...)} \ |\ \text{Term} = \text{Term} \\
+\text{ComplexSentence} &amp;\to (\text{Sentence}) \\
+&amp;\ \ \ | \ \neg \text{Sentence} \\
+&amp;\ \ \ | \ \text{Sentence} \land \text{Sentence} \\
+&amp;\ \ \ | \ \text{Sentence} \lor \text{Sentence} \\
+&amp;\ \ \ | \ \text{Sentence} \implies \text{Sentence} \\
+&amp;\ \ \ | \ \text{Sentence} \iff \text{Sentence} \\
+&amp;\ \ \ | \ \text{Quantifier} \ \text{Variable}, \dots
+\text{Sentence} \\
+\text{Term} &amp;\to \text{Function}(\text{Term}, \dots) \\
+&amp;\ \ \ | \ \text{Constant} \\
+&amp;\ \ \ | \ \text{Variable} \\
+\text{Quantifier} &amp;\to \forall \ |\  \exists \\
+\text{Constant} &amp;\to A \ |\  X_1 \ |\  John \ |\  \cdots \\
+\text{Variable} &amp;\to a \ |\  x \ |\  s \ |\  \cdots \\
+\text{Predicate} &amp;\to True \ |\  False \ |\  After \ |\ Loves \ |
+\cdots \\
+\text{Function} &amp;\to Mother \ |\  LeftLeg \ |  \cdots \\
+\text{Operator Precedence} &amp;\to \neg, =, \land, \lor, \implies, \iff
+\end{align}
+\]</span></p>
+<p>The syntax of first-order logic with equality, specified in
+Backus–Naur form. Operator precedences are specified, from highest to
+lowest. The precedence of quantifiers is such that a quantifier holds
+over everything to the right of it.</p>
+<p>Every model must provide the information required to determine if any
+given sentence is true or false. Thus, in addition to its objects,
+relations, and functions, each model includes an
+<strong>interpretation</strong> that specifies exactly which objects,
+relations and functions are referred to by the constant, predicate, and
+function symbols.</p>
+<h2 id="terms">Terms</h2>
+<p>A <strong>term</strong> is a logical expression that refers to an
+object. In the general case, a <strong>complex term</strong> is formed
+by a function symbol followed by a parenthesized list of terms as
+arguments to the function symbol.</p>
+<p>In a term <span class="math inline">\(f(t_1, \cdots, t_n)\)</span>,
+the function symbol <span class="math inline">\(f\)</span> refers to
+some function in the model (call it <span
+class="math inline">\(F\)</span>); the argument terms refer to objects
+in the domain (call them <span class="math inline">\(d_1, \cdots,
+d_n\)</span>); and the term as a whole refers to the object that is the
+value of the function <span class="math inline">\(F\)</span> applied to
+<span class="math inline">\(d_1, \cdots, d_n\)</span>.</p>
+<h2 id="atomic-sentences">Atomic Sentences</h2>
+<p>An <strong>atomic sentence</strong> is formed from a predicate symbol
+optionally followed by a parenthesized list of terms, such as</p>
+<p><span class="math display">\[
+Brother(Richard, John)
+\]</span></p>
+<p>Atomic sentences can have complex terms as arguments</p>
+<p><span class="math display">\[
+Married(Father(Richard), Mother(John))
+\]</span></p>
+<p>An atomic sentence is true in a given model if the relation referred
+to by the predicate symbol holds among the objects referred to by the
+arguments.</p>
+<h2 id="complex-sentences">Complex Sentences</h2>
+<p>Logical connectives are used to construct more complex sentences.</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp;\neg Brother(LeftLeg(Richard), John) \\
+&amp; Brother(Richard, John) \land Brother(John, Richard)
+\end{align*}
+\]</span></p>
+<h2 id="quantifiers">Quantifiers</h2>
+<p><strong>Universal quantifier</strong> <span
+class="math inline">\(\forall\)</span> and <strong>existential
+quantifier</strong> <span class="math inline">\(\exists\)</span>.</p>
+<h3 id="universal-quantifier">Universal Quantifier</h3>
+<p>The sentence <span class="math inline">\(\forall x P\)</span>, where
+<span class="math inline">\(P\)</span> is any logical sentence, say that
+<span class="math inline">\(P\)</span> is true for every object <span
+class="math inline">\(x\)</span>. More precisely, <span
+class="math inline">\(\forall x P\)</span> is true in a given model if
+<span class="math inline">\(P\)</span> is true in all possible
+<strong>extended interpretations</strong> constructed from the
+interpretation given in the model, where each extended interpretation
+specifies a domain element to which <span
+class="math inline">\(x\)</span> refers.</p>
+<p>By asserting the universally quantified sentence, which is equivalent
+to asserting a whole list of individual implications, we end up
+asserting the conclusion of the rule just for those objects for which
+the premise is true and saying nothing at all about those objects for
+which the premise is false. <strong>Thus, the truth-table definition of
+<span class="math inline">\(\implies\)</span> turns out to be perfect
+for writing general rules with universal quantifiers</strong>.</p>
+<h3 id="existential-quantification">Existential Quantification</h3>
+<p>The sentence <span class="math inline">\(\exists x P\)</span> says
+that <span class="math inline">\(P\)</span> is true for at least one
+object <span class="math inline">\(x\)</span>. More precisely, <span
+class="math inline">\(\exists x P\)</span> is true in a given model if
+<span class="math inline">\(P\)</span> <strong>is true in at least one
+</strong>extended interpretation that assigns <span
+class="math inline">\(x\)</span> **to a domain element.</p>
+<p><strong>Just as <span class="math inline">\(\implies\)</span> appears
+to be the natural connective to use with <span
+class="math inline">\(\forall\)</span>, <span
+class="math inline">\(\land\)</span> is the natural connective to use
+with <span class="math inline">\(\exists\)</span>.</strong></p>
+<h3 id="nested-quantifiers">Nested Quantifiers</h3>
+<p>Some examples</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \forall x, \forall y \ Brother(x, y) \implies Sibling(x, y) \\
+&amp; \forall x \exists y \ Loves(x, y) \\
+&amp; \exists y \forall x \ Loves(x, y) \\
+&amp; \forall x \ (Crown(x) \lor (\exists x \ Brother(Richard, x)))
+\end{align*}
+\]</span></p>
+<h3
+id="connections-between-universal-and-existential-quantifier">Connections
+between Universal and Existential Quantifier</h3>
+<p>The two quantifiers are actually intimately connected with each
+other, through negation. The De Morgan rules for quantified and
+unquantified sentences are as follows:</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \neg \exists x \ P \equiv \forall x \ \neg P &amp;\ \ \ \ \ \
+\  \neg(P \lor Q) \equiv \neg P \land \neg Q \\
+&amp; \neg \forall x \ P \equiv \exists x \ \neg P &amp; \neg(P \land Q)
+\equiv \neg P \lor \neg Q \\
+&amp; \forall x \ P \equiv \neg \exists x \ \neg P &amp; P \land Q
+\equiv \neg(\neg P \lor \neg Q) \\
+&amp; \exists x \ P \equiv \neg \forall x \ \neg P &amp; P \lor Q \equiv
+\neg(\neg P \land \neg Q) \\
+\end{align*}
+\]</span></p>
+<h2 id="equality">Equality</h2>
+<p><strong>Equality symbol</strong> is used to signify that two terms
+refer to the same object. For example</p>
+<p><span class="math display">\[
+Father(John) = Henry
+\]</span></p>
+<h2 id="database-semantics">Database Semantics</h2>
+<p>In a database system, we insist that every constant symbol refer to a
+distinct object —— the <strong>unique-names assumption</strong>. Second,
+we assume that atomic sentences not known to be true are in fact false
+—— the <strong>closed world assumption</strong>. Finally, we invoke
+<strong>domain closure</strong>, meaning that each model contains no
+more domain elements than those named by the constant symbols.</p>
+<h1 id="using-first-order-logic">Using First-Order Logic</h1>
+<p>In knowledge representation, a <strong>domain</strong> is just some
+part of the world about which we wish to express some knowledge.</p>
+<h2 id="assertions-and-queries-in-fisrt-order-logic">Assertions and
+Queries in Fisrt-Order Logic</h2>
+<p>Sentences are added to a knowledge base using <code>TELL</code>. Such
+sentences are called <strong>assertions</strong>. Questions asked with
+<code>ASK</code> are called <strong>queries</strong> or
+<strong>goals</strong>. Geerally speaking, any query that is logically
+entailed by the knowledge base should be answered affirmatively.</p>
+<p>For example</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \text{TELL}(KB, \text{King}(John)) \\
+&amp; \text{TELL}(KB, \text{Person}(Richard)) \\
+&amp; \text{TELL}(KB, \forall x \ \text{King}(x) \implies
+\text{Person}(x)) \\
+\\
+&amp; \text{ASK}(KB, \text{Person}(John)) \to true
+\end{align*}
+\]</span></p>
+<p>If we want to know what value of <span
+class="math inline">\(x\)</span> makes the sentence true, we will need a
+different function, which we call <code>ASKVARS</code>.</p>
+<p><span class="math display">\[
+\text{ASKVARS}(KB, \text{Person}(x)) \to \{x/John\}, \{x/Richard\}
+\]</span></p>
+<p>Such an answer is called a <strong>substitution</strong> or
+<strong>binding list</strong>.</p>
+<h2 id="the-kinship-domain">The Kinship Domain</h2>
+<p>Kinship relations are represented by binary predicates: <em>Parent,
+Sibling, Brother, Sister, Child, Daughter, Son, Spouse, Wife, Husband,
+Grandparent, Grandchild, Cousin, Aunt</em>, and <em>Uncle</em>. We can
+go through each function and predicate, writing down what we know in
+terms of the other symbols.</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \forall m,c \ \text{Mother}(c) = m \iff \text{Female}(m) \land
+\text{Parent}(m, c) \\
+&amp; \forall w, h \ \text{Husband}(h, w) \iff \text{Male}(h) \land
+\text{Spouse}(h, w) \\
+&amp; \forall p, c \ \text{Parent}(p, c) \iff \text{Child}(c, p)
+\end{align*}
+\]</span></p>
+<p>Each of these sentences can be viewed as an <strong>axiom</strong> of
+the kinship domain. The kinship axioms are also
+<strong>definitions</strong>; they have the form <span
+class="math inline">\(\forall x, y \ P(x, y) \iff \cdots\)</span>. Not
+all logical sentences about a domain are axioms. Some are
+<strong>theorems</strong> —— that is, they are entailed by the
+axioms.</p>
+<h2 id="numbers">Numbers</h2>
+<p>Peano axioms define natural numbers and addition. Natural numbers are
+defined recursively.</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \text{NaturalNumber}(0) \\
+&amp; \forall n \ \text{NaturalNumber}(n) \implies
+\text{NaturalNumber}(S(n))
+\end{align}
+\]</span></p>
+<p>The successor function is constrained by</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \forall n \ 0 \neq S(n) \\
+&amp; \forall m, n \ m \neq n \implies S(m) \neq S(n)
+\end{align*}
+\]</span></p>
+<p>Addition can be defined in terms of the successor function</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \forall m \ \text{NaturalNumber}(m) \implies +(0, m) = m \\
+&amp; \forall m, n \ \text{NaturalNumber}(m) \land
+\text{NaturalNumber}(n) \implies +(S(m), n) = S(+(m, n))
+\end{align*}
+\]</span></p>
+<p>Once we have addition, it is straightforward to define multiplication
+as repeated addition, exponentiation as repeated multiplication, integer
+division and remainders, prime numbers and so on. Thus the whole number
+theory can be built up from one constant, one function, one predicate
+and four axioms.</p>
+<h2 id="sets">Sets</h2>
+<p>Define an operation <span class="math inline">\(\text{Add}(x,
+s)\)</span>, which gives the set resulting from adding element <span
+class="math inline">\(x\)</span> to set <span
+class="math inline">\(s\)</span>. One possible set of axioms is as
+follows:</p>
+<ol type="1">
+<li><p>The only sets are the empty set and those made by adding
+something to a set:</p>
+<p><span class="math display">\[
+\forall s \ \text{Set}(s) \iff (s = \{\}) \lor (\exists x, s_2 \
+\text{Set}(s_2) \land (s = \text{Add}(x, s_2)))
+\]</span></p></li>
+<li><p>The empty set has no elements added into it. There is no way to
+decompose <span class="math inline">\(\{\}\)</span> into a smaller set
+and an element:</p>
+<p><span class="math display">\[
+\neg \exists x, s \ \text{Add}(x, s) = \{\}
+\]</span></p></li>
+<li><p>Adding an element already in the set has no effect:</p>
+<p><span class="math display">\[
+\forall x, s \ x \in s \iff s = \text{Add}(x, s)
+\]</span></p></li>
+<li><p>The only members of a set are the elements that were added into
+it.</p>
+<p><span class="math display">\[
+\forall x, s \ x \in s \iff \exists y, s_2 \ (s = \text{Add}(y, s_2))
+\land (x = y \lor x \in s_2)
+\]</span></p></li>
+<li><p>A set is a subset of another set if and only if all of the first
+set’s members are members of the second set:</p>
+<p><span class="math display">\[
+\forall s_1, s_2 \ s_1 \subseteq s_2 \iff (\forall x \ x \in s_1
+\implies x \in s_2)
+\]</span></p></li>
+<li><p>Two sets are equal if and only if each is a subset of the
+other:</p>
+<p><span class="math display">\[
+\forall s_1, s_2 \ (s_1 = s_2) \iff (s_1 \subset s_2 \land s_2 \subset
+s_1)
+\]</span></p></li>
+<li><p>An object is in the intersection of two sets if and only if it is
+a member of both sets:</p>
+<p><span class="math display">\[
+\forall x, s_1, s_2 \ x \in (s_1 \cap s_2) \iff (x \in s_1 \land x \in
+s_2)
+\]</span></p></li>
+<li><p>An object is in the union of two sets if and only if it is a
+member of either set:</p>
+<p><span class="math display">\[
+\forall x, s_1, s_2 \ x \in (s_1 \cup s_2) \iff (x \in s_1 \lor x \in
+s_2)
+\]</span></p></li>
+</ol>
+<h2 id="the-wumpus-world">The Wumpus World</h2>
+<p>A typical percept sentence would be</p>
+<p><span class="math display">\[
+\text{Percept}([Stench, Breeze, Clitter, None, None], 5)
+\]</span></p>
+<p>The integer is time step.</p>
+<p>The actions in the wumpus world can be represented by logical
+terms:</p>
+<p><span class="math display">\[
+\text{Turn}(Right), \text{Turn}(Left), \text{Forward}, \text{Shoot},
+\text{Grab}, \text{Climb}
+\]</span></p>
+<h1 id="knowledge-engineering-in-first-order-logic">Knowledge
+Engineering in First-Order Logic</h1>
+<p>A <strong>knowledge engineer</strong> is someone who investigates a
+particular domain, learns what concepts are important in that domain,
+and creates a formal representation of the objects and relations in the
+domain.</p>
+<h2 id="the-knowledge-engineering-process">The Knowledge Engineering
+Process</h2>
+<h3 id="identify-the-questions">1. Identify the questions</h3>
+<p>The knowledge engineer must delineate the range of questions that the
+knowledge base will support and the kinds of facts that will be
+available for each specific problem instance.</p>
+<h3 id="assemble-the-relevant-knowledge">2. Assemble the relevant
+knowledge</h3>
+<p>A process called <strong>knowledge acquisition</strong>. At this
+stage, the knowledge is not represented formally. The idea is to
+understand the scope of the knowledge base, as determined by the task,
+and to understand how the domain actually works.</p>
+<h3 id="decide-on-a-vocabulary-of-predicates-functions-and-constants">3.
+Decide on a vocabulary of predicates, functions, and constants</h3>
+<p>Translate the important domain-level concepts into logic-level names.
+Once the choices have been made, the result is a vocabulary that is
+known as the <strong>ontology</strong> of the domain. The word
+<em>ontology</em> means a particular theory of the nature of being or
+existence. The ontology determines what kinds of things exist, but does
+not determine their specific properties and interrelationships.</p>
+<h3 id="encode-general-knowledge-about-the-domain">4. Encode general
+knowledge about the domain</h3>
+<p>The knowledge engineer writes down the axioms for all the vocabulary
+terms.</p>
+<h3 id="encode-a-description-of-the-problem-instance">5. Encode a
+description of the problem instance</h3>
+<p>It involves writing simple atomic sentences about instances of
+concepts that are already part of the ontology.</p>
+<h3 id="pose-queries-to-the-inference-procedure-and-get-answers">6. Pose
+queries to the inference procedure and get answers</h3>
+<p>We can let the inference procedure operate on the axioms and
+problem-specific facts to derive the facts we are interested in
+knowing.</p>
+<h3 id="debug-and-evaluate-the-knowledge-base">7. Debug and evaluate the
+knowledge base</h3>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>Knowledge representation languages should be declarative,
+compositional, expressive, context independent, and unambiguous.</li>
+<li>Logics differ in their <strong>ontological commitments</strong> and
+<strong>epistemological commitments</strong>. While propositional logic
+commits only to the existence of facts, first-order logic commits to the
+existence of objects and relations and thereby gains expressive power,
+appropriate for domains such as the wumpus world and electronic
+circuits.</li>
+<li>Both propositional logic and first-order logic share a difficulty in
+representing vague propositions. This difficulty limits their
+applicability in domains that require personal judgments, like politics
+or cuisine.</li>
+<li>The syntax of first-order logic builds on that of propositional
+logic. It adds terms to represent objects, and has universal and
+existential quantifiers to construct assertions about all or some of the
+possible values of the quantified variables.</li>
+<li>A <strong>possible world</strong>, or <strong>model</strong>, for
+first-order logic includes a set of objects and an
+<strong>interpretation</strong> that maps constant symbols to objects,
+predicate symbols to relations among objects, and function symbols to
+functions on objects.</li>
+<li>An atomic sentence is true only when the relation named by the
+predicate holds between the objects named by the terms. <strong>Extended
+interpretations</strong>, which map quantifier variables to objects in
+the model, define the truth of quantified sentences.</li>
+<li>Developing a knowledge base in first-order logic requires a careful
+process of analyzing the domain, choosing a vocabulary, and encoding the
+axioms required to support the desired inferences.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/" title="First-Order Logic">https://aquietzero.github.io/2023/04/23/reading/ai-a-modern-approach/2023-04-23-first-order-logic/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/" rel="tag"># 方法论</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E9%80%BB%E8%BE%91/" rel="tag"># 逻辑</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/03/25/reading/ai-a-modern-approach/2023-03-25-search-in-complex-environments/" rel="prev" title="Search in Complex Environments">
+                  <i class="fa fa-angle-left"></i> Search in Complex Environments
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/05/10/reading/ai-a-modern-approach/2023-05-10-logical-agent/" rel="next" title="Logical Agents">
+                  Logical Agents <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

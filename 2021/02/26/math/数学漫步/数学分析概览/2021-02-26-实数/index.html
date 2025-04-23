@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="实数概念图  在历史的长河里，数集不断被扩充，从正整数开始，扩充到整数，到有理数，再到无理数，在实分析的范畴内，数集为我们所熟知的实数 \(\mathbb{R}\)。 定义 通过对有理数分划进行定义而引入无理数的概念。满足下面条件的称为一个分划：  任一有理数，必在且仅在 \(A\) 及 \(A&#39;\) 二集之一中出现； 集 \(A\) 内的任一数 \(a\)，必小于集 \(A&#39;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实数">
+<meta property="og:url" content="https://aquietzero.github.io/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="实数概念图  在历史的长河里，数集不断被扩充，从正整数开始，扩充到整数，到有理数，再到无理数，在实分析的范畴内，数集为我们所熟知的实数 \(\mathbb{R}\)。 定义 通过对有理数分划进行定义而引入无理数的概念。满足下面条件的称为一个分划：  任一有理数，必在且仅在 \(A\) 及 \(A&#39;\) 二集之一中出现； 集 \(A\) 内的任一数 \(a\)，必小于集 \(A&#39;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/%E5%AE%9E%E6%95%B0/%E5%AE%9E%E6%95%B0%E6%A6%82%E5%BF%B5.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/%E5%AE%9E%E6%95%B0/%E5%88%86%E5%88%92.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/%E5%AE%9E%E6%95%B0/%E6%95%B0%E9%9B%86%E7%9A%84%E7%95%8C.png">
+<meta property="article:published_time" content="2021-02-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.522Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="高等数学">
+<meta property="article:tag" content="数学分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/%E5%AE%9E%E6%95%B0/%E5%AE%9E%E6%95%B0%E6%A6%82%E5%BF%B5.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/","path":"2021/02/26/math/数学漫步/数学分析概览/2021-02-26-实数/","title":"实数"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>实数 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%A0%E5%AF%86%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">稠密性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">连续性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E9%9B%86%E7%9A%84%E7%95%8C"><span class="nav-number">5.</span> <span class="nav-text">数集的界</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="实数 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          实数
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-02-26 00:00:00" itemprop="dateCreated datePublished" datetime="2021-02-26T00:00:00+08:00">2021-02-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/02/26/math/数学漫步/数学分析概览/2021-02-26-实数/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>722</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><figure>
+<img src="/assets/images/数学漫步/数学分析概览/实数/实数概念.png"
+alt="实数概念图" />
+<figcaption aria-hidden="true">实数概念图</figcaption>
+</figure>
+<p>在历史的长河里，数集不断被扩充，从正整数开始，扩充到整数，到有理数，再到无理数，在实分析的范畴内，数集为我们所熟知的实数
+<span class="math inline">\(\mathbb{R}\)</span>。</p>
+<h1 id="定义">定义</h1>
+<p>通过对有理数分划进行定义而引入无理数的概念。满足下面条件的称为一个<strong>分划</strong>：</p>
+<ol type="1">
+<li>任一有理数，必在且仅在 <span class="math inline">\(A\)</span> 及
+<span class="math inline">\(A&#39;\)</span> 二集之一中出现；</li>
+<li>集 <span class="math inline">\(A\)</span> 内的任一数 <span
+class="math inline">\(a\)</span>，必小于集 <span
+class="math inline">\(A&#39;\)</span> 内的任一数 <span
+class="math inline">\(a&#39;\)</span>。</li>
+</ol>
+<p>分划记为 <span class="math inline">\(A | A&#39;\)</span>。</p>
+<p>分划有三种类型</p>
+<ol type="1">
+<li>在下组 <span class="math inline">\(A\)</span> 内无最大数，而在上组
+<span class="math inline">\(A&#39;\)</span> 内有最小数 <span
+class="math inline">\(r\)</span>；</li>
+<li>在下组 <span class="math inline">\(A\)</span> 内有最大数 <span
+class="math inline">\(r\)</span>，而在上组 <span
+class="math inline">\(A&#39;\)</span> 内无最小数；</li>
+<li>在下组 <span class="math inline">\(A\)</span> 内无最大数，而在上组
+<span class="math inline">\(A&#39;\)</span> 内亦无最小数。</li>
+</ol>
+<p>对于前两种情况，我们说，分划由有理数 <span
+class="math inline">\(r\)</span> 所产生，或者说分划定义有理数 <span
+class="math inline">\(r\)</span>。对于第三种情况，我们约定分划定义一个无理数
+<span
+class="math inline">\(\alpha\)</span>，这个数代替了缺少的界数。</p>
+<figure>
+<img src="/assets/images/数学漫步/数学分析概览/实数/分划.png"
+alt="分划" />
+<figcaption aria-hidden="true">分划</figcaption>
+</figure>
+<h1 id="序">序</h1>
+<p>由分划 <span class="math inline">\(A|A&#39;\)</span> 及 <span
+class="math inline">\(B|B&#39;\)</span> 所确定的两个无理数 <span
+class="math inline">\(\alpha\)</span> 和 <span
+class="math inline">\(\beta\)</span>，当且仅当两个分划恒等时，始认为相等，即
+<span class="math inline">\(\alpha =
+\beta\)</span>。而有较大下组的那个分划，确定的数更大，即如果 <span
+class="math inline">\(A \subset B\)</span>，则 <span
+class="math inline">\(\alpha &lt; \beta\)</span>。</p>
+<h1 id="稠密性">稠密性</h1>
+<p>对于任意两个实数 <span class="math inline">\(\alpha\)</span> 与 <span
+class="math inline">\(\beta\)</span>，其中 <span
+class="math inline">\(\alpha &gt;
+\beta\)</span>，恒存在一个位于其中的有理数，即 <span
+class="math inline">\(\alpha &gt; r &gt;
+\beta\)</span>（因此，这种有理数是有无数个的）。</p>
+<p>设给定两个实数 <span class="math inline">\(\alpha\)</span> 和 <span
+class="math inline">\(\beta\)</span>，如果任取一个 <span
+class="math inline">\(e &gt; 0\)</span>，数 <span
+class="math inline">\(\alpha\)</span> 与 <span
+class="math inline">\(\beta\)</span> 都能位于同一对有理数 <span
+class="math inline">\(s\)</span> 与 <span
+class="math inline">\(s&#39;\)</span> 之间：</p>
+<p><span class="math display">\[
+s&#39;&gt;\alpha&gt;s \\ s&#39;&gt;\beta&gt;s
+\]</span></p>
+<p>这对数的差小于 <span class="math inline">\(e\)</span>：</p>
+<p><span class="math display">\[
+s&#39; - s &lt; e
+\]</span></p>
+<p>则数 <span class="math inline">\(\alpha\)</span> 与 <span
+class="math inline">\(\beta\)</span> 必须相等。</p>
+<aside>
+<p>💡 其实在此能够看到，稠密性的定义已经是比较接近 <span
+class="math inline">\(\varepsilon-\delta\)</span> 语言了。</p>
+</aside>
+<h1 id="连续性">连续性</h1>
+<p>引入无理数的目的，是为了填补有理数的空隙。有以下基本定理。</p>
+<aside>
+<p>💡 <strong>基本定理（戴德金）</strong>：对于实数域内的任一分划 <span
+class="math inline">\(A|A&#39;\)</span> 必有产生这分划的实数 <span
+class="math inline">\(\beta\)</span> 存在，这个数 <span
+class="math inline">\(\beta\)</span> 满足</p>
+<p>（1）或是下组 <span class="math inline">\(A\)</span> 内的最大数
+（2）或是上组 <span class="math inline">\(A&#39;\)</span> 内的最小数</p>
+</aside>
+<p>实数域上的这个性质通常称为它的<strong>完备性</strong>，也称为它的<strong>连续性</strong>。</p>
+<h1 id="数集的界">数集的界</h1>
+<p>设实数的任一无限集，集合内的任一数为 <span
+class="math inline">\(x\)</span>，记集合为 <span
+class="math inline">\(\chi = \{x\}\)</span>，对所考察的集合 <span
+class="math inline">\(\{x\}\)</span>，存在 <span
+class="math inline">\(M\)</span> 使得一切的 <span
+class="math inline">\(x \leq
+M\)</span>，则说该集合<strong>上有界</strong>，而 <span
+class="math inline">\(M\)</span>
+就是该集合的<strong>上界</strong>。而上界有无穷多个，其中最小的为<strong>上确界</strong>。相应地有<strong>下有界</strong>，<strong>下界</strong>以及<strong>下确界</strong>的概念。</p>
+<p>如果数集不上（下）有界，则称 <span
+class="math inline">\(+\infty\)</span>（<span
+class="math inline">\(-\infty\)</span>）为其上（下）界。</p>
+<figure>
+<img src="/assets/images/数学漫步/数学分析概览/实数/数集的界.png"
+alt="数集的界" />
+<figcaption aria-hidden="true">数集的界</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2021/02/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-02-26-%E5%AE%9E%E6%95%B0/" title="实数">https://aquietzero.github.io/2021/02/26/math/数学漫步/数学分析概览/2021-02-26-实数/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E9%AB%98%E7%AD%89%E6%95%B0%E5%AD%A6/" rel="tag"># 高等数学</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/" rel="tag"># 数学分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/14/languages/2021-02-14-%E8%A5%BF%E8%AF%AD%E5%AD%A6%E4%B9%A0-%E8%BF%87%E5%8E%BB%E6%97%B6%E4%B8%8E%E6%9C%AA%E5%AE%8C%E6%88%90%E6%97%B6/" rel="prev" title="西语学习-过去时与未完成时">
+                  <i class="fa fa-angle-left"></i> 西语学习-过去时与未完成时
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E6%A6%82%E8%A7%88/2021-03-01-%E6%9E%81%E9%99%90/" rel="next" title="极限">
+                  极限 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

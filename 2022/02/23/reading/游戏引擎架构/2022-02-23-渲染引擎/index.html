@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="三角形光栅化基础 三维场景渲染的本质涉及以下几个基本步骤。  描述一个虚拟场景（virtual scene），这些场景一般是易某数学形式表示的三维表面。 定位及定向一个虚拟摄像机（virtual camera），为场景取景。摄像机位于一个理想化焦点，在焦点前的近处悬浮这一个影像面。 设置光源（light source），光源产生的光线会与环境中的物体交互作用并反射，最终到达虚拟摄像机的感光像面。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渲染引擎">
+<meta property="og:url" content="https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="三角形光栅化基础 三维场景渲染的本质涉及以下几个基本步骤。  描述一个虚拟场景（virtual scene），这些场景一般是易某数学形式表示的三维表面。 定位及定向一个虚拟摄像机（virtual camera），为场景取景。摄像机位于一个理想化焦点，在焦点前的近处悬浮这一个影像面。 设置光源（light source），光源产生的光线会与环境中的物体交互作用并反射，最终到达虚拟摄像机的感光像面。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/%E6%B8%B2%E6%9F%93%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/source/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/%E9%BD%90%E6%AC%A1%E8%A3%81%E5%89%AA%E7%A9%BA%E9%97%B4.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/%E5%85%89%E6%A0%85%E5%8C%96.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/%E6%B8%B2%E6%9F%93%E7%AE%A1%E9%81%93.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/GPU%E6%B8%B2%E6%9F%93%E7%AE%A1%E9%81%93.png">
+<meta property="article:published_time" content="2022-02-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.532Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="渲染引擎">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/%E6%B8%B2%E6%9F%93%E6%96%B9%E6%B3%95.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/","path":"2022/02/23/reading/游戏引擎架构/2022-02-23-渲染引擎/","title":"渲染引擎"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>渲染引擎 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E5%BD%A2%E5%85%89%E6%A0%85%E5%8C%96%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">三角形光栅化基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">场景描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E5%BD%A2%E7%BD%91%E6%A0%BC"><span class="nav-number">1.1.1.</span> <span class="nav-text">三角形网格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%B6%E5%B5%8Ctessellation"><span class="nav-number">1.1.2.</span> <span class="nav-text">镶嵌（tessellation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%86%E8%8A%82lodlevel-of-detail"><span class="nav-number">1.1.3.</span> <span class="nav-text">层次细节（LOD，level of
+detail）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E7%BD%91%E7%BB%9Cprogressive-mesh"><span class="nav-number">1.1.4.</span> <span class="nav-text">渐进网络（progressive mesh）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E7%A9%BA%E9%97%B4"><span class="nav-number">1.1.5.</span> <span class="nav-text">模型空间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E9%9D%A2%E8%A7%86%E8%A7%89%E6%80%A7%E8%B4%A8%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.2.</span> <span class="nav-text">表面视觉性质的描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E5%92%8C%E9%A2%9C%E8%89%B2%E6%A6%82%E8%AE%BA"><span class="nav-number">1.2.1.</span> <span class="nav-text">光和颜色概论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2%E7%A9%BA%E9%97%B4%E5%92%8C%E9%A2%9C%E8%89%B2%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">颜色空间和颜色模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B6%E7%82%B9%E5%B1%9E%E6%80%A7"><span class="nav-number">1.2.3.</span> <span class="nav-text">顶点属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%89%E7%85%A7%E5%9F%BA%E7%A1%80"><span class="nav-number">1.3.</span> <span class="nav-text">光照基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%8F%8A%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">局部及全局光照模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phong%E6%B0%8F%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.2.</span> <span class="nav-text">Phong氏光照模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E6%BA%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.3.</span> <span class="nav-text">光源模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%91%84%E5%83%8F%E6%9C%BA"><span class="nav-number">1.4.</span> <span class="nav-text">虚拟摄像机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E7%A9%BA%E9%97%B4"><span class="nav-number">1.4.1.</span> <span class="nav-text">观察空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%95%E5%BD%B1"><span class="nav-number">1.4.2.</span> <span class="nav-text">投影</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E6%88%AA%E5%A4%B4%E4%BD%93frustum"><span class="nav-number">1.4.3.</span> <span class="nav-text">平截头体（frustum）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BD%90%E6%AC%A1%E8%A3%81%E5%89%AA%E7%A9%BA%E9%97%B4"><span class="nav-number">1.4.4.</span> <span class="nav-text">齐次裁剪空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E5%BD%A2%E5%85%89%E6%A0%85%E5%8C%96rasterization"><span class="nav-number">1.4.5.</span> <span class="nav-text">三角形光栅化（rasterization）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B8%B2%E6%9F%93%E7%AE%A1%E9%81%93"><span class="nav-number">2.</span> <span class="nav-text">渲染管道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#gpu-%E6%B8%B2%E6%9F%93%E7%AE%A1%E9%81%93"><span class="nav-number">2.1.</span> <span class="nav-text">GPU 渲染管道</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%9D%80%E8%89%B2%E5%99%A8"><span class="nav-number">2.1.1.</span> <span class="nav-text">可编程着色器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%98%B6%E6%AE%B5"><span class="nav-number">2.2.</span> <span class="nav-text">应用程序阶段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E5%85%89%E7%85%A7%E5%92%8C%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7"><span class="nav-number">3.</span> <span class="nav-text">高级光照和全局光照</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E5%85%89%E7%85%A7"><span class="nav-number">3.1.</span> <span class="nav-text">基于图像的光照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4%E5%85%89%E7%85%A7"><span class="nav-number">3.2.</span> <span class="nav-text">高动态范围光照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%85%89%E7%85%A7"><span class="nav-number">3.3.</span> <span class="nav-text">全局光照</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B4%E5%BD%B1%E6%B8%B2%E6%9F%93"><span class="nav-number">3.3.1.</span> <span class="nav-text">阴影渲染</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E8%A7%89%E6%95%88%E6%9E%9C%E5%92%8C%E8%A6%86%E7%9B%96%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">视觉效果和覆盖层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%92%E5%AD%90%E6%95%88%E6%9E%9C"><span class="nav-number">4.1.</span> <span class="nav-text">粒子效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%B4%E8%8A%B1decal"><span class="nav-number">4.2.</span> <span class="nav-text">贴花（decal）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%95%88%E6%9E%9C"><span class="nav-number">4.3.</span> <span class="nav-text">环境效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E5%B1%82"><span class="nav-number">4.4.</span> <span class="nav-text">覆盖层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%8F%E5%90%8E%E6%9C%9F%E5%A4%84%E7%90%86%E6%95%88%E6%9E%9C"><span class="nav-number">4.5.</span> <span class="nav-text">全屏后期处理效果</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="渲染引擎 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          渲染引擎
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-02-23 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-23T00:00:00+08:00">2022-02-23</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/02/23/reading/游戏引擎架构/2022-02-23-渲染引擎/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>24 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="三角形光栅化基础">三角形光栅化基础</h1>
+<p>三维场景渲染的本质涉及以下几个基本步骤。</p>
+<ul>
+<li>描述一个<strong>虚拟场景（virtual
+scene）</strong>，这些场景一般是易某数学形式表示的三维表面。</li>
+<li>定位及定向一个<strong>虚拟摄像机（virtual
+camera）</strong>，为场景取景。摄像机位于一个理想化焦点，在焦点前的近处悬浮这一个影像面。</li>
+<li>设置<strong>光源（light
+source）</strong>，光源产生的光线会与环境中的物体交互作用并反射，最终到达虚拟摄像机的感光像面。</li>
+<li>描述场景物体表面的<strong>视觉特性（visual
+property）</strong>，这些视觉特性决定光线如何与物体表面产生交互作用。</li>
+<li>对每个位于影像矩形内的像素，渲染引擎会找出经过该像素而聚焦于虚拟摄像机焦点的光线，并计算其颜色和强度，此过程称为<strong>求解渲染方程（solving
+the rendering equation）</strong>，也叫<strong>着色方程（shading
+equation）</strong>。</li>
+</ul>
+<figure>
+<img src="/assets/images/2022-02-23-渲染引擎/渲染方法.png"
+alt="几乎所有三维计算机图形技术，在高层次来看都会使用这种渲染方法" />
+<figcaption
+aria-hidden="true">几乎所有三维计算机图形技术，在高层次来看都会使用这种渲染方法</figcaption>
+</figure>
+<p>几乎所有三维计算机图形技术，在高层次来看都会使用这种渲染方法</p>
+<p>实时渲染引擎重复地进行上述的步骤，以每秒 30、50 或 60
+帧的速度显示渲染出来的影响，从而产生运动的错觉。</p>
+<h2 id="场景描述">场景描述</h2>
+<p>场景有物体组成，所有物体都占据三维体积。物体可以分为</p>
+<ul>
+<li><strong>不透明的（opaque）</strong>：光不能通过物体。</li>
+<li><strong>透明的（transparent）</strong>：光能通过该物体，过程中不被散射。</li>
+<li><strong>半透明的（translucent）</strong>：光能通过该物体，但过程中会被散射到各个方向。</li>
+</ul>
+<p>渲染不透明物体的时候，只需考虑其表面，对于不透明物体的渲染，如果精细的话需要知道其物理特性并为其建模，不过一般引擎不会这么复杂，只会使用
+alpha
+这种简单的不透明度数值来模拟。所以可以说，<strong>大部分游戏渲染引擎，只会着重于渲染物体的表面</strong>。</p>
+<h3 id="三角形网格">三角形网格</h3>
+<p>用三角形网格的原因在于</p>
+<ul>
+<li>三角形是最简单的多边形。</li>
+<li>三角形必然是平坦的。</li>
+<li>三角形经过多种变换后仍然维持是三角形，这对于仿射转换和透视转换也成立。</li>
+<li>几乎所有商用图形加速硬件都是为了三角形光栅化而设计的。</li>
+</ul>
+<p>三角形由三个定点矢量 <span class="math inline">\(\textbf{p}_1,
+\textbf{p}_2, \textbf{p}_3\)</span> 构成，每条棱为</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{e}_{12} &amp;= \textbf{p}_2 - \textbf{p}_1 \\
+\textbf{e}_{13} &amp;= \textbf{p}_3 - \textbf{p}_1 \\
+\textbf{e}_{23} &amp;= \textbf{p}_3 - \textbf{p}_2 \\
+\end{align}
+\]</span></p>
+<p>其面法线（face normal）为</p>
+<p><span class="math display">\[
+\textbf{N} = \frac{\textbf{e}_{12} \times
+\textbf{e}_{13}}{|\textbf{e}_{12} \times \textbf{e}_{13}|}
+\]</span></p>
+<p>索引化三角形表（indexed triangle
+list）用于表示三维网格，三角形定点只列举一次，存在于<strong>顶点数组（vertex
+array）</strong>中。然后三角形则用索引来引用这些定点，存于<strong>索引数组（index
+array）</strong>。缓存还能通过<strong>三角形带（triangle
+strip）</strong>和<strong>三角形扇（triangle
+fan）</strong>来进行优化，这两种方式不需要索引数组，而是直接根据定点顺序来理解三角形。</p>
+<h3 id="镶嵌tessellation">镶嵌（tessellation）</h3>
+<p>镶嵌是指把表面分割为一组离散多边形的过程，这些多边形通常是三角形或四边形。<strong>三角化（triangulation）</strong>专指吧表面镶嵌为三角形。</p>
+<h3 id="层次细节lodlevel-of-detail">层次细节（LOD，level of
+detail）</h3>
+<p>游戏开发者经常以一串不同版本的三角形网络链去逼近理想的三角形对像素的密度，每一个版本称为<strong>层次细节（LOD，level-of-detail）</strong>。当物体远离计算机，引擎会把网络换成更低级别的细节，这样渲染引擎就能将更多的时间用在接近摄像机的物体上。</p>
+<h3 id="渐进网络progressive-mesh">渐进网络（progressive mesh）</h3>
+<p>当物体很接近摄像机时采用单个最高分辨率网格，当物体自摄像机远离时，这个网格会自动密铺，将某些棱收缩为点。此过程能自动生成半自动的
+LOD 链。</p>
+<h3 id="模型空间">模型空间</h3>
+<p>三角形网格的位置矢量，会被指定于一个便利的局部坐标系，此坐标系可称为模型空间。模型空间的原点一般不是物体中心，而是一个便利的位置，比如角色脚掌所在地板的位置，车辆轮子在地上的水平质心。</p>
+<p>每个网格可以在场景中多次出现，比如成排的路灯，桌子椅子等，这称为网格的<strong>实例化</strong>。每个这些物体称为<strong>网格的实例（mesh
+instance）</strong>。每个网格包含一个共享网格的引用，也包含一个变换矩阵，此矩阵为模型至世界矩阵，或简称为<strong>世界矩阵（world
+matrix）</strong>。此矩阵为</p>
+<p><span class="math display">\[
+\textbf{M}_{M \to W} =
+\begin{bmatrix}
+(\textbf{RS}_{M \to W} &amp; \textbf{0}) \\
+\textbf{t}_M &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>其中左上角的 <span class="math inline">\(\textbf{RS}_{M \to
+W}\)</span>用于旋转和缩放模型空间的顶点至世界空间，而 <span
+class="math inline">\(\textbf{t}_M\)</span>
+则是模型空间轴在世界空间的位移。</p>
+<h2 id="表面视觉性质的描述">表面视觉性质的描述</h2>
+<p>表面性质包括光和表面交互作用的方式，包括漫反射颜色（diffuse
+color），粗糙度（roughness），光滑度（shininess），反射率（reflectivity），纹理，透明度/不透明度，折射率（refractive
+index）等。</p>
+<aside>
+<p>💡
+渲染照相写实影像的关键在于，正确地模拟光和场景中物体交互作用时候的行为。</p>
+</aside>
+<h3 id="光和颜色概论">光和颜色概论</h3>
+<p>光的颜色由其<strong>强度（intensity）<span
+class="math inline">\(I\)</span></strong>
+及<strong>波长（wavelength）<span
+class="math inline">\(\lambda\)</span></strong>
+所决定。光的行为，部分是由其穿过的<strong>介质（medium）</strong>所控制的，部分是由两种不同的介质之间的<strong>界面（interface）</strong>所控制的。</p>
+<p>不过从技术的角度来看，不管光的行为有多复杂，其实光只能做四件事情</p>
+<ul>
+<li>光可被<strong>吸收（absorb）</strong></li>
+<li>光可被<strong>反射（reflect）</strong>
+<ul>
+<li><strong>漫反射（diffuse）</strong>是指入射光会向所有方向平均散射</li>
+<li><strong>镜面反射（specular）</strong>是指入射光直接被反射，或在反射时展开成很窄的椎体</li>
+</ul></li>
+<li>光可在物体中<strong>传播（transmit）</strong>，过程中通常会被<strong>折射（refract）</strong>
+<ul>
+<li>当光穿过物体时，光可能会被散射（半透明物质）</li>
+<li>部分被吸收（如彩色玻璃）</li>
+<li>或被折射（三棱镜）</li>
+<li>也能先进入半固态表面，在表面下反弹，再从另一个位置离开表面。此称为<strong>次表面散射（SSS，subsurface
+scattering）</strong></li>
+</ul></li>
+<li>通过很窄的缺口时，光会被<strong>衍射（diffract）</strong></li>
+</ul>
+<aside>
+<p>💡 衍射行为通常会被忽略，因为在多数场景中效果不明显。</p>
+</aside>
+<h3 id="颜色空间和颜色模型">颜色空间和颜色模型</h3>
+<p><strong>颜色模型（color
+model）</strong>是量度颜色的三维坐标系统。而<strong>颜色空间（color
+space）</strong>是一个具体的标准，描述某颜色空间的数值化颜色如何映射至人类在真实世界中看到的颜色。</p>
+<h3 id="顶点属性">顶点属性</h3>
+<p>要描述表面的视觉特性，最简单的方法是把这些特性记录在表面的离散点上。网格的顶点是储存表面特性的便利位置，这种存储方式称为<strong>顶点属性（vertex
+attribute）</strong>。</p>
+<ul>
+<li><strong>位置矢量（position vector）</strong>：<span
+class="math inline">\(\textbf{p}_i = [p_{ix}, p_{iy},
+p_{iz}]\)</span>，网格中第 <span class="math inline">\(i\)</span>
+个定点的三维位置。位置矢量通常用物体的局部空间坐标表示。</li>
+<li><strong>顶点法矢量（vertex normal）</strong>：<span
+class="math inline">\(\textbf{n}_i = [n_{ix}, n_{iy},
+n_{iz}]\)</span>，顶点 <span class="math inline">\(i\)</span>
+位置上的表面单位矢量。用于计算动态光照。</li>
+<li><strong>顶点切线矢量（vertex tangent）</strong>：<span
+class="math inline">\(\textbf{t}_i = [t_{ix}, t_{iy},
+t_{iz}]\)</span>，这是和顶点副切线矢量（vertex bitangent）<span
+class="math inline">\(\textbf{b}_i = [b_{ix}, b_{iy},
+b_{iz}]\)</span>相互垂直的单位矢量，它们同时垂直于顶点法矢量 <span
+class="math inline">\(\textbf{n}_i\)</span>，这三个矢量 <span
+class="math inline">\(\textbf{n}_i, \textbf{t}_i, \textbf{b}_i\)</span>
+一起定义称为切线空间的坐标轴。此空间用于计算多种逐像素光照，法线贴图，环境贴图等。</li>
+<li><strong>漫反射颜色（diffuse color）</strong>：<span
+class="math inline">\(\textbf{d}_i = [d_{Ri}, d_{Gi}, d_{Bi},
+d_{Ai}]\)</span>，四元素颜色矢量。</li>
+<li><strong>镜面颜色（specular color）</strong>：<span
+class="math inline">\(\textbf{s}_i = [s_{Ri}, s_{Gi}, s_{Bi},
+s_{Ai}]\)</span>，描述其镜面高光的颜色。</li>
+<li><strong>纹理坐标（texture coordinates）</strong>：<span
+class="math inline">\(\textbf{u}_{ij} = [u_{ij},
+v_{ij}]\)</span>，用于把二维的位图“收缩包裹”在网格的表面，此过程称为纹理贴图（texture
+mapping）。</li>
+<li><strong>蒙皮权重（skinning weight）</strong>：<span
+class="math inline">\((k_{ij},
+w_{ij})\)</span>，在骨骼动画里，网格的顶点依附在骨骼的个别关节上，每个顶点需要指明其依附着的关节索引
+<span
+class="math inline">\(k\)</span>。另一种情况是，一个顶点受多个关节所影响，最终的顶点位置变为这些影响的加权平均。每个关节影响用权重因子
+<span class="math inline">\(w\)</span> 表示，所以顶点 <span
+class="math inline">\(i\)</span> 可以受到顶点 <span
+class="math inline">\(j\)</span> 所影响，其影响权重为 <span
+class="math inline">\(w_{ij}\)</span>。</li>
+</ul>
+<p>当渲染三角形时，重要的是三角形内点的视觉特性，这些内点最终成为屏幕上的像素。要取得网格表面的每像素属性，最简单的方法是对顶点属性进行<strong>线性插值</strong>。当把线性插值施于顶点颜色，这种插值便称为<strong>高氏着色法（Gouraud
+shading）</strong>。</p>
+<h2 id="光照基础">光照基础</h2>
+<p><strong>着色（shading）</strong>一词，通常是光照加上其他视觉效果的泛称。</p>
+<h3 id="局部及全局光照模型">局部及全局光照模型</h3>
+<p>渲染引擎用多种数学模型来模拟光合表面/体积的交互作用，这些模型称为<strong>光传输模型（light
+transport model）</strong>。最简单的模型只考虑<strong>直接光照（direct
+lighting）</strong>，在此模型中，光发射后，碰到场景中的某个物体后会反射，然后直接进入虚拟摄像机的虚拟平面，这种简单的模型又称为<strong>局部光照模型（local
+illumination
+model）</strong>，因为其只考虑光对于单个物体的局部影响。</p>
+<p>要达到真实的写照效果，就必须考虑<strong>间接光照（indirect
+lighting）</strong>，即光被多个表面反射后才进入摄像机，照顾到间接光照的模型称为<strong>全局光照模型（global
+illumination model）</strong>。</p>
+<p>全局光照模型能够完全由单一的数学公式描述，此公式称为<strong>渲染方程</strong>或<strong>着色方程</strong>。</p>
+<h3 id="phong氏光照模型">Phong氏光照模型</h3>
+<p>游戏引擎中最常用的<strong>局部光照模型</strong>是 Phong
+氏反射模型（Phong reflection
+model）。此模型把从表面反射的光分解为三个独立项。</p>
+<ul>
+<li><strong>环境（ambient）</strong>项模拟场景中的光照水平。此乃场景中间接反射光的粗略估计，使阴影部分不会变成全黑。</li>
+<li><strong>漫反射（diffuse）</strong>项模拟直接光源在表面均匀地向各个方向反射。此项能逼近真光源照射至哑光表面的反射，比如木块或布料。</li>
+<li><strong>镜面反射（specular）</strong>项模拟在光滑表面看到的高光，镜面高光会出现在光源的直接反射方向。</li>
+</ul>
+<p><img
+src="source/assets/images/2022-02-23-渲染引擎/phong-render-method.png" /></p>
+<p>Phong 氏模型输入如下</p>
+<ul>
+<li>视线方向矢量 <span class="math inline">\(\textbf{V} = [V_x, V_y,
+V_z]\)</span> 是从反射点延伸至虚拟摄像机焦点的方向。</li>
+<li>三个颜色痛到的环境光强度 <span class="math inline">\(\textbf{A} =
+[A_R, A_G, A_B]\)</span>。</li>
+<li>光线到达表面上那一点的表面法线 <span
+class="math inline">\(\textbf{N} = [N_x, N_y, N_z]\)</span>。</li>
+<li>表面的反射属性，包括
+<ul>
+<li>环境反射量 <span class="math inline">\(k_A\)</span></li>
+<li>漫反射量 <span class="math inline">\(k_D\)</span></li>
+<li>镜面反射量 <span class="math inline">\(k_S\)</span></li>
+<li>镜面的光滑度幂 <span class="math inline">\(\alpha\)</span></li>
+</ul></li>
+<li>每个光源 <span class="math inline">\(i\)</span> 的属性，包括
+<ul>
+<li>光源的颜色及强度 <span class="math inline">\(\textbf{C}_i = [C_{Ri},
+C_{Gi}, C_{Bi}]\)</span></li>
+<li>从反射点至光源的方向矢量 <span
+class="math inline">\(\textbf{L}_i\)</span></li>
+</ul></li>
+</ul>
+<p>Phong 氏模型中，从表面上某点反射的光强度 <span
+class="math inline">\(\textbf{I}\)</span> 可以表示为以下的矢量方程</p>
+<p><span class="math display">\[
+\textbf{I} = k_A \textbf{A}+ \sum_i [k_D (\textbf{N} \cdot \textbf{L}_i)
++ k_S(\textbf{R}_i \cdot \textbf{V})^\alpha]\textbf{C}_i
+\]</span></p>
+<p>其中 <span class="math inline">\(\textbf{R}_i = [R_{xi}, R_{yi},
+R_{zi}]\)</span> 是光线方向 <span
+class="math inline">\(\textbf{L}_i\)</span> 对于表面法线的反射。其中
+<span class="math inline">\(\textbf{R}\)</span> 的计算方式如下</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{L} &amp;= \textbf{L}_T + \textbf{L}_N \\
+\textbf{R} &amp;= \textbf{L}_N - \textbf{L}_T \\
+&amp;= \textbf{L}_N - (\textbf{L} - \textbf{L}_N) \\
+&amp;= 2 \textbf{L}_N - \textbf{L} \\
+&amp;= 2(\textbf{N} \cdot \textbf{L}) \textbf{N} - \textbf{L}
+\end{align}
+\]</span></p>
+<h3 id="光源模型">光源模型</h3>
+<ul>
+<li><strong>环境光（ambient light）</strong>：对应于 Phong
+模型中的环境项。此项独立于视觉，并且不含方向。环境光由单个颜色 <span
+class="math inline">\(\textbf{A}\)</span> 表示。</li>
+<li><strong>平行光（directional
+light）</strong>：模拟距离受光表面接近无限远的光源，比如太阳。平行光以光源的颜色
+<span class="math inline">\(\textbf{C}\)</span> 和方向 <span
+class="math inline">\(\textbf{L}\)</span> 表示。</li>
+<li><strong>点光 / 全向光（point light / omni-directional
+light）</strong>：在游戏世界中有特定的位置，并向所有方向均匀投射。</li>
+<li><strong>聚光（spot
+light）</strong>：等同于发射光线受限于一个圆锥范围的点光，以聚光位置
+<span class="math inline">\(\textbf{P}\)</span>，光源颜色 <span
+class="math inline">\(\textbf{C}\)</span>，中央方向矢量 <span
+class="math inline">\(\textbf{L}\)</span>，最大半径 <span
+class="math inline">\(r_{max}\)</span>，内外圆锥角 <span
+class="math inline">\(\theta_{min}\)</span> 和 <span
+class="math inline">\(\theta_{max}\)</span> 表示。</li>
+</ul>
+<h2 id="虚拟摄像机">虚拟摄像机</h2>
+<p>虚拟摄像机是把摄像机看成是一个理想的焦点，并有一个矩形虚拟感光表面——称为<strong>成像矩形（imaging
+rectangle）</strong>——悬浮在焦点的近距离前面。成像矩形由正方形或矩形虚拟感光元件的栅格组成，每个感光元件对应屏幕中一个像素。<strong>所谓渲染，可以理解为每个虚拟感光元件记录光强度和颜色的过程。</strong></p>
+<h3 id="观察空间">观察空间</h3>
+<p>虚拟摄像机的焦点，是观察空间（view space）或称为摄像机空间（camera
+space）的三维坐标系统的原点。</p>
+<p><img
+src="source/assets/images/2022-02-23-渲染引擎/观察空间.png" /></p>
+<p>摄像机位置及定向可以用观察至世界矩阵表示。当渲染三角形网格，其顶点首先从模型空间转换至世界空间，然后再从世界空间变换为观察空间。</p>
+<p><span class="math display">\[
+\textbf{M}_{M \to V} = \textbf{M}_{M \to W}\textbf{M}_{W \to V} =
+\textbf{M}_\text{model-view}
+\]</span></p>
+<h3 id="投影">投影</h3>
+<p><strong>投影（projection）</strong>将三维场景渲染成二维影像。</p>
+<ul>
+<li><strong>透视投影（perspective
+projection）</strong>模仿典型摄像机的成像方式，使用这种投影的时候，物体近大远小。此效果称为透视收缩（perspective
+foreshortening）。</li>
+<li><strong>正射投影（orthographic
+projection）</strong>维持长度不变，主要用于渲染平面图。</li>
+</ul>
+<h3 id="平截头体frustum">平截头体（frustum）</h3>
+<p>平截头体是摄像机能“看到”的空间，也是观察体积（view
+volume）。观察体积由六个平面定义。</p>
+<ul>
+<li><strong>近平面（near
+plane）</strong>对应于摄像机感光元件的表面。</li>
+<li><strong>上下左右四个平面</strong>是虚拟屏幕的边缘。</li>
+<li><strong>远平面（far
+plane）</strong>则用作渲染优化，确保很远的物体不被渲染。</li>
+</ul>
+<aside>
+<p>💡 使用正射投影的时候，观察体积是长方体。</p>
+</aside>
+<h3 id="齐次裁剪空间">齐次裁剪空间</h3>
+<p>透视及正射投影能把点从观察空间变换至一个称为<strong>齐次裁剪空间（homogeneous
+clip
+space）</strong>的坐标系。<strong>此三维空间仅是观察空间的变形版本。</strong>裁剪空间是用来把摄像机空间的观察体积转换为标准的观察体积，转换后的体积不仅<strong>独立于</strong>把三维场景转换成二维屏幕<strong>空间的投影类型</strong>，也独立于<strong>屏幕的分辨率（resolution）</strong>和<strong>长宽比（aspect
+ratio）</strong>。</p>
+<p>裁剪空间中，标准观察体积是一个长方体，<span
+class="math inline">\(x\)</span> 轴和 <span
+class="math inline">\(y\)</span> 轴的范围是 <span
+class="math inline">\([-1, 1]\)</span>，<span
+class="math inline">\(z\)</span> 轴的范围在 OpenGL 是<span
+class="math inline">\([-1, 1]\)</span>，在 DirectX 里是<span
+class="math inline">\([0, 1]\)</span></p>
+<figure>
+<img src="source/assets/images/2022-02-23-渲染引擎/齐次裁剪空间.png"
+alt="齐次裁剪空间的标准观察体积" />
+<figcaption aria-hidden="true">齐次裁剪空间的标准观察体积</figcaption>
+</figure>
+<p>齐次裁剪空间的标准观察体积</p>
+<p><strong>透视投影矩阵</strong>将点从观察空间变换至齐次裁剪空间，令近平面在
+<span class="math inline">\(z\)</span> 轴相交于 <span
+class="math inline">\(-n\)</span>，远平面相交于 <span
+class="math inline">\(-f\)</span>，虚拟屏幕左右上下分别位于近平面的
+<span class="math inline">\(x = l, x = r, y = b, y =
+t\)</span>。则透视投影矩阵为</p>
+<p><span class="math display">\[
+\textbf{M}_{V \to H} =
+\begin{bmatrix}
+\cfrac{2n}{r-l} &amp; 0 &amp; 0 &amp; 0 \\ \\
+0 &amp; \cfrac{2n}{t-b} &amp; 0 &amp; 0 \\ \\
+\cfrac{r+l}{r-l} &amp;
+\cfrac{t+b}{t-b} &amp;
+-\cfrac{f+n}{f-n} &amp; -1 \\ \\
+0 &amp; 0 &amp; -\cfrac{2nf}{f-n} &amp; 0
+\end{bmatrix}
+\]</span></p>
+<p>进行透视投影后，每个顶点的 <span class="math inline">\(x\)</span> 和
+<span class="math inline">\(y\)</span> 坐标会除以其 <span
+class="math inline">\(z\)</span>
+坐标，这个除法是产生透视收缩的方法。将观察空间的点 <span
+class="math inline">\(\textbf{p}_V\)</span>
+转化为齐次坐标再乘以透视投影矩阵，有</p>
+$$ _H = <em>V </em>{V H} =
+<span class="math display">\[\begin{bmatrix}
+p_{V_x} &amp; p_{V_y} &amp; p_{V_z} &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+\cfrac{2n}{r-l} &amp; 0 &amp; 0 &amp; 0 \\ \\
+0 &amp; \cfrac{2n}{t-b} &amp; 0 &amp; 0 \\ \\
+\cfrac{r+l}{r-l} &amp;
+\cfrac{t+b}{t-b} &amp;
+-\cfrac{f+n}{f-n} &amp; -1 \\ \\
+0 &amp; 0 &amp; -\cfrac{2nf}{f-n} &amp; 0
+\end{bmatrix}\]</span>
+<p>$$</p>
+<p>其结果是以下的形式</p>
+<p><span class="math display">\[
+\textbf{p}_H =
+\begin{bmatrix}
+a &amp; b &amp; c &amp; -p_{V_z}
+\end{bmatrix}
+\]</span></p>
+<p>转换为三维坐标的时候，除以第四维分量即可</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{p}_H &amp;=
+\begin{bmatrix}
+\cfrac{a}{-p_{V_z}} &amp;
+\cfrac{b}{-p_{V_z}} &amp;
+\cfrac{c}{-p_{V_z}}
+\end{bmatrix} \\
+&amp;=
+\begin{bmatrix}
+p_{H_x} &amp; p_{H_y} &amp; p_{H_z}
+\end{bmatrix}
+\end{align}
+\]</span></p>
+<p><strong>正射投影矩阵</strong>如下所示</p>
+<p><span class="math display">\[
+\textbf{M}_{V \to H} =
+\begin{bmatrix}
+\cfrac{2}{r-l} &amp; 0 &amp; 0 &amp; 0 \\ \\
+0 &amp; \cfrac{2}{t-b} &amp; 0 &amp; 0 \\ \\
+0 &amp; 0 &amp; -\cfrac{2}{f-n} &amp; 0 \\ \\
+-\cfrac{r+l}{r-l} &amp;
+-\cfrac{t+b}{t-b} &amp;
+-\cfrac{f+n}{f-n} &amp; 1
+\end{bmatrix}
+\]</span></p>
+<h3 id="三角形光栅化rasterization">三角形光栅化（rasterization）</h3>
+<p>要在屏幕上产生一个三角形影像，我们需要给该三角形范围内的像素填充数据。此过程称为<strong>光栅化</strong>。光栅化过程中，三角形表面会拆分成名为<strong>片段（fragment）</strong>的小块，每个片段对应三角形表面中的一个细小区域，而每个这些细小区域对应单个屏幕像素。</p>
+<p><img src="/assets/images/2022-02-23-渲染引擎/光栅化.png" /></p>
+<aside>
+<p>💡
+把一个片段写进帧缓冲之前，它要通过很多测试，如果片段在任何一个测试中不获通过，它就会被丢弃。能通过所有测试的片段就会被着色，接着其颜色就会写进帧缓冲。</p>
+</aside>
+<p><strong>抗锯齿（antialiasing）</strong>是一种降低由混合所形成的视觉缺乏的技术。抗锯齿的效果是，三角形与帧缓冲附近的颜色混合起来。</p>
+<p>要正确实现三角形的遮挡关系，不需要理会三角形的渲染次序，渲染引擎会使用称为<strong>深度缓冲（depth
+buffer）</strong>的技术。每个片段含有一个 <span
+class="math inline">\(z\)</span> 坐标，以量度其“深入”屏幕的深度。</p>
+<p>在渲染两个非常相近的平面的时候，渲染引擎必须能够区分两个平面的深度。深度缓冲仅有有限的精确度，因此两个足够接近的平面，其两个深度可能会变成相同的离散值，这样较远的平面就会“刺穿”较近的平面，造成一个称为<strong>深度冲突（z-fighting）</strong>的噪点效果。<strong>要解决这个问题，深度应该使用观察空间中的
+<span class="math inline">\(z\)</span> 坐标而非齐次裁剪空间的 <span
+class="math inline">\(z\)</span> 坐标，这种技术也称为 <span
+class="math inline">\(w\)</span> 缓冲。</strong></p>
+<h1 id="渲染管道">渲染管道</h1>
+<p>高级渲染步骤是由名为<strong>管道（pipeline）</strong>的软件架构所实现的。管道只是一连串顺序计算阶段，每个阶段有其具体目的，每个阶段会操作输入流中的数据项，并对输出流产生数据。管道中的每个阶段通常会独立于其他阶段，因此，非常适合<strong>并行化</strong>。</p>
+<p>渲染管道概览如下</p>
+<ul>
+<li><strong>工具阶段（脱机）</strong>：定义几何的表面特性（材质）。</li>
+<li><strong>资产调节阶段（脱机）</strong>：资产调节管道处理几何和材质数据，生成引擎可用的格式。</li>
+<li><strong>应用程序阶段（CPU）</strong>：识别出潜在可视的网格实例，并把它们及其材质呈交至图形硬件以供渲染。</li>
+<li><strong>几何阶段（GPU）</strong>：把顶点变换，照明，然后投影至齐次裁剪空间。用几何着色器处理三角形，然后对三角形根据平截头体进行裁剪。</li>
+<li><strong>光栅化阶段（GPU）</strong>：把三角形转化为片段，并对片段进行着色。片段经过多种测试后（深度测试，alpha
+测试，模板测试等），最终和帧缓冲混合。</li>
+</ul>
+<p><img src="/assets/images/2022-02-23-渲染引擎/渲染管道.png" /></p>
+<h2 id="gpu-渲染管道">GPU 渲染管道</h2>
+<p>典型 GPU 渲染管道实现的几何处理及光栅化阶段。</p>
+<p><img src="/assets/images/2022-02-23-渲染引擎/GPU渲染管道.png" /></p>
+<ul>
+<li><strong>顶点着色器</strong>：此阶段完全可以编程，负责变换及着色 /
+光照顶点。
+<ul>
+<li>进行透视投影</li>
+<li>每顶点光照及纹理计算</li>
+<li>动画角色计算蒙皮</li>
+<li>产生程序式动画</li>
+</ul></li>
+<li><strong>几何着色器</strong>：几何着色器处理以齐次裁剪空间表示的整个图元（三角形，线段，点）。
+<ul>
+<li>阴影体积拉伸</li>
+<li>渲染立方体贴图</li>
+<li>在网格的轮廓边缘拉伸毛发的鳍</li>
+<li>从数据生成粒子四边形</li>
+<li>动态镶嵌</li>
+</ul></li>
+<li><strong>流输出</strong>：现在的 GPU
+允许把到达此阶段的数据写回内存。</li>
+<li><strong>裁剪</strong>：把三角形在平截头体以外的部分去掉。</li>
+<li><strong>屏幕映射</strong>：将顶点从齐次裁剪空间变换至屏幕空间。</li>
+<li><strong>三角形建立</strong>：光栅化硬件把三角形转换成片段。</li>
+<li><strong>三角形遍历</strong>：对顶点属性进行插值，以产生每片段属性，供像素着色器使用。</li>
+<li><strong>提前深度测试</strong>：检测片段是否需要被丢弃。</li>
+<li><strong>像素着色器</strong>：替每个像素着色。</li>
+<li><strong>合并 / 光栅运算阶段（ROP，raster operations
+stage）</strong>：负责多个片段测试，包括深度测试，alpha
+测试，以及模板测试。</li>
+</ul>
+<h3 id="可编程着色器">可编程着色器</h3>
+<p>着色器从输入数据取得一个元素，把该元素变换为输出数据的一个或多个元素。</p>
+<ul>
+<li><strong>顶点着色器</strong>的输入为顶点，包含以模型空间或世界空间表示的位置及法矢量。输出为已变换及照明的顶点，以齐次裁剪空间表示。</li>
+<li><strong>几何着色器</strong>的输入为单个 <span
+class="math inline">\(n\)</span> 顶点几何图元——点，线，三角形，以及最多
+<span class="math inline">\(n\)</span> 个作为控制点的额外顶点。其输出为
+0 或者多个图元。</li>
+<li><strong>像素着色器</strong>的输入为片段，其属性来自对三角形顶点属性的插值。其输出是将要写至帧缓冲的颜色。</li>
+</ul>
+<h2 id="应用程序阶段">应用程序阶段</h2>
+<p>应用程序阶段驱动 GPU 管道渲染，本阶段有三个角色：</p>
+<ul>
+<li><strong>可见性判别</strong>：把可见（或至少潜在可见）的物体提交
+GPU，以免浪费宝贵的资源渲染总是看不见的物体。</li>
+<li><strong>提交几何图元至 GPU 以供渲染</strong>：把子网格材质对传送至
+GPU。</li>
+<li><strong>控制着色器参数及渲染状态</strong>：uniform
+参数通过常数寄存器传送至着色器时，应用程序阶段按每个图元为单位进行配置。</li>
+</ul>
+<h1 id="高级光照和全局光照">高级光照和全局光照</h1>
+<h2 id="基于图像的光照">基于图像的光照</h2>
+<p>许多高级的光照及着色技术都会大量使用影像数据，这些数据通常是以二维纹理贴图形式表示的。这些技术统称为<strong>基于图像的光照（image-based
+lighting）</strong>算法。</p>
+<h2 id="高动态范围光照">高动态范围光照</h2>
+<p><strong>高动态范围（HDR，high dynamic
+range）</strong>光照尝试捕捉真实世界的光照强度，而不限于从 0 到
+1。把影像显示于屏幕之前，还需要进行一个<strong>色调映射（tone
+mapping）</strong>处理，把影像的强度调整至显示设备所支持的范围。</p>
+<h2 id="全局光照">全局光照</h2>
+<p>全局光照是指一类光照算法，这些算法考虑到光从光源传送至虚拟摄像机之间与多个物体的互动。</p>
+<h3 id="阴影渲染">阴影渲染</h3>
+<p>最流行的两种渲染技巧分别为<strong>阴影体积（shadow
+volume）</strong>和<strong>阴影贴图（shadow
+map）</strong>。两种技巧中，都会把场景中的物体分为 3
+个类别：投射阴影的物体，接收阴影的物体，以及完全被阴影渲染忽略的物体。</p>
+<ul>
+<li><p><strong>阴影体积</strong></p>
+<p>在阴影体积技术中，会从产生阴影的光源位置观察每个投射阴影的物体，在那个视觉判断物体的轮廓边缘。这些边缘沿光线方向伸出一个几何立体，该几何立体代表着光线被阴影物体遮挡所造成的空间体积。</p>
+<p>渲染的时候要先渲染一次没有阴影的场景，同时填充准确的深度缓冲。然后把模板缓冲清空，再从摄像机的视觉渲染阴影体积。</p></li>
+<li><p><strong>阴影贴图</strong></p>
+<p>进行每片段深度测试，但该“深度”非从摄像机的视角去计算，而是从光源的视觉计算。使用阴影贴图时，需要把场景渲染两次，首先，从光源视觉渲染场景，把结果的深度缓冲存储为阴影贴图纹理。然后，以正常方式渲染场景，渲染每个判断时用阴影贴图判断该片段是否在阴影内。</p></li>
+</ul>
+<h1 id="视觉效果和覆盖层">视觉效果和覆盖层</h1>
+<p>上面所说的渲染管道，主要是用于渲染三维固体物体的。通常在此渲染管道之上，还有一些专门渲染视觉效果的渲染系统，例如例子效果，贴花（比如弹孔，裂缝，抓痕），头发皮毛，降雨降雪，水，以及其他专门的视觉效果。</p>
+<h2 id="粒子效果">粒子效果</h2>
+<p>粒子渲染系统是为了渲染无固定形状的物体而设置的，具有以下的特点：</p>
+<ul>
+<li>粒子系统由<strong>大量相对简单</strong>的几何物体所组成。</li>
+<li>几何物体通常是<strong>朝向摄像机</strong>的。</li>
+<li>其材质几乎是<strong>半透明</strong>的，因此，粒子系统有严格的<strong>渲染次序</strong>。</li>
+<li>粒子以多种<strong>丰富的方式表现动画</strong>。</li>
+<li>粒子通常会<strong>不断出生及湮灭</strong>，粒子发射器是游戏世界中的逻辑实体，以用户设置的速率创造粒子。</li>
+</ul>
+<h2 id="贴花decal">贴花（decal）</h2>
+<p>贴花是覆盖在场景中正常物体上，相对较小的几何物体，用于动态改变物体表面的外观。</p>
+<h2 id="环境效果">环境效果</h2>
+<p>比如天空，地形，水体等。</p>
+<h2 id="覆盖层">覆盖层</h2>
+<p>游戏内图形用户界面及菜单系统。</p>
+<h2 id="全屏后期处理效果">全屏后期处理效果</h2>
+<p>全屏后期处理效果应用在已渲染的三维场景上，以增加真实感或做出特殊的风格。</p>
+<ul>
+<li>动态模糊（motion blur）</li>
+<li>景深模糊（depth-of-field blur）</li>
+<li>晕影（vignette）</li>
+<li>着色（colorization）</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/" title="渲染引擎">https://aquietzero.github.io/2022/02/23/reading/游戏引擎架构/2022-02-23-渲染引擎/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+              <a href="/tags/%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/" rel="tag"># 渲染引擎</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/18/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-18-%E4%BD%8E%E9%98%B6%E5%BC%95%E6%93%8E%E7%B3%BB%E7%BB%9F/" rel="prev" title="低阶引擎系统">
+                  <i class="fa fa-angle-left"></i> 低阶引擎系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" rel="next" title="动画系统">
+                  动画系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

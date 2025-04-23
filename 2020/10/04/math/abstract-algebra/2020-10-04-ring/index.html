@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Ring By a ring we mean a set \(A\) with operations called addition and multiplication which satisfy the following axioms:  \(A\) with addition alone is an abelian group. Multiplication is associative.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Abstract Algebra - Ring">
+<meta property="og:url" content="https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Ring By a ring we mean a set \(A\) with operations called addition and multiplication which satisfy the following axioms:  \(A\) with addition alone is an abelian group. Multiplication is associative.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.521Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/","path":"2020/10/04/math/abstract-algebra/2020-10-04-ring/","title":"Abstract Algebra - Ring"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Abstract Algebra - Ring | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ring"><span class="nav-number">1.</span> <span class="nav-text">Ring</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-examples-of-ring"><span class="nav-number">1.1.</span> <span class="nav-text">Basic Examples of Ring</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trivial-ring"><span class="nav-number">1.2.</span> <span class="nav-text">Trivial Ring</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#divisor-of-zero"><span class="nav-number">1.3.</span> <span class="nav-text">Divisor of Zero</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cancellation-property"><span class="nav-number">1.4.</span> <span class="nav-text">Cancellation Property</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#direct-product"><span class="nav-number">1.5.</span> <span class="nav-text">Direct Product</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#subring"><span class="nav-number">2.</span> <span class="nav-text">Subring</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ideal"><span class="nav-number">3.</span> <span class="nav-text">Ideal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#principal-ideal"><span class="nav-number">3.1.</span> <span class="nav-text">Principal ideal</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#coset-of-rings"><span class="nav-number">4.</span> <span class="nav-text">Coset of Rings</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#coset-addition-and-multiplication"><span class="nav-number">4.1.</span> <span class="nav-text">Coset Addition and
+Multiplication</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#quotient-rings"><span class="nav-number">5.</span> <span class="nav-text">Quotient Rings</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#integral-domains"><span class="nav-number">6.</span> <span class="nav-text">Integral domains</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#characteristic"><span class="nav-number">6.1.</span> <span class="nav-text">Characteristic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1"><span class="nav-number">6.1.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2"><span class="nav-number">6.1.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-3"><span class="nav-number">6.1.3.</span> <span class="nav-text">Theorem 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-4"><span class="nav-number">6.1.4.</span> <span class="nav-text">Theorem 4</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ordered-integral-domain"><span class="nav-number">6.2.</span> <span class="nav-text">Ordered integral domain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#integral-system"><span class="nav-number">6.3.</span> <span class="nav-text">Integral System</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1-1"><span class="nav-number">6.3.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2-principle-of-mathematical-induction"><span class="nav-number">6.3.2.</span> <span class="nav-text">Theorem 2:
+Principle of mathematical induction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-3-division-algorithm"><span class="nav-number">6.3.3.</span> <span class="nav-text">Theorem 3: Division algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#factoring-into-primes"><span class="nav-number">6.4.</span> <span class="nav-text">Factoring into Primes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1-2"><span class="nav-number">6.4.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2-1"><span class="nav-number">6.4.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-3-1"><span class="nav-number">6.4.3.</span> <span class="nav-text">Theorem 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#composite-number-lemma"><span class="nav-number">6.4.4.</span> <span class="nav-text">Composite number lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#euclids-lemma"><span class="nav-number">6.4.5.</span> <span class="nav-text">Euclid&#39;s lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#corollary-1"><span class="nav-number">6.4.6.</span> <span class="nav-text">Corollary 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#corollary-2"><span class="nav-number">6.4.7.</span> <span class="nav-text">Corollary 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#factorization-into-primes"><span class="nav-number">6.4.8.</span> <span class="nav-text">Factorization into primes</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Abstract Algebra - Ring | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Abstract Algebra - Ring
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-04 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-04T00:00:00+08:00">2020-10-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2020/10/04/math/abstract-algebra/2020-10-04-ring/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/04/math/abstract-algebra/2020-10-04-ring/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="ring">Ring</h1>
+<p>By a ring we mean a set <span class="math inline">\(A\)</span> with
+operations called addition and multiplication which satisfy the
+following axioms:</p>
+<ul>
+<li><p><span class="math inline">\(A\)</span> with addition alone is an
+abelian group.</p></li>
+<li><p>Multiplication is associative.</p></li>
+<li><p>Multiplication is distributive over addition. That is, for all
+<span class="math inline">\(a, b\)</span> and <span
+class="math inline">\(c\)</span> in <span
+class="math inline">\(A\)</span>, we have</p>
+<p><span class="math display">\[
+  a(b+c) = ab + ac \\
+  (b+c)a = ba + ca
+  \]</span></p></li>
+</ul>
+<aside>
+<p>💡 When multiplication is communicative in a ring, we call that ring
+a <strong>communicative ring</strong>.</p>
+</aside>
+<aside>
+<p>💡 When there is a neutral element for multiplication, then that
+neutral element is called the <strong>unity</strong> of the ring.</p>
+</aside>
+<h2 id="basic-examples-of-ring">Basic Examples of Ring</h2>
+<ul>
+<li><span class="math inline">\(\mathbb{Z}\)</span> is the ring of the
+integers.</li>
+<li><span class="math inline">\(\mathbb{Q}\)</span> is the ring of the
+rational numbers.</li>
+<li><span class="math inline">\(\mathbb{R}\)</span> is the ring of the
+real numbers.</li>
+<li><span class="math inline">\(\mathbb{C}\)</span> is the ring of the
+complex numbers.</li>
+<li><span class="math inline">\(\mathscr{F}(\mathbb{R})\)</span> is the
+ring of real functions.</li>
+</ul>
+<h2 id="trivial-ring">Trivial Ring</h2>
+<p>A ring with only the zero element <span class="math inline">\(\{ 0
+\}\)</span> is called the trivial ring.</p>
+<h2 id="divisor-of-zero">Divisor of Zero</h2>
+<p>In any ring, a nonzero element <span class="math inline">\(a\)</span>
+is called a <strong>divisor of zero</strong> (除数，零因子) if there is
+a nonzero element <span class="math inline">\(b\)</span> in the ring
+such that the product <span class="math inline">\(ab\)</span> or <span
+class="math inline">\(ba\)</span> is equal to zero. </p>
+<aside>
+<p>💡 For example, 2 and 3 are divisors of zero in <span
+class="math inline">\(\mathbb{Z}_6\)</span>.</p>
+</aside>
+<h2 id="cancellation-property">Cancellation Property</h2>
+<p>A ring is said to have the cancellation property if</p>
+<p><span class="math display">\[
+ab = ac \text{ or } ba = ca \implies b = c
+\]</span></p>
+<p>for any elements <span class="math inline">\(a, b, c\)</span> in the
+ring and <span class="math inline">\(a \neq 0\)</span>.</p>
+<aside>
+<p>💡 A ring has the cancellation property iff it has no divisors of
+zero.</p>
+</aside>
+<h2 id="direct-product">Direct Product</h2>
+<p>If <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> are rings, their direct product is a
+new ring, denoted by <span class="math inline">\(A \times B\)</span>,
+and defined as follows: <span class="math inline">\(A \times B\)</span>
+consists of all the ordered pairs <span class="math inline">\((x,
+y)\)</span> where <span class="math inline">\(x \in A\)</span> and <span
+class="math inline">\(y \in B\)</span>. Addition in <span
+class="math inline">\(A \times B\)</span> consists of adding
+corresponding components:</p>
+<p><span class="math display">\[
+(x_1, y_1) + (x_2, y_2) = (x_1 + x_2, y_1 + y_2)
+\]</span></p>
+<p>Multiplication in <span class="math inline">\(A \times B\)</span>
+consists of multiplying corresponding components:</p>
+<p><span class="math display">\[
+(x_1, y_1) \cdot (x_2, y_2) = (x_1y_1, x_2y_2)
+\]</span></p>
+<h1 id="subring">Subring</h1>
+<p>If a nonempty subset <span class="math inline">\(B \sube A\)</span>
+is closed with respect to addition, multiplication, and negatives, then
+<span class="math inline">\(B\)</span> with the operations of <span
+class="math inline">\(A\)</span> is a subring of <span
+class="math inline">\(A\)</span>.</p>
+<h1 id="ideal">Ideal</h1>
+<p>A nonempty subset <span class="math inline">\(B\)</span> of a ring
+<span class="math inline">\(A\)</span> is called an ideal of <span
+class="math inline">\(A\)</span> if <span
+class="math inline">\(B\)</span> is closed with respect to addition and
+negative, and <span class="math inline">\(B\)</span> absorbs products in
+<span class="math inline">\(A\)</span>.</p>
+<aside>
+<p>💡 <span class="math inline">\(B\)</span> absorbs products in <span
+class="math inline">\(A\)</span> if for all <span
+class="math inline">\(b \in B\)</span> and <span class="math inline">\(x
+\in A\)</span>, <span class="math inline">\(xb\)</span> and <span
+class="math inline">\(bx\)</span> are in <span
+class="math inline">\(B\)</span>.</p>
+</aside>
+<p><strong>Ideals are in rings as normal subgroups are in
+groups.</strong></p>
+<h2 id="principal-ideal">Principal ideal</h2>
+<p>In a commutative ring with unity, the set of all the multiples of a
+fixed element <span class="math inline">\(a\)</span> by all the elements
+in the ring</p>
+<p><span class="math display">\[
+xa
+\]</span></p>
+<p>is called the principal ideal generated by <span
+class="math inline">\(a\)</span>, and is denoted by <span
+class="math inline">\(\langle a \rangle\)</span>.</p>
+<h1 id="coset-of-rings">Coset of Rings</h1>
+<p>Let <span class="math inline">\(A\)</span> be a ring, and <span
+class="math inline">\(J\)</span> an ideal of <span
+class="math inline">\(A\)</span>. For any element <span
+class="math inline">\(a \in A\)</span>, the symbol <span
+class="math inline">\(J + a\)</span> denotes the set of all sums <span
+class="math inline">\(j + a\)</span>, as <span
+class="math inline">\(a\)</span> remains fixed and <span
+class="math inline">\(j\)</span> ranges over <span
+class="math inline">\(J\)</span>. That is,</p>
+<p><span class="math display">\[
+J + a = \{ j + a: j \in J\}
+\]</span></p>
+<p><span class="math inline">\(J + a\)</span> is called a coset of <span
+class="math inline">\(J\)</span> in <span
+class="math inline">\(A\)</span>.</p>
+<h2 id="coset-addition-and-multiplication">Coset Addition and
+Multiplication</h2>
+<p>Additions and multiplications of coset of rings are as follows:</p>
+<p><span class="math display">\[
+(J + a)+(J + b) = J + (a+b) \\
+(J + a)(J + b) = J + ab
+\]</span></p>
+<h1 id="quotient-rings">Quotient Rings</h1>
+<p><span class="math inline">\(A/J\)</span> with coset addition and
+multiplication is a ring, and it is called quotient ring.</p>
+<aside>
+<p>💡 <span class="math inline">\(A/J\)</span> is a homomorphic image of
+<span class="math inline">\(A\)</span>.</p>
+</aside>
+<h1 id="integral-domains">Integral domains</h1>
+<p>An integral domain is defined to be a communicative ring with unity
+have the cancellation property.</p>
+<h2 id="characteristic">Characteristic</h2>
+<p>The characteristic of <span class="math inline">\(A\)</span> is the
+least positive integer <span class="math inline">\(n\)</span> such
+that</p>
+<p><span class="math display">\[
+\underbrace{1 + 1 + \cdots + 1}_{n  \text{ times }} = 0
+\]</span></p>
+<p>If there is no such positive integer <span
+class="math inline">\(n\)</span>, <span class="math inline">\(A\)</span>
+has characteristic <span class="math inline">\(0\)</span>.</p>
+<h3 id="theorem-1">Theorem 1</h3>
+<p>All the nonzero elements in an integral domain have the same additive
+order.</p>
+<aside>
+<p>💡 which is equal to the characteristic of <span
+class="math inline">\(1\)</span>. Since <span class="math inline">\(n
+\cdot a = a + a + \cdots + a = (n \cdot 1)a\)</span>. Since <span
+class="math inline">\(a \neq 0\)</span>, then <span
+class="math inline">\(n \cdot 1 = 0\)</span> makes <span
+class="math inline">\(n \cdot a = 0\)</span>.</p>
+</aside>
+<h3 id="theorem-2">Theorem 2</h3>
+<p>In an integral domain with nonzero characteristic, the characteristic
+is a prime number.</p>
+<h3 id="theorem-3">Theorem 3</h3>
+<p>In any integral domain of characteristic <span
+class="math inline">\(p\)</span>, for all elements <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>,</p>
+<p><span class="math display">\[
+(a+b)^p = a^p + b^p
+\]</span></p>
+<h3 id="theorem-4">Theorem 4</h3>
+<p>Every finite integral domain is a field.</p>
+<h2 id="ordered-integral-domain">Ordered integral domain</h2>
+<p>An ordered inttegral domain is an integral domain <span
+class="math inline">\(A\)</span> with a relation, symbolized by <span
+class="math inline">\(&lt;\)</span>, having the following
+properties:</p>
+<ol type="1">
+<li>For any <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> in <span
+class="math inline">\(A\)</span>, exactly one of the following is true:
+<span class="math inline">\(a = b, a &lt; b, a &gt; b\)</span>.</li>
+<li>If <span class="math inline">\(a &lt; b\)</span> and <span
+class="math inline">\(b &lt; c\)</span>, then <span
+class="math inline">\(a &lt; c\)</span>.</li>
+<li>If <span class="math inline">\(a &lt; b\)</span>, then <span
+class="math inline">\(a + c &lt; b + c\)</span>.</li>
+<li>If <span class="math inline">\(a &lt; b\)</span>, then <span
+class="math inline">\(ac &lt; bc\)</span> on the condition that <span
+class="math inline">\(0 &lt; c\)</span>.</li>
+</ol>
+<h2 id="integral-system">Integral System</h2>
+<p>An ordered integral domain <span class="math inline">\(A\)</span> is
+called an integral system if every nonempty subset of <span
+class="math inline">\(A^+\)</span> has a least element.</p>
+<h3 id="theorem-1-1">Theorem 1</h3>
+<p>Let <span class="math inline">\(K\)</span> represent a set of
+positive integers. Consider the following two conditions:</p>
+<ol type="1">
+<li><span class="math inline">\(1 \in K\)</span>.</li>
+<li>For any positive integer <span class="math inline">\(k\)</span>, if
+<span class="math inline">\(k \in K\)</span>, then <span
+class="math inline">\(k + 1 \in K\)</span>.</li>
+</ol>
+<p>If <span class="math inline">\(K\)</span> is any set of positive
+integers satisfying these two conditions, then <span
+class="math inline">\(K\)</span> consists of all the positive
+integers.</p>
+<h3 id="theorem-2-principle-of-mathematical-induction">Theorem 2:
+Principle of mathematical induction</h3>
+<ol type="1">
+<li><span class="math inline">\(S_1\)</span> is true.</li>
+<li>For any positive integer <span class="math inline">\(k\)</span>, if
+<span class="math inline">\(S_k\)</span> is true, then <span
+class="math inline">\(S_{k+1}\)</span> is true.</li>
+</ol>
+<p>If conditions 1 and 2 are satisfied, then <span
+class="math inline">\(S_n\)</span> is true for every positive iinteger
+<span class="math inline">\(n\)</span>.</p>
+<h3 id="theorem-3-division-algorithm">Theorem 3: Division algorithm</h3>
+<p>If <span class="math inline">\(m\)</span> and <span
+class="math inline">\(n\)</span> are integers and <span
+class="math inline">\(n\)</span> is positive, there exist unique
+integers <span class="math inline">\(q\)</span> and <span
+class="math inline">\(r\)</span> such that</p>
+<p><span class="math display">\[
+m = nq + r \text{ and } 0 \leq r &lt; n
+\]</span></p>
+<aside>
+<p>💡 We call <span class="math inline">\(q\)</span> the quotient, and
+<span class="math inline">\(r\)</span> the remainder, in the division of
+<span class="math inline">\(m\)</span> by <span
+class="math inline">\(n\)</span>.</p>
+</aside>
+<h2 id="factoring-into-primes">Factoring into Primes</h2>
+<h3 id="theorem-1-2">Theorem 1</h3>
+<p>Every ideal of <span class="math inline">\(\mathbb{Z}\)</span> is
+principal.</p>
+<h3 id="theorem-2-1">Theorem 2</h3>
+<p>The only invertible elements of <span
+class="math inline">\(\mathbb{Z}\)</span> are 1 and -1.</p>
+<aside>
+<p>💡 A pair of integers <span class="math inline">\(r\)</span> and
+<span class="math inline">\(s\)</span> are called
+<strong>associates</strong> if they divide each other. If <span
+class="math inline">\(r\)</span> and <span
+class="math inline">\(s\)</span> are associates in <span
+class="math inline">\(\mathbb{Z}\)</span>, then <span
+class="math inline">\(r = \pm s\)</span>.</p>
+</aside>
+<h3 id="theorem-3-1">Theorem 3</h3>
+<p>Any two nonzero integers <span class="math inline">\(r\)</span> and
+<span class="math inline">\(s\)</span> have a greatest common divisor
+<span class="math inline">\(t\)</span>. Furthermore, <span
+class="math inline">\(t\)</span> is equal to a "linear combination" of
+<span class="math inline">\(r\)</span> and <span
+class="math inline">\(s\)</span>. That is</p>
+<p><span class="math display">\[
+t = kr + ls
+\]</span></p>
+<p>for some integers <span class="math inline">\(k\)</span> and <span
+class="math inline">\(l\)</span>.</p>
+<aside>
+<p>💡 A <strong>greatest common divisor</strong> of <span
+class="math inline">\(r\)</span> and <span
+class="math inline">\(s\)</span> is an integer <span
+class="math inline">\(r\)</span> such that</p>
+<ol type="i">
+<li><span class="math inline">\(t | r\)</span> and <span
+class="math inline">\(t|s\)</span>.</li>
+<li>For any integer <span class="math inline">\(u\)</span>, if <span
+class="math inline">\(u | r\)</span> and <span class="math inline">\(u |
+s\)</span>, then <span class="math inline">\(u | t\)</span>.</li>
+</ol>
+<p>which is denoted by <span class="math inline">\(t = \gcd(r,
+s)\)</span></p>
+</aside>
+<h3 id="composite-number-lemma">Composite number lemma</h3>
+<p>If a positive integer <span class="math inline">\(m\)</span> is
+composite, then <span class="math inline">\(m = rs\)</span> where</p>
+<p><span class="math display">\[
+1&lt; r&lt; m \text{ and } 1&lt;s&lt;m
+\]</span></p>
+<h3 id="euclids-lemma">Euclid's lemma</h3>
+<p>Let <span class="math inline">\(m\)</span> and <span
+class="math inline">\(n\)</span> be integers, and let <span
+class="math inline">\(p\)</span> be a prime. If <span
+class="math inline">\(p | (mn)\)</span>, then either <span
+class="math inline">\(p|m\)</span> or <span
+class="math inline">\(p|n\)</span>.</p>
+<h3 id="corollary-1">Corollary 1</h3>
+<p>Let <span class="math inline">\(m_1, \dots , m_t\)</span> be
+integers, and let <span class="math inline">\(p\)</span> be a prime. If
+<span class="math inline">\(p|(m_1 \cdots m_t)\)</span>, then <span
+class="math inline">\(p|m_i\)</span> for on of the factors <span
+class="math inline">\(m_i\)</span> among <span
+class="math inline">\(m_1, \dots, m_t\)</span>.</p>
+<h3 id="corollary-2">Corollary 2</h3>
+<p>Let <span class="math inline">\(q_1, \dots, q_t\)</span> and <span
+class="math inline">\(p\)</span> be positive primes. If <span
+class="math inline">\(p | (q_1 \dots q_t)\)</span>, then <span
+class="math inline">\(p\)</span> is equal to one of the factors <span
+class="math inline">\(q_1, \dots, q_t\)</span>.</p>
+<h3 id="factorization-into-primes">Factorization into primes</h3>
+<p>Every integer <span class="math inline">\(n &gt; 1\)</span> can be
+expressed as a product of positive primes. That is, there are one or
+more primes <span class="math inline">\(p_1, \dots, p_r\)</span> such
+that</p>
+<p><span class="math display">\[
+n = p_1p_2 \cdots p_r
+\]</span></p>
+<p>And the factorization is unique.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/" title="Abstract Algebra - Ring">https://aquietzero.github.io/2020/10/04/math/abstract-algebra/2020-10-04-ring/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/09/25/math/abstract-algebra/2020-09-25-functions/" rel="prev" title="Abstract Algebra - Functions">
+                  <i class="fa fa-angle-left"></i> Abstract Algebra - Functions
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/" rel="next" title="Abstract Algebra - Polynomial">
+                  Abstract Algebra - Polynomial <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Collision Algorithm Design Factors There are serveral factors affecting the choices made in designing a collision detecton system.  Application domain representation. The geometrical representations u">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collision Detection Design Issues">
+<meta property="og:url" content="https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Collision Algorithm Design Factors There are serveral factors affecting the choices made in designing a collision detecton system.  Application domain representation. The geometrical representations u">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/","path":"2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/","title":"Collision Detection Design Issues"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Collision Detection Design Issues | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#collision-algorithm-design-factors"><span class="nav-number">1.</span> <span class="nav-text">Collision Algorithm Design
+Factors</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#application-domain-representation"><span class="nav-number">2.</span> <span class="nav-text">Application Domain
+Representation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#object-representations"><span class="nav-number">2.1.</span> <span class="nav-text">Object Representations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#collision-versus-rendering-geometry"><span class="nav-number">2.2.</span> <span class="nav-text">Collision Versus Rendering
+Geometry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#collision-algorithm-specialization"><span class="nav-number">2.3.</span> <span class="nav-text">Collision Algorithm
+Specialization</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#types-of-queries"><span class="nav-number">3.</span> <span class="nav-text">Types of Queries</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#environment-simulation-parameters"><span class="nav-number">4.</span> <span class="nav-text">Environment Simulation
+Parameters</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#number-of-objects"><span class="nav-number">4.1.</span> <span class="nav-text">Number of Objects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sequential-versus-simultaneous-motion"><span class="nav-number">4.2.</span> <span class="nav-text">Sequential Versus
+Simultaneous Motion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#discrete-versus-continuous-motion"><span class="nav-number">4.3.</span> <span class="nav-text">Discrete Versus Continuous
+Motion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#performance"><span class="nav-number">5.</span> <span class="nav-text">Performance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#robustness"><span class="nav-number">6.</span> <span class="nav-text">Robustness</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Collision Detection Design Issues | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Collision Detection Design Issues
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-12 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-12T00:00:00+08:00">2022-03-12</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="collision-algorithm-design-factors">Collision Algorithm Design
+Factors</h1>
+<p>There are serveral factors affecting the choices made in designing a
+collision detecton system.</p>
+<ul>
+<li><strong>Application domain representation.</strong> The geometrical
+representations used for the scene and its objects have a direct bearing
+on the algorithms used. With fewer restrictions put on these
+representations, more general collision detection solutions have to be
+used, with possible performance repercussions.</li>
+<li><strong>Different types of queries.</strong></li>
+<li><strong>Environment simulation parameters.</strong> These include
+how many objects there are, their relative sizes and positions, if and
+how they move, if they are allowed to interpenetrate, and whether they
+are rigid or flexible.</li>
+<li><strong>Performance.</strong> With time and space always being a
+trade-off, several features are usually balanced to meet stated
+performance requirements.</li>
+<li><strong>Robustness.</strong> Not all applications requier the same
+level of physical simulation.</li>
+<li><strong>Ease of implementation and use.</strong></li>
+</ul>
+<h1 id="application-domain-representation">Application Domain
+Representation</h1>
+<p>To select appropriate collision detection algorithms, it is important
+to consider the types of geometrical representations that will be used
+for the scene and its objects.</p>
+<h2 id="object-representations">Object Representations</h2>
+<p>Polygonal objects are defined in terms of their vertices, edges, and
+faces. When constructed in this way, objects are said to have an
+<strong>explicit representation</strong>. <strong>Implicit
+objects</strong> refer to sphere, cones, cylinders, ellipsoids, tori,
+and other geometric primitives that are not explicitly defined in such a
+manner but through a methematical expression.</p>
+<p>Geometric primitives such as spheres, boxes, and cylinders are also
+the building blocks of objects constructed via the <strong>constructive
+solid geometry (CSG) framework</strong>. CSG objects are recursively
+formed through applying set-theoretic operations (such as union,
+intersection, or difference) on basic geometric shapes or other CSG
+objects.</p>
+<figure>
+<img
+src="/assets/images/2022-03-12-collision-detection-design-issues/csg.png"
+alt="(a) A cube with a cylindrical hole through it. (b) The CSG construction three for the left-hand object, where a cylinder is subtracted from the cube." />
+<figcaption aria-hidden="true">(a) A cube with a cylindrical hole
+through it. (b) The CSG construction three for the left-hand object,
+where a cylinder is subtracted from the cube.</figcaption>
+</figure>
+<ol type="a">
+<li>A cube with a cylindrical hole through it. (b) The CSG construction
+three for the left-hand object, where a cylinder is subtracted from the
+cube.</li>
+</ol>
+<h2 id="collision-versus-rendering-geometry">Collision Versus Rendering
+Geometry</h2>
+<p>Although it is possible to pass rendering geometry directly into a
+collision system, there are several reasons it is better to have
+separate geometry with which collision detection is performed.</p>
+<ul>
+<li>Graphics platforms have advanced to the point where rendering
+geometry is becoming to complex to be used to perform collision
+detection or physics. <strong>Simplified geometric shapes, or bounding
+volumes, are frequently used to accelerate collision queries regardless
+of what geometry representation is used.</strong></li>
+<li>For modern hardware, geometry tends to be given in very specific
+formats, which lend themselves to fast rendering but not to collision
+detection.</li>
+<li>The required data and data organization of rendering geometry and
+collision geometry are likely to vary drastically.</li>
+<li>Sometimes the collision geometry differs from the rendered geometry
+by design.</li>
+<li>For simulation purposes, collision data must be kept around even
+when rendering data can be thrown out as not visible.</li>
+<li>The original geometry might be given as a polygon soup or mesh,
+whereas the simulation requires a solid-object representation.</li>
+</ul>
+<h2 id="collision-algorithm-specialization">Collision Algorithm
+Specialization</h2>
+<p>Rather than having one all-encompassing collision detection system,
+it is often wise to provide specialized collision systems for specific
+scenarios.</p>
+<h1 id="types-of-queries">Types of Queries</h1>
+<ul>
+<li><strong>Interference detection</strong> or <strong>intersection
+testing</strong> problem: answering the boolean question of whether two
+(static) objects, A and B, are overlapping at their given positions and
+orientations.</li>
+<li><strong>Intersection finding</strong>: involving finding one or more
+points of contact.</li>
+<li><strong>Approximate queries</strong>: the answers are only required
+to be accurate up to a given tolerance.</li>
+<li>If objects penetrate, some application require finding the
+<strong>penetration depth</strong>. The penetration depth is usually
+defined in terms of the <strong>minimum translational distance</strong>:
+the length of the shortest movement vector that would separate the
+objects.</li>
+<li>The <strong>separation distance</strong> between two disjoint
+objects A and B is defined as the minimum of the distance between poitns
+in A and points in B.</li>
+</ul>
+<h1 id="environment-simulation-parameters">Environment Simulation
+Parameters</h1>
+<h2 id="number-of-objects">Number of Objects</h2>
+<p>Because any one object can potentially collide with any other object,
+a simulation with <span class="math inline">\(n\)</span> objects
+requires <span class="math inline">\((n-1)+(n-2)+\cdots+1 =
+O(n^2)\)</span> pairwise tests, worst case. <strong>To really speed up
+the process, the number of pairs tested must be reduced.</strong> The
+reduction is performed by separating the collision handling of multiple
+objects into two phases: the <strong>broad phase</strong> and the
+<strong>narrow phase</strong>.</p>
+<ul>
+<li>The broad phase identifies smaller groups of objects that may be
+colliding and quickly excludes those that definitely are not.</li>
+<li>The narrow phase constitutes the pairwise tests within
+subgroups.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-03-12-collision-detection-design-issues/broad-phase.png"
+alt="The broad phase identifies disjoint groups of possibly intersecting objects." />
+<figcaption aria-hidden="true">The broad phase identifies disjoint
+groups of possibly intersecting objects.</figcaption>
+</figure>
+<p>The broad phase identifies disjoint groups of possibly intersecting
+objects.</p>
+<h2 id="sequential-versus-simultaneous-motion">Sequential Versus
+Simultaneous Motion</h2>
+<p>In real life, objects are moving <strong>simultaneously</strong>
+during a given movement time step, with any eventual collisions resolved
+within the time step. But simultaneous updates remain expensive and are
+therefore often reserved for accurate rigid-body simulations. For these,
+an alternative option is to resolve motion
+<strong>sequentially</strong>. That is, objects are moved one object at
+a time and any collisions are detected and resolved before the process
+continues with the next object.</p>
+<figure>
+<img
+src="/assets/images/2022-03-12-collision-detection-design-issues/sequential-versus-simultaneous-motion.png"
+alt="(a) Top: If both objects move simultaneously, there is no collision. Bottom: If the circle object moves before the triangle, the objects collide. In (b), again there is no collision for simultaneous movement, but for sequential movement the objects collide. (c) The objects collide under simultaneous movement, but not under sequential movement." />
+<figcaption aria-hidden="true">(a) Top: If both objects move
+simultaneously, there is no collision. Bottom: If the circle object
+moves before the triangle, the objects collide. In (b), again there is
+no collision for simultaneous movement, but for sequential movement the
+objects collide. (c) The objects collide under simultaneous movement,
+but not under sequential movement.</figcaption>
+</figure>
+<aside>
+<p>💡 Clearly, sequential movement is not a physically accurate movement
+model. But for games, the problems introduced by a sequential movement
+model can often be ignored. The high frame rate of games often makes the
+movement step so small that the overlap is also small and not really
+noticeable.</p>
+</aside>
+<h2 id="discrete-versus-continuous-motion">Discrete Versus Continuous
+Motion</h2>
+<p><strong>Static collision detection</strong> involves detecting
+intersection between the objects, at discrete points in time, during
+their motion. At each such point in time the objects are treated as if
+they were stationary at their current positions with zero
+velocities.</p>
+<p><strong>Dynamic collision detection</strong> considers the full
+continuous motion of the objects over the given time interval.</p>
+<aside>
+<p>💡 The volume covered by an object in continuous motion over a given
+time interval is called the <strong>swept volume</strong>. If the swept
+volumes of two moving objects do not intersect, there is no intersection
+between the objects.</p>
+</aside>
+<h1 id="performance">Performance</h1>
+<p>For the best possible visuals games must run at 60 fps. This frame
+rate leaves 16.7 ms to prepare each game frame. Depending on the type of
+game, collision detection may accout for 10 to 30% of a frame, in turn
+<strong>leaving 2 to 5 ms for collision detection</strong>.</p>
+<h1 id="robustness">Robustness</h1>
+<p>Robustness is used to refer to a program’s capability of dealing with
+numerical computations and geometrical configurations that in some way
+are difficult to handle. Robustness problems can be broadly categorized
+into two classes: those due to lack of <strong>numerical
+robustness</strong> and those due to lack of <strong>geometrical
+robustness</strong>.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/" title="Collision Detection Design Issues">https://aquietzero.github.io/2022/03/12/reading/realtime-collision-detection/2022-03-12-collision-detection-design-issues/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/12/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-12-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%B8%B8%E6%88%8F%E6%80%A7%E5%9F%BA%E7%A1%80%E7%B3%BB%E7%BB%9F/" rel="prev" title="运行时游戏性基础系统">
+                  <i class="fa fa-angle-left"></i> 运行时游戏性基础系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/" rel="next" title="Bounding Volumes">
+                  Bounding Volumes <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

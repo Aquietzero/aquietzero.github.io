@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Definition Polynomial Let \(A\) be a commutative ring with unity, and \(**x\) an arbitrary symbol**. Every expression of the form \[ a(x) &#x3D; a_0 + a_1x + a_2x^2 + \cdots + a_nx^n \] is called a polynom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Abstract Algebra - Polynomial">
+<meta property="og:url" content="https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Definition Polynomial Let \(A\) be a commutative ring with unity, and \(**x\) an arbitrary symbol**. Every expression of the form \[ a(x) &#x3D; a_0 + a_1x + a_2x^2 + \cdots + a_nx^n \] is called a polynom">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.521Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/","path":"2020/10/08/math/abstract-algebra/2020-10-08-polynomial/","title":"Abstract Algebra - Polynomial"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Abstract Algebra - Polynomial | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#definition"><span class="nav-number">1.</span> <span class="nav-text">Definition</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#polynomial"><span class="nav-number">1.1.</span> <span class="nav-text">Polynomial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zero-polynomial"><span class="nav-number">1.2.</span> <span class="nav-text">Zero polynomial</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#polynomial-ring"><span class="nav-number">2.</span> <span class="nav-text">Polynomial ring</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-1"><span class="nav-number">2.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-2"><span class="nav-number">2.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-3-division-algorithm-for-polynomials"><span class="nav-number">2.3.</span> <span class="nav-text">Theorem 3:
+Division algorithm for polynomials</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#factoring-polynomials"><span class="nav-number">3.</span> <span class="nav-text">Factoring polynomials</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-1-1"><span class="nav-number">3.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-2-1"><span class="nav-number">3.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-3-factorization-into-irreducible-polynomials"><span class="nav-number">3.3.</span> <span class="nav-text">Theorem 3:
+Factorization into irreducible polynomials</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#substitution-of-polynomials"><span class="nav-number">4.</span> <span class="nav-text">Substitution of Polynomials</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#root"><span class="nav-number">4.1.</span> <span class="nav-text">Root</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-1-2"><span class="nav-number">4.2.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-2-2"><span class="nav-number">4.3.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-3"><span class="nav-number">4.4.</span> <span class="nav-text">Theorem 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-4"><span class="nav-number">4.5.</span> <span class="nav-text">Theorem 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eisensteins-irreducibility-criterion"><span class="nav-number">4.6.</span> <span class="nav-text">Eisenstein&#39;s
+irreducibility criterion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fundamental-theorem-of-algebra"><span class="nav-number">5.</span> <span class="nav-text">Fundamental Theorem of
+Algebra</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Abstract Algebra - Polynomial | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Abstract Algebra - Polynomial
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-08T00:00:00+08:00">2020-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/08/math/abstract-algebra/2020-10-08-polynomial/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>738</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="definition">Definition</h1>
+<h2 id="polynomial">Polynomial</h2>
+<p>Let <span class="math inline">\(A\)</span> be a commutative ring with
+unity, and <span class="math inline">\(**x\)</span> an arbitrary
+symbol**. Every expression of the form</p>
+<p><span class="math display">\[
+a(x) = a_0 + a_1x + a_2x^2 + \cdots + a_nx^n
+\]</span></p>
+<p>is called a polynomial in <span class="math inline">\(x\)</span> with
+coefficients in <span class="math inline">\(A\)</span>, or more simply,
+<strong>a polynomial in <span class="math inline">\(x\)</span> over
+<span class="math inline">\(A\)</span></strong>. The expressions <span
+class="math inline">\(a_kx^k\)</span>, for <span class="math inline">\(k
+\in \{1, \dots, n\}\)</span>, are called the <strong>terms</strong> of
+the polynomial.</p>
+<h2 id="zero-polynomial">Zero polynomial</h2>
+<p>The polynomial <span class="math inline">\(0 + 0x + 0x^2 +
+\cdots\)</span> of whose coefficients are equal to zero is called the
+zero polynomial, and is symbolized by <span
+class="math inline">\(0\)</span>.</p>
+<h1 id="polynomial-ring">Polynomial ring</h1>
+<p>Let <span class="math inline">\(A\)</span> be a ring, the symbol
+<span class="math inline">\(A[x]\)</span> designates the set of all the
+polynomials in <span class="math inline">\(x\)</span> whose coefficients
+are in <span class="math inline">\(A\)</span>, with polynomial addition
+and multiplication.</p>
+<h2 id="theorem-1">Theorem 1</h2>
+<p>Let <span class="math inline">\(A\)</span> be a commutative ring with
+unity. Then <span class="math inline">\(A[x]\)</span> is a commutative
+ring with unity.</p>
+<h2 id="theorem-2">Theorem 2</h2>
+<p>If <span class="math inline">\(A\)</span> is an integral domain, then
+<span class="math inline">\(A[x]\)</span> is an integral domain.</p>
+<aside>
+<p>💡 If <span class="math inline">\(F\)</span> is a field, <span
+class="math inline">\(F[x]\)</span> is not necessarily a field.</p>
+</aside>
+<h2 id="theorem-3-division-algorithm-for-polynomials">Theorem 3:
+Division algorithm for polynomials</h2>
+<p>If <span class="math inline">\(a(x)\)</span> and <span
+class="math inline">\(b(x)\)</span> arer polynomials over a field <span
+class="math inline">\(F\)</span>, and <span class="math inline">\(b(x)
+\neq 0\)</span>, there exist polynomials <span
+class="math inline">\(q(x)\)</span> and <span
+class="math inline">\(r(x)\)</span> over <span
+class="math inline">\(F\)</span> such that</p>
+<p><span class="math display">\[
+a(x) = b(x)q(x) + r(x), \text{ and } r(x) = 0 \text{ or } \deg r(x) &lt;
+\deg b(x)
+\]</span></p>
+<h1 id="factoring-polynomials">Factoring polynomials</h1>
+<p>Just as every integer can be factored into primes, so every
+polynomial can be factored into "irreducible" polynomials which cannot
+be factored further.</p>
+<h2 id="theorem-1-1">Theorem 1</h2>
+<p>Every ideal of <span class="math inline">\(F[x]\)</span> is
+principal.</p>
+<h2 id="theorem-2-1">Theorem 2</h2>
+<p>Any two nonzero polynomials <span class="math inline">\(a(x)\)</span>
+and <span class="math inline">\(b(x)\)</span> in <span
+class="math inline">\(F[x]\)</span> have a gcd <span
+class="math inline">\(d(x)\)</span>. Furthermore, <span
+class="math inline">\(d(x)\)</span> can be expressed as a "linear
+combination"</p>
+<p><span class="math display">\[
+d(x) = r(x)a(x) + s(x)b(x)
+\]</span></p>
+<p>where <span class="math inline">\(r(x)\)</span> and <span
+class="math inline">\(s(x)\)</span> are in <span
+class="math inline">\(F[x]\)</span>.</p>
+<h2 id="theorem-3-factorization-into-irreducible-polynomials">Theorem 3:
+Factorization into irreducible polynomials</h2>
+<p>Every polynomial <span class="math inline">\(a(x)\)</span> of
+positive degree in <span class="math inline">\(F[x]\)</span> can be
+written as a product</p>
+<p><span class="math display">\[
+a(x) = kp_1(x)p_2(x)\cdots p_r(x)
+\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is a constant in <span
+class="math inline">\(F\)</span> and <span class="math inline">\(p_1(x),
+\dots , p_r(x)\)</span> are monic irreducible polynomials of <span
+class="math inline">\(F[x]\)</span>. More importantly, the factorization
+is unique.</p>
+<h1 id="substitution-of-polynomials">Substitution of Polynomials</h1>
+<p>If <span class="math inline">\(a(x)\)</span> is a polynomial over a
+field <span class="math inline">\(F\)</span>, say</p>
+<p><span class="math display">\[
+a(x) = a_0 + a_1x + \cdots + a_nx^n
+\]</span></p>
+<p>this means that the coefficients <span class="math inline">\(a_0,
+a_1, \dots , a_n\)</span> are elements of the field <span
+class="math inline">\(F\)</span>, while the letter <span
+class="math inline">\(x\)</span> is a placeholder <strong>which plays no
+other role than to occupy a given posititon</strong>.</p>
+<p>If <span class="math inline">\(a(x)\)</span> is a polynomial over
+<span class="math inline">\(F\)</span> and if <span
+class="math inline">\(c \in F\)</span>, then</p>
+<p><span class="math display">\[
+a_0 + a_1c + \cdots + a_nc^n
+\]</span></p>
+<p>is also an element of <span class="math inline">\(F\)</span>,
+obtatined by substituting <span class="math inline">\(c\)</span> for
+<span class="math inline">\(x\)</span> in the polynomial <span
+class="math inline">\(a(x)\)</span>. This element is denoted by <span
+class="math inline">\(a(c)\)</span>. We may regard <span
+class="math inline">\(a(x)\)</span> as a function from <span
+class="math inline">\(F\)</span> to <span
+class="math inline">\(F\)</span>.</p>
+<aside>
+<p>💡 But the difference between a polynomial and a polynomial function
+is mainly a difference of viewpoint.</p>
+</aside>
+<h2 id="root">Root</h2>
+<p>If <span class="math inline">\(a(x) \in F[x]\)</span> and <span
+class="math inline">\(c \in F\)</span> such that <span
+class="math inline">\(a(c) = 0\)</span>, then we call <span
+class="math inline">\(c\)</span> a root of <span
+class="math inline">\(a(x)\)</span>.</p>
+<h2 id="theorem-1-2">Theorem 1</h2>
+<p><span class="math inline">\(c\)</span> is a root of <span
+class="math inline">\(a(x)\)</span> iff <span class="math inline">\(x -
+c\)</span> is a factor of <span class="math inline">\(a(x)\)</span>.</p>
+<h2 id="theorem-2-2">Theorem 2</h2>
+<p>If <span class="math inline">\(a(x)\)</span> has distinct roots <span
+class="math inline">\(c_1, c_2, \dots, c_m\)</span> in <span
+class="math inline">\(F\)</span>, then <span
+class="math inline">\((x-c_1)(x-c_2) \cdots (x - c_m)\)</span> is a
+factor of <span class="math inline">\(a(x)\)</span>.</p>
+<h2 id="theorem-3">Theorem 3</h2>
+<p>If <span class="math inline">\(a(x)\)</span> has degree <span
+class="math inline">\(n\)</span>, it has at most <span
+class="math inline">\(n\)</span> roots.</p>
+<h2 id="theorem-4">Theorem 4</h2>
+<p>If <span class="math inline">\(s/t\)</span> is a root of <span
+class="math inline">\(a(x)\)</span>, then <span
+class="math inline">\(s|a_0\)</span> and <span
+class="math inline">\(t|a_n\)</span>.</p>
+<h2 id="eisensteins-irreducibility-criterion">Eisenstein's
+irreducibility criterion</h2>
+<p>Let</p>
+<p><span class="math display">\[
+a(x) = a_0 + a_1x + \cdots + a_nx^n
+\]</span></p>
+<p>be a polynomial with integer coefficients. Suppose there is a prime
+number <span class="math inline">\(p\)</span> which divides every
+coefficient of <span class="math inline">\(a(x)\)</span> except the
+leading coefficient <span class="math inline">\(a_n\)</span>; suppose
+<span class="math inline">\(p\)</span> does not divide <span
+class="math inline">\(a_n\)</span> and <span
+class="math inline">\(p^2\)</span> does not divide <span
+class="math inline">\(a_0\)</span>. <strong>Then <span
+class="math inline">\(a(x)\)</span> is irreducible over <span
+class="math inline">\(\mathbb{Q}\)</span></strong>.</p>
+<h1 id="fundamental-theorem-of-algebra">Fundamental Theorem of
+Algebra</h1>
+<p>Every non-constant polynomial with complex coefficients has a complex
+root.</p>
+<aside>
+💡 Every polynomial in <span
+class="math inline">\(\mathbb{C}[x]\)</span> can be factored into
+irreducibles. Since.Since the irreducible polynomials are all of degree
+1, it follows that if <span class="math inline">\(a(x)\)</span> is a
+polynomial of degree <span class="math inline">\(n\)</span> over <span
+class="math inline">\(\mathbb{C}\)</span>, it can be factored into <span
+class="math inline">\(a(x)=k(x-c_1)(x-c_2)\cdots (x-c_n)\)</span>.
+</aside>
+<p>Suppose <span class="math inline">\(a(x) \in \mathbb{R}[x]\)</span>.
+If <span class="math inline">\(a+bi\)</span> is a root of <span
+class="math inline">\(a(x)\)</span>, so is <span
+class="math inline">\(a-bi\)</span>.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/" title="Abstract Algebra - Polynomial">https://aquietzero.github.io/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/04/math/abstract-algebra/2020-10-04-ring/" rel="prev" title="Abstract Algebra - Ring">
+                  <i class="fa fa-angle-left"></i> Abstract Algebra - Ring
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/17/math/abstract-algebra/2020-10-17-field/" rel="next" title="Abstract Algebra - Field">
+                  Abstract Algebra - Field <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

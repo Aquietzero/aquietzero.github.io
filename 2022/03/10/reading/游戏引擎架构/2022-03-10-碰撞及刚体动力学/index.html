@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="碰撞及刚体动力学 碰撞检测系统（collision detection system）确保物体不会相互穿透，是任何游戏引擎的核心元件之一。而碰撞检测系统通常紧密地和物理引擎（physics engine）整合。当然，物理的范畴很广，在现游戏中所指的“物理”，更精确地说应该称为刚体动力学（rigid body dynamics）模拟。刚体（rigid body）是理想化，无限坚硬，不变形的固体物体。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="碰撞及刚体动力学">
+<meta property="og:url" content="https://aquietzero.github.io/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="碰撞及刚体动力学 碰撞检测系统（collision detection system）确保物体不会相互穿透，是任何游戏引擎的核心元件之一。而碰撞检测系统通常紧密地和物理引擎（physics engine）整合。当然，物理的范畴很广，在现游戏中所指的“物理”，更精确地说应该称为刚体动力学（rigid body dynamics）模拟。刚体（rigid body）是理想化，无限坚硬，不变形的固体物体。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/tunneling.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/contacts.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/contacts2.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/%E6%97%A0%E6%91%A9%E6%93%A6%E5%8A%9B%E7%A2%B0%E6%92%9E.png">
+<meta property="article:published_time" content="2022-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.532Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/tunneling.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/","path":"2022/03/10/reading/游戏引擎架构/2022-03-10-碰撞及刚体动力学/","title":"碰撞及刚体动力学"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>碰撞及刚体动力学 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">1.</span> <span class="nav-text">碰撞及刚体动力学</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">物理系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%AF%B9%E6%B8%B8%E6%88%8F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">2.1.</span> <span class="nav-text">物理对游戏的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">2.1.1.</span> <span class="nav-text">对设计的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%B7%A5%E7%A8%8B%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">2.1.2.</span> <span class="nav-text">对工程的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%BE%8E%E6%9C%AF%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">2.1.3.</span> <span class="nav-text">对美术的影响</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F"><span class="nav-number">3.</span> <span class="nav-text">碰撞检测系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E7%A2%B0%E6%92%9E%E5%AE%9E%E4%BD%93"><span class="nav-number">3.1.</span> <span class="nav-text">可碰撞实体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E-%E7%89%A9%E7%90%86%E4%B8%96%E7%95%8C"><span class="nav-number">3.2.</span> <span class="nav-text">碰撞 &#x2F; 物理世界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%A2%E7%8A%B6%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">3.3.</span> <span class="nav-text">形状的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E4%BA%A4"><span class="nav-number">3.3.1.</span> <span class="nav-text">相交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E8%A7%A6"><span class="nav-number">3.3.2.</span> <span class="nav-text">接触</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%B8%E6%80%A7"><span class="nav-number">3.3.3.</span> <span class="nav-text">凸性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E5%8E%9F%E5%9E%8B"><span class="nav-number">3.4.</span> <span class="nav-text">碰撞原型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%83%E4%BD%93"><span class="nav-number">3.4.1.</span> <span class="nav-text">球体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%B6%E5%9B%8A%E4%BD%93"><span class="nav-number">3.4.2.</span> <span class="nav-text">胶囊体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%B4%E5%AF%B9%E9%BD%90%E5%8C%85%E5%9B%B4%E7%9B%92"><span class="nav-number">3.4.3.</span> <span class="nav-text">轴对齐包围盒</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E5%90%91%E5%8C%85%E5%9B%B4%E7%9B%92"><span class="nav-number">3.4.4.</span> <span class="nav-text">定向包围盒</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%AE%9A%E5%90%91%E5%A4%9A%E6%B3%A1%E5%9E%8B"><span class="nav-number">3.4.5.</span> <span class="nav-text">离散定向多泡型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%BB%E6%84%8F%E5%87%B8%E4%BD%93%E7%A7%AF"><span class="nav-number">3.4.6.</span> <span class="nav-text">任意凸体积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%BE%B9%E5%BD%A2%E6%B1%A4"><span class="nav-number">3.4.7.</span> <span class="nav-text">多边形汤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E6%B5%8B%E8%AF%95%E5%8F%8A%E8%A7%A3%E9%87%8A%E5%87%A0%E4%BD%95"><span class="nav-number">3.5.</span> <span class="nav-text">碰撞测试及解释几何</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E4%B8%8E%E7%90%83%E4%BD%93%E7%9A%84%E7%9B%B8%E4%BA%A4"><span class="nav-number">3.5.1.</span> <span class="nav-text">点与球体的相交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%83%E4%BD%93%E4%B8%8E%E7%90%83%E4%BD%93%E7%9A%84%E7%9B%B8%E4%BA%A4"><span class="nav-number">3.5.2.</span> <span class="nav-text">球体与球体的相交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E8%BD%B4%E5%AE%9A%E7%90%86"><span class="nav-number">3.5.3.</span> <span class="nav-text">分离轴定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#aabb-%E4%B8%8E-aabb-%E7%9A%84%E7%9B%B8%E4%BA%A4"><span class="nav-number">3.5.4.</span> <span class="nav-text">AABB 与 AABB 的相交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E5%87%B8%E7%A2%B0%E6%92%9Egjk-%E7%AE%97%E6%B3%95"><span class="nav-number">3.5.5.</span> <span class="nav-text">检测凸碰撞：GJK 算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E7%89%A9%E4%BD%93%E4%B9%8B%E9%97%B4%E7%9A%84%E7%A2%B0%E6%92%9E"><span class="nav-number">3.5.6.</span> <span class="nav-text">运动物体之间的碰撞</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.6.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">3.6.1.</span> <span class="nav-text">时间一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86"><span class="nav-number">3.6.2.</span> <span class="nav-text">空间划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E5%88%92%E5%88%86"><span class="nav-number">3.6.3.</span> <span class="nav-text">阶段划分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E6%9F%A5%E8%AF%A2"><span class="nav-number">3.7.</span> <span class="nav-text">碰撞查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%89%E7%BA%BF%E6%8A%95%E5%B0%84"><span class="nav-number">3.7.1.</span> <span class="nav-text">光线投射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%A2%E7%8A%B6%E6%8A%95%E5%B0%84"><span class="nav-number">3.7.2.</span> <span class="nav-text">形状投射</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">4.</span> <span class="nav-text">刚体动力学</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80"><span class="nav-number">4.1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E4%BD%8D"><span class="nav-number">4.1.1.</span> <span class="nav-text">单位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E7%BA%BF%E6%80%A7%E5%8F%8A%E6%97%8B%E8%BD%AC%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">4.1.2.</span> <span class="nav-text">分离线性及旋转动力学</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%A8%E5%BF%83"><span class="nav-number">4.1.3.</span> <span class="nav-text">质心</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">4.2.</span> <span class="nav-text">线性动力学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E9%80%9F%E5%BA%A6%E5%92%8C%E5%8A%A0%E9%80%9F%E5%BA%A6"><span class="nav-number">4.2.1.</span> <span class="nav-text">线性速度和加速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%9B%E5%8F%8A%E5%8A%A8%E9%87%8F"><span class="nav-number">4.2.2.</span> <span class="nav-text">力及动量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E5%8A%A8%E6%96%B9%E7%A8%8B%E6%B1%82%E8%A7%A3"><span class="nav-number">4.3.</span> <span class="nav-text">运动方程求解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E5%8A%9B%E4%BD%9C%E4%B8%BA%E5%87%BD%E6%95%B0"><span class="nav-number">4.3.1.</span> <span class="nav-text">把力作为函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B"><span class="nav-number">4.3.2.</span> <span class="nav-text">常微分方程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86"><span class="nav-number">4.4.</span> <span class="nav-text">数值积分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%BE%E5%BC%8F%E6%AC%A7%E6%8B%89"><span class="nav-number">4.4.1.</span> <span class="nav-text">显式欧拉</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9F%A6%E5%B0%94%E8%8E%B1%E7%A7%AF%E5%88%86"><span class="nav-number">4.4.2.</span> <span class="nav-text">韦尔莱积分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E6%97%8B%E8%BD%AC%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">4.5.</span> <span class="nav-text">二维旋转动力学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E9%80%9F%E5%BA%A6%E5%92%8C%E5%8A%A0%E9%80%9F%E5%BA%A6"><span class="nav-number">4.5.1.</span> <span class="nav-text">角速度和加速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E5%8A%A8%E6%83%AF%E9%87%8F"><span class="nav-number">4.5.2.</span> <span class="nav-text">转动惯量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%9B%E7%9F%A9"><span class="nav-number">4.5.3.</span> <span class="nav-text">力矩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%BB%B4%E6%97%8B%E8%BD%AC%E5%8A%A8%E5%8A%9B%E5%AD%A6"><span class="nav-number">4.6.</span> <span class="nav-text">三维旋转动力学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E5%90%91"><span class="nav-number">4.6.1.</span> <span class="nav-text">定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%92%E9%80%9F%E5%BA%A6%E5%92%8C%E8%A7%92%E5%8A%A8%E9%87%8F"><span class="nav-number">4.6.2.</span> <span class="nav-text">角速度和角动量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E5%93%8D%E5%BA%94"><span class="nav-number">4.7.</span> <span class="nav-text">碰撞响应</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E9%87%8F"><span class="nav-number">4.7.1.</span> <span class="nav-text">能量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%B2%E9%87%8F%E7%A2%B0%E6%92%9E%E5%93%8D%E5%BA%94"><span class="nav-number">4.7.2.</span> <span class="nav-text">冲量碰撞响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%91%E6%AD%A2%E5%B2%9B%E5%B1%BF%E5%8F%8A%E4%BC%91%E7%9C%A0"><span class="nav-number">4.7.3.</span> <span class="nav-text">休止，岛屿及休眠</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-number">4.8.</span> <span class="nav-text">约束</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%AF%B9%E7%82%B9%E7%BA%A6%E6%9D%9F"><span class="nav-number">4.8.1.</span> <span class="nav-text">点对点约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9A%E6%80%A7%E5%BC%B9%E7%B0%A7"><span class="nav-number">4.8.2.</span> <span class="nav-text">刚性弹簧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%B0%E9%93%BE%E7%BA%A6%E6%9D%9F"><span class="nav-number">4.8.3.</span> <span class="nav-text">铰链约束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E7%A7%BB%E9%93%B0"><span class="nav-number">4.8.4.</span> <span class="nav-text">滑移铰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E5%A8%83%E5%A8%83"><span class="nav-number">4.8.5.</span> <span class="nav-text">布娃娃</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%88%9A%E4%BD%93%E7%9A%84%E8%BF%90%E5%8A%A8"><span class="nav-number">4.9.</span> <span class="nav-text">控制刚体的运动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%8A%9B"><span class="nav-number">4.9.1.</span> <span class="nav-text">引力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%BD%E5%8A%9B"><span class="nav-number">4.9.2.</span> <span class="nav-text">施力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%BD%E5%8A%9B%E7%9F%A9"><span class="nav-number">4.9.3.</span> <span class="nav-text">施力矩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%BD%E4%BB%A5%E5%86%B2%E9%87%8F"><span class="nav-number">4.9.4.</span> <span class="nav-text">施以冲量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E-%E7%89%A9%E7%90%86%E6%AD%A5"><span class="nav-number">4.10.</span> <span class="nav-text">碰撞 &#x2F; 物理步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E5%90%88%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E%E8%87%B3%E6%B8%B8%E6%88%8F"><span class="nav-number">5.</span> <span class="nav-text">整合物理引擎至游戏</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%B8%B8%E6%88%8F%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%88%9A%E4%BD%93"><span class="nav-number">5.1.</span> <span class="nav-text">连接游戏对象和刚体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E9%A9%B1%E5%8A%A8%E7%9A%84%E5%88%9A%E4%BD%93"><span class="nav-number">5.1.1.</span> <span class="nav-text">物理驱动的刚体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E9%A9%B1%E5%8A%A8%E5%88%9A%E4%BD%93"><span class="nav-number">5.1.2.</span> <span class="nav-text">游戏驱动刚体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9A%E4%BD%93%E5%9B%BA%E4%BD%93"><span class="nav-number">5.1.3.</span> <span class="nav-text">刚体固体</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%A8%A1%E6%8B%9F"><span class="nav-number">5.2.</span> <span class="nav-text">更新模拟</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%9B%B4%E6%96%B0"><span class="nav-number">5.2.1.</span> <span class="nav-text">单线程更新</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="碰撞及刚体动力学 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          碰撞及刚体动力学
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-10 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-10T00:00:00+08:00">2022-03-10</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/10/reading/游戏引擎架构/2022-03-10-碰撞及刚体动力学/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>34 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="碰撞及刚体动力学">碰撞及刚体动力学</h1>
+<p><strong>碰撞检测系统（collision detection
+system）</strong>确保物体不会相互穿透，是任何游戏引擎的核心元件之一。而碰撞检测系统通常紧密地和<strong>物理引擎（physics
+engine）</strong>整合。当然，物理的范畴很广，在现游戏中所指的“物理”，更精确地说应该称为<strong>刚体动力学（rigid
+body dynamics）</strong>模拟。<strong>刚体（rigid
+body）</strong>是理想化，无限坚硬，不变形的固体物体。<strong>动力学（dynamics）</strong>是一个过程，计算刚体怎样在<strong>力（force）</strong>的影响下随时间<strong>移动</strong>及<strong>相互作用</strong>。</p>
+<h1 id="物理系统">物理系统</h1>
+<p>以下是一些物理系统可以做的事情</p>
+<ul>
+<li>检测动画物体和静态世界几何物体之间的碰撞。</li>
+<li>模拟在引力及其他力影响下的自由刚体。</li>
+<li>弹簧质点系统。</li>
+<li>可破坏的建筑物和结构。</li>
+<li>光线及形状的投射。</li>
+<li>触发体积（判断物体进入/离开游戏世界中定义的区域，或逗留在那些区域的时间）。</li>
+<li>容许角色拾起刚体。</li>
+<li>复杂机器（起重机，移动平台谜题等）</li>
+<li>陷阱（例如山崩和泥石）</li>
+<li>带有逼真悬挂系统的可驾驶工具。</li>
+<li>布娃娃式死亡。</li>
+<li>富动力的布娃娃，真实地混合传统动画及布娃娃物理。</li>
+<li>悬挂道具（水壶，项链，佩剑），半真实的头发/衣服移动。</li>
+<li>布料模拟。</li>
+<li>水面模拟及浮力。</li>
+<li>声音传播。</li>
+</ul>
+<h2 id="物理对游戏的影响">物理对游戏的影响</h2>
+<h3 id="对设计的影响">对设计的影响</h3>
+<ul>
+<li><strong>可预测性</strong>：若某事情必须每次都以某种方式发生，最好还是使用动画，而不需要逼动力学模拟确保每次产生相同的结果。</li>
+<li><strong>调校及控制</strong>：物理定律通常是不变的，调整物理参数的效果通常很不直观和很难可视化，要令一个角色向某个方向走，用调整力的方式比调整角色走路动画要难很多。</li>
+<li><strong>意外行为</strong>：有时候物理会产生游戏中预料之外的特征。</li>
+</ul>
+<h3 id="对工程的影响">对工程的影响</h3>
+<ul>
+<li><strong>工具管道</strong>：优良的碰撞/物理管道需要花长时间去建设和维护。</li>
+<li><strong>用户界面</strong>：玩家如何操控世界中的物理物体？能射击它们吗？能走进它们吗？能拾起它们吗？</li>
+<li><strong>碰撞检测</strong>：用于动力学模拟的碰撞模型，可能需要比非物理驱动的模型更细致，建模也需要更为谨慎。</li>
+<li><strong>人工智能</strong>：使用物理模拟的物体后，路径可能无法预测。</li>
+<li><strong>动画及动作角色</strong>：以动画驱动的物体可以轻微与另一个物体碰撞而不产生不良后果，但使用动力学模拟，物体可能会从另一个物体弹开，而且是以预料之外的形式，或产生严重的抖动。</li>
+<li><strong>布娃娃物理</strong>：布娃娃需要大量微调，而有时候会受模拟的不稳定所影响。</li>
+<li><strong>图形</strong>：物理驱动的动作或会影响可渲染物体的包围体积。</li>
+<li><strong>网络及多人</strong>：不影响游戏性的物理效果可以在客户端进行，影响的就需要在服务器上模拟，并将结果同步至客户端。</li>
+<li><strong>记录及重播</strong>：记录游戏过程及在稍后重播的能力，对除错/测试很有帮助，但也可以作为一个游戏功能。此功能在含有动力学模拟的游戏上更难实现，因为物理的混沌行为及物理更新的时间差异会导致重播结果与记录有所出入。</li>
+</ul>
+<h3 id="对美术的影响">对美术的影响</h3>
+<ul>
+<li><strong>额外的工具及工作流程复杂度</strong>：需要在物体中加入质量，摩擦力，约束，及其他动力学模拟的参数。</li>
+<li><strong>更复杂的内容</strong>：需要对一个物体建立多个不同用途的版本，每个版本含有不同的碰撞及动力学设置。</li>
+<li><strong>失控</strong>：物理驱动物体的不可预测性可能会令美术人员难以控制场景的艺术构图。</li>
+</ul>
+<h1 id="碰撞检测系统">碰撞检测系统</h1>
+<p>碰撞检测系统的主要用途在于，判断游戏世界中的物体有否<strong>接触（contact）</strong>。</p>
+<h2 id="可碰撞实体">可碰撞实体</h2>
+<p>若希望游戏中某逻辑对象需要和其他对象碰撞，我们需要为该对象提供一个<strong>碰撞表达式（collision
+representation）</strong>，以描述对象的形状及其在游戏世界的位置和定向。碰撞表达式是一个独特的数据结构，分离于对象的<strong>游戏性表达形式（gameplay
+representation）</strong>及<strong>视觉表达形式（visual
+representation）</strong>。</p>
+<h2 id="碰撞-物理世界">碰撞 / 物理世界</h2>
+<p>碰撞系统通常会通过一个名为<strong>碰撞世界（collision
+world）</strong>的数据结构，管理其所有的可碰撞实体。碰撞世界是专门为碰撞检测而设的游戏世界完整表达式。</p>
+<p>若游戏含有刚体动力学系统，该系统通常会紧密地与碰撞系统整合。动力学系统的“世界”数据解结构通常会与碰撞系统共享，模拟中每个刚体通常会关联至碰撞系统里的一个可碰撞体。因此，碰撞世界有时候称为<strong>碰撞
+/ 物理世界</strong>，或直接称为<strong>物理世界（physics
+world）</strong>。</p>
+<h2 id="形状的概念">形状的概念</h2>
+<p><strong>形状</strong>可以理解为一个由边界所指明的空间区域，能清楚界定形状的<strong>内外</strong>。有些游戏对象的类型，如地形，河流或者薄墙，最好以<strong>表面（surface）</strong>来表示。三维空间里，表面只有<strong>前后</strong>之分，没有内外之分。</p>
+<h3 id="相交">相交</h3>
+<p>两集合的交集是它们共有成员所组成的集合。</p>
+<h3 id="接触">接触</h3>
+<p>通常在游戏里我们没有兴趣追求严格意义上以点集表示的交集，我们只希望知道两个物体<strong>是否相交</strong>。碰撞事件发生的时候，碰撞系统通常会提供额外的关于接触性质的信息，里面一般会包含一个<strong>分离矢量（separating
+vector）</strong>，我们可以把物体沿这个矢量移动，就能高效地把物体脱离碰撞状态。</p>
+<h3 id="凸性">凸性</h3>
+<p>在碰撞检测的范畴里，需要分辨<strong>凸（convex）</strong>和<strong>非凸（non-convex）</strong>，或者是<strong>凹（concave）</strong>。</p>
+<h2 id="碰撞原型">碰撞原型</h2>
+<p>碰撞检测系统一般只会支持有限的形状类型，有些碰撞系统称其为<strong>碰撞原型（collision
+primitive）</strong>，因为这些形状可以作为基本组件构成更复杂的形状。</p>
+<h3 id="球体">球体</h3>
+<p><strong>球（sphere）</strong>体是最简单的三维体积。通过一个四元素浮点矢量表示。</p>
+<h3 id="胶囊体">胶囊体</h3>
+<p><strong>胶囊体（capsule）</strong>是药丸形状的体积，由一个圆柱体加上两端的半球所组成。胶囊体由两点和半径表示。</p>
+<h3 id="轴对齐包围盒">轴对齐包围盒</h3>
+<p><strong>轴对齐包围盒（axis-aligned bouding
+box，AABB）</strong>是一个矩形体积，六个面都与坐标系统的轴平行。AABB
+可以用两个点定义，一个点是三个主轴上最小的坐标，另一个则是最大的坐标。</p>
+<h3 id="定向包围盒">定向包围盒</h3>
+<p>若我们允许把轴对齐的盒子于其坐标系中旋转，便会得到<strong>定向包围盒（oriented
+bounding box，OBB）</strong>。OBB 通常会表示为 3
+个半尺寸（半宽，半长，半高）再加上一个变换。</p>
+<h3 id="离散定向多泡型">离散定向多泡型</h3>
+<p><strong>离散定向多泡型（discrete oriented
+polytope，DOP）</strong>是比 AABB 和 OBB 更泛化的形状。DOP
+是凸的泡型，用来逼近物体的形状。构建 DOP
+的方法之一是，把多个置于无穷远的平面依其法矢量滑动，直至与所需逼近的物体接触。另一个方法是，构建
+OBB，再把角或者边以 45° 切割，加入更多的平面视图做一个更紧密的逼近。</p>
+<h3 id="任意凸体积">任意凸体积</h3>
+<h3 id="多边形汤">多边形汤</h3>
+<p>有些碰撞系统也会支持完全任意，非凸的形状。这些形状通常是由三角形或其他简单多边形所构成。因此，这类形状通常称为<strong>多边形汤（polygon
+soup）</strong>。多边形汤常用于复杂的静态表面建模，如地形或建筑</p>
+<h2 id="碰撞测试及解释几何">碰撞测试及解释几何</h2>
+<p>碰撞系统应用到<strong>解释几何（analytical
+geometry）</strong>中三维体积及表面的数学描述，计算形状是否相交。</p>
+<h3 id="点与球体的相交">点与球体的相交</h3>
+<p>要判断点 <span class="math inline">\(\textbf{p}\)</span>
+是否在球体中，只需生成一个自球心至该点的分离矢量 <span
+class="math inline">\(\textbf{s}\)</span>，然后量度该矢量的长度。若大于球体半径，则在球体之外，否则在球体之内。</p>
+<p><span class="math display">\[
+\textbf{s} = \textbf{c} - \textbf{p} \\
+若 |\textbf{s}| \leq r，则 \textbf{p} 位于球体内
+\]</span></p>
+<h3 id="球体与球体的相交">球体与球体的相交</h3>
+<p>生成链接两个球心的分离矢量 <span
+class="math inline">\(\textbf{s}\)</span>，取其长度，与球的半径之和作比较。</p>
+<p><span class="math display">\[
+\textbf{s} = \textbf{c}_1 - \textbf{c}_2 \\
+若 |\textbf{s}| \leq (r_1 + r_2)，则两球体相交
+\]</span></p>
+<h3 id="分离轴定理">分离轴定理</h3>
+<p>多数碰撞检测系统都会大量使用<strong>分离轴定理（separating axis
+theorem）</strong>。此定理指出，若能找到一个轴，两个凸形状于该轴上的投影不重叠，就能确定两个形状不相交。若这样的轴不存在，并且那些形状是凸的，则可以确定两个形状相交。</p>
+<p>要检测 A 和 B
+两个形状是否相交，我们可以把这些形状逐一投影到各个潜在的分离轴，并检查两个投影区间
+<span class="math inline">\([c^A_\text{min}, c^A_\text{max}]\)</span> 和
+<span class="math inline">\([c^B_\text{min}, c^B_\text{max}]\)</span>
+是否相交。数学上说，只有当 <span class="math inline">\(c^A_\text{max}
+&lt; c^B_\text{min}\)</span> 或 <span
+class="math inline">\(c^B_\text{max} &lt; c^A_\text{min}\)</span>
+时，两个区间不相交。</p>
+<h3 id="aabb-与-aabb-的相交">AABB 与 AABB 的相交</h3>
+<p>使用分离轴定理即可，因为 AABB
+与三个坐标轴平行，所以分离轴必定为某个坐标轴之一。逐个检测即可。</p>
+<h3 id="检测凸碰撞gjk-算法">检测凸碰撞：GJK 算法</h3>
+<p>GJK 算法用于检测任意凸多胞形是否碰撞。</p>
+<aside>
+<p>💡 <strong>闵可夫斯基差（Minkowski difference）</strong>：把 A
+图形中的所有点，与 B 图形中的所有点成对相减，得出的集合 <span
+class="math inline">\(\{(\textbf{A}_i - \textbf{B}_j)\}\)</span>
+便是闵可夫斯基差。<strong>如果两个形状相交，其闵可夫斯基差会包含原点。</strong></p>
+</aside>
+<p>算法详情可以看<a
+target="_blank" rel="noopener" href="https://realtimecollisiondetection.net/pubs/SIGGRAPH04_Ericson_the_GJK_algorithm.ppt">这个
+ppt</a>。</p>
+<p>GJK
+算法可以处理所有凸形状之间的碰撞检测，而不同形状的唯一区别只在于算法所使用的的<strong>支持函数（support
+function）</strong>。</p>
+<h3 id="运动物体之间的碰撞">运动物体之间的碰撞</h3>
+<p>在游戏中，运动通常是以离散的时间步来模拟的，因此，简单的方法是在每个时间步中，将每个刚体的位置和定向当做是静止的，然后把静态相交测试施于这些碰撞世界的“快照”。<strong>然而，对于较小的高速移动物体，此方法将会失效</strong>。</p>
+<figure>
+<img src="/assets/images/2022-03-10-碰撞及刚体动力学/tunneling.png"
+alt="细小快速的物体移动时，其路径可能会在碰撞世界的连续快照中留下空隙，这意味着可能会完全错过碰撞，此现象称为隧穿（tunneling）" />
+<figcaption
+aria-hidden="true">细小快速的物体移动时，其路径可能会在碰撞世界的连续快照中留下空隙，这意味着可能会完全错过碰撞，此现象称为<strong>隧穿（tunneling）</strong></figcaption>
+</figure>
+<p>细小快速的物体移动时，其路径可能会在碰撞世界的连续快照中留下空隙，这意味着可能会完全错过碰撞，此现象称为<strong>隧穿（tunneling）</strong></p>
+<p><strong>扫掠形状（swept
+shape）</strong>是一个形状随时间从某点移动至另一点所形成的形状。扫掠球体是胶囊体，扫掠三角形则是一个三角柱体。使用扫掠形状可以避免隧穿。<strong>检测相交的时候，使用测试形状从上一个快照的位置及定向移动至当前快照所形成的的扫掠形状。</strong></p>
+<aside>
+<p>💡
+扫掠形状是有用的技术以确保碰撞不会在快照间错过，然而，若是沿着曲线路径进行线性插值，又或者涉及旋转的碰撞体，其测试结果一般是不准确的，所以可能要根据游戏所需使用更细密的技术。</p>
+</aside>
+<h2 id="性能优化">性能优化</h2>
+<p>碰撞检测是 CPU 密集的工作，原因有二：</p>
+<ul>
+<li>判断两个形状是否相交，所需的计算是非平凡的。</li>
+<li>多数游戏含有大量的物体，随物体数量的递增，所需的相交测试会迅速增长。</li>
+</ul>
+<h3 id="时间一致性">时间一致性</h3>
+<p><strong>时间一致性（temporal
+coherency）</strong>也称为<strong>帧间一致性（frame-to-frame
+coherency）</strong>。当碰撞物体以正常速率移动，在两时步中其位置及其定向通常会很接近，通过跨越多帧把结果缓存，我们可以避免每帧重新计算一些类型的信息。</p>
+<h3 id="空间划分">空间划分</h3>
+<p><strong>空间划分（space
+partitioning）</strong>的基本思路是将空间切割成较小的区域，以大幅降低需要做相交测试的碰撞体。例如八叉树，二元空间分割树，kd
+树，球体树等。</p>
+<h3 id="阶段划分">阶段划分</h3>
+<p>Havok 采用三阶段的方式，缩减每时步中所需检测的碰撞体集合。</p>
+<ul>
+<li><strong>粗略阶段（broad phase）</strong>：用粗略的 AABB
+测试判断哪些物体有机会碰撞。</li>
+<li><strong>中间阶段（midphase）：检测复合形状的逼近包围体。</strong></li>
+<li><strong>精确阶段（narrow
+phase）</strong>：测试碰撞体中的个别碰撞原型是否相交。</li>
+</ul>
+<h2 id="碰撞查询">碰撞查询</h2>
+<p>碰撞检测的另一个任务是回答有关游戏世界中碰撞体积的假想问题。</p>
+<ul>
+<li>若从玩家武器的某个方向射出子弹，若能集中目标，那目标是什么？</li>
+<li>汽车从 A 点移动到 B 点是否会碰到任何障碍物？</li>
+<li>找出玩家在给定半径范围内的所有敌人对象。</li>
+</ul>
+<p>这些操作称为<strong>碰撞查询（collision query）</strong>。</p>
+<h3 id="光线投射">光线投射</h3>
+<p>回答以下问题</p>
+<ul>
+<li>形状 A 能否“看到”形状 B？</li>
+<li>形状 A 最先能看到什么形状 B？</li>
+</ul>
+<p>光线投射（ray cast）通常以起点 <span
+class="math inline">\(\textbf{p}_0\)</span> 以及增量矢量 <span
+class="math inline">\(\textbf{d}\)</span>
+来描述，起点加上增量矢量后会得到终点 <span
+class="math inline">\(\textbf{p}_1\)</span>，此线段上的任何点都能在以下参数方程中求得</p>
+<p><span class="math display">\[
+\textbf{p}(t) = \textbf{p}_0 + t \textbf{d}, t \in [0, 1]
+\]</span></p>
+<p>多数碰撞系统可以回传<strong>最早的接触</strong>，即最接近 <span
+class="math inline">\(\textbf{p}_0\)</span>
+的接触点。有些系统也会传回与光线相交的所有接触点的完整列表。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">RayCastContact</span> &#123;</span><br><span class="line">    F32 <span class="type">m_t</span>; <span class="comment">// 此接触点的 t 值</span></span><br><span class="line">    U32 m_collidableId; <span class="comment">// 击中哪个可碰撞体？</span></span><br><span class="line">    Vector m_normal; <span class="comment">// 接触点的法矢量</span></span><br><span class="line">    <span class="comment">// 其他信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="形状投射">形状投射</h3>
+<p>回答以下问题</p>
+<ul>
+<li>形状 A 沿一有向线段移动多远才能碰到其他物体？</li>
+<li>判断虚拟摄像机是否和游戏世界中的物体碰撞。</li>
+<li></li>
+</ul>
+<p>投射一个凸形状时有两个情况要考虑</p>
+<ul>
+<li>投射形状已插入或接触到至少一个其他的碰撞体，因而阻止投射性状移动。</li>
+<li>投射性状在起点没有与其他碰撞体相交，因此可以自由地沿路径移动一段非零距离。</li>
+</ul>
+<figure>
+<img src="/assets/images/2022-03-10-碰撞及刚体动力学/contacts.png"
+alt="球体在开始投射的时候已经穿透其他物体，无法移动" />
+<figcaption
+aria-hidden="true">球体在开始投射的时候已经穿透其他物体，无法移动</figcaption>
+</figure>
+<p>球体在开始投射的时候已经穿透其他物体，无法移动</p>
+<figure>
+<img src="/assets/images/2022-03-10-碰撞及刚体动力学/contacts2.png"
+alt="球体还没有穿透其他物体，所以可以先沿着线段移动一段非零距离" />
+<figcaption
+aria-hidden="true">球体还没有穿透其他物体，所以可以先沿着线段移动一段非零距离</figcaption>
+</figure>
+<p>球体还没有穿透其他物体，所以可以先沿着线段移动一段非零距离</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ShapeCastContact</span> &#123;</span><br><span class="line">    F32 <span class="type">m_t</span>; <span class="comment">// 此接触点的 t 值</span></span><br><span class="line">  U32 m_collidableId; <span class="comment">// 击中哪个可碰撞体？</span></span><br><span class="line">    Point m_contactPoint; <span class="comment">// 实际接触点的位置</span></span><br><span class="line">    Vector m_normal; <span class="comment">// 接触点的法矢量</span></span><br><span class="line">    <span class="comment">// 其他信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="刚体动力学">刚体动力学</h1>
+<p>一直以来，游戏中几乎只关注动力学中的<strong>经典刚体动力学（classical
+rigid body
+dynamics）</strong>。此术语意味着在游戏物理模拟中，做了两个重要的简化假设。</p>
+<ul>
+<li><strong>经典（牛顿）力学</strong>：假设物体服从牛顿运动定律，物体足够大，不会产生量子效应，物体的速度足够低，不会产生相对性效应。</li>
+<li><strong>刚体</strong>：模拟物体是完美的固体，不会变形。</li>
+</ul>
+<h2 id="基础">基础</h2>
+<h3 id="单位">单位</h3>
+<p>多数刚体动力学模拟都会使用 MKS
+单位系统。此系统中，距离以米（meter，m）量度，质量以千克（kilogram，kg）量度，时间以秒（second，s）量度。</p>
+<h3 id="分离线性及旋转动力学">分离线性及旋转动力学</h3>
+<p><strong>无约束刚体（unconstrained rigid body）</strong>，是指可以在 3
+个笛卡尔轴上自由唯一，并绕这 3 个轴自由旋转的刚体。我们称这种刚体含 6
+个<strong>自由度（degree of freedom，DOF）</strong>。</p>
+<p>无约束刚体的运动可以分离为两个独立的部分。</p>
+<ul>
+<li><strong>线性动力学（linear
+dynamics）</strong>描述刚体旋转以外的运动。</li>
+<li><strong>旋转动力学（angular
+dynamics）</strong>描述刚体的旋转性运动。</li>
+</ul>
+<h3 id="质心">质心</h3>
+<p>无约束刚体的行为有如把所有其物质集中于一个点，此点称为质心（center of
+mass，CM / COM）。质心本质是刚体在所有定向的平衡点。</p>
+<p><span class="math display">\[
+\textbf{r}_\text{CM} = \frac{\sum_{\forall
+i}m_i\textbf{r}_i}{\sum_{\forall i}m_i} = \frac{\sum_{\forall
+i}m_i\textbf{r}_i}{m}
+\]</span></p>
+<p>对于凸刚体，质心位于刚体之内，凹刚体质心可能位于刚体之外。</p>
+<h2 id="线性动力学">线性动力学</h2>
+<h3 id="线性速度和加速度">线性速度和加速度</h3>
+<p>刚体的<strong>线性速度（linear
+velocity）</strong>定义了刚体质心的<strong>移动速度</strong>和<strong>方向</strong>。速度是位置对于时间的第一导数，可以写为</p>
+<p><span class="math display">\[
+\textbf{v}(t) = \frac{\text{d} \textbf{r}(t)}{\text{d}t} =
+\dot{\textbf{r}}(t)
+\]</span></p>
+<p>线性加速度是线性速度对于时间的第一导数，又等于刚体质心位置对于时间的第二导数。</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{a}(t) &amp;= \frac{\text{d} \textbf{v}(t)}{\text{d}t} =
+\dot{\textbf{v}}(t) \\
+&amp;= \frac{\text{d}^2\textbf{r}(t)}{\text{d} t^2} =
+\ddot{\textbf{r}}(t)
+\end{align}
+\]</span></p>
+<h3 id="力及动量">力及动量</h3>
+<p>力（force）定义为任何能使含质量物体加速或减速的东西。力含模（magnitude）及空间中的方向，因为力都以矢量表示。</p>
+<p>对刚体线性运动的净效应为那些力的矢量和</p>
+<p><span class="math display">\[
+\textbf{F}_\text{net} = \sum^N_{i=1} \textbf{F}_i
+\]</span></p>
+<p>牛顿第二定律</p>
+<p><span class="math display">\[
+\textbf{F}(t) = m\textbf{a}(t) = m\ddot{\textbf{r}}(t)
+\]</span></p>
+<p>当把刚体的线性速度和质量相乘，会得到线性动量（linear momentum）。</p>
+<p><span class="math display">\[
+\textbf{p}(t) = m\textbf{v}(t)
+\]</span></p>
+<p>当质量不是常数的时候，下面的公式才是正确的牛顿第二定律</p>
+<p><span class="math display">\[
+\textbf{F}(t) = \frac{\text{d}\textbf{p}(t)}{\text{d}t}
+\]</span></p>
+<h2 id="运动方程求解">运动方程求解</h2>
+<p>刚体动力学的中心问题是，给定一组施于刚体的已知力，对刚体的运动求解。</p>
+<h3 id="把力作为函数">把力作为函数</h3>
+<p>力可以是刚体位置，速度或其他多个变量的函数，广义上可以表达为</p>
+<p><span class="math display">\[
+\textbf{F}(t, \textbf{r}(t), \dot{\textbf{r}}(t), \cdots) =
+m\ddot{\textbf{r}}(t)
+\]</span></p>
+<h3 id="常微分方程">常微分方程</h3>
+<p>广义来说，<strong>常微分方程（ordinary differential
+equation，ODE）</strong>是涉及一个自变量的函数及多个该函数导数的方程。若自变量是时间，而该函数是
+<span class="math inline">\(x(t)\)</span>，那么一个 ODE
+是以下形式的关系</p>
+<p><span class="math display">\[
+\frac{\text{d}^n x}{\text{d}t^n} = f \Big( t, x(t),
+\frac{\text{d}x(t)}{\text{d}t},
+\frac{\text{d}^2 x(t)}{\text{d}t^2}, \cdots,
+\frac{\text{d}^{n-1}x(t)}{\text{d}t^{n-1}}  
+\Big)
+\]</span></p>
+<p>所以广义上的力学方程可以写为</p>
+<p><span class="math display">\[
+\ddot{\textbf{r}(t)} = \frac{1}{m}\textbf{F}(t, \textbf{r}(t),
+\dot{\textbf{r}}(t))
+\]</span></p>
+<h2 id="数值积分">数值积分</h2>
+<p>游戏中几乎无法得出方程的解释解，所以通常使用<strong>数值积分（numerical
+integration）</strong>。使用这种技术，我们能对微分方程以<strong>时步（time
+step）</strong>的方式求解。</p>
+<h3 id="显式欧拉">显式欧拉</h3>
+<p>对常微分方程最简单的数值求解方法之一是<strong>显式欧拉法（explicit
+Euler
+method）</strong>。假设在某一时刻我们得悉当前的速度，而我们希望对以下的常微分方程求解，以得到次帧的刚体位置：</p>
+<p><span class="math display">\[
+\textbf{v}(t) = \dot{\textbf{r}}(t)
+\]</span></p>
+<p>使用显式欧拉法，我们只需要简单把速度乘以时间步，然后把一帧所移动的距离加到当前位置上，就得到物体在次帧的位置。</p>
+<p><span class="math display">\[
+\textbf{r}(t_2) = \textbf{r}(t_1) + \textbf{v}(t_1) \Delta t
+\]</span></p>
+<p>类似的方法可以求次帧的速度</p>
+<p><span class="math display">\[
+\textbf{v}(t_2) = \textbf{v}(t_1) +
+\frac{\textbf{F}_\text{net}(t_1)}{m}\Delta t
+\]</span></p>
+<h3 id="韦尔莱积分">韦尔莱积分</h3>
+<p>显式欧拉法常出现于游戏中的简单积分工作，当速度接近常数时它能产生最好的结果。然而，通用的动力学模拟并不会使用显式欧拉法，因为此法误差又高，稳定性又低。现在，游戏中常用的常微分方程数值方法大概是<strong>韦尔莱积分（Verlet
+integration）</strong>。韦尔莱积分有两个变种，<strong>正常韦尔莱</strong>和<strong>速度韦尔莱</strong>。</p>
+<p>正常韦尔莱积分用往后的时间和往前的时间的泰勒级数求和得出。</p>
+<p><span class="math display">\[
+\begin{align*}
+\textbf{r}(t_1 + \Delta t) &amp;= \textbf{r}(t_1) +
+\dot{\textbf{r}}\Delta t + \frac{1}{2}\ddot{\textbf{r}}(t_1) \Delta t^2
++ \frac{1}{6}{\textbf{r}}^{&#39;&#39;&#39;}(t_1) \Delta t^3 + O(\Delta
+t^4) \\
+\textbf{r}(t_1 - \Delta t) &amp;= \textbf{r}(t_1) +
+\dot{\textbf{r}}\Delta t + \frac{1}{2}\ddot{\textbf{r}}(t_1) \Delta t^2
+- \frac{1}{6}{\textbf{r}}^{&#39;&#39;&#39;}(t_1) \Delta t^3 + O(\Delta
+t^4)
+\end{align*}
+\]</span></p>
+<p>两式相加消去相反的项可得正常的韦尔莱积分</p>
+<p><span class="math display">\[
+\textbf{r}(t_1 + \Delta t) = 2\textbf{r}(t_1) - \textbf{r}(t_1 - \Delta
+t) + \textbf{a}(t_1) \Delta t^2 + O(\Delta t^4)
+\]</span></p>
+<p>用合力表示，则可以写成</p>
+<p><span class="math display">\[
+\textbf{r}(t_1 + \Delta t) = 2\textbf{r}(t_1) - \textbf{r}(t_1 - \Delta
+t) + \frac{\textbf{F}_\text{net}(t_1)}{m} \Delta t^2 + O(\Delta t^4)
+\]</span></p>
+<p>速度韦尔莱用于计算经过一个时步的速度。</p>
+<h2 id="二维旋转动力学">二维旋转动力学</h2>
+<p>二维中，每个刚体可当做一块材料薄片。所有线性运动在 xy
+平面上发生，而所有旋转则是绕 z 轴发生。</p>
+<h3 id="角速度和加速度">角速度和加速度</h3>
+<p><strong>角速度（angular
+velocity）</strong>实际上是标量，应该叫“角速率”，角速度以标量函数 <span
+class="math inline">\(\omega(t)\)</span>
+标记，单位是弧度每秒（rad/s）。角速率是定向角度 <span
+class="math inline">\(\theta(t)\)</span> 对于时间的导数。</p>
+<p><span class="math display">\[
+\omega(t) = \frac{\text{d} \theta(t)}{\text{d}t} = \dot{\theta}(t)
+\]</span></p>
+<p><strong>角加速度（angular
+acceleration）</strong>是角速率的变化率。</p>
+<p><span class="math display">\[
+\alpha(t) = \frac{\text{d}\omega(t)}{\text{d}t} = \dot{\omega}(t) =
+\ddot{\theta}(t)
+\]</span></p>
+<h3 id="转动惯量">转动惯量</h3>
+<p>相当于质量，旋转动力学中有称为<strong>转动惯量（moment of
+inertia）</strong>的概念。就如质量代表改变点质量线性速度的难易程度一样，转动惯量是量度刚体在某轴上改变角速度的难易程度。</p>
+<h3 id="力矩">力矩</h3>
+<p>若某个力的施力线穿过刚体的质心，则该力仅产生线性运动，在其他情况下，该力除了产生线性运动，还会同时产生一个称为<strong>力矩（torque）</strong>的旋转力。</p>
+<p>我们把施力的位置表示为矢量 <span
+class="math inline">\(\textbf{r}\)</span>，此矢量是有质心延伸至施力点（也就是矢量
+<span class="math inline">\(\textbf{r}\)</span>
+位于<strong>刚体空间</strong>，该空间的原点位于质心），由力 <span
+class="math inline">\(\textbf{F}\)</span> 施于位置 <span
+class="math inline">\(\textbf{r}\)</span> 所产生的力矩 <span
+class="math inline">\(\textbf{N}\)</span> 为</p>
+<p><span class="math display">\[
+\textbf{N} = \textbf{r} \times \textbf{F}
+\]</span></p>
+<p>当两个或以上的力施于一个刚体的时候，可以把各个力矩求和。最后需要关心的是净力矩
+<span
+class="math inline">\(\textbf{N}_\text{net}\)</span>。力矩对于角加速率和转动惯量，有如力对于线加速度和质量</p>
+<p><span class="math display">\[
+\textbf{N}_z = I\alpha(t) = I\dot{\omega}(t) = I\ddot{\theta}(t)
+\]</span></p>
+<h2 id="三维旋转动力学">三维旋转动力学</h2>
+<p>刚体在三个坐标轴上的质量分布可以很不相同，不同轴的转动惯量会有所不同。在三维中，刚体的旋转质量由
+<span class="math inline">\(3 \times 3\)</span>
+矩阵表示，此矩阵称为<strong>惯性张量（inertia tensor）</strong>。</p>
+<p><span class="math display">\[
+\textbf{I} = \begin{bmatrix}
+I_{xx} &amp; I_{xy} &amp; I_{xz} \\
+I_{yx} &amp; I_{yy} &amp; I_{yz} \\
+I_{zx} &amp; I_{zy} &amp; I_{zz}
+\end{bmatrix}
+\]</span></p>
+<p>此矩阵主对角线上的元素 <span class="math inline">\(I_{xx}, I_{yy},
+I_{zz}\)</span>
+是刚体绕三个主轴的转动惯量。此矩阵的主对角线以外的元素称为<strong>惯量积（product
+of inertia）</strong>。</p>
+<h3 id="定向">定向</h3>
+<p>三维中的刚体定向可以用一个 <span class="math inline">\(3 \times
+3\)</span> 的旋转矩阵 <span class="math inline">\(\textbf{R}\)</span>
+或者一个四元数 <span class="math inline">\(q\)</span> 来表示。</p>
+<h3 id="角速度和角动量">角速度和角动量</h3>
+<p>三维中，角速度是一个矢量，可以看为以一个单位矢量 <span
+class="math inline">\(\textbf{u}\)</span>
+定义旋转轴，再乘以旋转平面上刚体的角速度标量 <span
+class="math inline">\(\omega_u = \dot{\theta}_u\)</span>，因此</p>
+<p><span class="math display">\[
+\boldsymbol{\omega}(t) = \boldsymbol{\omega}_u(t)\textbf{u}(t) =
+\dot{\boldsymbol{\theta}}_u(t)\textbf{u}(t)
+\]</span></p>
+<p>在无力矩情况下角速度矢量能改变的事实，说明角速度并不是守恒的，然而，另一个相关称为<strong>角动量（angular
+momentum）</strong>的量，在无力矩下仍维持不变，即角动量是守恒的。旋转动力学的角动量如同线性动力学的线性动量。</p>
+<p><span class="math display">\[
+\textbf{L}(t) = \textbf{I}\boldsymbol{\omega}(t)
+\]</span></p>
+<h2 id="碰撞响应">碰撞响应</h2>
+<p>当刚体相互碰撞的时候，动力学模拟必须采取步骤确保它们对碰撞做出真实的响应，并且确保它们永不在模拟完成之后处于相互穿插的状态，此为<strong>碰撞响应（collision
+response）</strong>。</p>
+<h3 id="能量">能量</h3>
+<p>当施力令刚体移动一段距离，称该力做了<strong>功（work）</strong>。功代表<strong>能量（energy）</strong>的改变。能量有两种形式：</p>
+<ul>
+<li><strong>刚体的势能（potential energy）<span
+class="math inline">\(V\)</span></strong>：仅仅来自其相对力场的位置而形成的能量。</li>
+<li><strong>刚体的动能（kinetic energy）<span
+class="math inline">\(T\)</span></strong>：代表该刚体相对于系统中其他刚体的能量。</li>
+</ul>
+<p><strong>由刚体形成的孤立系统，总能量 <span class="math inline">\(E =
+V + T\)</span> 是守恒量。</strong></p>
+<p>线性运动形成的能量可以写成</p>
+<p><span class="math display">\[
+T_\text{linear} = \frac{1}{2}mv^2 = \frac{1}{2} \textbf{p}\cdot
+\textbf{v}
+\]</span></p>
+<p>刚体旋转运动形成的动能为</p>
+<p><span class="math display">\[
+T_\text{angular} = \frac{1}{2} \textbf{L} \cdot \boldsymbol{\omega}
+\]</span></p>
+<h3 id="冲量碰撞响应">冲量碰撞响应</h3>
+<p>两个刚体在真实世界中碰撞，会产生一系列复杂的事件。刚体会被轻微压缩，然后反弹，改变其速度，并在过程中因为生成热和声音而损失一些能量。一个简化的定律称为<strong>无摩擦力下瞬时碰撞的牛顿恢复定律（Newton's
+law of restitution for instantaneous collisions with no
+friction）</strong>，此定律用于简化碰撞假设。</p>
+<ul>
+<li><strong>碰撞的力作用于无穷短的时间内</strong>，这个力转化为理想化的冲量（impulse），这样令物体在碰撞的时候瞬间改变速度。</li>
+<li><strong>物体表面上的接触点无摩擦力</strong>。这意味着碰撞时分离物体的冲量垂直于这两个表面。</li>
+<li><strong>刚体间的复杂分子下互动，可以由单个简单的恢复系数逼近</strong>，习惯上标记为
+<span class="math inline">\(\varepsilon\)</span>。当 <span
+class="math inline">\(\varepsilon = 1\)</span>
+时，碰撞是<strong>完全弹性（perfectly
+elastic）</strong>的，没有任何能量损失，当 <span
+class="math inline">\(\varepsilon = 0\)</span>
+时，碰撞是<strong>完全塑性（perfectly
+plastic）</strong>的，一起失去两个刚体的动能。</li>
+</ul>
+<p>所有碰撞基于动量守恒</p>
+<p><span class="math display">\[
+\textbf{p}_1 + \textbf{p}_2 = \textbf{p}_1&#39; + \textbf{p}_2&#39;
+\]</span></p>
+<p>动能也是守恒的</p>
+<p><span class="math display">\[
+\frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2 = \frac{1}{2}m_1 v_1&#39;^2
++ \frac{1}{2}m_2 v_2&#39;^2 + T_\text{lost}
+\]</span></p>
+<p>其中能量损失为 <span
+class="math inline">\(T_\text{lost}\)</span>，如果碰撞完全弹性，则 <span
+class="math inline">\(T_\text{lost}\)</span> 为
+0，否则带撇号的动能完全变为 0。</p>
+<p>要使用牛顿恢复定律进行碰撞决议，我们在两个刚体上施加理想化的<strong>冲量</strong>。冲量标记为
+<span
+class="math inline">\(\hat{\textbf{p}}\)</span>，假设没有摩擦力，冲量矢量必然与接触点上垂直于两个表面，换言之，<span
+class="math inline">\(\hat{\textbf{p}} =
+\hat{p}\textbf{n}\)</span>，其中 <span
+class="math inline">\(\textbf{n}\)</span>
+为垂直于两个表面的单位法矢量。两碰撞物体冲量方向相反，碰撞前后满足</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{p}_1&#39; &amp;= \textbf{p}_1 + \hat{\textbf{p}},
+&amp;~~~~~
+\textbf{p}_2&#39; &amp;= \textbf{p}_2 - \hat{\textbf{p}} \\
+m_1\textbf{v}_1&#39; &amp;= m_1\textbf{v}_1 + \hat{\textbf{p}},
+&amp;~~~~~
+m_2\textbf{v}_2&#39; &amp;= m_2\textbf{v}_2 - \hat{\textbf{p}} \\
+\textbf{v}_1&#39; &amp;= \textbf{v}_1 + \frac{\hat{p}}{m_1}\textbf{n},
+&amp;~~~~~
+\textbf{v}_2&#39; &amp;= \textbf{v}_2 - \frac{\hat{p}}{m_2}\textbf{n}
+\end{align}
+\]</span></p>
+<figure>
+<img src="/assets/images/2022-03-10-碰撞及刚体动力学/无摩擦力碰撞.png"
+alt="无摩擦力碰撞中，冲量作用于垂直于两表面接触点的直线，此直线以单位法矢量定义。" />
+<figcaption
+aria-hidden="true">无摩擦力碰撞中，冲量作用于垂直于两表面接触点的直线，此直线以单位法矢量定义。</figcaption>
+</figure>
+<p>无摩擦力碰撞中，冲量作用于垂直于两表面接触点的直线，此直线以单位法矢量定义。</p>
+<p>令两个刚体质心在碰撞前速度为 <span
+class="math inline">\(\textbf{v}_1, \textbf{v}_2\)</span>，碰撞后速度为
+<span class="math inline">\(\textbf{v}_1&#39;,
+\textbf{v}_2&#39;\)</span>，那么恢复系数 <span
+class="math inline">\(\varepsilon\)</span> 定义为</p>
+<p><span class="math display">\[
+\textbf{v}_2&#39; - \textbf{v}_1&#39; = \varepsilon(\textbf{v}_2 -
+\textbf{v}_1)
+\]</span></p>
+<p>对上述方程求解可得</p>
+<p><span class="math display">\[
+\hat{\textbf{p}} = \hat{p}\textbf{n} = \frac{(\varepsilon +
+1)(\textbf{v}_2 \cdot \textbf{n} - \textbf{v}_1 \cdot
+\textbf{n})}{\cfrac{1}{m_1}+\cfrac{1}{m_2}}
+\]</span></p>
+<h3 id="休止岛屿及休眠">休止，岛屿及休眠</h3>
+<p>当通过摩擦力，阻尼或其他方式削减模拟系统中的能量时，移动中的物体会最终停止。但在真实的计算中，多种因素会使得物体永远抖动不止，为了优化性能，多数物理引擎容许模拟中的动力学物体进入<strong>休眠（sleep）</strong>状态。这样可以令那些物体暂时撇除在模拟之外。</p>
+<p>可使用多种条件判断刚体是否满足休眠的资格。</p>
+<ul>
+<li>刚体受<strong>支持</strong>。刚体含有三个或者以上的接触点，能在引力或者其他施力下处于平冲状态。</li>
+<li>刚体的<strong>线性及角动量</strong>低于预设阈值。</li>
+<li><strong>线性及角动量的移动平均</strong>低于预设阈值。</li>
+<li>骨骼那题的<strong>总动能</strong>低于预设阈值。动能通常以质量归一化，从而可以不论质量大小把单个阈值用于所有物体。</li>
+<li>对于将休眠的刚体，可以<strong>逐渐减慢</strong>其运动，令它能平滑地停止而不是突然停止。</li>
+</ul>
+<h2 id="约束">约束</h2>
+<p>无约束的刚体有 6
+个自由度，它能在三个维度上平移，并能绕三个笛卡尔轴旋转。<strong>约束（constraint）</strong>限制了物体的运动，削减了部分或完整的
+DOF。</p>
+<h3 id="点对点约束">点对点约束</h3>
+<p><strong>点对点（point-to-point
+constraint）</strong>是最简单的约束类型，它的作用如同球窝关节，刚体中某个指定的点与其他刚体的指定点对齐。</p>
+<h3 id="刚性弹簧">刚性弹簧</h3>
+<p><strong>刚性弹簧约束（stiff spring
+constraint）</strong>很像点对点约束，区别是前者要保持两点分隔一段指定距离。</p>
+<h3 id="铰链约束">铰链约束</h3>
+<p><strong>铰链约束（hinge
+constraint）</strong>限制旋转运动只能绕铰链旋转。<strong>无限制铰链（unlimited
+hinge）</strong>如同轮轴，容许物体旋转无限个圈。而<strong>有限制铰链（limited
+hinge）</strong>令物体只能在预设的角度内绕轴旋转。</p>
+<h3 id="滑移铰">滑移铰</h3>
+<p><strong>滑移铰约束（prismatic
+constraint）</strong>的行为如活塞：受限的刚体运动只余一个平移自由度。滑移铰可选择容许或不容许刚体绕活塞的平移轴旋转。</p>
+<h3 id="布娃娃">布娃娃</h3>
+<p>布娃娃（ragdoll）是模拟人体在死亡或失去知觉时候的动作，即整个身体是瘫痪的。制作布娃娃的方法是，把一组刚体链接起来，每个刚体代表身体的半刚性部位。</p>
+<h2 id="控制刚体的运动">控制刚体的运动</h2>
+<p>刚体除了要自然地受引力影响移动，响应对场景中其他物体的碰撞，多数游戏设计师还会要求对刚体有某种程度的控制能力。</p>
+<h3 id="引力">引力</h3>
+<p>多数物理引擎会把引力加速度作为全局设置。</p>
+<h3 id="施力">施力</h3>
+<p>游戏物理模拟中的刚体可施以任意数量的力，施力总是在有限的时间区间中进行的。游戏中的力一般是动态的，这些力可以在每帧改变其方向及绝对值。因此，多数物理引擎的施力函数会设计为每帧调用一次，而力的持续影响时间也是在该帧之内。</p>
+<h3 id="施力矩">施力矩</h3>
+<p>当施力作用于刚体的质心，不会产生力矩，仅影响刚体的线性加速度。若力施于质心之外，就会同时产生线性及旋转加速度。此外，也能产生纯<strong>力矩（pure
+torque）</strong>，方法是在离质心相同距离的对点上施以相反的等额的力。这对力所产生的线性运动会相互抵消，只留下旋转效果。这种产生力矩的一对力，称为<strong>力偶（couple）</strong>。</p>
+<h3 id="施以冲量">施以冲量</h3>
+<p>技术上来说，冲量是无穷短时间内的施力，然而，基于时间步的动力模拟中，最短的持续时间为
+<span class="math inline">\(\Delta
+t\)</span>，而这不够小去充分模拟冲量。所以，多数物理引擎会直接提供函数来对刚体施于冲量。</p>
+<h2 id="碰撞-物理步">碰撞 / 物理步</h2>
+<p>每个碰撞 / 物理引擎都会在更新步时执行以下的基本工作。不同物理 SDK
+可能会以不同的次序执行这些工作阶段。</p>
+<ol type="1">
+<li>以 <span class="math inline">\(\Delta t\)</span>
+对施于物理世界刚体的力及力矩计算向前积分，求出次帧的暂定位置及定向。</li>
+<li>调用碰撞检测库，判断暂定移动是否有令物体间产生新的接触点。</li>
+<li>进行碰撞决议。常用的方法是使用冲量，惩罚性力，或作为以下约束求解的一部分。</li>
+<li>以约束求解程序满足约束条件。</li>
+</ol>
+<aside>
+<p>💡 <strong>约束求解程序（constraint
+solver）</strong>本质上是一个迭代算法，尝试<strong>最小化</strong>刚体在物理空间的实际位置
+/ 定向与约束所定义的理想位置 /
+定向的<strong>误差</strong>，以同时满足大量的约束。因此，约束求解程序本质上是迭代式误差最小化算法。</p>
+</aside>
+<h1 id="整合物理引擎至游戏">整合物理引擎至游戏</h1>
+<h2 id="连接游戏对象和刚体">连接游戏对象和刚体</h2>
+<p>一般来说，游戏对象在碰撞 / 物理系统中会表示为零或多个刚体。</p>
+<ul>
+<li><strong>零个刚体</strong>：在物理世界中不含刚体的游戏对象适当做固体的，因为他们完全没任何碰撞表示方式。</li>
+<li><strong>一个刚体</strong>：大多数简单游戏对象只需要由单个刚体表示。</li>
+<li><strong>多个刚体</strong>：有些复杂游戏对象是由碰撞 /
+物理世界中的多个刚体表示。比如 角色，机械，载具等。</li>
+</ul>
+<h3 id="物理驱动的刚体">物理驱动的刚体</h3>
+<p>若游戏中含有刚体动力学系统，那么有些对象会完全由模拟驱动。这些游戏对象称为<strong>物理驱动（physics-driven）</strong>对象。<strong>物理驱动刚体连接其游戏对象的方式，是通过步进模拟后，向物理系统查询刚体的位置和定向</strong>，之后，把这个变换施于整个游戏对象，或施于某个关节。</p>
+<h3 id="游戏驱动刚体">游戏驱动刚体</h3>
+<p>游戏世界的某些物体需要以非物理的方式移动，这种物体的运动可以由动画，样条路径或人类玩家所控制。我们通常希望这些物体参与碰撞检测，但不希望物理系统对这些物体有任何影响。为了支持这种物体，多数物理
+SDK 提供一种特别的刚体类型，称为<strong>游戏驱动刚体（game-driven
+body）</strong>。</p>
+<aside>
+<p>💡
+要在物理世界中移动游戏驱动刚体，我们不能简单地在每帧设置其位置及定向，以配合对应游戏对象的位置。这样回产生不连贯性，令物理模拟非常难求解。<strong>因此，通常会使用冲量移动游戏驱动刚体。冲量即速度瞬时改变，以时间向前积分就能令刚体在时步末时到达所需的位置。</strong></p>
+</aside>
+<h3 id="刚体固体">刚体固体</h3>
+<p>多数游戏世界是由静态几何物体和动态物体所组成的。为了模拟游戏世界的静态组件，多数物理
+SDK 会提供一种特别的刚体，称为固定<strong>刚体（fixed
+body）</strong>。固定刚体的行为有如游戏驱动刚体，但固定刚体并不参与动力学模拟。</p>
+<h2 id="更新模拟">更新模拟</h2>
+<p>物理模拟需要定期更新，通常每帧一次。以下是完整的更新物理模拟所需的步骤。</p>
+<ul>
+<li><strong>更新游戏驱动刚体</strong>：更新物理世界中所有游戏驱动刚体的变换，令这些变换匹配其相连的游戏世界中的对象。</li>
+<li><strong>更新 phantom</strong>：每个 phantom
+形状的行为，如同欠缺刚体的游戏驱动碰撞体。</li>
+<li><strong>施以力，冲量，并调整约束</strong>：更新游戏正在施行的力。本帧所发生的的游戏事件，其产生的冲量也在此施行。按需调整约束。</li>
+<li><strong>步进模拟</strong>：定期更新碰撞及物理引擎。包括
+<ul>
+<li>对运动方程进行数值积分，求出所有刚体的次帧物理状态。</li>
+<li>执行碰撞检测算法，以求出物理世界中要求增加或删减的刚体接触。</li>
+<li>碰撞决议。</li>
+<li>施行约束。</li>
+</ul></li>
+<li><strong>更新物理驱动的游戏对象</strong>：从物理世界中获取物理驱动物体的变换，然后用这些变换更新相对的游戏对象或关节。</li>
+<li><strong>phantom 查询</strong>：在物理步进之后，读取 phantom
+形状的接触信息，做出游戏中的决定。</li>
+<li><strong>执行碰撞投射查询</strong>：已同步或异步的方式启动光线及形状投射。</li>
+</ul>
+<h3 id="单线程更新">单线程更新</h3>
+<p>非常简单的游戏循环如下所示。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">F32 dt = <span class="number">1.0f</span> / <span class="number">30.0f</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    g_hidManager-&gt;<span class="built_in">poll</span>();</span><br><span class="line"></span><br><span class="line">    g_gameObjectManager-&gt;**preAnimationUpdate**(dt);</span><br><span class="line">    g_animationEngine-&gt;<span class="built_in">updateAnimations</span>(dt);</span><br><span class="line">    g_gameObjectManager-&gt;**postAnimationUpdate**(dt);</span><br><span class="line">    **g_physicsWorld**-&gt;**step**(dt);</span><br><span class="line">    g_animationEngine-&gt;<span class="built_in">pudateRagDolls</span>(dt);</span><br><span class="line">    g_gameObjectManager-&gt;**postPhysicsUpdate**(dt);</span><br><span class="line">    g_animationEngine-&gt;<span class="built_in">finalize</span>();</span><br><span class="line"></span><br><span class="line">    g_effectManager-&gt;<span class="built_in">update</span>(dt);</span><br><span class="line">    g_audioEngine-&gt;<span class="built_in">update</span>(dt);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    g_renderManager-&gt;<span class="built_in">render</span>();</span><br><span class="line">    dt = <span class="built_in">calcDeltaTime</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>游戏驱动刚体的位置通常于 <code>preAnimationUpdate()</code> 或
+<code>postAnimationUpdate()</code> 中更新。</li>
+<li>物理驱动刚体的位置通常在 <code>postPhysicsUpdate()</code>
+中被读取。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/" title="碰撞及刚体动力学">https://aquietzero.github.io/2022/03/10/reading/游戏引擎架构/2022-03-10-碰撞及刚体动力学/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" rel="prev" title="动画系统">
+                  <i class="fa fa-angle-left"></i> 动画系统
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/11/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-11-%E6%B8%B8%E6%88%8F%E6%80%A7%E7%B3%BB%E7%BB%9F/" rel="next" title="游戏性系统">
+                  游戏性系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

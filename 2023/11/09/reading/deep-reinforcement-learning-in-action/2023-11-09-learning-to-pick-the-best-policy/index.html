@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="A Q-network takes a state and returns Q values (action values) for each action. We can use those action values to decide which actions to take.  If we skip selecting a policy on top of the DQN and ins">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning to pick the best policy: Policy gradient methods">
+<meta property="og:url" content="https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="A Q-network takes a state and returns Q values (action values) for each action. We can use those action values to decide which actions to take.  If we skip selecting a policy on top of the DQN and ins">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/","path":"2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/","title":"Learning to pick the best policy: Policy gradient methods"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Learning to pick the best policy: Policy gradient methods | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#policy-function-using-neural-networks"><span class="nav-number">1.</span> <span class="nav-text">Policy function using
+neural networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#neural-network-as-the-policy-function"><span class="nav-number">1.1.</span> <span class="nav-text">Neural network as the
+policy function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stochastic-policy-gradient"><span class="nav-number">1.2.</span> <span class="nav-text">Stochastic policy gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exploration"><span class="nav-number">1.3.</span> <span class="nav-text">Exploration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reinforcement-good-actions-the-policy-gradient-algorithm"><span class="nav-number">2.</span> <span class="nav-text">Reinforcement
+good actions: The policy gradient algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#defining-an-objective"><span class="nav-number">2.1.</span> <span class="nav-text">Defining an objective</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#action-reinforcement"><span class="nav-number">2.2.</span> <span class="nav-text">Action reinforcement</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#log-probability"><span class="nav-number">2.3.</span> <span class="nav-text">Log probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#credit-assignment"><span class="nav-number">2.4.</span> <span class="nav-text">Credit assignment</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-reinforce-algorithm"><span class="nav-number">3.</span> <span class="nav-text">The REINFORCE algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#creating-the-policy-network"><span class="nav-number">3.1.</span> <span class="nav-text">Creating the policy network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#having-the-agent-interact-with-the-environment"><span class="nav-number">3.2.</span> <span class="nav-text">Having the agent
+interact with the environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-the-model"><span class="nav-number">3.3.</span> <span class="nav-text">Training the model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#calculate-the-probability-of-the-action"><span class="nav-number">3.3.1.</span> <span class="nav-text">Calculate the
+probability of the action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#calculating-future-rewards"><span class="nav-number">3.3.2.</span> <span class="nav-text">Calculating future rewards</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#the-loss-function"><span class="nav-number">3.3.3.</span> <span class="nav-text">The loss function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#back-propagating"><span class="nav-number">3.3.4.</span> <span class="nav-text">Back-propagating</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Learning to pick the best policy: Policy gradient methods | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Learning to pick the best policy: Policy gradient methods
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-11-09 00:00:00" itemprop="dateCreated datePublished" datetime="2023-11-09T00:00:00+08:00">2023-11-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>A Q-network takes a state and returns Q values (action values) for
+each action. We can use those action values to decide which actions to
+take.</p>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/q-network.png" /></p>
+<p>If we skip selecting a policy on top of the DQN and instead train a
+neural network to output an action directly, the network ends up being a
+<strong>policy function</strong>, or a <strong>policy
+network</strong>.</p>
+<h1 id="policy-function-using-neural-networks">Policy function using
+neural networks</h1>
+<p>Instead of training a network that outputs action values, we will
+train a network to output (the probability of) actions.</p>
+<h2 id="neural-network-as-the-policy-function">Neural network as the
+policy function</h2>
+<p>In contrast to a Q-network, a policy network tells us exactly what to
+do given the state we’re in. All we need to do is randomly sample from
+the probability distribution <span
+class="math inline">\(P(A|S)\)</span>, and we get an action to take.</p>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/policy-network.png" /></p>
+<p>A policy network is a function that takes a state and returns a
+probability distribution over the possible actions.</p>
+<p>Policy gradient methods offer a few advantages over value prediction
+methods like DQN.</p>
+<ul>
+<li>We no longer have to worry about devising an action-selection
+strategy like epsilon-greedy; instead, we directly sample actions from
+the policy.</li>
+<li>In order to improve the stability of training DQN, we had to use
+experience replay and target networks. A policy network tends to
+simplify some of that complexity.</li>
+</ul>
+<h2 id="stochastic-policy-gradient">Stochastic policy gradient</h2>
+<p>A stochastic policy function. A policy function accepts a state and
+returns a probability distribution over actions. It is stochastic
+because it returns a probability distribution over actions rather than
+returning a deterministic, single action.</p>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/policy-gradient.png" /></p>
+<p>If the environment is stationary, which is when the distribution of
+states and rewards is constant, and we use a deterministic strategy,
+we’d expect the probability distribution to eventually converge to a
+<strong>degenerate probability distribution</strong>.</p>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/policy-gradient-degenerate.png" /></p>
+<p>Early in training we want the distribution to be fairly uniform so
+that we can maximize exploration, but over the course of training we
+want the distribution to converge on the optimal actions, given a
+state.</p>
+<h2 id="exploration">Exploration</h2>
+<p>Since in stochastic policy gradient methods, the output is a
+probability distribution, there should be a small chance that we explore
+all spaces.</p>
+<p><strong>Building a notion of uncertainty into the models is generally
+a good thing.</strong></p>
+<h1
+id="reinforcement-good-actions-the-policy-gradient-algorithm">Reinforcement
+good actions: The policy gradient algorithm</h1>
+<h2 id="defining-an-objective">Defining an objective</h2>
+<p>With a policy network, we’re predicting actions directly, and there
+is not way to come up with a target vector of actions we should have
+taken instead, given the rewards. All we know is whether the action led
+to positive or negative rewards. <strong>In fact, what the best action
+is secretly depends on a value function, but with a policy network we’re
+trying to avoid computing these action values directly.</strong></p>
+<p>Keep using the policy network to generate action distribution, then
+select action until the end of an episode. We have a series of
+experience tuples.</p>
+<p><span class="math display">\[
+\varepsilon = (S_0, A_0, R_1), (S_1, A_1, R_2), \dots, (S_{t-1},
+A_{t-1}, R_t)
+\]</span></p>
+<p>If the reward is good, then the actions must have been “good” to some
+degree. Given the states we were in, <strong>we should encourage our
+policy network to make those actions more likely next time. We want to
+reinforce those actions that led to a nice positive reward.</strong></p>
+<h2 id="action-reinforcement">Action reinforcement</h2>
+<p>The probability of an action, given the parameters of the policy
+network, is denoted <span
+class="math inline">\(\pi_s(a|\theta)\)</span>.</p>
+<aside>
+<p>💡 This means we have some function that takes a parameter <span
+class="math inline">\(\theta\)</span> and returns a probability
+distribution over some other parameter <span
+class="math inline">\(a\)</span>.</p>
+</aside>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/action-reinforcement.png" /></p>
+<p>Once an action is sampled from the policy network’s probability
+distribution, it produces a new state and reward. The reward signal is
+used to reinforce the action that was taken, that is, it increases the
+probability of that action given the state if the reward is positive, or
+it decreases the probability if the reward is negative. <em>Notice that
+we only received information about action 3 (element 4), but since the
+probabilities must sum to 1, we have to lower the probabilities of the
+other actions.</em></p>
+<h2 id="log-probability">Log probability</h2>
+<p>The probabilities are bounded by 0 and 1 by definition, so the range
+of values that the optimizer can operate over is limited and small.
+Sometimes probabilities may be extremely tiny or very close to 1, and
+this runs into numerical issues when optimizing on a computer with
+limited numerical precision. If we use a surrogate objective, <span
+class="math inline">\(-\log \pi_s(a|\theta)\)</span>, we have an
+objective that has a larger “dynamic range” than raw probability space
+and this makes the log probability easier to compute.</p>
+<h2 id="credit-assignment">Credit assignment</h2>
+<p>The last action right before the reward deserves more credit for
+winning the game than does the first action in the episode. Our
+confidence in how “good” each action is diminishes the further we are
+from the point of reward. This is the problem of <strong>credit
+assignment</strong>.</p>
+<p>The final objective function that we will tell PyTorch to minimize is
+<span class="math inline">\(-\gamma_t G_t\log \pi_s(a|\theta)\)</span>,
+where <span class="math inline">\(\gamma_t\)</span> is the
+<strong>discount factor</strong>. The parameter <span
+class="math inline">\(G_t\)</span> is the total return. It is the return
+we expect to collect from time step <span
+class="math inline">\(t\)</span> until the end of the episode, and it
+can be approximated by adding the rewards from some state in the episode
+until the end of the episode.</p>
+<p><span class="math display">\[
+G_t = r_t + r_{t+1} + \cdots + r_T
+\]</span></p>
+<p>The discount is exponentially decayed from <span
+class="math inline">\(1\)</span>, <span class="math inline">\(\gamma_t =
+\gamma_0^{T - t}\)</span>. For example, if the agent is in state <span
+class="math inline">\(S_0\)</span> and it takes action <span
+class="math inline">\(a_1\)</span> and receives reward <span
+class="math inline">\(r_{t+1} = -1\)</span>, the target update will be
+<span class="math inline">\(-\gamma^0(-1)\log \pi(a_1 | \theta, S_0) =
+\log \pi(a_1 | \theta, S_0)\)</span>.</p>
+<p><img
+src="/assets/images/2023-11-09-learning-to-pick-the-best-policy/credit-assignment.png" /></p>
+<p>A string diagram for training a policy network for Grid world. The
+policy network is a neural network parameterized by <span
+class="math inline">\(\theta\)</span> (the weights) that accepts a
+64-dimensional vector for an input state. It produces a discrete
+4-dimensional probability distribution over the actions. The sample
+action box samples an action from the distribution and produces an
+integer as the action, which is given to the environment (to produce a
+new state and reward) and to the loss function so we can reinforce that
+action. The reward signal is also fed into the loss function, which we
+attempt to minimize with respect to the policy network parameters.</p>
+<h1 id="the-reinforce-algorithm">The REINFORCE algorithm</h1>
+<p>Policy gradient focused on a particular algorithm that has been
+around for decades called REINFORCE.</p>
+<h2 id="creating-the-policy-network">Creating the policy network</h2>
+<p>The policy network is a neural network that takes state vectors as
+inputs, and it will produce a probability distribution over the possible
+actions.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">l1 = <span class="number">4</span>   <span class="comment"># size of state space is 4</span></span><br><span class="line">l2 = <span class="number">150</span> <span class="comment"># hidden layer</span></span><br><span class="line">l3 = <span class="number">2</span>   <span class="comment"># size of action space</span></span><br><span class="line"></span><br><span class="line">model = torch.nn.Sequential(</span><br><span class="line">    torch.nn.Linear(l1, l2),</span><br><span class="line">    torch.nn.LeakyReLU(),</span><br><span class="line">    torch.nn.Linear(l2, l3),</span><br><span class="line">    torch.nn.Softmax()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">learning_rate = <span class="number">0.0009</span></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)</span><br></pre></td></tr></table></figure>
+<h2 id="having-the-agent-interact-with-the-environment">Having the agent
+interact with the environment</h2>
+<p>The agent consumes the state and takes an action, <span
+class="math inline">\(a\)</span>, probabilistically. The state is input
+to the policy network, which then produces the probability distribution
+over the actions <span class="math inline">\(P(A|\theta, S_t)\)</span>
+given its current parameters and the state.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pred = model(torch.from_numpy(state1).<span class="built_in">float</span>())</span><br><span class="line">action = np.random.choice(np.array([<span class="number">0</span>, <span class="number">1</span>]), p=pred.data.numpy())</span><br><span class="line">state2, reward, terminated, truncated, info = env.step(action)</span><br></pre></td></tr></table></figure>
+<h2 id="training-the-model">Training the model</h2>
+<p>We train the policy network by updating the parameters to minimize
+the objective function, this involves three steps:</p>
+<ol type="1">
+<li>Calculate the probability of the action actually taken at each time
+step.</li>
+<li>Multiply the probability by the discounted return (the sum of
+rewards).</li>
+<li>Use this probability-weighted return to backpropagate and minimize
+the loss.</li>
+</ol>
+<h3 id="calculate-the-probability-of-the-action">Calculate the
+probability of the action</h3>
+<p>We can use the stored past transitions to recompute the probability
+distributions using the policy network, <em>but this time we extract
+just the predicted probability for the action that was actually
+taken.</em> This quantity is denoted as <span
+class="math inline">\(P(a_t|\theta, s_t)\)</span>. This is a single
+probability value.</p>
+<p>To be concrete, let’s say the current state is <span
+class="math inline">\(S_5\)</span>. We input that into the policy
+network and it returns <span class="math inline">\(P_\theta(A|s_5) =
+[0.25, 0.75]\)</span>. We sample from this distribution and taken action
+<span class="math inline">\(a = 1\)</span>, and after this the pole
+falls over and the episode has ended. The total duration of the episode
+was <span class="math inline">\(T = 5\)</span>. For each of these 5 time
+steps, we took an action according to <span
+class="math inline">\(P_\theta(A|s_t)\)</span> and <em>we stored the
+specific probabilities of the actions that were actually taken, <span
+class="math inline">\(P_\theta(a|s_t)\)</span> in an array</em>, which
+might look like <span class="math inline">\([0.5, 0.3, 0.25, 0.5,
+0.75]\)</span>. We simply multiply these probabilities by the discounted
+rewards, take the sum, multiply by -1, and call that our overall loss
+for this episode.</p>
+<aside>
+<p>💡 Unlike Gridworld, in CartPole the last action is the one that
+loses the episode; we discount it the most since we want to penalize the
+worst move the most.</p>
+</aside>
+<p>Minimizing this object function will tend to increase those
+probabilities <span class="math inline">\(P_\theta(a | s_t)\)</span>
+weighted by the discounted rewards. <strong>Since probabilities must sum
+to 1, if we increase the probability of a good action, that will
+automatically steal probability mass from the other presumably less good
+actions.</strong></p>
+<h3 id="calculating-future-rewards">Calculating future rewards</h3>
+<p>In the CartPole environment, if the episode lasted 5 time steps, the
+return array would be <span class="math inline">\([5, 4, 3, 2,
+1]\)</span>. This makes sense because our first action should be
+rewarded the most, since it is the least responsible for the pole
+falling and losing the episode. To compute the discounted rewards, we
+can multiply the return array by discounted factors <span
+class="math inline">\([1, \gamma, \gamma^2, \gamma^3,
+\gamma^4]\)</span>.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">discount_rewards</span>(<span class="params">rewards, gamma=<span class="number">0.99</span></span>):</span><br><span class="line">    lenr = <span class="built_in">len</span>(rewards)</span><br><span class="line">    disc_return = torch.<span class="built_in">pow</span>(gamma, torch.arange(lenr).<span class="built_in">float</span>()) * rewards</span><br><span class="line">    <span class="comment"># normalize rewards to be within [0, 1] to improve numerical stability</span></span><br><span class="line">    disc_return /= disc_return.<span class="built_in">max</span>()</span><br><span class="line">    <span class="keyword">return</span> disc_return</span><br></pre></td></tr></table></figure>
+<h3 id="the-loss-function">The loss function</h3>
+<p>The loss function is defined as above by the negative log-probability
+function. In PyTorch, this is defined as
+<code>-1 * torch.sum(r * torch.log(preds))</code>. We compute the loss
+with the data we’ve collected for the episode, and run the
+<code>torch</code> optimizer to minimize the loss.</p>
+<p>The reason for this normalization step is to improve the learning
+efficiency and stability, since it keeps the return values within the
+same range no matter how big the raw return is.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">loss_fn</span>(<span class="params">preds, r</span>):</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span> * torch.<span class="built_in">sum</span>(r * torch.log(preds))</span><br></pre></td></tr></table></figure>
+<h3 id="back-propagating">Back-propagating</h3>
+<p>Since we have all the variables in our objective function, we can
+calculate the loss and backpropagate to adjust the parameters.</p>
+<h1 id="summary">Summary</h1>
+<p>REINFORCE is an effective and very simple way of training a policy
+function, but it’s a little too simple. If we’re dealing with an
+environment with many more possible actions, reinforcing all of them
+each episode and hoping that on average it will only reinforce the good
+actions becomes less and less reliable.</p>
+<ul>
+<li><strong>Probability</strong> is a way of assigning degrees of belief
+about different possible outcomes in an unpredictable process. Each
+possible outcome is assigned a probability in the interval <span
+class="math inline">\([0, 1]\)</span> such that all probabilities for
+all outcomes sum to 1. If we believe a particular outcome is more likely
+than another, we assign it a higher probability. If we receive new
+information, we can change our assignments of probabilities.</li>
+<li><strong>Probability distribution</strong> is the full
+characterization of assigned probabilities to possible outcomes. A
+probability distribution can be thought of as a function <span
+class="math inline">\(P: O \to [0, 1]\)</span> that maps all possible
+outcomes to a real number in the interval <span
+class="math inline">\([0, 1]\)</span> such that the sum of this function
+over all outcomes is 1.</li>
+<li>A <strong>degenerate probability distribution</strong> is a
+probability distribution in which only 1 outcome is possible (i.e., it
+has probability of 1, and all other outcomes have a probability of
+0).</li>
+<li><strong>Conditional probability</strong> is the probability assigned
+to an outcome, assuming you have some additional information (the
+information that is conditioned).</li>
+<li>A <strong>policy</strong> is a function, <span
+class="math inline">\(\pi: S \to A\)</span>, that maps states to actions
+and is usually implemented as a probabilistic function, <span
+class="math inline">\(\pi: P(A|S)\)</span>, that creates a probability
+distribution over actions given a state.</li>
+<li>The <strong>return</strong> is the sum of discounted rewards in an
+episode of the environment.</li>
+<li>A <strong>policy gradient method</strong> **is a reinforcement
+learning approach that tries to directly learn a policy by generally
+using a parameterized function as a policy function (e.g., a neural
+network) and training it to increase the probability of actions based on
+the observed rewards.</li>
+<li><strong>REINFORCE</strong> is the simplest implementation of a
+policy gradient method; it essentially maximizes the probability of an
+action times the observed reward after taking that action, such that
+each action’s probability (given a state) is adjusted according to the
+size of the observed reward.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/" title="Learning to pick the best policy: Policy gradient methods">https://aquietzero.github.io/2023/11/09/reading/deep-reinforcement-learning-in-action/2023-11-09-learning-to-pick-the-best-policy/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/29/notebooks/2023-10-29-gridworld-with-deep-q/" rel="prev" title="使用深度 Q 网络求解 GridWorld">
+                  <i class="fa fa-angle-left"></i> 使用深度 Q 网络求解 GridWorld
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/12/reading/deep-reinforcement-learning-in-action/2023-11-12-tackling-more-complex-problems-with-actor-critic-methods/" rel="next" title="Tackling more complex problems with actor-critic methods">
+                  Tackling more complex problems with actor-critic methods <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

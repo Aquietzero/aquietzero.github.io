@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Several geometrical features may cause problems for collision detection code, including the following.  Redundant vertices, edges, and faces Degenerate faces, including nonconvex or self-intersecting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Geometrical Robustness">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Several geometrical features may cause problems for collision detection code, including the following.  Redundant vertices, edges, and faces Degenerate faces, including nonconvex or self-intersecting">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.531Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/","path":"2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/","title":"Geometrical Robustness"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Geometrical Robustness | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vertex-welding"><span class="nav-number">1.</span> <span class="nav-text">Vertex Welding</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#computing-adjacency-information"><span class="nav-number">2.</span> <span class="nav-text">Computing Adjacency
+Information</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#computing-a-vertex-to-face-table"><span class="nav-number">2.1.</span> <span class="nav-text">Computing a Vertex-to-Face
+Table</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computing-an-edge-to-face-table"><span class="nav-number">2.2.</span> <span class="nav-text">Computing an Edge-to-Face
+Table</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#holes-crack-gaps-and-t-junctions"><span class="nav-number">3.</span> <span class="nav-text">Holes, Crack, Gaps, and
+T-junctions</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Geometrical Robustness | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Geometrical Robustness
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-14 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-14T00:00:00+08:00">2022-04-14</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Several geometrical features may cause problems for collision
+detection code, including the following.</p>
+<ul>
+<li>Redundant vertices, edges, and faces</li>
+<li>Degenerate faces, including nonconvex or self-intersecting faces and
+faces of zero or near-zero area</li>
+<li>Incorrect orientation of single-sided faces</li>
+<li>Unintended holes, cracks, gaps, and t-junctions between neighboring
+faces</li>
+<li>Nonplanar faces</li>
+</ul>
+<p>Possible approaches to solve the problem.</p>
+<ul>
+<li>Welding of vertices</li>
+<li>Fixing of cracks between neighboring faces</li>
+<li>Merging co-planar faces into a single face</li>
+<li>Decomposition into convex (possibly triangular) pieces</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/turning-polygon-into-robust-mesh.png"
+alt="The key steps in turning a polygon soup into a well-formed robust mesh: vertex welding, t-junction removal, merging of co-planar faces, and decomposition into convex pieces." />
+<figcaption aria-hidden="true">The key steps in turning a polygon soup
+into a well-formed robust mesh: vertex welding, t-junction removal,
+merging of co-planar faces, and decomposition into convex
+pieces.</figcaption>
+</figure>
+<p>The key steps in turning a polygon soup into a well-formed robust
+mesh: vertex welding, t-junction removal, merging of co-planar faces,
+and decomposition into convex pieces.</p>
+<h1 id="vertex-welding">Vertex Welding</h1>
+<p>Collision geometry suffers from being built from polygons whose
+vertices should have been joined but were not. These duplicate
+representations of a single vertex cause cracks between polygons.</p>
+<ul>
+<li>Cause ray tests to pass through what was supposed to be solid
+geometry.</li>
+<li>Ruin the possiblity of maintaining adjacency information between
+neighboring faces.</li>
+<li>Take up unnecessary space.</li>
+</ul>
+<p>Vertices are considered near when they are within some preset
+distance of each other, called the <strong>welding tolerance</strong> or
+the welding epsilon. The space within the welding tolerance of a vertex
+is the <strong>welding neighborhood</strong> of the vertex.</p>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/welding-tolerance.png"
+alt="The welding tolerance must be set appropriately. (a) Too small, and some vertices that should be included in the welding operation could be missed. (b) Too large, and vertices that should not be part of the welding operation could be erroneously included. Arrows indicate vertices incorrectly handled during the respective welding operations." />
+<figcaption aria-hidden="true">The welding tolerance must be set
+appropriately. (a) Too small, and some vertices that should be included
+in the welding operation could be missed. (b) Too large, and vertices
+that should not be part of the welding operation could be erroneously
+included. Arrows indicate vertices incorrectly handled during the
+respective welding operations.</figcaption>
+</figure>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/different-outcomes.png"
+alt="Different outcomes from alternative methods for welding a set of points mutually within the welding tolerance distance." />
+<figcaption aria-hidden="true">Different outcomes from alternative
+methods for welding a set of points mutually within the welding
+tolerance distance.</figcaption>
+</figure>
+<h1 id="computing-adjacency-information">Computing Adjacency
+Information</h1>
+<p>A common geometry representation is the face table representation in
+which a table of faces indexes into a table of vertices.</p>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/adjacent-info.png"
+alt="The face and vertex tables for a simple mesh." />
+<figcaption aria-hidden="true">The face and vertex tables for a simple
+mesh.</figcaption>
+</figure>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/adjacent-info-2.png"
+alt="Adjacency information associated with each vertex, edge, and face facilitates instantaneous access to their adjacent vertices, edges, and faces." />
+<figcaption aria-hidden="true">Adjacency information associated with
+each vertex, edge, and face facilitates instantaneous access to their
+adjacent vertices, edges, and faces.</figcaption>
+</figure>
+<p>Having full adjacency information allows retrieval of all adjacent
+vertices, edges, and faces of a given vertex, edge, or face in constant
+<span class="math inline">\(O(1)\)</span> time.</p>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/adjacent-info-3.png"
+alt="Data associated with (a) the winged-edge E, (b) the half-edge H, and (c) the winged-triangle T." />
+<figcaption aria-hidden="true">Data associated with (a) the winged-edge
+<em>E</em>, (b) the half-edge <em>H</em>, and (c) the winged-triangle
+<em>T</em>.</figcaption>
+</figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Basic representation of an edge in the winged-edge representation</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WingedEdge</span> &#123;</span><br><span class="line">    Vertex *v1, *v2; <span class="comment">// The two vertices of the represented edge (E)</span></span><br><span class="line">    Face *f1, f2; <span class="comment">// The two faces connected to the edge</span></span><br><span class="line">    Edge *e11, *e12, *e21, *e22; <span class="comment">// The next edges CW and CCW for each face</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Basic representation of a half-edge in the half-edge representation</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">HalfEdge</span> &#123;</span><br><span class="line">    HalfEdge *ht; <span class="comment">// The matching “twin” half-edge of the opposing face</span></span><br><span class="line">    HalfEdge *hn; <span class="comment">// The next half-edge counter clockwise</span></span><br><span class="line">    Face *f; <span class="comment">// The face connected to this half-edge</span></span><br><span class="line">    Vertex *v; <span class="comment">// The vertex constituting the origin of this half-edge</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Basic representation of a triangle in the winged-triangle representation</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WingedTriangle</span> &#123;</span><br><span class="line">    Vertex *v1, *v2, *v3; <span class="comment">// The 3 vertices defining this triangle</span></span><br><span class="line">    WingedTriangle *t1, *t2, *t3; <span class="comment">// The 3 triangles this triangle connects to</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Fields specifying to which edge (0-2) of these triangles the connection</span></span><br><span class="line">    <span class="comment">// is made are not strictly required, but they improve performance and can</span></span><br><span class="line">    <span class="comment">// be stored “for free” inside the triangle pointers</span></span><br><span class="line">    <span class="type">int</span> edge1:<span class="number">2</span>, edge2:<span class="number">2</span>, edge3:<span class="number">2</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="computing-a-vertex-to-face-table">Computing a Vertex-to-Face
+Table</h2>
+<p>Locating the faces a given vertex is part of would require an <span
+class="math inline">\(O(n)\)</span> pass over all faces. To make this
+operation equally fast, a reverse table can be computed: a table taht
+for each vertex allows the immediate location of all faces incident to
+the vertex.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Reset the list of triangles associated with each vertex</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; MAX_VERTICES; i++) triListHead[i] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Reset the triangle list entry counter</span></span><br><span class="line"><span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// Loop over all triangles and all three of their vertices</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numTris; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++) &#123;</span><br><span class="line">        <span class="comment">// Get the vertex index number</span></span><br><span class="line">        <span class="type">int</span> vi = tri[i].vertexIndex[j];</span><br><span class="line">        <span class="comment">// Fill in a new triangle entry for this vertex</span></span><br><span class="line">        triListEntry[cnt].triIndex = i;</span><br><span class="line">        <span class="comment">// Link new entry first in list and bump triangle entry counter</span></span><br><span class="line">        triListEntry[cnt].pNext = triListHead[vi];</span><br><span class="line">        triListHead[vi] = &amp;triListEntry[cnt++];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Actually it links triangles of a given vertex to that vertex.</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> v2f = &#123;&#125;</span><br><span class="line"></span><br><span class="line">_.<span class="title function_">each</span>(vertices, <span class="function"><span class="params">vertex</span> =&gt;</span> &#123;</span><br><span class="line">    v2f[vertex] = []</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">_.<span class="title function_">each</span>(faces, <span class="function"><span class="params">face</span> =&gt;</span> &#123;</span><br><span class="line">    v2f[face.<span class="property">a</span>].<span class="title function_">push</span>(face)</span><br><span class="line">    v2f[face.<span class="property">b</span>].<span class="title function_">push</span>(face)</span><br><span class="line">    v2f[face.<span class="property">c</span>].<span class="title function_">push</span>(face)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="computing-an-edge-to-face-table">Computing an Edge-to-Face
+Table</h2>
+<p>The problem is to compute a table that associates an edge with the
+faces connected to the edge. Assume that the input mesh is a bounded
+manifold. Thus, no edge will be connected to more than two triangles.
+The key point is to treat <span class="math inline">\((A, B)\)</span>
+and <span class="math inline">\((B, A)\)</span> for the same edge.</p>
+<aside>
+<p>💡 In a case in which vertices are given as a triplet of coordinates
+instead of an index, the vertices can still be consistently ordered by
+ordering the one with the smallest <span
+class="math inline">\(x\)</span>, then <span
+class="math inline">\(y\)</span>, then <span
+class="math inline">\(z\)</span> component first. This is the
+<strong>lexicographic ordering</strong> of the vertices as implemented
+by the following code.</p>
+</aside>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Compare vertices lexicographically and return index (0 or 1) corresponding</span></span><br><span class="line"><span class="comment">// to which vertex is smaller. If equal, consider v0 as the smaller vertex</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">SmallerVertex</span><span class="params">(Vertex v0, Vertex v1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (v<span class="number">0.</span>x != v<span class="number">1.</span>x) <span class="keyword">return</span> v<span class="number">1.</span>x &gt; v<span class="number">0.</span>x;</span><br><span class="line">    <span class="keyword">if</span> (v<span class="number">0.</span>y != v<span class="number">1.</span>y) <span class="keyword">return</span> v<span class="number">1.</span>y &gt; v<span class="number">0.</span>y;</span><br><span class="line">    <span class="keyword">return</span> v<span class="number">1.</span>z &gt; v<span class="number">0.</span>z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Because edges are represented as a pair of vertex indices and this
+pair must be used to index into a table, an open hash table is employed.
+The hash key is computed from the two vertex indeces. The key is
+associated with a data block, which is defined as below.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">EdgeEntry</span> &#123;</span><br><span class="line">    <span class="type">int</span> vertexIndex[<span class="number">2</span>]; <span class="comment">// The two vertices this edge connects to</span></span><br><span class="line">    <span class="type">int</span> triangleIndex[<span class="number">2</span>]; <span class="comment">// The two triangles this edge connects to</span></span><br><span class="line">    <span class="type">int</span> edgeNumber[<span class="number">2</span>]; <span class="comment">// Which edge of that triangle this triangle connects to</span></span><br><span class="line">    EdgeEntry *pNext; <span class="comment">// Pointer to the next edge in the current hash bucket</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Reset the hash table</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; MAX_EDGES; i++) &#123;</span><br><span class="line">    edgeListHead[i] = <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Reset the edge list entry counter</span></span><br><span class="line"><span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// Loop over all triangles and their three edges</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numTris; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">2</span>, k = <span class="number">0</span>; k &lt; <span class="number">2</span>; j = k, k++) &#123;</span><br><span class="line">        <span class="comment">// Get the vertex indices</span></span><br><span class="line">        <span class="type">int</span> vj = tri[i].vertexIndex[j];</span><br><span class="line">        <span class="type">int</span> vk = tri[i].vertexIndex[k];</span><br><span class="line">        <span class="comment">// Treat edges (vj, vk) and (vk, vj) as equal by</span></span><br><span class="line">        <span class="comment">// flipping the indices so vj &lt;= vk (if necessary)</span></span><br><span class="line">        <span class="keyword">if</span> (vj &gt; vk) <span class="built_in">Swap</span>(vj, vk);</span><br><span class="line">        <span class="comment">// Form a hash key from the pair (vj, vk) in range 0 &lt;= x &lt; MAX_EDGES</span></span><br><span class="line">        <span class="type">int</span> hashKey = <span class="built_in">ComputeHashKey</span>(vj, vk);</span><br><span class="line">        <span class="comment">// Check linked list to see if edge already present</span></span><br><span class="line">        <span class="keyword">for</span> (EdgeEntry *pEdge = edgeListHead[hashKey]; ; pEdge = Edge-&gt;pNext) &#123;</span><br><span class="line">            <span class="comment">// Edge is not in the list of this hash bucket; create new edge entry</span></span><br><span class="line">            <span class="keyword">if</span> (pEdge == <span class="literal">NULL</span>) &#123;</span><br><span class="line">                <span class="comment">// Create new edge entry for this bucket</span></span><br><span class="line">                edgeListEntry[cnt].vertexIndex[<span class="number">0</span>] = vj;</span><br><span class="line">                edgeListEntry[cnt].vertexIndex[<span class="number">1</span>] = vk;</span><br><span class="line">                edgeListEntry[cnt].triangleIndex[<span class="number">0</span>] = i;</span><br><span class="line">                edgeListEntry[cnt].edgeNumber[<span class="number">0</span>] = j;</span><br><span class="line">                <span class="comment">// Link new entry first in list and bump edge entry counter</span></span><br><span class="line">                edgeListEntry[cnt].pNext = edgeListHead[hashKey];</span><br><span class="line">                edgeListHead[hashKey] = &amp;edgeListEntry[cnt++];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Edge is in this bucket, fill in the second edge</span></span><br><span class="line">            <span class="keyword">if</span> (pEdge-&gt;vertexIndex[<span class="number">0</span>] == vj &amp;&amp; pEdge-&gt;vertexIndex[<span class="number">1</span>] == vk) &#123;</span><br><span class="line">                pEdge-&gt;triangleIndex[<span class="number">1</span>] = i;</span><br><span class="line">                pEdge-&gt;edgeNumber[<span class="number">1</span>] = j;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In ts, the code would be much simpler.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> computeHashKey = (edge) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">hashVertex</span>(edge.a) + <span class="built_in">hashVertex</span>(edge.b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> e2f = &#123;&#125;</span><br><span class="line">_.<span class="built_in">each</span>(faces, face =&gt; &#123;</span><br><span class="line">    <span class="type">const</span> [a, b] = <span class="built_in">lexicographicSort</span>(face.a, face.b)</span><br><span class="line">    <span class="type">const</span> [b, c] = <span class="built_in">lexicographicSort</span>(face.b, face.c)</span><br><span class="line">    <span class="type">const</span> [c, a] = <span class="built_in">lexicographicSort</span>(face.c, face.a)</span><br><span class="line">    </span><br><span class="line">    <span class="type">const</span> ab = b.<span class="built_in">sub</span>(a)</span><br><span class="line">    <span class="type">const</span> bc = c.<span class="built_in">sub</span>(b)</span><br><span class="line">    <span class="type">const</span> ca = a.<span class="built_in">sub</span>(c)</span><br><span class="line"></span><br><span class="line">    _.<span class="built_in">each</span>([ab, bc, ca], edge =&gt; &#123;</span><br><span class="line">        <span class="type">const</span> e = e2f[<span class="built_in">computeHashKey</span>(edge)]</span><br><span class="line">        <span class="keyword">if</span> (!e) &#123;</span><br><span class="line">            e2f[<span class="built_in">computeHashKey</span>(edge)] = &#123;</span><br><span class="line">                edge,</span><br><span class="line">                facePair: [face],</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            e.facePair[<span class="number">1</span>] = face</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="holes-crack-gaps-and-t-junctions">Holes, Crack, Gaps, and
+T-junctions</h1>
+<p><strong>A hole</strong> in a mesh is signified by a set of vertices,
+connected by a closed chain of edges in which no faces have been defined
+to connect all of these vertices and edges.</p>
+<p><strong>A crack</strong> is used to refer to narrow wedge-like slots
+between two partially connected geometries.</p>
+<p><strong>A gap</strong> is some narrow voids between two completely
+unconnected geometries.</p>
+<p><strong>T-junctions</strong> or <strong>t-joints</strong> are
+referred as situations in which an endpoint of one edge lying on the
+interior of another edge — the vertex usually displaced off the line by
+some small amount.</p>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/mesh-with-hole.png"
+alt="(a) A mesh with an intentional hole. (b) A mesh with an unintentional hole — a crack (exaggerated)." />
+<figcaption aria-hidden="true">(a) A mesh with an intentional hole. (b)
+A mesh with an unintentional hole — a crack (exaggerated).</figcaption>
+</figure>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/mesh-with-crack.png"
+alt="(a) A (nonhole) crack. (b) A gap. (c) A t-junction (and its corresponding t-vertex)." />
+<figcaption aria-hidden="true">(a) A (nonhole) crack. (b) A gap. (c) A
+t-junction (and its corresponding t-vertex).</figcaption>
+</figure>
+<figure>
+<img
+src="/assets/images/2022-04-14-geometrical-robustness/resolving-t-junction.png"
+alt="Three alternative methods for resolving a t-junction. (a) Collapsing the t-vertex with a neighboring vertex on the opposing edge. (b) Cracking the opposing edge in two, connecting the two new edge endpoints to the t-vertex. (c) Snapping the vertex onto the opposing edge and inserting it, by edge cracking, into the edge." />
+<figcaption aria-hidden="true">Three alternative methods for resolving a
+t-junction. (a) Collapsing the t-vertex with a neighboring vertex on the
+opposing edge. (b) Cracking the opposing edge in two, connecting the two
+new edge endpoints to the t-vertex. (c) Snapping the vertex onto the
+opposing edge and inserting it, by edge cracking, into the
+edge.</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/" title="Geometrical Robustness">https://aquietzero.github.io/2022/04/14/reading/realtime-collision-detection/2022-04-14-geometrical-robustness/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/13/reading/realtime-collision-detection/2022-04-13-bsp-tree-hierarchies/" rel="prev" title="BSP Tree Hierarchies">
+                  <i class="fa fa-angle-left"></i> BSP Tree Hierarchies
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/14/reading/realtime-collision-detection/index/" rel="next" title="Real-Time Collision Detection">
+                  Real-Time Collision Detection <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

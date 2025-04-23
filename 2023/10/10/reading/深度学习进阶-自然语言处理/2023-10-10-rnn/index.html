@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="概率和语言模型 语言模型 语言模型（language model）给出了单词序列发生的概率。考虑由 \(m\) 个单词 \(w_1, \dots, w_m\) 构成的句子，将单词按 \(w_1, \dots, w_m\) 的顺序出现的概率记为 \(P(w_1, \dots, w_m)\)。使用后验概率可以将这个联合概率分解为 \[ p(w_1, \dots, w_m) &#x3D; \prod^m_{t &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RNN">
+<meta property="og:url" content="https://aquietzero.github.io/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="概率和语言模型 语言模型 语言模型（language model）给出了单词序列发生的概率。考虑由 \(m\) 个单词 \(w_1, \dots, w_m\) 构成的句子，将单词按 \(w_1, \dots, w_m\) 的顺序出现的概率记为 \(P(w_1, \dots, w_m)\)。使用后验概率可以将这个联合概率分解为 \[ p(w_1, \dots, w_m) &#x3D; \prod^m_{t &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E6%9D%A1%E4%BB%B6%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E7%A4%BA%E6%84%8F%E5%9B%BE%E6%96%B9%E5%BC%8F%E6%94%B9%E5%8F%98.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E5%BE%AA%E7%8E%AF%E5%B1%82%E5%B1%95%E5%BC%80.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/bptt.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/bptt%E5%AD%A6%E4%B9%A0%E9%A1%BA%E5%BA%8F.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/bptt-mini-batch.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnn-%E5%B1%95%E5%BC%80%E5%9B%BE.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnn%E5%B1%82.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnn%E5%BD%A2%E7%8A%B6%E6%A3%80%E6%9F%A5.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnn%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/time-rnn.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/time-rnn-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/t-trnn-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnnlm.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/rnnlm-example.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E6%95%B4%E5%90%88%E6%95%B4%E4%BD%93rnn.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/time-rnn-%E5%AD%A6%E4%B9%A0%E8%AF%84%E4%BB%B7.png">
+<meta property="article:published_time" content="2023-10-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.531Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="自然语言处理">
+<meta property="article:tag" content="RNN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2023-10-10-RNN/%E6%9D%A1%E4%BB%B6%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/","path":"2023/10/10/reading/深度学习进阶-自然语言处理/2023-10-10-rnn/","title":"RNN"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RNN | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E7%8E%87%E5%92%8C%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">概率和语言模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">语言模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rnn"><span class="nav-number">2.</span> <span class="nav-text">RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn-%E7%9A%84%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">RNN 的循环结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn-%E7%9A%84%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="nav-number">2.2.</span> <span class="nav-text">RNN 的反向传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#truncated-bptt-%E7%9A%84-mini-batch-%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.3.</span> <span class="nav-text">Truncated BPTT 的 mini-batch
+学习</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rnn-%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">RNN 的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn-%E5%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">RNN 层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#time-rnn-%E5%B1%82"><span class="nav-number">3.2.</span> <span class="nav-text">Time RNN 层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#time-rnn-%E5%B1%82%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.3.</span> <span class="nav-text">Time RNN 层的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E6%97%B6%E5%BA%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E5%B1%82"><span class="nav-number">4.</span> <span class="nav-text">处理时序数据的层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnnlm-%E5%85%A8%E8%B2%8C%E5%9B%BE"><span class="nav-number">4.1.</span> <span class="nav-text">RNNLM 全貌图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#time-%E5%B1%82%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.2.</span> <span class="nav-text">Time 层的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rnnlm-%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%92%8C%E8%AF%84%E4%BB%B7"><span class="nav-number">5.</span> <span class="nav-text">RNNLM 的学习和评价</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RNN | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RNN
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-10-10 00:00:00" itemprop="dateCreated datePublished" datetime="2023-10-10T00:00:00+08:00">2023-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/10/10/reading/深度学习进阶-自然语言处理/2023-10-10-rnn/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="概率和语言模型">概率和语言模型</h1>
+<h2 id="语言模型">语言模型</h2>
+<p><strong>语言模型（language
+model）</strong>给出了单词序列发生的概率。考虑由 <span
+class="math inline">\(m\)</span> 个单词 <span class="math inline">\(w_1,
+\dots, w_m\)</span> 构成的句子，将单词按 <span
+class="math inline">\(w_1, \dots, w_m\)</span> 的顺序出现的概率记为
+<span class="math inline">\(P(w_1, \dots,
+w_m)\)</span>。使用后验概率可以将这个联合概率分解为</p>
+<p><span class="math display">\[
+p(w_1, \dots, w_m) = \prod^m_{t = 1} P(w_t | w_1, \dots, w_{t - 1})
+\]</span></p>
+<p>这个模型有时候也称为<strong>条件语言模型（conditional language
+model）</strong>。</p>
+<figure>
+<img src="/assets/images/2023-10-10-RNN/条件语言模型.png"
+alt="语言模型中的后验概率:若以第 t 个单词为目标词，则第 t 个单词左侧的全部单词 构成上下文(条件)" />
+<figcaption aria-hidden="true">语言模型中的后验概率:若以第 t
+个单词为目标词，则第 t 个单词左侧的全部单词
+构成上下文(条件)</figcaption>
+</figure>
+<p>语言模型中的后验概率:若以第 t 个单词为目标词，则第 t
+个单词左侧的全部单词 构成上下文(条件)</p>
+<h1 id="rnn">RNN</h1>
+<p><strong>RNN（Recurrent Neural Network）</strong>为循环神经网络。与
+CBOW 的最大区别在于，CBOW
+会受到上下文大小的限制，如果窗口大小无法覆盖上下文，将无法进行正确的推理。但是通过
+RNN 可以做到这点。</p>
+<h2 id="rnn-的循环结构">RNN 的循环结构</h2>
+<p>RNN
+的特征就在于拥有一个环路，这个环路可以使数据不断循环。通过数据的循环，RNN
+一边记住过去的数据，一边更新到最新的数据。</p>
+<figure>
+<img src="/assets/images/2023-10-10-RNN/示意图方式改变.png"
+alt="将层从左向右的方向改为从下往上" />
+<figcaption
+aria-hidden="true">将层从左向右的方向改为从下往上</figcaption>
+</figure>
+<p>将层从左向右的方向改为从下往上</p>
+<p><img src="/assets/images/2023-10-10-RNN/循环层展开.png" /></p>
+<p>将循环层展开。虽然展开为多个独立的单元，但是这些单元组成一个整体的层。上面的计算可以表示为</p>
+<p><span class="math display">\[
+\textbf{h}_t = \tanh(\textbf{h}_{t - 1} \textbf{W}_h + \textbf{x}_t
+\textbf{W}_x + \textbf{b})
+\]</span></p>
+<p>其中，<span class="math inline">\(\textbf{W}_x\)</span> 将输入 <span
+class="math inline">\(\textbf{x}\)</span> 转化为输出 <span
+class="math inline">\(\textbf{h}\)</span>，而 <span
+class="math inline">\(\textbf{W}_h\)</span> 将前一个 RNN
+层的输出转化为当前时刻的输出。RNN 的 <span
+class="math inline">\(\textbf{h}\)</span>
+存储状态，时间每前进一步，它就以上式被更新。有时候这个状态被称为<strong>隐藏状态（hidden
+state）</strong>。</p>
+<h2 id="rnn-的反向传播">RNN 的反向传播</h2>
+<p>将 RNN 展开后，就可以看成是普通 的神经网络，因此常规的反向传播也能在
+RNN
+内进行。因为这是基于时间的，所以有时候被称为<strong>基于时间的反向传播（Backpropagation
+Through Time，BPTT）</strong>。</p>
+<p><img src="/assets/images/2023-10-10-RNN/反向传播.png" /></p>
+<aside>
+<p>💡 要基于 BPTT 求梯度，必须在内存中保存各个时刻的 RNN
+层的中间数据。因此，随着时序数据变长，计算机的内存使用量(不仅仅是计算量)也会增加。</p>
+</aside>
+<p>在处理长时序数据时，通常的做法是将网络连接截成适当的长度。具体来说，就是将时间轴方向上过长的网络在合适的位置进行截断，从而创建多个小型网络，然后对截出来的小型网络执行误差反向传播，这个方法称为<strong>截断
+BPTT（Truncated BPTT）</strong>。</p>
+<p>需要注意的是，虽然反向传播的链接被截断，但是正向传播的链接不会。</p>
+<p><img src="/assets/images/2023-10-10-RNN/bptt.png" /></p>
+<p>在适当位置截断反向传播的连接。这里，将反向传播的连接中的某一段 RNN 层
+称为“块”(块的背景为灰色)</p>
+<p><img src="/assets/images/2023-10-10-RNN/bptt学习顺序.png" /></p>
+<p>可以注意到，即使分成了区块，正向传播的时候还是需要前一个区块的输出作为输入的，即
+<span class="math inline">\(\textbf{h}_9\)</span> 和 <span
+class="math inline">\(\textbf{h}_{19}\)</span>，也就是说正向传播是不会截断的，但是对于反向传播来说，只会单纯在块内进行。</p>
+<h2 id="truncated-bptt-的-mini-batch-学习">Truncated BPTT 的 mini-batch
+学习</h2>
+<p>假设有长度为 1000 的时序数据，以时间长度为 10
+为单位进行截断，如果要进行批次为 2
+的学习，则需要平移批次数据。第一批由第 1
+笔样本开始按顺序输入，第二批由第 501 笔数据开始顺序输入。</p>
+<figure>
+<img src="/assets/images/2023-10-10-RNN/bptt-mini-batch.png"
+alt="在进行 mini-batch 学习时，在各批次(各样本)中平移输入数据的开始位置" />
+<figcaption aria-hidden="true">在进行 mini-batch
+学习时，在各批次(各样本)中平移输入数据的开始位置</figcaption>
+</figure>
+<p>在进行 mini-batch
+学习时，在各批次(各样本)中平移输入数据的开始位置</p>
+<h1 id="rnn-的实现">RNN 的实现</h1>
+<p>考虑到 Truncated
+BPTT，只需要创建一个在水平方向上长度固定的网络序列即可，RNN
+的展开图如下所示。</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnn-展开图.png" /></p>
+<p>其中长度为 <span class="math inline">\(T\)</span>，也就是隐藏状态有
+<span class="math inline">\(T\)</span> 个。将其整合为一个层，有</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnn层.png" /></p>
+<p>其中处理单步的层称为 <strong>RNN 层</strong>，一次处理 <span
+class="math inline">\(T\)</span> 步的层称为 <strong>Time RNN
+层</strong>。</p>
+<h2 id="rnn-层">RNN 层</h2>
+<p>单步处理的正向传播表达式为</p>
+<p><span class="math display">\[
+\textbf{h}_t = \tanh(\textbf{h}_{t - 1} \textbf{W}_h + \textbf{x}_t
+\textbf{W}_x + \textbf{b})
+\]</span></p>
+<p>数据以 mini-batch 的形式流入，因此，<span
+class="math inline">\(\textbf{x}_t\)</span> 和 <span
+class="math inline">\(\textbf{h}_t\)</span>
+在行方向上保存各样本数据。假设批大小为 <span
+class="math inline">\(N\)</span>，输入向量的维数为 <span
+class="math inline">\(D\)</span>，隐藏向量的维数是 <span
+class="math inline">\(H\)</span>，则矩阵形状关系如下</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnn形状检查.png" /></p>
+<p>上图省略了偏置。RNN 层的反向传播如下图所示</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnn反向传播.png" /></p>
+<p>RNN 层的实现如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RNN</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, Wx, Wh, b</span>):</span><br><span class="line">        <span class="variable language_">self</span>.params = [Wx, Wh, b]</span><br><span class="line">        <span class="variable language_">self</span>.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]</span><br><span class="line">        <span class="variable language_">self</span>.cache = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, h_prev</span>):</span><br><span class="line">        Wx, Wh, b = <span class="variable language_">self</span>.params</span><br><span class="line">        t = np.dot(h_prev, Wh) + np.dot(x, Wx) + b</span><br><span class="line">        h_next = np.tanh(t)</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.cache = (x, h_prev, h_next)</span><br><span class="line">        <span class="keyword">return</span> h_next</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">self, dh_next</span>):</span><br><span class="line">            Wx, Wh, b = <span class="variable language_">self</span>.params</span><br><span class="line">            x, h_prev, h_next = <span class="variable language_">self</span>.cache</span><br><span class="line"></span><br><span class="line">            dt = dh_next * (<span class="number">1</span> - h_next ** <span class="number">2</span>)</span><br><span class="line">            db = np.<span class="built_in">sum</span>(dt, axis=<span class="number">0</span>)</span><br><span class="line">            dWh = np.dot(h_prev.T, dt)</span><br><span class="line">            dh_prev = np.dot(dt, Wh.T)</span><br><span class="line">            dWx = np.dot(x.T, dt)</span><br><span class="line">            dx = np.dot(dt, Wx.T)</span><br><span class="line"></span><br><span class="line">            <span class="variable language_">self</span>.grads[<span class="number">0</span>][...] = dWx</span><br><span class="line">            <span class="variable language_">self</span>.grads[<span class="number">1</span>][...] = dWh</span><br><span class="line">            <span class="variable language_">self</span>.grads[<span class="number">2</span>][...] = db</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> dx, dh_prev</span><br></pre></td></tr></table></figure>
+<h2 id="time-rnn-层">Time RNN 层</h2>
+<p>Time RNN 层由 <span class="math inline">\(T\)</span> 个 RNN
+层链接起来，RNN 层的隐藏状态 <span
+class="math inline">\(\textbf{h}\)</span> 保存在成员变量中。</p>
+<p><img src="/assets/images/2023-10-10-RNN/time-rnn.png" /></p>
+<p>Time RNN 层分有状态和无状态，有状态表示维持 Time RNN
+层的隐藏状态，也就是说，无论时序数据多长，Time RNN
+层的正向传播都可以不中断地进行。而当其为无状态时，每次调用 Time RNN 的
+<code>forward</code>，都会将第一个 RNN 层的隐藏状态初始化为零矩阵。</p>
+<p>Time RNN 层的反向传播如下所示</p>
+<p><img src="/assets/images/2023-10-10-RNN/time-rnn-反向传播.png" /></p>
+<p>第 <span class="math inline">\(t\)</span> 个 RNN 层的反向传播</p>
+<p><img src="/assets/images/2023-10-10-RNN/t-trnn-反向传播.png" /></p>
+<h2 id="time-rnn-层的实现">Time RNN 层的实现</h2>
+<p>Time RNN 层由多个 RNN 层堆叠而成。Time RNN 层会将最后一个 RNN
+层的输出作为隐藏状态记录下来。如果 Time RNN
+层被设置为无状态，则每次向前传播的时候，这个隐藏状态都会重置为
+0，否则则会一直保存这个隐藏状态。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TimeRNN</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, Wx, Wh, b, stateful=<span class="literal">False</span></span>):</span><br><span class="line">        <span class="variable language_">self</span>.params = [Wx, Wh, b]</span><br><span class="line">        <span class="variable language_">self</span>.grads = [</span><br><span class="line">            np.zeros_like(Wx),</span><br><span class="line">            np.zeros_like(Wh),</span><br><span class="line">            np.zeros_like(b),</span><br><span class="line">        ]</span><br><span class="line">        <span class="comment"># save internal RNN layers</span></span><br><span class="line">        <span class="variable language_">self</span>.layers = <span class="literal">None</span></span><br><span class="line">        <span class="comment"># h is the hidden state of the last RNN layer</span></span><br><span class="line">        <span class="variable language_">self</span>.h, <span class="variable language_">self</span>.dh = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">        <span class="variable language_">self</span>.stateful = stateful</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set_state</span>(<span class="params">self, h</span>):</span><br><span class="line">        <span class="variable language_">self</span>.h = h</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset_state</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.h = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, xs</span>):</span><br><span class="line">        Wx, Wh, b = <span class="variable language_">self</span>.params</span><br><span class="line">        N, T, D = xs.shape</span><br><span class="line">        D, H = Wx.shape</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.layers = []</span><br><span class="line">        hs = np.empty((N, T, H), dtype=<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.stateful <span class="keyword">or</span> <span class="variable language_">self</span>.h <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            <span class="variable language_">self</span>.h = np.zeros((N, H), dtype=<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T):</span><br><span class="line">            layer = RNN(*<span class="variable language_">self</span>.params)</span><br><span class="line">            <span class="variable language_">self</span>.h = layer.forward(xs[:, t, :], <span class="variable language_">self</span>.h)</span><br><span class="line">            hs[:, t, :] = <span class="variable language_">self</span>.h</span><br><span class="line">            <span class="variable language_">self</span>.layers.append(layer)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> hs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">self, dhs</span>):</span><br><span class="line">        Wx, Wh, b = <span class="variable language_">self</span>.params</span><br><span class="line">        N, T, H = dhs.shape</span><br><span class="line">        D, H = Wx.shape</span><br><span class="line"></span><br><span class="line">        dxs = np.empty((N, T, D), dtype=<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        dh = <span class="number">0</span></span><br><span class="line">        grads = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(T)):</span><br><span class="line">            layer = <span class="variable language_">self</span>.layers[t]</span><br><span class="line">            <span class="comment"># 求和后的梯度 dxs[:, t, :] = dx</span></span><br><span class="line">            dx, dh = layer.backward(dhs[:, t, :] + dh)</span><br><span class="line">            <span class="keyword">for</span> i, grad <span class="keyword">in</span> <span class="built_in">enumerate</span>(layer.grads):</span><br><span class="line">                grads[i] += grad</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i, grad <span class="keyword">in</span> <span class="built_in">enumerate</span>(grads):</span><br><span class="line">            <span class="variable language_">self</span>.grads[i][...] = grad</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.dh = dh</span><br><span class="line">        <span class="keyword">return</span> dxs</span><br></pre></td></tr></table></figure>
+<h1 id="处理时序数据的层">处理时序数据的层</h1>
+<p>根据已经实现的 RNN 层和整体处理时序数据的 Time RNN 层，可以实现基于
+RNN 的语言模型。基于 RNN 的语言模型称为 <strong>RNNLM</strong>。</p>
+<h2 id="rnnlm-全貌图">RNNLM 全貌图</h2>
+<p>左图为 RNNLM 的层结构，右图是基于时间轴的展开网络。</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnnlm.png" /></p>
+<p>向上面的网络输入“you say goodbye and i say hello”，可以得到</p>
+<p><img src="/assets/images/2023-10-10-RNN/rnnlm-example.png" /></p>
+<p>通过实现各个层的 Time 版本，可以组合为整体的时序神经网络。</p>
+<p><img src="/assets/images/2023-10-10-RNN/整合整体rnn.png" /></p>
+<h2 id="time-层的实现">Time 层的实现</h2>
+<h1 id="rnnlm-的学习和评价">RNNLM 的学习和评价</h1>
+<p>RNNLM
+的架构如右图所示，主要是将上面提到的各个层转化为支持时序数据的实现然后堆叠起来。</p>
+<p>其中 <code>TimeEmbedding</code>
+学习单词的分布式权重，<code>TimeRNN</code>
+学习输入的时序特征，<code>TimeAffine</code> 则将输出整合，方便最后的
+<code>TimeSoftmax</code> 计算概率以及误差。</p>
+<p>语言模型基于给定的已经出现的单词输出将要出现的单词的概率分布。<strong>困惑度（perplexity）</strong>常被用作评价语言模型的预测性能的指标。</p>
+<p>简单地说，困惑度是概率的倒数，困惑度越低越好。由于概率最高为
+1，所以困惑度最低就是 1
+了。这个值可以看成是<strong>分叉度</strong>。当困惑度为 1
+的时候，分叉度就是 1，意味着下一个可能出现的单词的候选个数位
+1。如果概率是 0.25，就意味着困惑度为 4，意味着候选单词有 4 个了。</p>
+<p><img style="display: float; width: 50%" src="/assets/images/2023-10-10-RNN/time-rnn-学习评价.png"></p>
+<aside>
+<p>💡 好的模型困惑度小，能够以高概率预测正确的单词。</p>
+</aside>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-10-rnn/" title="RNN">https://aquietzero.github.io/2023/10/10/reading/深度学习进阶-自然语言处理/2023-10-10-rnn/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"># 自然语言处理</a>
+              <a href="/tags/RNN/" rel="tag"># RNN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/10/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-12-gated-rnn/" rel="prev" title="Gated RNN">
+                  <i class="fa fa-angle-left"></i> Gated RNN
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/10/12/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-10-12-attention/" rel="next" title="Attention">
+                  Attention <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

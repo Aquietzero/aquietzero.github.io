@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Acting under Uncertainty The rational decision —— depends on both the relative importance of various goals and the likelihood that, and degree to which, they will be achieved. Summarizing Uncertainty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quantifying Uncertainty">
+<meta property="og:url" content="https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Acting under Uncertainty The rational decision —— depends on both the relative importance of various goals and the likelihood that, and degree to which, they will be achieved. Summarizing Uncertainty">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="方法论">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="逻辑">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/","path":"2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/","title":"Quantifying Uncertainty"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Quantifying Uncertainty | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#acting-under-uncertainty"><span class="nav-number">1.</span> <span class="nav-text">Acting under Uncertainty</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#summarizing-uncertainty"><span class="nav-number">1.1.</span> <span class="nav-text">Summarizing Uncertainty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uncertainty-and-rational-decisions"><span class="nav-number">1.2.</span> <span class="nav-text">Uncertainty and Rational
+Decisions</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#basic-probability-notation"><span class="nav-number">2.</span> <span class="nav-text">Basic Probability Notation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#probabilities"><span class="nav-number">2.1.</span> <span class="nav-text">Probabilities</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-language-of-propositions-in-probability-assertions"><span class="nav-number">2.2.</span> <span class="nav-text">The
+Language of Propositions in Probability Assertions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#probability-axioms-and-their-reasonableness"><span class="nav-number">2.3.</span> <span class="nav-text">Probability Axioms
+and their Reasonableness</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#inference-using-full-joint-distributions"><span class="nav-number">3.</span> <span class="nav-text">Inference Using Full
+Joint Distributions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#independence"><span class="nav-number">4.</span> <span class="nav-text">Independence</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bayes-rule-and-its-use"><span class="nav-number">5.</span> <span class="nav-text">Bayes’ Rule and Its Use</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#applying-bayes-rule-the-simple-case"><span class="nav-number">5.1.</span> <span class="nav-text">Applying Bayes’ Rule: The
+Simple Case</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#using-bayes-rule-combining-evidence"><span class="nav-number">5.2.</span> <span class="nav-text">Using Bayes’ Rule:
+Combining Evidence</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#naive-bayes-models"><span class="nav-number">6.</span> <span class="nav-text">Naive Bayes Models</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#text-classification-with-naive-bayes"><span class="nav-number">6.1.</span> <span class="nav-text">Text Classification with
+Naive Bayes</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">7.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Quantifying Uncertainty | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Quantifying Uncertainty
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-06-13 00:00:00" itemprop="dateCreated datePublished" datetime="2023-06-13T00:00:00+08:00">2023-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="acting-under-uncertainty">Acting under Uncertainty</h1>
+<p>The rational decision —— depends on both the relative importance of
+various goals and the likelihood that, and degree to which, they will be
+achieved.</p>
+<h2 id="summarizing-uncertainty">Summarizing Uncertainty</h2>
+<h2 id="uncertainty-and-rational-decisions">Uncertainty and Rational
+Decisions</h2>
+<p>An agent must have <strong>preferences</strong> among the different
+possible <strong>outcomes</strong> of the various plans. An outcome is a
+completely specified state. We use <strong>utility theory</strong> to
+represent preferences and reason quantitatively with them.</p>
+<p>Preferences, as expressed by utilities, are combined with
+probabilities in the general theory of rational decisions called
+decision theory:</p>
+<p><span class="math display">\[
+\text{decision theory} = \text{probability theory} + \text{utility
+theory}
+\]</span></p>
+<p>The fundamental idea of decision theory is that an agent is rational
+if and only if it chooses the action that yields the highest expected
+utility, averaged over all the possible outcomes of the action. This is
+called the principle of <strong>maximum expected utility
+(MEU)</strong>.</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// A decision-theoretic agent</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">DT_Agent</span>(<span class="params"><span class="attr">percept</span>: <span class="title class_">Percept</span></span>): <span class="title class_">Action</span> &#123;</span><br><span class="line">    <span class="comment">// probabilistic beliefs about the current state of the world</span></span><br><span class="line">    <span class="keyword">const</span> beliefState</span><br><span class="line">    <span class="comment">// the agent&#x27;s action</span></span><br><span class="line">    <span class="keyword">const</span> action</span><br><span class="line"></span><br><span class="line">    beliefState.<span class="title function_">update</span>(action, percept)</span><br><span class="line">    <span class="keyword">const</span> probabilities = <span class="title class_">CalculateProbabilities</span>(</span><br><span class="line">        <span class="title class_">ActionDescriptions</span>,</span><br><span class="line">        beliefState.<span class="property">current</span></span><br><span class="line">    )</span><br><span class="line">    action = <span class="title class_">SelectAction</span>(</span><br><span class="line">        probabilities,</span><br><span class="line">        utilityInformation</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> action</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="basic-probability-notation">Basic Probability Notation</h1>
+<h2 id="probabilities">Probabilities</h2>
+<p>The set of all possible worlds is called the <strong>sample
+space</strong>. The possible worlds are mutually exclusive and
+exhaustive. <span class="math inline">\(\Omega\)</span> is used to refer
+to the sample space, and <span class="math inline">\(\omega\)</span>
+refers to elements of the space.</p>
+<p>A fully specified probability model associates a numerical
+probability <span class="math inline">\(P(\omega)\)</span> with each
+possible world.</p>
+<p><span class="math display">\[
+0 \leq P(\omega) \leq 1 \text{ for every } \omega \text{ and }
+\sum_{\omega \in \Omega} P(\omega) = 1
+\]</span></p>
+<p>Probabilistic assertions and queries are not usually about particular
+possible worlds, but about sets of them. In probability theory, these
+sets are called <strong>events</strong>. In logic, a set of worlds
+corresponds to a <strong>proposition</strong> in a formal language. The
+probability associated with a proposition is defined to be the sum of
+the probabilities of the worlds in which it holds</p>
+<p><span class="math display">\[
+\text{For any proposition } \phi, P(\phi) = \sum_{\omega \in \phi}
+P(\omega)
+\]</span></p>
+<p><strong>Unconditional probabilities</strong> are called <strong>prior
+probabilities</strong>, they refer to degrees of belief in propositions
+in the absence of any other information. <strong>Conditional
+probabilities</strong> are called <strong>posterior
+probabilities</strong>, which is defined as</p>
+<p><span class="math display">\[
+P(a|b) = \frac{P(a \land b)}{P(b)}
+\]</span></p>
+<h2 id="the-language-of-propositions-in-probability-assertions">The
+Language of Propositions in Probability Assertions</h2>
+<p>Variables in probability theory are called <strong>random
+variables</strong>. Every random variable is a function that maps from
+the domain of possible worlds <span
+class="math inline">\(\Omega\)</span> to some range —— the set of
+possible values it can take on.</p>
+<p>Variables can have infinitive ranges, either discrete or
+continuous.</p>
+<p>For example, “the probability that the patient has a cavity, given
+that she is a teenager with no toothache, is 0.1” can be expressed as
+follows:</p>
+<p><span class="math display">\[
+P(cavity | \lnot toothache \land teen) = 0.1
+\]</span></p>
+<h2 id="probability-axioms-and-their-reasonableness">Probability Axioms
+and their Reasonableness</h2>
+<p>The formula for the probability of a disjunction, sometimes called
+the <strong>inclusion-exclusion principle</strong>.</p>
+<p><span class="math display">\[
+P(a \lor b) = P(a) + P(b) - P(a \land b)
+\]</span></p>
+<p>De Finettis’ theorem is not concerned with choosing the right values
+for individual probabilities, but with choosing values for the
+probabilities of logically related propositions.</p>
+<h1 id="inference-using-full-joint-distributions">Inference Using Full
+Joint Distributions</h1>
+<p>Probabilistic inference, the computation of posterior probabilities
+for <strong>query</strong> propositions given observed evidence. The
+full joint distribution is used as a knowledge base from which answers
+to all questions may be derived.</p>
+<p><strong>Marginalization rule</strong>:</p>
+<p><span class="math display">\[
+\textbf{P}(\textbf{Y}) = \sum_\textbf{Z}\textbf{P}(\textbf{Y},
+\textbf{Z} = \textbf{z})
+\]</span></p>
+<p>where <span class="math inline">\(\sum_{\textbf{Z}}\)</span> sums
+over all the possible combinations of values of the set of variables
+<span class="math inline">\(\textbf{Z}\)</span>. Using the product rule,
+obtaining a rule called <strong>conditioning</strong>.</p>
+<p><span class="math display">\[
+\textbf{P}(\textbf{Y}) = \sum_\textbf{Z}
+\textbf{P}(\textbf{Y}|\textbf{z})P(\textbf{z})
+\]</span></p>
+<p>General inference procedure. Let the query involve only a single
+variable, <span class="math inline">\(X\)</span>. Let <span
+class="math inline">\(\textbf{E}\)</span> be the list of evidence
+variables. Let <span class="math inline">\(\textbf{e}\)</span> be the
+list of observed values for them, and let <span
+class="math inline">\(\textbf{Y}\)</span> be the remaining unobserved
+variables. The query is <span class="math inline">\(\textbf{P}(X |
+\textbf{e})\)</span> and can be evaluated as</p>
+<p><span class="math display">\[
+\textbf{P}(X | \textbf{e}) = \alpha \textbf{P}(X, \textbf{e}) = \alpha
+\sum_\textbf{y} \textbf{P}(X, \textbf{e}, \textbf{y})
+\]</span></p>
+<aside>
+<p>💡 The full joint distribution in tabular form is seldom a practical
+tool for building reasoning systems. Instead, it should be viewed as the
+theoretical foundation on which more effective approaches may be built,
+just as truth tables formed a theoretical foundation for more practical
+algorithms like DPLL.</p>
+</aside>
+<h1 id="independence">Independence</h1>
+<p>Independence between propositions <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> can be written as</p>
+<p><span class="math display">\[
+P(a|b) = P(a) \text{ or }
+P(b|a) = P(b) \text{ or }
+P(a\land b) = P(a)P(b)
+\]</span></p>
+<figure>
+<img
+src="/assets/images/2023-06-13-quantifying-uncertainty/examples-of-factoring-joint-distribution.png"
+alt="Two examples of factoring a large joint distribution into smaller distributions, using absolute independence. (a) Weather and dental problems are independent. (b) Coin flips are independent." />
+<figcaption aria-hidden="true">Two examples of factoring a large joint
+distribution into smaller distributions, using absolute independence.
+(a) Weather and dental problems are independent. (b) Coin flips are
+independent.</figcaption>
+</figure>
+<p>Two examples of factoring a large joint distribution into smaller
+distributions, using absolute independence. (a) Weather and dental
+problems are independent. (b) Coin flips are independent.</p>
+<h1 id="bayes-rule-and-its-use">Bayes’ Rule and Its Use</h1>
+<p>Basic version of Bayes’ rule.</p>
+<p><span class="math display">\[
+P(b|a) = \frac{P(a|b)P(b)}{P(a)}
+\]</span></p>
+<p>A more general version of Bayes’ rule.</p>
+<p><span class="math display">\[
+\textbf{P}(Y|X) = \frac{\textbf{P}(X|Y)\textbf{P}(Y)}{\textbf{P}(X)}
+\]</span></p>
+<p>A more general version conditionalized on some background evidence
+<span class="math inline">\(\textbf{e}\)</span>.</p>
+<p><span class="math display">\[
+\textbf{P}(Y|X, \textbf{e}) = \frac{\textbf{P}(X|Y,
+\textbf{e})\textbf{P}(Y|\textbf{e})}{\textbf{P}(X|\textbf{e})}
+\]</span></p>
+<h2 id="applying-bayes-rule-the-simple-case">Applying Bayes’ Rule: The
+Simple Case</h2>
+<p>Often, we perceive as evidence the effect of some unkonwn cause and
+we would like to determine that cause.</p>
+<p><span class="math display">\[
+P(\text{cause}|\text{effect}) =
+\frac{P(\text{effect}|\text{cause})P(\text{cause})}{P(\text{effect})}
+\]</span></p>
+<p>The conditional probability <span
+class="math inline">\(P(\text{effect}|\text{cause})\)</span> quantifies
+the relationship in the <strong>causal</strong> direction, whereas <span
+class="math inline">\(P(\text{cause}|\text{effect})\)</span> describes
+the <strong>diagnostic</strong> direction.</p>
+<p>The general form of Bayes’ rule with normalization is</p>
+<p><span class="math display">\[
+\textbf{P}(Y|X) = \alpha \textbf{P}(X|Y) \textbf{P}(Y)
+\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is the
+normalization constant needed to make the entries in <span
+class="math inline">\(\textbf{P}(Y|X)\)</span> sum to 1.</p>
+<h2 id="using-bayes-rule-combining-evidence">Using Bayes’ Rule:
+Combining Evidence</h2>
+<p>The general definition of <strong>conditional independence</strong>
+of two variable <span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span>, given a third variable <span
+class="math inline">\(Z\)</span>, is</p>
+<p><span class="math display">\[
+\textbf{P}(X, Y|Z) = \textbf{P}(X|Z)\textbf{P}(Y|Z)
+\]</span></p>
+<p>As with <strong>absolute independence</strong>, we have</p>
+<p><span class="math display">\[
+\textbf{P}(X|Y, Z) = \textbf{P}(X|Z) \text{ and } \textbf{P}(Y|X, Z) =
+\textbf{P}(Y|Z)
+\]</span></p>
+<p>Absolute independence assertions allow a decomposition of the full
+joint distribution into much smaller pieces.</p>
+<h1 id="naive-bayes-models">Naive Bayes Models</h1>
+<p>Suppose the effects are conditionally independent, then the full
+joint distribution can be written as</p>
+<p><span class="math display">\[
+\textbf{P}(\text{Cause}, \text{Effect}_1, \dots, \text{Effect}_n) =
+\textbf{P}(\text{Cause})\prod_i \textbf{P}(\text{Effect}_i |
+\text{Cause})
+\]</span></p>
+<p>Such a probability distribution is called a <strong>naive Bayes
+model</strong>. “naive” is because it is often used in cases where the
+“effect” variables are not strictly independent given the cause
+variable.</p>
+<p>To use the naive Bayes model, call the observed effects <span
+class="math inline">\(\textbf{E} = \textbf{e}\)</span>, while the
+remaining effect variables <span
+class="math inline">\(\textbf{Y}\)</span> are unobserved. Then the
+standard method for inference from the joint distribution can be
+applied:</p>
+<p><span class="math display">\[
+\textbf{P}(\text{Cause}|\textbf{e}) = \alpha \sum_\textbf{y}
+\textbf{P}(\text{Cause}, \textbf{e}, \textbf{y})
+\]</span></p>
+<p>From the above equation, we then obtain</p>
+<p><span class="math display">\[
+\begin{align*}
+\textbf{P}(\text{Cause}|\textbf{e}) &amp;= \alpha \sum_\textbf{y}
+\textbf{P}(\text{Cause}) \textbf{P}(\textbf{y}|\text{Cause}) \bigg(
+\prod_j \textbf{P}(e_j | \text{Cause}) \bigg) \\
+&amp;=
+\alpha \textbf{P}(\text{Cause}) \bigg( \prod_j \textbf{P}(e_j |
+\text{Cause}) \bigg)
+\sum_\textbf{y}  \textbf{P}(\textbf{y}|\text{Cause}) \\
+&amp;=
+\alpha \textbf{P}(\text{Cause})\prod_j \textbf{P}(e_j | \text{Cause})
+\end{align*}
+\]</span></p>
+<p>The run time of this calculation is linear in the number of observed
+effects and does not depend on the number of unobserved effects.</p>
+<h2 id="text-classification-with-naive-bayes">Text Classification with
+Naive Bayes</h2>
+<p>The task of <strong>text classification</strong>: given a text,
+decide which of a predefined set of classes or categories it belongs to.
+Here the “cause” is the <span class="math inline">\(Category\)</span>
+variable, and the “effect” variables are the presence or absence of
+certain key words, <span class="math inline">\(HasWord_i\)</span>.</p>
+<p>Naive Bayes models are widely used for language determination,
+document retrieval, spam filtering, and other classification tasks.</p>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>Uncertainty arises because of both laziness and ignorance. It is
+inescapable in complex, nondeterministic, or partially observable
+environments.</li>
+<li><strong>Probabilities</strong> express the agent’s inability to
+reach a definite decision regarding the truth of a sentence.
+Probabilities summarize the agent’s beliefs relative to the
+evidence.</li>
+<li><strong>Decision theory</strong> combines the agent’s beliefs and
+desires, defining the best action asthe one that maximizes expected
+<strong>utility</strong>.</li>
+<li>Basic probability statements include <strong>prior</strong> or
+<strong>unconditional probabilities</strong> and
+<strong>posterior</strong> or <strong>conditional probabilities</strong>
+over simple and complex propositions.</li>
+<li>The axioms of probability constrain the probabilities of logically
+related propositions. An agent that violates the axioms must behave
+irrationally in some cases.</li>
+<li>The <strong>full joint probability distribution</strong> specifies
+the probability of each complete assignment of values to random
+variables. It is usually too large to create or use in its explicit
+form, but when it is available it can be used to answer queries simply
+by adding up entries for the possible worlds corresponding to the query
+propositions.</li>
+<li><strong>Absolute independence</strong> between subsets of random
+variables allows the full joint distribution to be factored into smaller
+joint distributions, greatly reducing its complexity.</li>
+<li><strong>Bayes’ rule</strong> allows unknown probabilities to be
+computed from known conditional probabilities, usually in the causal
+direction. Applying Bayes’ rule with many pieces of evidence runs into
+the same scaling problems as does the full joint distribution.</li>
+<li><strong>Conditional independence</strong> brought about by direct
+causal relationships in the domain allows the full joint distribution to
+be factored into smaller, conditional distributions. The <strong>naive
+Bayes</strong> model assumes the conditional independence of all effect
+variables, given a single cause variable; its size grows linearly with
+the number of effects.</li>
+<li>A wumpus-world agent can calculate probabilities for unobserved
+aspects of the world, thereby improving on the decisions of a purely
+logical agent. Conditional independence makes these calculations
+tractable.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/" title="Quantifying Uncertainty">https://aquietzero.github.io/2023/06/13/reading/ai-a-modern-approach/2023-06-13-quantifying-uncertainty/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%96%B9%E6%B3%95%E8%AE%BA/" rel="tag"># 方法论</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E9%80%BB%E8%BE%91/" rel="tag"># 逻辑</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/05/18/reading/ai-a-modern-approach/2023-05-18-inference-in-first-order-logic/" rel="prev" title="Inference in First-Order Logic">
+                  <i class="fa fa-angle-left"></i> Inference in First-Order Logic
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/05/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/index/" rel="next" title="深度学习进阶-自然语言处理">
+                  深度学习进阶-自然语言处理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

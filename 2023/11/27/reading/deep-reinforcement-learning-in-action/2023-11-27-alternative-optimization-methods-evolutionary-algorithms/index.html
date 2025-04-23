@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="A different approach to reinforcement learning With both DQN and policy gradient, we need to carefully tune several hyperparameters ranging from selecting the right optimizer function, mini-batch size">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alternative optimization methods - Evolutionary algorithms">
+<meta property="og:url" content="https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="A different approach to reinforcement learning With both DQN and policy gradient, we need to carefully tune several hyperparameters ranging from selecting the right optimizer function, mini-batch size">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="遗传算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/","path":"2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/","title":"Alternative optimization methods - Evolutionary algorithms"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Alternative optimization methods - Evolutionary algorithms | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#a-different-approach-to-reinforcement-learning"><span class="nav-number">1.</span> <span class="nav-text">A different
+approach to reinforcement learning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reinforcement-learning-with-evolution-strategies"><span class="nav-number">2.</span> <span class="nav-text">Reinforcement
+learning with evolution strategies</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#evolution-in-theory"><span class="nav-number">2.1.</span> <span class="nav-text">Evolution in theory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-process"><span class="nav-number">2.2.</span> <span class="nav-text">Training process</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pros-and-cons-of-evolutionary-algorithms"><span class="nav-number">3.</span> <span class="nav-text">Pros and cons of
+evolutionary algorithms</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#evolutionary-algorithms-explore-more"><span class="nav-number">3.1.</span> <span class="nav-text">Evolutionary algorithms
+explore more</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#evolutionary-algorithms-are-incredibly-sample-intensive"><span class="nav-number">3.2.</span> <span class="nav-text">Evolutionary
+algorithms are incredibly sample intensive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#simulators"><span class="nav-number">3.3.</span> <span class="nav-text">Simulators</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#evolutionary-algorithms-as-a-scalable-alternative"><span class="nav-number">4.</span> <span class="nav-text">Evolutionary
+algorithms as a scalable alternative</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#scaling-evolutionary-algorithms"><span class="nav-number">4.1.</span> <span class="nav-text">Scaling evolutionary
+algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parallel-vs.-serial-processing"><span class="nav-number">4.2.</span> <span class="nav-text">Parallel vs. serial
+processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scaling-efficiency"><span class="nav-number">4.3.</span> <span class="nav-text">Scaling efficiency</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#communicating-between-nodes"><span class="nav-number">4.4.</span> <span class="nav-text">Communicating between nodes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scaling-linearly"><span class="nav-number">4.5.</span> <span class="nav-text">Scaling linearly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scaling-gradient-based-approaches"><span class="nav-number">4.6.</span> <span class="nav-text">Scaling gradient-based
+approaches</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Alternative optimization methods - Evolutionary algorithms | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Alternative optimization methods - Evolutionary algorithms
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-11-27 00:00:00" itemprop="dateCreated datePublished" datetime="2023-11-27T00:00:00+08:00">2023-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="a-different-approach-to-reinforcement-learning">A different
+approach to reinforcement learning</h1>
+<p>With both DQN and policy gradient, we need to carefully tune several
+hyperparameters ranging from selecting the right optimizer function,
+mini-batch size, and learning rate so that the training would be stable
+and successful. Since the training of both DQN and policy gradient
+algorithms relies on stochastic gradient descent, there is no guarantee
+that these methods will successfully learn.</p>
+<p>Moreover, in order to use gradient descent and back-propagation, we
+need a model that is differentiable.</p>
+<p>Instead of creating one agent and improving it, we can instead learn
+from natural selection. We could spawn multiple different agents with
+different parameters, observe which ones did the best, and “breed” the
+best agents such that descendants could inherit their parent’s desirable
+traits.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/different-approach.png" /></p>
+<p>Evolutionary algorithms are different from gradient descent-based
+optimization techniques. With evolutionary strategies, we generate
+agents and pass the most favorable weights down to the subsequent
+agents.</p>
+<h1 id="reinforcement-learning-with-evolution-strategies">Reinforcement
+learning with evolution strategies</h1>
+<h2 id="evolution-in-theory">Evolution in theory</h2>
+<p>Natural selection selects for the “most fit” individuals from each
+generation. In biology this represents the individuals that had the
+greatest reproductive success, and hence passed on their genetic
+information to subsequent generations. The environment can be thought as
+determining an objective or fitness function that assigns individuals a
+fitness score based on their performance with that environment.</p>
+<p>In <strong>evolutionary reinforcement learning</strong>, we are
+selecting for traits that give our agents the highest reward in a given
+environment, and by <strong>traits</strong> we mean model parameters or
+entire model structures. An RL agent’s fitness can be determined by the
+expected reward it would receive if it were to perform in the
+environment.</p>
+<p>The objective in evolutionary reinforcement learning is exactly the
+same as in back-propagation and gradient descent-based training. The
+only difference is that we use this evolutionary process, which is often
+referred to as a <strong>genetic algorithm</strong>, to optimize the
+parameters of a model such as a neural network.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/evolutionary-algo.png" /></p>
+<p>In an evolutionary algorithm approach to reinforcement learning,
+agents compete in an environment, and the agents that are more fit
+(those that generate more rewards) are preferentially copied to produce
+offspring. After many iterations of this process, only the most fit
+agents are left.</p>
+<h2 id="training-process">Training process</h2>
+<p>Train process is described as below:</p>
+<ol type="1">
+<li>We generate an initial population of random parameter vectors. We
+refer to each parameter vector in the population as an
+<strong>individual</strong>.</li>
+<li>We iterate through this population and assess the fitness of each
+individual by running the model in environment with that parameter
+vector and recording the rewards. Each individual is assigned a fitness
+score based on the rewards it earns.</li>
+<li>We randomly sample a pair of individuals from the population,
+weighted according to their relative fitness score to create a “breeding
+population”.</li>
+<li>The individuals in the breeding population will then “mate” to
+produce “offspring” that will form a new, full population. If the
+individuals are simply parameter vectors of real numbers, mating vector
+1 with vector 2 involves taking a subset from vector 1 and combining it
+with a complementary subset of vector 2 to make a new offspring vector
+of the same dimensions.</li>
+<li>With the new offspring solutions, we will iterate over our solutions
+and randomly mutate some of them to make sure we introduce new genetic
+diversity into every generation to prevent premature convergence on a
+local optimum. Mutation simply means adding a little random noise to the
+parameter vectors.</li>
+<li>Repeat this process with the new population for <span
+class="math inline">\(N\)</span> number of generations or until we reach
+<strong>convergence</strong>.</li>
+</ol>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/training-process.png" /></p>
+<h1 id="pros-and-cons-of-evolutionary-algorithms">Pros and cons of
+evolutionary algorithms</h1>
+<p>There are circumstances where an evolutionary approach works better,
+such as with problems that would benefit more from exploration; other
+circumstances make it impractical, such as problems where it is
+expensive to gather data.</p>
+<h2 id="evolutionary-algorithms-explore-more">Evolutionary algorithms
+explore more</h2>
+<p>Both DQN and policy gradients followed a similar approach: collect
+experiences and nudge the agent to take actions that led to greater
+rewards. This tends to cause agents to abandon exploring new states if
+they prefer an action already.</p>
+<p>The agents in the genetic algorithm, on the other hand, are not
+nudged in any direction.</p>
+<h2
+id="evolutionary-algorithms-are-incredibly-sample-intensive">Evolutionary
+algorithms are incredibly sample intensive</h2>
+<p>We have to make a lot of computation to calculate a bunch of random
+agents before we can actually evaluate them. We will say that
+evolutionary algorithms are less <strong>data-efficient</strong> than
+DQN or PG methods.</p>
+<p>Being data-inefficient is a problem if collecting data is expensive,
+such as in robotics or with autonomous vehicles.</p>
+<h2 id="simulators">Simulators</h2>
+<p>Instead of using an expensive robot or building a car with the
+necessary sensors, we could instead use computer software to emulate the
+experiences the environment would provide. Not only are simulators
+significantly cheaper to train agents with, but agents are able to train
+much more quickly since they can interact with the simulated environment
+much faster than in real life.</p>
+<h1 id="evolutionary-algorithms-as-a-scalable-alternative">Evolutionary
+algorithms as a scalable alternative</h1>
+<p>Producing a viable agent with evolutionary algorithms can sometimes
+be faster than gradient-based approaches because we do not have to
+compute the gradients via back-propagation. Another advantage of
+evolutionary algorithms is that they can be scaled incredibly well when
+parallelized.</p>
+<h2 id="scaling-evolutionary-algorithms">Scaling evolutionary
+algorithms</h2>
+<p>Evolutionary algorithm is an umbrella term for a wide variety of
+algorithms that take inspiration from biological evolution and rely on
+interactively selecting slightly better solutions from a large
+population to optimize a solution.</p>
+<p>There is another class of evolutionary algorithms confusingly termed
+<strong>evolutionary strategies (ES)</strong>, which employ a less
+biologically accurate form of evolution.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/evolutionary-strategy.png" /></p>
+<p>If we’re training a neural network with an ES algorithm</p>
+<ol type="1">
+<li><p>Start with a single parameter vector <span
+class="math inline">\(\theta_t\)</span>, sample a bunch of noise vectors
+of equal size (usually from a Gaussian distribution), such as <span
+class="math inline">\(e_i \sim N(\mu, \sigma)\)</span>.</p></li>
+<li><p>Then create a population of parameter vectors that are mutated
+versions of <span class="math inline">\(\theta_t\)</span> by taking
+<span class="math inline">\(\theta_i&#39; = \theta +
+e_i\)</span>.</p></li>
+<li><p>Test each of these mutated parameter vectors in the environment
+and assign them fitness scores based on their performance in the
+environment.</p></li>
+<li><p>Get an updated parameter vector by taking a weighted sum of each
+of the mutated vectors, where the weights are proportional to their
+fitness scores.</p>
+<p><span class="math display">\[
+\theta_{t+1} = \theta_t + \alpha \frac{1}{N_\sigma} \sum_i^N F_i \cdot
+e_i
+\]</span></p>
+<p>where the variables are defined as below:</p>
+<ul>
+<li><span class="math inline">\(\theta_{t+1}\)</span>: parameter
+vector</li>
+<li><span class="math inline">\(\alpha\)</span>: learning rate</li>
+<li><span class="math inline">\(N_\sigma\)</span>: population size</li>
+<li><span class="math inline">\(F_i\)</span>: fitness score</li>
+<li><span class="math inline">\(e_i\)</span>: noice vector</li>
+</ul></li>
+</ol>
+<aside>
+<p>💡 This evolutionary strategy algorithm is significantly simpler than
+the genetic algorithm. We only perform mutation, and the recombination
+step does not involve swapping pieces from different parents but is just
+a simple weighted summation which is very easy to implement and
+computationally fast.</p>
+</aside>
+<h2 id="parallel-vs.-serial-processing">Parallel vs. serial
+processing</h2>
+<p>In the CartPole example, we determine the fitness of the agents one
+by one, which will generally be the longest-running task in an
+evolutionary algorithm.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/serial-processing.png" /></p>
+<p>But we can determine the fitness simultaneously.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/parallel-processing.png" /></p>
+<p>If we have multiple machines at our disposal, we can determine the
+fitness of each agent on its own machine in parallel with each
+other.</p>
+<h2 id="scaling-efficiency">Scaling efficiency</h2>
+<p>Scaling efficiency is a term used to describe how a particular
+approach improves as more resources are thrown at it and can be
+calculated as follows:</p>
+<p><span class="math display">\[
+\text{Scaling Efficiency} = \frac{\text{Multiple of Performance Speed up
+after adding Resources}}{\text{Multiple of Resources Added}}
+\]</span></p>
+<p>In the real world, processes never have a scaling efficiency of 1.
+Adding 10 more machines will only gives us a 9x speedup.</p>
+<p>Ultimately we need to combine the results from assessing the fitness
+of each agent in parallel so that we can recombine and mutate them.
+Thus, we need to use true parallel processing followed by a period of
+sequential processing.</p>
+<figure>
+<img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/general-schematic-for-distributed-computation.png"
+alt="A general schematic for how distributed computing works. A master node assigns tasks to worker nodes; the worker nodes perform those tasks and then send their results back to the master node (not shown)." />
+<figcaption aria-hidden="true">A general schematic for how distributed
+computing works. A master node assigns tasks to worker nodes; the worker
+nodes perform those tasks and then send their results back to the master
+node (not shown).</figcaption>
+</figure>
+<p>A general schematic for how distributed computing works. A master
+node assigns tasks to worker nodes; the worker nodes perform those tasks
+and then send their results back to the master node (not shown).</p>
+<h2 id="communicating-between-nodes">Communicating between nodes</h2>
+<p>The architecture derived from OpenAI’s distributed ES paper. Each
+worker creates a child parameter vector from a parent by adding noise to
+the parent. Then it evaluates the child’s fitness and sends the fitness
+score to all other agents. Using shared random seeds, each agent can
+reconstruct the noise vectors used to create the other vectors from the
+other workers without each having to send an entire vector. Lastly, new
+parent vectors are created by performing a weighted sum of the child
+vectors, weighted according to their fitness scores.</p>
+<p><img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/communicating-between-workers.png" /></p>
+<aside>
+<p>💡 Seeing is important; it allows experiments involving random
+numbers to be reproduced by other researchers.</p>
+</aside>
+<h2 id="scaling-linearly">Scaling linearly</h2>
+<p><strong>Scaling linearly</strong> means that for every machine added,
+we receive roughly the same performance boost as we did by adding the
+previous machine.</p>
+<figure>
+<img
+src="/assets/images/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/scaling.png"
+alt="Figure recreated from the OpenAI “Evolutionary Strategies as a Scalable Alternative to Reinforcement Learning” paper. The figure demonstrates that as more computing resources were added, the time improvement remained constant." />
+<figcaption aria-hidden="true">Figure recreated from the OpenAI
+“Evolutionary Strategies as a Scalable Alternative to Reinforcement
+Learning” paper. The figure demonstrates that as more computing
+resources were added, the time improvement remained
+constant.</figcaption>
+</figure>
+<p>Figure recreated from the OpenAI “Evolutionary Strategies as a
+Scalable Alternative to Reinforcement Learning” paper. The figure
+demonstrates that as more computing resources were added, the time
+improvement remained constant.</p>
+<h2 id="scaling-gradient-based-approaches">Scaling gradient-based
+approaches</h2>
+<p>Gradient-based approaches can be trained on multiple machines as
+well. Currently, most distributed training of gradient-based approaches
+involves training the agent on each worker and then passing the
+gradients back to a central machine to be aggregated. All the gradients
+must be passed for each epoch or update cycle, which requires a lot of
+network bandwidth and strain on the central machine.</p>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>Evolutionary algorithms provide us with more powerful tools for our
+toolkit. Based on biological evolution, we
+<ul>
+<li>Produce individuals</li>
+<li>Select the best from the current generation</li>
+<li>Shuffle the genes around</li>
+<li>Mutate them to introduce some variation</li>
+<li>Mate them to create new generations for the next population</li>
+</ul></li>
+<li>Evolutionary algorithms tend to be more data hungry and less
+data-efficient than gradient-based approaches; in some circumstances
+this may be fine, notably if you have a simulator.</li>
+<li>Evolutionary algorithms can optimize over non-differentiable or even
+discrete functions, which gradient-based methods cannot do.</li>
+<li>Evolutionary strategies (ES) are a subclass of evolutionary
+algorithms that do not involve biological-like mating and recombination,
+but instead use copying with noise and weighted sums to create new
+individuals from a population.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/" title="Alternative optimization methods - Evolutionary algorithms">https://aquietzero.github.io/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-alternative-optimization-methods-evolutionary-algorithms/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" rel="tag"># 遗传算法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/27/reading/deep-reinforcement-learning-in-action/2023-11-27-curiosity-driven-exploration/" rel="prev" title="Curiosity-driven exploration">
+                  <i class="fa fa-angle-left"></i> Curiosity-driven exploration
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/07/03/life/2024-07-03-%E5%BE%80%E4%BA%8B%E7%B3%BB%E5%88%97/" rel="next" title="往事系列">
+                  往事系列 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

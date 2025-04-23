@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Definition If \(A\) is a communicative ring with unity in which every nonzero element is invertible, \(A\) is called a field. \(\mathbb{Q}\), \(\mathbb{R}\) and \(\mathbb{C}\) are infinite fields. Sub">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Abstract Algebra - Field">
+<meta property="og:url" content="https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Definition If \(A\) is a communicative ring with unity in which every nonzero element is invertible, \(A\) is called a field. \(\mathbb{Q}\), \(\mathbb{R}\) and \(\mathbb{C}\) are infinite fields. Sub">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.522Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="总结">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/","path":"2020/10/17/math/abstract-algebra/2020-10-17-field/","title":"Abstract Algebra - Field"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Abstract Algebra - Field | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#definition"><span class="nav-number">1.</span> <span class="nav-text">Definition</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#substitution-function"><span class="nav-number">1.1.</span> <span class="nav-text">Substitution function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#algebraic-and-transcendental"><span class="nav-number">1.2.</span> <span class="nav-text">Algebraic and Transcendental</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#range"><span class="nav-number">1.3.</span> <span class="nav-text">Range</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#field-extension"><span class="nav-number">2.</span> <span class="nav-text">Field Extension</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-theorem"><span class="nav-number">2.1.</span> <span class="nav-text">Basic Theorem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-idea"><span class="nav-number">2.2.</span> <span class="nav-text">The Idea</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-1"><span class="nav-number">2.3.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-2"><span class="nav-number">2.4.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#theorem-3"><span class="nav-number">2.5.</span> <span class="nav-text">Theorem 3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ruler-and-compass"><span class="nav-number">3.</span> <span class="nav-text">Ruler and Compass</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lemma"><span class="nav-number">3.1.</span> <span class="nav-text">Lemma</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-theorem-on-constructible-points"><span class="nav-number">3.2.</span> <span class="nav-text">Basic theorem on
+constructible points</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#galois-theory"><span class="nav-number">4.</span> <span class="nav-text">Galois Theory</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#root-field"><span class="nav-number">4.1.</span> <span class="nav-text">Root field</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-theorems"><span class="nav-number">4.2.</span> <span class="nav-text">Basic theorems</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2-1"><span class="nav-number">4.2.2.</span> <span class="nav-text">Theorem 2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isomorphism-extension"><span class="nav-number">4.3.</span> <span class="nav-text">Isomorphism extension</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1-2"><span class="nav-number">4.3.1.</span> <span class="nav-text">Theorem 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2-2"><span class="nav-number">4.3.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-3-1"><span class="nav-number">4.3.3.</span> <span class="nav-text">Theorem 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-4"><span class="nav-number">4.3.4.</span> <span class="nav-text">Theorem 4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-5"><span class="nav-number">4.3.5.</span> <span class="nav-text">Theorem 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-6"><span class="nav-number">4.3.6.</span> <span class="nav-text">Theorem 6</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#galois-group"><span class="nav-number">4.4.</span> <span class="nav-text">Galois Group</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-1-3"><span class="nav-number">4.4.1.</span> <span class="nav-text">Theorem 1</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fixer-and-fixfield"><span class="nav-number">4.5.</span> <span class="nav-text">Fixer and Fixfield</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#definition-1"><span class="nav-number">4.5.1.</span> <span class="nav-text">Definition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-2-3"><span class="nav-number">4.5.2.</span> <span class="nav-text">Theorem 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lemma-1"><span class="nav-number">4.5.3.</span> <span class="nav-text">Lemma</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-3-2"><span class="nav-number">4.5.4.</span> <span class="nav-text">Theorem 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#theorem-4-1"><span class="nav-number">4.5.5.</span> <span class="nav-text">Theorem 4</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Abstract Algebra - Field | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Abstract Algebra - Field
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-17 00:00:00" itemprop="dateCreated datePublished" datetime="2020-10-17T00:00:00+08:00">2020-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2020/10/17/math/abstract-algebra/2020-10-17-field/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/10/17/math/abstract-algebra/2020-10-17-field/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="definition">Definition</h1>
+<p>If <span class="math inline">\(A\)</span> is a communicative ring
+with unity in which every <strong>nonzero</strong> element is
+invertible, <span class="math inline">\(A\)</span> is called a
+<strong>field</strong>. <span class="math inline">\(\mathbb{Q}\)</span>,
+<span class="math inline">\(\mathbb{R}\)</span> and <span
+class="math inline">\(\mathbb{C}\)</span> are infinite fields.</p>
+<h2 id="substitution-function">Substitution function</h2>
+<p>Let <span class="math inline">\(E\)</span> be a field, <span
+class="math inline">\(F\)</span> a subfield of <span
+class="math inline">\(E\)</span>, and <span
+class="math inline">\(c\)</span> any element of <span
+class="math inline">\(E\)</span>.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/52b640f1-2523-4954-acb5-4d758bd69f59/Untitled.png</p>
+<p>The substitution function <span
+class="math inline">\(\sigma_c\)</span> is defined as follows:</p>
+<p>For every polynomial <span class="math inline">\(a(x)\)</span> in
+<span class="math inline">\(F[x]\)</span>,</p>
+<p><span class="math display">\[
+\sigma_c(a(x)) = a(c)
+\]</span></p>
+<p>Thus, <span class="math inline">\(\sigma_c\)</span> is the function
+"substitute <span class="math inline">\(c\)</span> for <span
+class="math inline">\(x\)</span>."</p>
+<aside>
+<p>💡 <span class="math inline">\(\sigma_c\)</span> is a homomorphism.
+The kernel of <span class="math inline">\(\sigma_c\)</span> is the set
+of all polynomials <span class="math inline">\(a(x)\)</span> such that
+<span class="math inline">\(a(c) = \sigma_c(a(x)) = 0\)</span>. That is,
+<strong>the <span class="math inline">\(\ker(\sigma_c)\)</span> consists
+of all the polynomials <span class="math inline">\(a(x)\)</span> in
+<span class="math inline">\(F[x]\)</span> such that <span
+class="math inline">\(c\)</span> is a root of <span
+class="math inline">\(a(x)\)</span></strong>.</p>
+</aside>
+<h2 id="algebraic-and-transcendental">Algebraic and Transcendental</h2>
+<p>An element <span class="math inline">\(c\)</span> in <span
+class="math inline">\(E\)</span> is called <strong>algebraic over <span
+class="math inline">\(F\)</span></strong> if it is the root of some
+nonzero polynomial <span class="math inline">\(a(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>. Otherwise, <span
+class="math inline">\(c\)</span> is called <strong>transcendental over
+<span class="math inline">\(F\)</span></strong>.</p>
+<p>Let <span class="math inline">\(J_c\)</span> denote the kernel of
+<span class="math inline">\(\sigma_c\)</span>. Obviously <span
+class="math inline">\(c\)</span> is algebraic over <span
+class="math inline">\(F\)</span> iff <span
+class="math inline">\(J_c\)</span> contains nonzero polynomials, and
+transcendental over <span class="math inline">\(F\)</span> iff <span
+class="math inline">\(J_c = \{0\}\)</span>.</p>
+<h2 id="range">Range</h2>
+<p>The range of <span class="math inline">\(\sigma_c\)</span> is a
+subfield of <span class="math inline">\(E\)</span>, which is a set of
+all the elements <span class="math inline">\(a(c)\)</span>, for all
+<span class="math inline">\(a(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>.</p>
+<p><span class="math display">\[
+\text{Range } \sigma_c = \{a(c): a(x) \in F[x]\}
+\]</span></p>
+<p>The range of <span class="math inline">\(\sigma_c\)</span> is the
+smallest field containing <span class="math inline">\(F\)</span> and
+<span class="math inline">\(c\)</span>. This field can also be called as
+<strong>the field generated by <span class="math inline">\(F\)</span>
+and <span class="math inline">\(c\)</span></strong>, and is denoted by
+the symbol</p>
+<p><span class="math display">\[
+F(c)
+\]</span></p>
+<p>In a nutshell: <span class="math inline">\(\sigma_c\)</span> is a
+homomorphism with domain <span class="math inline">\(F[x]\)</span>,
+range <span class="math inline">\(F(c)\)</span>, and kernel <span
+class="math inline">\(J_c = \langle p(x) \rangle\)</span>. Thus, by the
+FHT,</p>
+<p><span class="math display">\[
+F(c) \cong F[x]/ \langle p(x) \rangle
+\]</span></p>
+<aside>
+<p>💡 If <span class="math inline">\(c\)</span> and <span
+class="math inline">\(d\)</span> are roots of the same irreducible
+polynomial <span class="math inline">\(p(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>, then <span
+class="math inline">\(F(c) \cong F(d)\)</span>.</p>
+</aside>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e01a7f44-6083-4ab8-b7d6-8e48b22e62f1/Untitled.png</p>
+<h1 id="field-extension">Field Extension</h1>
+<p>Why should we be interested in looking at the extension of fields?
+There are several reasons, but one is very special. If <span
+class="math inline">\(F\)</span> is an arbitrary field, there are , in
+general, polynomials over <span class="math inline">\(F\)</span> which
+have no roots in <span class="math inline">\(F\)</span>. <strong>But
+every polynomials over <span class="math inline">\(F\)</span> has roots.
+If those roots are not already in <span
+class="math inline">\(F\)</span>, they are in a suitable extension of
+<span class="math inline">\(F\)</span></strong>.</p>
+<h2 id="basic-theorem">Basic Theorem</h2>
+<p>Let <span class="math inline">\(F\)</span> be a field and <span
+class="math inline">\(a(x)\)</span> a non-constant polynomial in <span
+class="math inline">\(F[x]\)</span>. There exists an extension field
+<span class="math inline">\(E\)</span> of <span
+class="math inline">\(F\)</span> and an element <span
+class="math inline">\(c\)</span> in <span
+class="math inline">\(E\)</span> such that <span
+class="math inline">\(c\)</span> is a root of <span
+class="math inline">\(a(x)\)</span>.</p>
+<h2 id="the-idea">The Idea</h2>
+<p>Let <span class="math inline">\(F\)</span> and <span
+class="math inline">\(K\)</span> be fields. If <span
+class="math inline">\(K\)</span> is an extension of <span
+class="math inline">\(F\)</span>, we may regard <span
+class="math inline">\(K\)</span> as being a vector space over <span
+class="math inline">\(F\)</span>. We may treat the elements in <span
+class="math inline">\(K\)</span> as "vectors" and the elements in <span
+class="math inline">\(F\)</span> as "scalars".</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/91ee7e48-3aa2-47f4-bb75-7cf07ca35465/Untitled.png</p>
+<ul>
+<li>Adding elements in <span class="math inline">\(K\)</span> can be
+regarded as vector addition.</li>
+<li>Add and multiply elements in <span class="math inline">\(F\)</span>
+can be regarded as scalar addition and multiplication.</li>
+<li>Multiply an element of <span class="math inline">\(F\)</span> by an
+element of <span class="math inline">\(K\)</span> can be regarded as
+scalar multiplication.</li>
+</ul>
+<p>If <span class="math inline">\(K\)</span>, as a vector space over
+<span class="math inline">\(F\)</span>, is of finite dimension, we call
+<span class="math inline">\(K\)</span> a finite extension of <span
+class="math inline">\(F\)</span>. If the dimension of the vector space
+<span class="math inline">\(K\)</span> is <span
+class="math inline">\(n\)</span>, we say that <span
+class="math inline">\(K\)</span> is an extension of degree <span
+class="math inline">\(n\)</span> over <span
+class="math inline">\(F\)</span>. This is symbolized by writing</p>
+<p><span class="math display">\[
+[K:F] = n
+\]</span></p>
+<h2 id="theorem-1">Theorem 1</h2>
+<p>The degree of <span class="math inline">\(F(c)\)</span> over <span
+class="math inline">\(F\)</span> is equal to the degree of the minimum
+polynomial of <span class="math inline">\(c\)</span> over <span
+class="math inline">\(F\)</span>.</p>
+<h2 id="theorem-2">Theorem 2</h2>
+<p>Suppose <span class="math inline">\(F \subseteq K \subseteq
+E\)</span> where <span class="math inline">\(E\)</span> is a finite
+extension of <span class="math inline">\(K\)</span> and <span
+class="math inline">\(K\)</span> is a finite extension of <span
+class="math inline">\(F\)</span>. Then <span
+class="math inline">\(E\)</span> is a finite extension of <span
+class="math inline">\(F\)</span>, and</p>
+<p><span class="math display">\[
+[E:F] = [E:K][K:F]
+\]</span></p>
+<p>An extension <span class="math inline">\(F(c)\)</span> formed by
+adjoining a single element to <span class="math inline">\(F\)</span> is
+called a simple extension of <span class="math inline">\(F\)</span>. And
+extension <span class="math inline">\(F(c_1, \dots, c_n)\)</span>,
+formed by adjoining a finite number of elements <span
+class="math inline">\(c_1, \dots, c_n\)</span>, is called an iterated
+extension. It is called "iterated" because it can be formed step by
+step, one simple extension at a time:</p>
+<p><span class="math display">\[
+F \subseteq F(c_1) \subseteq F(c_1, c_2) \subseteq \cdots \subseteq
+F(c_1, c_2, \dots, c_n)
+\]</span></p>
+<p>If <span class="math inline">\(c_1, \dots, c_n\)</span> are algebraic
+over <span class="math inline">\(F\)</span>, then <span
+class="math inline">\(F(c_1, c_2, \dots, c_n)\)</span> is a finite
+extension of <span class="math inline">\(F\)</span>.</p>
+<h2 id="theorem-3">Theorem 3</h2>
+<p>If <span class="math inline">\(K\)</span> is a finite extension of
+<span class="math inline">\(F\)</span>, every element of <span
+class="math inline">\(K\)</span> is algebraic over <span
+class="math inline">\(F\)</span>.</p>
+<h1 id="ruler-and-compass">Ruler and Compass</h1>
+<p>If <span class="math inline">\(\mathscr{A}\)</span> is any set of
+points in the plane, consider operations of the following two kinds:</p>
+<ol type="1">
+<li>Ruler operation: Through any two points in <span
+class="math inline">\(\mathscr{A}\)</span>, draw a straight line.</li>
+<li>Compass operation: Given three points <span class="math inline">\(A,
+B\)</span> and <span class="math inline">\(C\)</span> in <span
+class="math inline">\(\mathscr{A}\)</span>, draw a circle with center
+<span class="math inline">\(C\)</span> and radius equal in length to the
+segment <span class="math inline">\(AB\)</span>.</li>
+</ol>
+<p>The points of intersection of any two of these figures
+(<strong>line-line, line-circle, circle-circle</strong>) are said to be
+constructible in one step from <span
+class="math inline">\(\mathscr{A}\)</span>. A point <span
+class="math inline">\(P\)</span> is called constructible from <span
+class="math inline">\(\mathscr{A}\)</span> if there are points <span
+class="math inline">\(P_1, P_2, \dots, P_n = P\)</span> such that <span
+class="math inline">\(P_1\)</span> is constructible in one step from
+<span class="math inline">\(\mathscr{A}\)</span>, <span
+class="math inline">\(P_2\)</span> is constructible in one step from
+<span class="math inline">\(\mathscr{A} \cup \{P_1\}\)</span>, and so
+on, so that <span class="math inline">\(P_i\)</span> is constructible in
+one step from <span class="math inline">\(\mathscr{A} \cup \{P_1, P_2,
+\dots, P_{i-1}\}\)</span></p>
+<aside>
+<p>💡 We call a point in the plane <strong>constructible</strong> if it
+is constructible from <span class="math inline">\(\mathbb{Q} \times
+\mathbb{Q}\)</span>, that is, from the set of all points in the plane
+with rational coefficients.</p>
+</aside>
+<p>Suppose <span class="math inline">\(P\)</span> has coordinates <span
+class="math inline">\((a, b)\)</span> and is constructed from <span
+class="math inline">\(\mathbb{Q} \times \mathbb{Q}\)</span> in one step.
+We associate with <span class="math inline">\(P\)</span> the field <span
+class="math inline">\(\mathbb{Q}(a, b)\)</span>, obtained by adjoining
+to <span class="math inline">\(\mathbb{Q}\)</span> the coordinates of
+<span class="math inline">\(P\)</span>. More generally, suppose <span
+class="math inline">\(P\)</span> is constructible from <span
+class="math inline">\(\mathbb{Q}\times\mathbb{Q}\)</span> in <span
+class="math inline">\(n\)</span> steps: there are then <span
+class="math inline">\(n\)</span> points <span class="math inline">\(P_1,
+P_2, \dots, P_n = P\)</span> such that each <span
+class="math inline">\(P_i\)</span> is constructible in one step from
+<span class="math inline">\(\mathbb{Q} \times \mathbb{Q} \cup \{P_1,
+P_2, \dots, P_{i-1}\}\)</span>. Let the corrdinates of <span
+class="math inline">\(P_1, P_2, \dots, P_n\)</span> be <span
+class="math inline">\((a_1, b_1), \dots, (a_n, b_n)\)</span>
+respectively. With the points <span class="math inline">\(P_1, P_2,
+\dots, P_n\)</span> we associate fields <span class="math inline">\(K_1,
+K_2, \dots, K_n\)</span> where <span class="math inline">\(K_1 =
+\mathbb{Q}(a_1, b_1)\)</span>, and for each <span
+class="math inline">\(i &gt; 1\)</span>,</p>
+<p><span class="math display">\[
+K_i = K_{i-1}(a_i, b_i)
+\]</span></p>
+<p>Thus, beginning with <span class="math inline">\(\mathbb{Q}\)</span>,
+we adjoin first the coordinates of <span
+class="math inline">\(P_1\)</span>, then the coordinates of <span
+class="math inline">\(P_2\)</span>, and so on successively, yielding the
+sequence of extensions</p>
+<p><span class="math display">\[
+\mathbb{Q} \subseteq K_1 \subseteq K_2 \subseteq \cdots \subseteq K_n =
+K
+\]</span></p>
+<p>We call <span class="math inline">\(**K\)</span> the field extension
+associated with the point <span class="math inline">\(P\)</span>**.</p>
+<h2 id="lemma">Lemma</h2>
+<p>If <span class="math inline">\(K_1, \dots, K_n\)</span> are as
+defined previously, then <span class="math inline">\([K_i: K_{i-1}] = 1,
+2\)</span> or <span class="math inline">\(4\)</span>.</p>
+<h2 id="basic-theorem-on-constructible-points">Basic theorem on
+constructible points</h2>
+<p>If the point with coordinates <span class="math inline">\((a,
+b)\)</span> is constructible, then the degree of <span
+class="math inline">\(\mathbb{Q}(a)\)</span> over <span
+class="math inline">\(\mathbb{Q}\)</span> is a power of <span
+class="math inline">\(2\)</span>, and likewise for the degree of <span
+class="math inline">\(\mathbb{Q}(b)\)</span> over <span
+class="math inline">\(\mathbb{Q}\)</span>.</p>
+<h1 id="galois-theory">Galois Theory</h1>
+<p>We will be concerned not so much with finding solutions as with the
+nature and properties of these solutions. As we shall discover, these
+properties turn out to depend less on the polynomials themselves than on
+the fields which contain their solutions. We will be speaking of field
+extensions, but polynomials will always be lurking in the background.
+Every extension will be generated by roots of a polynomial, and every
+theorem about these extensions will actually be saying something about
+the polynomials.</p>
+<h2 id="root-field">Root field</h2>
+<p>If <span class="math inline">\(a(x)\)</span> is a polynomial of
+degree <span class="math inline">\(n\)</span> in <span
+class="math inline">\(F[x]\)</span>, let its roots be <span
+class="math inline">\(c_1, c_2, \dots, c_n\)</span>. Then <span
+class="math inline">\(F(c_1, c_2, \dots, c_n)\)</span> is clearly the
+smallest extension of <span class="math inline">\(F\)</span> containing
+all the roots of <span class="math inline">\(a(x)\)</span>. <span
+class="math inline">\(F(c_1, c_2, \dots, c_n)\)</span> is called the
+root field of <span class="math inline">\(a(x)\)</span> over <span
+class="math inline">\(F\)</span>.</p>
+<h2 id="basic-theorems">Basic theorems</h2>
+<h3 id="theorem-1-1">Theorem 1</h3>
+<p>If <span class="math inline">\(F\)</span> has characteristic 0,
+irreducible polynomials over <span class="math inline">\(F\)</span> can
+never have multiple roots.</p>
+<h3 id="theorem-2-1">Theorem 2</h3>
+<p>Every finite extension of <span class="math inline">\(F\)</span> is a
+simple extension <span class="math inline">\(F(c)\)</span>.</p>
+<aside>
+<p>💡 For example, <span class="math inline">\(\mathbb{Q}(\sqrt 2, \sqrt
+3) = \mathbb{Q}(\sqrt 2 + \sqrt 3)\)</span>.</p>
+</aside>
+<h2 id="isomorphism-extension">Isomorphism extension</h2>
+<p>Suppose <span class="math inline">\(F_1\)</span> and <span
+class="math inline">\(F_2\)</span> are fields, and <span
+class="math inline">\(h:F_1 \to F_2\)</span> is an isomorphism. Let
+<span class="math inline">\(K_1\)</span> and <span
+class="math inline">\(K_2\)</span> be extensions of <span
+class="math inline">\(F_1\)</span> and <span
+class="math inline">\(F_2\)</span>, and let <span
+class="math inline">\(\bar{h}: K_1 \to K_2\)</span> also be an
+isomorphism. We call <span class="math inline">\(\bar{h}\)</span> an
+extension of <span class="math inline">\(h\)</span> if <span
+class="math inline">\(\bar{h}(x) = h(x)\)</span> for every <span
+class="math inline">\(x\)</span> in <span
+class="math inline">\(F_1\)</span>, that is, if <span
+class="math inline">\(h\)</span> and <span
+class="math inline">\(\bar{h}\)</span> are the same on <span
+class="math inline">\(F_1\)</span>.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6b00b681-2323-4f54-9341-a6acf4ba9f24/Untitled.png</p>
+<h3 id="theorem-1-2">Theorem 1</h3>
+<p>Let <span class="math inline">\(h:F_1 \to F_2\)</span> be an
+isomorphism, and let <span class="math inline">\(p(x)\)</span> be
+irreducible in <span class="math inline">\(F_1[x]\)</span>. Suppose
+<span class="math inline">\(a\)</span> is a root of <span
+class="math inline">\(p(x)\)</span>, and <span
+class="math inline">\(b\)</span> a root of <span
+class="math inline">\(hp(x)\)</span>. Then <span
+class="math inline">\(h\)</span> can be extended to an isomorphism</p>
+<p><span class="math display">\[
+\bar{h}: F_1(a) \to F_2(b)
+\]</span></p>
+<p>Furthermore, <span class="math inline">\(\bar{h}(a) = b\)</span>.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8e423179-c9b1-46f9-992a-a0c908f61934/Untitled.png</p>
+<h3 id="theorem-2-2">Theorem 2</h3>
+<p>Suppose <span class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span> are roots of the same irreducible
+polynomial <span class="math inline">\(p(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>. Then there is an isomorphism <span
+class="math inline">\(g:F(a) \to F(b)\)</span> such that <span
+class="math inline">\(g(x) = x\)</span> for every <span
+class="math inline">\(x\)</span> in <span
+class="math inline">\(F\)</span>, and <span class="math inline">\(g(a) =
+b\)</span>.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2988fe6a-429e-454d-8b27-7b3df69fa412/Untitled.png</p>
+<aside>
+<p>💡 Let <span class="math inline">\(a(x)\)</span> be any polynomial in
+<span class="math inline">\(F[x]\)</span>. Any isomorphism which fixes
+<span class="math inline">\(F\)</span> sends roots of <span
+class="math inline">\(a(x)\)</span> to roots of <span
+class="math inline">\(a(x)\)</span>.</p>
+</aside>
+<h3 id="theorem-3-1">Theorem 3</h3>
+<p>Let <span class="math inline">\(K\)</span> and <span
+class="math inline">\(K&#39;\)</span> be finite extensions of <span
+class="math inline">\(F\)</span>. Assume <span
+class="math inline">\(K\)</span> is the root field of some polynomial
+over <span class="math inline">\(F\)</span>. If <span
+class="math inline">\(h: K \to K&#39;\)</span> is an isomorphism which
+fiexes <span class="math inline">\(F\)</span>, then <span
+class="math inline">\(K = K&#39;\)</span>.</p>
+<h3 id="theorem-4">Theorem 4</h3>
+<p>Let <span class="math inline">\(L\)</span> and <span
+class="math inline">\(L&#39;\)</span> be finite extensions of <span
+class="math inline">\(F\)</span>. Let <span
+class="math inline">\(K\)</span> be an extension of <span
+class="math inline">\(L\)</span> such that <span
+class="math inline">\(K\)</span> is a root field over <span
+class="math inline">\(F\)</span>. Any isomorphism <span
+class="math inline">\(h: L \to L&#39;\)</span> which fixes <span
+class="math inline">\(F\)</span> can be extended to an isomorphism <span
+class="math inline">\(\bar{h}: K \to K\)</span>.</p>
+<h3 id="theorem-5">Theorem 5</h3>
+<p>Let <span class="math inline">\(K\)</span> be the root field of
+<strong>some</strong> polynomial over <span
+class="math inline">\(F\)</span>. For <strong>every</strong> irreducible
+polynomial <span class="math inline">\(p(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>, if <span
+class="math inline">\(p(x)\)</span> has one root in <span
+class="math inline">\(K\)</span>, then <span
+class="math inline">\(p(x)\)</span> must have <strong>all</strong> of
+its roots in <span class="math inline">\(K\)</span>.</p>
+<h3 id="theorem-6">Theorem 6</h3>
+<p>Suppose <span class="math inline">\(I \subseteq E \subseteq
+K\)</span>, where <span class="math inline">\(E\)</span> is a finite
+extension of <span class="math inline">\(I\)</span> and <span
+class="math inline">\(K\)</span> is a finite extension of <span
+class="math inline">\(E\)</span>. If <span
+class="math inline">\(K\)</span> is the root field of some polynomial
+over <span class="math inline">\(I\)</span>, then <span
+class="math inline">\(K\)</span> is also the root field of some
+polynomial over <span class="math inline">\(E\)</span>.</p>
+<h2 id="galois-group">Galois Group</h2>
+<p>If <span class="math inline">\(K\)</span> is the root field of a
+polynomial <span class="math inline">\(a(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>, the group of all the automorphisms
+of <span class="math inline">\(K\)</span> which fix <span
+class="math inline">\(F\)</span> is called the Galois group of <span
+class="math inline">\(a(x)\)</span>. We also call it the Galois group of
+<span class="math inline">\(K\)</span> over <span
+class="math inline">\(F\)</span>, and designates it by the symbol</p>
+<p><span class="math display">\[
+Gal(K:F)
+\]</span></p>
+<h3 id="theorem-1-3">Theorem 1</h3>
+<p>Let <span class="math inline">\(K\)</span> be the root field of some
+polynomial over <span class="math inline">\(F\)</span>. The number of
+automorphisms of <span class="math inline">\(K\)</span> fixing <span
+class="math inline">\(F\)</span> is equal to the degree of <span
+class="math inline">\(K\)</span> over <span
+class="math inline">\(F\)</span>.</p>
+<h2 id="fixer-and-fixfield">Fixer and Fixfield</h2>
+<p>For example, <span class="math inline">\(\mathbb{Q}(\sqrt 2, \sqrt
+3)\)</span> is an extension of degree 4 over <span
+class="math inline">\(\mathbb{Q}\)</span>. There are 4 automorphisms of
+<span class="math inline">\(\mathbb{Q}(\sqrt 2, \sqrt 3)\)</span> which
+fix <span class="math inline">\(\mathbb{Q}\)</span>. These 4
+automorphisms are</p>
+<p><span class="math display">\[
+a+b\sqrt 2 + c\sqrt 3 + d\sqrt 6 \xrightarrow{\varepsilon} a+b\sqrt 2 +
+c\sqrt 3 + d\sqrt 6 \\
+a+b\sqrt 2 + c\sqrt 3 + d\sqrt 6 \xrightarrow{\alpha} a-b\sqrt 2 +
+c\sqrt 3 - d\sqrt 6 \\
+a+b\sqrt 2 + c\sqrt 3 + d\sqrt 6 \xrightarrow{\beta} a+b\sqrt 2 - c\sqrt
+3 - d\sqrt 6 \\
+a+b\sqrt 2 + c\sqrt 3 + d\sqrt 6 \xrightarrow{\gamma} a-b\sqrt 2 -
+c\sqrt 3 + d\sqrt 6
+\]</span></p>
+<aside>
+<p>💡 If <span class="math inline">\(K\)</span> is an extension of <span
+class="math inline">\(F\)</span>, the automorphism of <span
+class="math inline">\(K\)</span> which fix <span
+class="math inline">\(F\)</span> form a group. (the operation is
+composition.)</p>
+</aside>
+<p>The group table of the above automorphism is</p>
+$$
+<span class="math display">\[\begin{array}{c|c c c c}
+   \circ &amp; \varepsilon &amp; \alpha &amp; \beta &amp; \gamma
+\\         
+   \hline
+\varepsilon &amp; \varepsilon &amp; \alpha &amp; \beta &amp; \gamma \\
+\alpha &amp; \alpha &amp;\varepsilon &amp;  \gamma &amp; \beta \\
+\beta &amp; \beta &amp; \gamma &amp; \varepsilon &amp; \gamma \\
+\gamma &amp; \gamma &amp; \beta &amp; \alpha &amp; \varepsilon \\
+         
+\end{array}\]</span>
+<p>$$</p>
+<p>Inclusion diagram of the Galois group of <span
+class="math inline">\(\mathbb{Q}(\sqrt 2, \sqrt 3)\)</span> over <span
+class="math inline">\(\mathbb{Q}\)</span> is as follows:</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6c562828-5fdb-47b2-9b9e-fd0a41c5c844/Untitled.png</p>
+<p>The fixed fields intermediate between <span
+class="math inline">\(\mathbb{Q}(\sqrt 2, \sqrt 3)\)</span> and <span
+class="math inline">\(\mathbb{Q}\)</span> is as follows:</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a7a3b36d-d82f-4078-9aa9-3ca25ba0a685/Untitled.png</p>
+<p>One to one correspondence between intermediate fields and subgroups
+of Galois groups.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/02b5dab5-7b4f-44dd-89fc-9b67c317848d/Untitled.png</p>
+<h3 id="definition-1">Definition</h3>
+<p>Let <span class="math inline">\(F\)</span> be an arbitrary field and
+<span class="math inline">\(K\)</span> is a root field of some
+polynomial <span class="math inline">\(a(x)\)</span> in <span
+class="math inline">\(F[x]\)</span>. Let <span
+class="math inline">\(I\)</span> be an intermediate field between <span
+class="math inline">\(F\)</span> and <span
+class="math inline">\(K\)</span>. Since <span
+class="math inline">\(K\)</span> is the root field of <span
+class="math inline">\(a(x)\)</span> over <span
+class="math inline">\(F\)</span>, it is also the root field of <span
+class="math inline">\(a(x)\)</span> over <span
+class="math inline">\(I\)</span> for every intermediate field <span
+class="math inline">\(I\)</span>.</p>
+<p>The letter <span class="math inline">\(\mathbf{G}\)</span> will
+denote the Galois group of <span class="math inline">\(K\)</span> over
+<span class="math inline">\(F\)</span>. With each intermediate field
+<span class="math inline">\(I\)</span>, we associate the group</p>
+<p><span class="math display">\[
+I^* = Gal(K:I)
+\]</span></p>
+<p>that is, the group of all the automorphisms of <span
+class="math inline">\(K\)</span> which fix <span
+class="math inline">\(I\)</span>. It is obviously a subgroup of <span
+class="math inline">\(\mathbf{G}\)</span>. <strong>We call <span
+class="math inline">\(I^*\)</span> the fixer of <span
+class="math inline">\(I\)</span>.</strong></p>
+<p>Conversely, with each subgroup <span class="math inline">\(H\)</span>
+of <span class="math inline">\(\mathbf{G}\)</span> we associate the
+subfield of <span class="math inline">\(K\)</span> containing all the
+<span class="math inline">\(a\)</span> in <span
+class="math inline">\(K\)</span> which are not changed by any <span
+class="math inline">\(\pi \in H\)</span>. That is,</p>
+<p><span class="math display">\[
+\{a \in K: \pi(a) = a,  \forall \pi \in H\}
+\]</span></p>
+<p>This is a subfield of <span class="math inline">\(K\)</span>. It
+obviously contains <span class="math inline">\(F\)</span>, and is
+therefore one of the intermediate fields. <strong>It is called the fixed
+field, or fixfield of <span
+class="math inline">\(H\)</span></strong>.</p>
+<p>!https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a18022c0-9c5f-4803-987f-660b35b647a4/Untitled.png</p>
+<h3 id="theorem-2-3">Theorem 2</h3>
+<p>If <span class="math inline">\(H\)</span> is the fixer of <span
+class="math inline">\(I\)</span>, then <span
+class="math inline">\(I\)</span> is the fixfield of <span
+class="math inline">\(H\)</span>.</p>
+<h3 id="lemma-1">Lemma</h3>
+<p>Let <span class="math inline">\(H\)</span> be a subgroup of <span
+class="math inline">\(\mathbf{G}\)</span>, and <span
+class="math inline">\(I\)</span> the fixfield of <span
+class="math inline">\(H\)</span>. The number of elements in <span
+class="math inline">\(H\)</span> is equal to <span
+class="math inline">\([K:I]\)</span>.</p>
+<h3 id="theorem-3-2">Theorem 3</h3>
+<p>If <span class="math inline">\(I\)</span> is the fixfield of <span
+class="math inline">\(H\)</span>, then <span
+class="math inline">\(H\)</span> is the fixer of <span
+class="math inline">\(I\)</span>.</p>
+<h3 id="theorem-4-1">Theorem 4</h3>
+<p>Suppose <span class="math inline">\(E \subseteq I \subseteq
+K\)</span>, where <span class="math inline">\(I\)</span> is a root field
+over <span class="math inline">\(E\)</span> and <span
+class="math inline">\(K\)</span> is a root field over <span
+class="math inline">\(I\)</span>. Then</p>
+<p><span class="math display">\[
+Gal(I:E) \cong \frac{Gal(K:E)}{Gal(K:I)}
+\]</span></p>
+<aside>
+<p>💡 It follows, in particular, that <span
+class="math inline">\(Gal(K:I)\)</span> is a normal subgroup of <span
+class="math inline">\(Gal(K:E)\)</span>.</p>
+</aside>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/" title="Abstract Algebra - Field">https://aquietzero.github.io/2020/10/17/math/abstract-algebra/2020-10-17-field/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%80%BB%E7%BB%93/" rel="tag"># 总结</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/08/math/abstract-algebra/2020-10-08-polynomial/" rel="prev" title="Abstract Algebra - Polynomial">
+                  <i class="fa fa-angle-left"></i> Abstract Algebra - Polynomial
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/27/math/abstract-algebra/2023-10-27-action-orbit-and-stabilizers/" rel="next" title="Abstract Algebra - Action, Orbit and Stabilizers">
+                  Abstract Algebra - Action, Orbit and Stabilizers <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

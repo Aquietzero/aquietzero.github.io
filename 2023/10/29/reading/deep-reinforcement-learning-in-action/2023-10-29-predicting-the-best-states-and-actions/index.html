@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="The Q function The value function is defined as below, which is the weighted sum of all future rewards from the given state. \[ V_\pi(s) &#x3D; \sum^t_{i&#x3D;1} w_i R_i &#x3D; w_1 R_1 + w_2 R_2 + \cdots + w_t R_t \">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predicting the best states and actions: Deep Q-networks">
+<meta property="og:url" content="https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="The Q function The value function is defined as below, which is the weighted sum of all future rewards from the given state. \[ V_\pi(s) &#x3D; \sum^t_{i&#x3D;1} w_i R_i &#x3D; w_1 R_1 + w_2 R_2 + \cdots + w_t R_t \">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.527Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/","path":"2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/","title":"Predicting the best states and actions: Deep Q-networks"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Predicting the best states and actions: Deep Q-networks | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#the-q-function"><span class="nav-number">1.</span> <span class="nav-text">The Q function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#navigate-with-q-learning"><span class="nav-number">2.</span> <span class="nav-text">Navigate with Q-learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#q-learning"><span class="nav-number">2.1.</span> <span class="nav-text">Q-learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#building-the-network"><span class="nav-number">2.2.</span> <span class="nav-text">Building the network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#learning-process"><span class="nav-number">2.3.</span> <span class="nav-text">Learning process</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#preventing-catastrophic-forgetting-experience-replay"><span class="nav-number">3.</span> <span class="nav-text">Preventing
+catastrophic forgetting: Experience replay</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#catastrophic-forgetting"><span class="nav-number">3.1.</span> <span class="nav-text">Catastrophic forgetting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#experience-replay"><span class="nav-number">3.2.</span> <span class="nav-text">Experience replay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#learning-instability"><span class="nav-number">3.3.</span> <span class="nav-text">Learning instability</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#summary"><span class="nav-number">4.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Predicting the best states and actions: Deep Q-networks | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Predicting the best states and actions: Deep Q-networks
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-10-29 00:00:00" itemprop="dateCreated datePublished" datetime="2023-10-29T00:00:00+08:00">2023-10-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="the-q-function">The Q function</h1>
+<p>The value function is defined as below, which is the weighted sum of
+all future rewards from the given state.</p>
+<p><span class="math display">\[
+V_\pi(s) = \sum^t_{i=1} w_i R_i = w_1 R_1 + w_2 R_2 + \cdots + w_t R_t
+\]</span></p>
+<p>This weighted sum is an expected value and it’s often concisely
+denoted as <span class="math inline">\(E[R|\pi, s]\)</span>. Similarly,
+the action-value function <span class="math inline">\(Q_\pi(s,
+a)\)</span> is denoted as <span class="math inline">\(E[R|\pi, s,
+a]\)</span>.</p>
+<h1 id="navigate-with-q-learning">Navigate with Q-learning</h1>
+<h2 id="q-learning">Q-learning</h2>
+<p>Q-learning is a particular method of learning optimal action values,
+but there are other methods. The main idea of Q-learning is that your
+algorithm predicts the value of a state-action pair, and then you
+compare this prediction to the observed accumulated rewards at some
+later time and update the parameters of the algorithm, so that next time
+it will make better predictions.</p>
+<p><span class="math display">\[
+\overbrace{Q(S_t, A_t)}^\text{Updated Q value}
+=
+\overbrace{Q(S_t, A_t)}^\text{Current Q value} +
+\alpha[
+\underbrace{R_{t+1}}_\text{Reward} +
+\gamma \underbrace{\max Q(S_{t+1}, a)}_\text{Max Q value for all
+actions} -
+Q(S_t, A_t)
+]
+\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is learning rate
+and <span class="math inline">\(\gamma\)</span> is discount factor.</p>
+<h2 id="building-the-network">Building the network</h2>
+<p>Generally, we want to use the Q function because it can tell us the
+value of taking an action in some state, so we can take the action that
+has the highest predicted value. <em>But it would be rather wasteful to
+separately compute the Q values for every possible action given the
+state</em>. A much more efficient procedure presented by DeepMind is to
+instead recast the Q function as a vector-valued function, it will
+compute the Q values for all actions, given some state, and return the
+vector of all those Q values. The new version of the Q function is
+denoted as <span class="math inline">\(Q_A(s)\)</span>.</p>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/q-function.png" /></p>
+<p>Once we have the output of the network, we can use it directly to
+decide what action to take using some action selection procedure, such
+as a simple epsilon-greedy approach or a softmax selection policy.</p>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/q-function-2.png" /></p>
+<p>The whole neural network is shown as follows.</p>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/deep-q.png" /></p>
+<h2 id="learning-process">Learning process</h2>
+<ol type="1">
+<li>Setup a <code>for</code> loop for the number of epochs.</li>
+<li>In the loop, we setup a <code>while</code> loop (while the game is
+in progress).</li>
+<li>Run the Q-network forward.</li>
+<li>Using an epsilon-greedy implementation, so at time <span
+class="math inline">\(t\)</span> with probability <span
+class="math inline">\(\varepsilon\)</span> we will choose a random
+action. With probability <span class="math inline">\(1 -
+\varepsilon\)</span>, we will choose the action associated with the
+highest Q value from our network.</li>
+<li>Take action <span class="math inline">\(a\)</span> as determined in
+the preceding step, and observe the new state <span
+class="math inline">\(s&#39;\)</span> and reward <span
+class="math inline">\(r_{t + 1}\)</span>.</li>
+<li>Run the network forward using <span
+class="math inline">\(s&#39;\)</span>. Store the highest Q value, which
+we’ll call max Q.</li>
+<li>Our target value for training the network is <span
+class="math inline">\(r_{t+1} + \gamma \max Q_A(S_{t+1})\)</span>. If
+after taking action <span class="math inline">\(a_t\)</span> the game is
+over, there is no legitimate <span
+class="math inline">\(s_{t+1}\)</span>, we can set <span
+class="math inline">\(\gamma \max Q_A(S_{t+1})\)</span> as 0. The target
+becomes just <span class="math inline">\(r_{t + 1}\)</span>.</li>
+<li>Given that we have four outputs and we only want to update the
+output associated with the action we just took, our target output vector
+is the same as the output vector from the first run, <strong>except we
+change the one output associated with our action to the result we
+computed using the Q-learning formula.</strong></li>
+<li>Train the model on this one sample. Then repeat steps 2-9.</li>
+</ol>
+<h1 id="preventing-catastrophic-forgetting-experience-replay">Preventing
+catastrophic forgetting: Experience replay</h1>
+<h2 id="catastrophic-forgetting">Catastrophic forgetting</h2>
+<p>It’s a very important issue associated with gradient descent-based
+training methods in online training.</p>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/forgetting.png" /></p>
+<p>The idea of catastrophic forgetting is that when two game states are
+very similar and yet lead to very different outcomes, the Q function
+will get “confused” and won’t be able to learn what to do. In this
+example, the catastrophic forgetting happens because the Q function
+learns from game 1 that moving right leads to a +1 reward, but in game
+2, which looks very similar, it gets a reward of –1 after moving right.
+<strong>As a result, the algorithm forgets what it previously learned
+about game 1, resulting in essentially no significant learning at
+all.</strong></p>
+<h2 id="experience-replay">Experience replay</h2>
+<p>Experience replay basically gives us batch updating in an online
+learning scheme.</p>
+<ol type="1">
+<li>In state <span class="math inline">\(s\)</span>, take action <span
+class="math inline">\(a\)</span>, and observe the new state <span
+class="math inline">\(s_{t+1}\)</span> and reward <span
+class="math inline">\(r_{t+1}\)</span>.</li>
+<li>Store this as a tuple <span class="math inline">\((s, a, s_{t+1},
+r_{t+1})\)</span> in a list.</li>
+<li>Continue to store each experience in this list until you have filled
+the list to a specific length.</li>
+<li>Once the experience replay memory is filled, randomly select a
+subset.</li>
+<li>Iterate through this subset and calculate value updates for each
+subset; store these in a target array (such as <span
+class="math inline">\(Y\)</span>) and store the state, <span
+class="math inline">\(s\)</span>, of each memory in <span
+class="math inline">\(X\)</span>.</li>
+<li>Use <span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> as a mini-batch for batch training. For
+subsequent epochs where the array is full, just overwrite old values in
+your experience replay memory array.</li>
+</ol>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/experience-replay.png" /></p>
+<p><strong>The idea is to employ mini-batching by storing past
+experiences and then using a random subset of these experiences to
+update the Q-network, rather than using just the single most recent
+experience.</strong></p>
+<h2 id="learning-instability">Learning instability</h2>
+<p>One potential problem that DeepMind identified when they published
+their deep Q-network paper was that if you keep updating the Q-network’s
+parameters after each move, you might cause instabilities to arise. The
+idea is that since the reward may be sparse, updating on every single
+step, where most steps don’t get any significant reward, may cause the
+algorithm to start behaving erratically.</p>
+<p>The solution is to <strong>duplicate the Q-network into two
+copies</strong>, each with its own model parameters. The regular
+Q-network and a copy called the <strong>target network</strong>.</p>
+<p>The learning sequence is as follows:</p>
+<ol type="1">
+<li>Initialize the Q-network with parameters <span
+class="math inline">\(\theta_Q\)</span>.</li>
+<li>Initialize the target network as a copy of the Q-network, but with
+separate parameters <span class="math inline">\(\theta_T\)</span>, and
+set <span class="math inline">\(\theta_T = \theta_Q\)</span>.</li>
+<li>Use the epsilon-greedy strategy with the Q-network’s Q values to
+selection action <span class="math inline">\(a\)</span>.</li>
+<li>Observe the reward and new state <span class="math inline">\(r_{t +
+1}, s_{t+1}\)</span>.</li>
+<li>The target network’s Q value will be set to <span
+class="math inline">\(r_{t+1}\)</span> if the episode has just been
+terminated or to <span class="math inline">\(r_{t+1} + \gamma \max
+Q_{\theta_r}(S_{t+1})\)</span> otherwise.</li>
+<li>Backpropagate the target network’s Q value through the
+Q-network.</li>
+<li>Every <span class="math inline">\(C\)</span> number of iterations,
+set <span class="math inline">\(\theta_T = \theta_Q\)</span>.</li>
+</ol>
+<p><img
+src="/assets/images/2023-10-29-predicting-the-best-states-and-actions/q-learning-with-target-network.png" /></p>
+<p>This is the general overview for Q-learning with a target network.
+It’s a fairly straightforward extension of the normal Q-learning
+algorithm, except that you have a second Q-network called <strong>the
+target network whose predicted Q values are used to backpropagate
+through and train the main Q-network</strong>. The target network’s
+parameters are not trained, but they are periodically synchronized with
+the Q-network’s parameters. The idea is that using the target network’s
+Q values to train the Q-network will improve the stability of the
+training.</p>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>A <strong>state-space</strong> is the set of all possible states
+that the environment can be in. Usually the states are encoded as
+tensors, so the state space may be a vector of type <span
+class="math inline">\(\mathbb{R}^n\)</span> or a matrix in <span
+class="math inline">\(\mathbb{R}^{n \times m}\)</span>.</li>
+<li>An <strong>action-space</strong> is the set of all possible actions
+given a state; for example, the action space for the game chess would be
+the set of all legal moves given some state of the game.</li>
+<li>A <strong>state-value</strong> is the expected sum of discounted
+rewards for a state given we follow some policy. If a state has a high
+state-value, that means that starting from this state will likely lead
+to high rewards.</li>
+<li>An <strong>action-value</strong> is the expected rewards for taking
+an action in a particular state. It is the value of a state-action pair.
+If you know the action-values for all possible actions for a state, you
+can decide to take the action with the highest action-value, and you
+would expect to receive the highest reward as a result.</li>
+<li>A <strong>policy function</strong> is a function that maps states to
+actions. It is the function that “decides” which actions to take given
+some input state.</li>
+<li><strong>Q function</strong> **is a function that takes a
+state-action pair and returns the action-value.</li>
+<li><strong>Q-learning</strong> is a form of reinforcement learning
+where we attempt to model the Q function; in other words, we attempt to
+learn how to predict the expected rewards for each action given a
+state.</li>
+<li>A <strong>deep Q-network (DQN)</strong> is simply where we use a
+deep learning algorithm as the model in Q-learning.</li>
+<li><strong>Off-policy learning</strong> is when we learn a policy while
+collecting data using a different policy.</li>
+<li><strong>On-policy learning</strong> **is when we learn a policy
+while also simultaneously using it to collect data for learning.</li>
+<li><strong>Catastrophic forgetting</strong> is a big problem that
+machine learning algorithms face when training with small batches of
+data at a time, where the new data being learned erases or corrupts the
+old information already learned.</li>
+<li><strong>Experience replay</strong> is a mechanism to allow batch
+training of reinforcement learning algorithms in order to mitigate
+catastrophic forgetting and allow stable training.</li>
+<li>A <strong>target network</strong> is a copy of the main DQN that we
+use to stabilize the update rule for training the main DQN.</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/" title="Predicting the best states and actions: Deep Q-networks">https://aquietzero.github.io/2023/10/29/reading/deep-reinforcement-learning-in-action/2023-10-29-predicting-the-best-states-and-actions/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/10/28/notebooks/2023-10-28-%E5%A4%9A%E8%87%82%E8%80%81%E8%99%8E%E6%9C%BA/" rel="prev" title="多臂老虎机">
+                  <i class="fa fa-angle-left"></i> 多臂老虎机
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/10/29/notebooks/2023-10-29-gridworld-with-deep-q/" rel="next" title="使用深度 Q 网络求解 GridWorld">
+                  使用深度 Q 网络求解 GridWorld <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

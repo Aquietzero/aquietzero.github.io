@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Bounding Volume Hierarchies By arranging the bounding volumes into a tree hierarchy called a bounding volume hierarchy (BVH), the time complexity can be reduced to logarithmic in the number of tests p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bounding Volume Hierarchies">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Bounding Volume Hierarchies By arranging the bounding volumes into a tree hierarchy called a bounding volume hierarchy (BVH), the time complexity can be reduced to logarithmic in the number of tests p">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-04-06-bounding-volume-hierarchies/bvh.png">
+<meta property="article:published_time" content="2022-04-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-04-06-bounding-volume-hierarchies/bvh.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/","path":"2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/","title":"Bounding Volume Hierarchies"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Bounding Volume Hierarchies | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bounding-volume-hierarchies"><span class="nav-number">1.</span> <span class="nav-text">Bounding Volume Hierarchies</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hierarchy-design-issues"><span class="nav-number">2.</span> <span class="nav-text">Hierarchy Design Issues</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cost-functions"><span class="nav-number">2.1.</span> <span class="nav-text">Cost Functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tree-degree"><span class="nav-number">2.2.</span> <span class="nav-text">Tree Degree</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#building-strategies-for-hierrachy-construction"><span class="nav-number">3.</span> <span class="nav-text">Building
+Strategies for Hierrachy Construction</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#top-down-construction"><span class="nav-number">3.1.</span> <span class="nav-text">Top-down Construction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#partitioning-strategies"><span class="nav-number">3.1.1.</span> <span class="nav-text">Partitioning Strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#choice-of-partitioning-axis"><span class="nav-number">3.1.2.</span> <span class="nav-text">Choice of Partitioning Axis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#choice-of-split-point-on-the-partitioning-axis"><span class="nav-number">3.1.3.</span> <span class="nav-text">Choice of Split
+Point on the Partitioning Axis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bottom-up-construction"><span class="nav-number">3.2.</span> <span class="nav-text">Bottom-up Construction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#other-bottom-up-construction-strategies"><span class="nav-number">3.2.1.</span> <span class="nav-text">Other Bottom-up
+Construction Strategies</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hierarchy-traversal"><span class="nav-number">4.</span> <span class="nav-text">Hierarchy Traversal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#generic-informed-depth-first-traversal"><span class="nav-number">4.1.</span> <span class="nav-text">Generic Informed
+Depth-first Traversal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#simultaneous-depth-first-traversal"><span class="nav-number">4.2.</span> <span class="nav-text">Simultaneous Depth-first
+Traversal</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#merging-bounding-volumes"><span class="nav-number">5.</span> <span class="nav-text">Merging Bounding Volumes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#merging-two-aabbs"><span class="nav-number">5.1.</span> <span class="nav-text">Merging Two AABBs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#merging-two-spheres"><span class="nav-number">5.2.</span> <span class="nav-text">Merging Two Spheres</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#efficient-tree-representation-and-traversal"><span class="nav-number">6.</span> <span class="nav-text">Efficient Tree
+Representation and Traversal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#array-representation"><span class="nav-number">6.1.</span> <span class="nav-text">Array Representation</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#grouping-queries"><span class="nav-number">7.</span> <span class="nav-text">Grouping Queries</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#improved-queries-through-caching"><span class="nav-number">8.</span> <span class="nav-text">Improved Queries Through
+Caching</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#front-tracking"><span class="nav-number">8.1.</span> <span class="nav-text">Front Tracking</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Bounding Volume Hierarchies | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Bounding Volume Hierarchies
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-06 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-06T00:00:00+08:00">2022-04-06</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="bounding-volume-hierarchies">Bounding Volume Hierarchies</h1>
+<p>By arranging the bounding volumes into a tree hierarchy called a
+<strong>bounding volume hierarchy (BVH)</strong>, the time complexity
+can be reduced to logarithmic in the number of tests performed.</p>
+<figure>
+<img src="/assets/images/2022-04-06-bounding-volume-hierarchies/bvh.png"
+alt="A bounding volume hierarchy of five simple objects. Here the bounding volumes used are AABBs." />
+<figcaption aria-hidden="true">A bounding volume hierarchy of five
+simple objects. Here the bounding volumes used are AABBs.</figcaption>
+</figure>
+<p>A bounding volume hierarchy of five simple objects. Here the bounding
+volumes used are AABBs.</p>
+<p>With a hierarchy in place, during collision testing children do not
+have to be examined if their parent volume is not intersected.</p>
+<h1 id="hierarchy-design-issues">Hierarchy Design Issues</h1>
+<p>Serval desired properties for bounding volume hierarchies have been
+suggested.</p>
+<ul>
+<li>The nodes contained in any given subtree should be near each
+other.</li>
+<li>Each node in the hierarchy should be of minimal volume.</li>
+<li>The sum of all bounding volumes should be minimal.</li>
+<li>Greater attention should be paid to nodes near the root of the
+hierarchy.</li>
+<li>The volume of overlap of sibling nodes should be minimal.</li>
+<li>The hierarchy should be balanced with respect to both its node
+structure and its content.</li>
+</ul>
+<aside>
+<p>💡 For real-time applications, games especially, an important
+addition to the previous list is the requirement that the worse case
+time for queries not be much worse than the average case query time.</p>
+</aside>
+<h2 id="cost-functions">Cost Functions</h2>
+<p>The cost function is defined as below:</p>
+<p><span class="math display">\[
+T = N_VC_V + N_PC_P + N_UC_U + C_O
+\]</span></p>
+<p>Here,</p>
+<ul>
+<li><span class="math inline">\(T\)</span> is the total cost of
+intersecting the two hierarchies</li>
+<li><span class="math inline">\(N_V\)</span> is the number of BV pairs
+tested for overlap</li>
+<li><span class="math inline">\(C_V\)</span> is the cost of testing a
+pair of BVs for overlap</li>
+<li><span class="math inline">\(N_P\)</span> is the number of primitive
+pairs tested</li>
+<li><span class="math inline">\(C_P\)</span> is the cost of testing a
+primitive pair</li>
+<li><span class="math inline">\(N_U\)</span> is the number of nodes that
+need to be updated</li>
+<li><span class="math inline">\(C_U\)</span> is the cost of updating
+each such node</li>
+<li><span class="math inline">\(C_O\)</span> is the cost of a one-time
+processing (such as a coordinate transformation between objects)</li>
+</ul>
+<h2 id="tree-degree">Tree Degree</h2>
+<p>In terms of size, a d-ary tree of <span
+class="math inline">\(n\)</span> leaves has <span
+class="math inline">\((n - 1)/(d - 1)\)</span> internal nodes for a
+total of <span class="math inline">\((nd - 1)/(d - 1)\)</span> nodes in
+the tree.</p>
+<h1 id="building-strategies-for-hierrachy-construction">Building
+Strategies for Hierrachy Construction</h1>
+<p>There are three primary categories of tree construction methods:
+<strong>top-down</strong>, <strong>bottom-up</strong>, and
+<strong>insertion methods</strong>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-06-bounding-volume-hierarchies/tree-construction.png"
+alt="A small tree of four objects built using (a) top-down, (b) bottom-up, and (c) insertion construction." />
+<figcaption aria-hidden="true">A small tree of four objects built using
+(a) top-down, (b) bottom-up, and (c) insertion
+construction.</figcaption>
+</figure>
+<p>A small tree of four objects built using (a) top-down, (b) bottom-up,
+and (c) insertion construction.</p>
+<h2 id="top-down-construction">Top-down Construction</h2>
+<p>It starts out by bounding the input set of primitives in a bounding
+volume. These primitives are then partitioned into two subsets. The
+procedure is now called recursively to form subhierarchies for the two
+subsets, which are then connected as children to the parent volume.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Construct a top-down tree. Rearranges object[] array during construction</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TopDownBVTree</span><span class="params">(Node **tree, Object object[], <span class="type">int</span> numObjects)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">assert</span>(numObjects &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> MIN_OBJECTS_PER_LEAF = <span class="number">1</span>;</span><br><span class="line">    Node *pNode = <span class="keyword">new</span> Node;</span><br><span class="line">    *tree = pNode;</span><br><span class="line">    <span class="comment">// Compute a bounding volume for object[0], ..., object[numObjects - 1]</span></span><br><span class="line">    pNode-&gt;BV = <span class="built_in">ComputeBoundingVolume</span>(&amp;object[<span class="number">0</span>], numObjects);</span><br><span class="line">    <span class="keyword">if</span> (numObjects &lt;= MIN_OBJECTS_PER_LEAF) &#123;</span><br><span class="line">        pNode-&gt;type = LEAF;</span><br><span class="line">        pNode-&gt;numObjects = numObjects;</span><br><span class="line">        pNode-&gt;object = &amp;object[<span class="number">0</span>]; <span class="comment">// Pointer to first object in leaf</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pNode-&gt;type = NODE;</span><br><span class="line">        <span class="comment">// Based on some partitioning strategy, arrange objects into</span></span><br><span class="line">        <span class="comment">// two partitions: object[0..k-1], and object[k..numObjects-1]**</span></span><br><span class="line">        <span class="type">int</span> k = <span class="built_in">PartitionObjects</span>(&amp;object[<span class="number">0</span>], numObjects);</span><br><span class="line">        <span class="comment">// Recursively construct left and right subtree from subarrays and</span></span><br><span class="line">        <span class="comment">// point the left and right fields of the current node at the subtrees</span></span><br><span class="line">        <span class="built_in">TopDownBVTree</span>(&amp;(pNode-&gt;left), &amp;object[<span class="number">0</span>], k);</span><br><span class="line">        <span class="built_in">TopDownBVTree</span>(&amp;(pNode-&gt;right), &amp;object[k], numObjects - k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="partitioning-strategies">Partitioning Strategies</h3>
+<p>A simple partitioning method is the
+<strong>medium-cut-algorithm</strong>. Here, the set is divided in two
+equal size parts with respect to their projection along the selected
+axis, resulting in a balanced tree.</p>
+<p><strong>Other possible partition strategies are:</strong></p>
+<ul>
+<li>Minimize the sum of the volumes of the child volumes.</li>
+<li>Minimize the maximum volume of the child volumes.</li>
+<li>Minimize the volume of the intersection of the child volumes.</li>
+<li>Maximize the separation of child volumes.</li>
+<li>Divide primitives equally between the child volumes.</li>
+<li>Combinations of the previous strategies.</li>
+</ul>
+<p><strong>Partitioning stops and a node is considered a leaf when some
+particular stop criterion is reached. Common stop criteria
+are:</strong></p>
+<ul>
+<li>The node contains just a single primitive, or less than some k
+primitives.</li>
+<li>The volume of the bounding volume has fallenbelow a set cut-off
+limit.</li>
+<li>The depth of the node has reached a predefind cut-off depth.</li>
+</ul>
+<p><strong>Partitioning can also fail early, before a stop criterion
+triggers, for instance when:</strong></p>
+<ul>
+<li>All primitives fall on one side of the split plane.</li>
+<li>One or both child volumes end up with as many (or nearly as many)
+primitives as the parent volume.</li>
+<li>Both child volumes are almost as large as the parent volume.</li>
+</ul>
+<h3 id="choice-of-partitioning-axis">Choice of Partitioning Axis</h3>
+<p>Common choices of axes are:</p>
+<ul>
+<li>Local x, y, z coordinate axes.</li>
+<li>Axes from the intended aligned bounding volume.</li>
+<li>Axes of the parent bounding volume.</li>
+<li>Axis through the two most distant points.</li>
+<li>Axis along which variance is greatest.</li>
+</ul>
+<aside>
+<p>💡 Even though a full optimization step is infeasible, once a
+partitioning axis has been selected a small number of hill-climbing
+steps can be performed to improve on the axis.</p>
+</aside>
+<h3 id="choice-of-split-point-on-the-partitioning-axis">Choice of Split
+Point on the Partitioning Axis</h3>
+<ul>
+<li>Median of the centroid coordinates (object median).</li>
+<li>Mean of the centroid coordinates (object mean).</li>
+<li>Median of the bounding volume projection extents (spatial
+median).</li>
+<li>Splitting at k evenly spaced points along the bounding volume
+projection extents. This brute force alternative simply tests some small
+number of evenly spaced points along the axis, picking the best
+one.</li>
+<li>Splitting between (random subset of ) the centroid coordinates.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-04-06-bounding-volume-hierarchies/object-split.png"
+alt="(a) Splitting at the object median. (b) Splitting at the object mean. (c) Splitting at the spatial median." />
+<figcaption aria-hidden="true">(a) Splitting at the object median. (b)
+Splitting at the object mean. (c) Splitting at the spatial
+median.</figcaption>
+</figure>
+<ol type="a">
+<li>Splitting at the object median. (b) Splitting at the object mean.
+(c) Splitting at the spatial median.</li>
+</ol>
+<h2 id="bottom-up-construction">Bottom-up Construction</h2>
+<p>In contrast to top-down methods, bottom-up methods are more
+complicated to implement and have a slower construction time but usually
+produce the best tress. To construct a tree hierarchy bottom up, the
+first step is to enclose each primitive within a bounding volume. These
+volumes form the leaf nodes of the tree. From the resulting set of
+volumes, two leaf nodes are selected based on some <strong>merging
+criterion</strong> (or called a <strong>clustering rule</strong>). These
+nodes are then bound within a bounding volume, which replaces the
+original nodes in the set. This pairing procedure repeats until the set
+consists of a single bounding volume representing the root node of the
+constructed tree.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">Node *<span class="title">BottomUpBVTree</span><span class="params">(Object object[], <span class="type">int</span> numObjects)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">assert</span>(numObjects != <span class="number">0</span>);</span><br><span class="line">    <span class="type">int</span> i, j;</span><br><span class="line">    <span class="comment">// Allocate temporary memory for holding node pointers to</span></span><br><span class="line">    <span class="comment">// the current set of active nodes (initially the leaves)</span></span><br><span class="line">    NodePtr *pNodes = <span class="keyword">new</span> NodePtr[numObjects];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Form the leaf nodes for the given input objects</span></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; numObjects; i++) &#123;</span><br><span class="line">        pNodes[i] = <span class="keyword">new</span> Node;</span><br><span class="line">        pNodes[i]-&gt;type = LEAF;</span><br><span class="line">        pNodes[i]-&gt;object = &amp;object[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Merge pairs together until just the root object left</span></span><br><span class="line">    <span class="keyword">while</span> (numObjects &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// Find indices of the two &quot;nearest&quot; nodes, based on some criterion</span></span><br><span class="line">        <span class="built_in">FindNodesToMerge</span>(&amp;pNodes[<span class="number">0</span>], numObjects, &amp;i, &amp;j);</span><br><span class="line">        <span class="comment">// Group nodes i and j together under a new internal node</span></span><br><span class="line">        Node *pPair = <span class="keyword">new</span> Node;</span><br><span class="line">        pPair-&gt;type = NODE;</span><br><span class="line">        pPair-&gt;left = pNodes[i];</span><br><span class="line">        pPair-&gt;right = pNodes[j];</span><br><span class="line">        <span class="comment">// Compute a bounding volume for the two nodes</span></span><br><span class="line">        pPair-&gt;BV = <span class="built_in">ComputeBoundingVolume</span>(pNodes[i]-&gt;object, pNodes[j]-&gt;object);</span><br><span class="line">        <span class="comment">// Remove the two nodes from the active set and add in the new node.</span></span><br><span class="line">        <span class="comment">// Done by putting new node at index ’min’ and copying last entry </span></span><br><span class="line">        <span class="comment">// to ’max’ int min = i, max = j;</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt; j) min = j, max = i;</span><br><span class="line">        pNodes[min] = pPair;</span><br><span class="line">        pNodes[max] = pNodes[numObjects - <span class="number">1</span>];</span><br><span class="line">        numObjects--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Free temporary storage and return root of tree</span></span><br><span class="line">    Node *pRoot = pNodes[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">delete</span> pNodes;</span><br><span class="line">    <span class="keyword">return</span> pRoot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>An improved method using priority queue is shown as below.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">Node *<span class="title">BottomUpBVTree</span><span class="params">(Object object[], <span class="type">int</span> numObjects)</span> </span>&#123;</span><br><span class="line">    PriorityQueue&lt;Pair&gt; q;</span><br><span class="line">    InsertionBVTree t;</span><br><span class="line">    <span class="comment">// Bound all objects in BV, forming leaf nodes. Insert leaf nodes into a</span></span><br><span class="line">    <span class="comment">// dynamically changable insertion-built BV tree</span></span><br><span class="line">    <span class="built_in">InitializeInsertionBVTree</span>(t, object, numObjects);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// For all nodes, form pair of references to the node and the node it pairs</span></span><br><span class="line">    <span class="comment">// best with (resulting in the smallest bounding volume). Add all pairs to</span></span><br><span class="line">    <span class="comment">// the priority queue, sorted on increasing volume order</span></span><br><span class="line">    <span class="built_in">InitializePriorityQueue</span>(q, object, numObjects);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">SizeOf</span>(q) &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// Fetch the smallest volume pair from the queue</span></span><br><span class="line">        Pair *p = <span class="built_in">Dequeue</span>(q);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Discard pair if the node has already been paired</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">HasAlreadyBeenPaired</span>(p-&gt;node)) <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Recompute the best pairing node for this node to see if</span></span><br><span class="line">        <span class="comment">// the stored pair node is still valid</span></span><br><span class="line">        Node *bestpairnode = <span class="built_in">ComputeBestPairingNodeUsingTree</span>(t, p-&gt;node);</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;pairnode == bestpairnode) &#123;</span><br><span class="line">            <span class="comment">// The store pair node is OK, pair the two nodes together;</span></span><br><span class="line">            <span class="comment">// link the nodes together under a new node</span></span><br><span class="line">            Node *n = <span class="keyword">new</span> Node;</span><br><span class="line">            n-&gt;left = p-&gt;node;</span><br><span class="line">            n-&gt;right = p-&gt;pairnode;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Add new node to BV tree; delete old nodes as not possible to pair with</span></span><br><span class="line">            <span class="built_in">Delete</span>(t, p-&gt;node);</span><br><span class="line">            <span class="built_in">Delete</span>(t, p-&gt;pairnode);</span><br><span class="line">            <span class="built_in">Insert</span>(t, n);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Compute a pairing node for the new node; insert it into queue</span></span><br><span class="line">            Node *newbestpairnode = <span class="built_in">ComputeBestPairingNodeUsingTree</span>(t, n);</span><br><span class="line">            p = <span class="built_in">Pair</span>(n, newbestpairnode);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Best pair node changed since the pair was inserted;</span></span><br><span class="line">            <span class="comment">// update the pair, reinsert into queue and try again</span></span><br><span class="line">            p = <span class="built_in">Pair</span>(p-&gt;node, bestpairnode);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">Enqueue</span>(q, p, <span class="built_in">VolumeOfBVForPairedNodes</span>(p));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Dequeue</span>(q)-&gt;node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="other-bottom-up-construction-strategies">Other Bottom-up
+Construction Strategies</h3>
+<p>Locating the point (or object) out of a set of points closest to a
+given query point is known as the <strong>nearest neighbor
+problem</strong>.</p>
+<p>For forming larger clusters of objects, specific clustering
+algorithms can be used. One such approach is to treat the objects as
+vertices of a complete graph and compute a <strong>minimum spanning tree
+(MST)</strong> for the graph, with edge weights set to the distance
+between the two connected objects or some similar clustering measure.
+The MST can be computed using <strong>Prim’s algorithm</strong> or
+<strong>Kruskal’s algorithm</strong>.</p>
+<h1 id="hierarchy-traversal">Hierarchy Traversal</h1>
+<p>The two most fundamental tree-traversing methods are
+<strong>breadth-first search</strong> and <strong>depth-first
+search</strong>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-06-bounding-volume-hierarchies/hierarchy-traversal.png"
+alt="(a) Breadth-firstsearch, (b) depth-firstsearch, and (c) one possible best-firstsearch ordering." />
+<figcaption aria-hidden="true">(a) Breadth-firstsearch, (b)
+depth-firstsearch, and (c) one possible best-firstsearch
+ordering.</figcaption>
+</figure>
+<ol type="a">
+<li>Breadth-firstsearch, (b) depth-firstsearch, and (c) one possible
+best-firstsearch ordering.</li>
+</ol>
+<p>Pure breadth-first and depth-first traversals are considered
+<strong>uninformed or blind search methods</strong>. Uninformed search
+methods do not examine and make traversal decisions based on the data
+contained in the traversed structure. In contrast to the uninformed
+methods is the group of <strong>informed search methods</strong>. These
+attempt to utilize known information about the domain being searched
+through heuristic rules.</p>
+<h2 id="generic-informed-depth-first-traversal">Generic Informed
+Depth-first Traversal</h2>
+<p>A generic informed depth-first traversal is as follows:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Generic recursive BVH traversal code.</span></span><br><span class="line"><span class="comment">// Assumes that leaves too have BVs</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">BVHCollision</span><span class="params">(CollisionResult *r, BVTree a, BVTree b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">BVOverlap</span>(a, b)) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">IsLeaf</span>(a) &amp;&amp; <span class="built_in">IsLeaf</span>(b)) &#123;</span><br><span class="line">        <span class="comment">// At leaf nodes. Perform collision tests on leaf node contents</span></span><br><span class="line">        <span class="built_in">CollidePrimitives</span>(r, a, b);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">DescendA</span>(a, b)) &#123;</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;left, b);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;right, b);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a, b-&gt;left);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a, b-&gt;right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>In the code</p>
+<ul>
+<li><code>BVOverlap()</code> determines the overlap between two bounding
+volumes.</li>
+<li><code>IsLeaf()</code> return true if its argument is a leaf node and
+not an internal node.</li>
+<li><code>CollidePrimitives()</code> collides all contained primitives
+against one another. Accumulating any reported collisions to the
+supplied <code>CollisionResult</code> structure.</li>
+<li><code>DescendA()</code> implements the descent rule, and returns
+true if object hierarchy <span class="math inline">\(A\)</span> should
+be descended or false for object hierarchy <span
+class="math inline">\(B\)</span>.</li>
+</ul>
+<p>Some basic implementations of <code>DescendA</code> is shown as
+below.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ‘Descend A’ descent rule</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">DescendA</span><span class="params">(BVTree a, BVTree b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !<span class="built_in">IsLeaf</span>(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ‘Descend B’ descent rule</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">DescendA</span><span class="params">(BVTree a, BVTree b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">IsLeaf</span>(b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ‘Descend larger’ descent rule</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">DescendA</span><span class="params">(BVTree a, BVTree b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">IsLeaf</span>(b) || (!<span class="built_in">IsLeaf</span>(a) &amp;&amp; (<span class="built_in">SizeOfBV</span>(a) &gt;= <span class="built_in">SizeOfBV</span>(b)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="simultaneous-depth-first-traversal">Simultaneous Depth-first
+Traversal</h2>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Recursive, simultaneous traversal</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">BVHCollision</span><span class="params">(CollisionResult *r, BVTree a, BVTree b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">BVOverlap</span>(a, b)) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">IsLeaf</span>(a)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">IsLeaf</span>(b)) &#123;</span><br><span class="line">            <span class="comment">// At leaf nodes. Perform collision tests on leaf node contents</span></span><br><span class="line">            <span class="built_in">CollidePrimitives</span>(r, a, b);</span><br><span class="line">            <span class="comment">// Could have an exit rule here (eg. exit on first hit)</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a, b-&gt;left);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a, b-&gt;right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">IsLeaf</span>(b)) &#123;</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;left, b);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;right, b);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;left, b-&gt;left);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;left, b-&gt;right);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;right, b-&gt;left);</span><br><span class="line">            <span class="built_in">BVHCollision</span>(a-&gt;right, b-&gt;right);</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="merging-bounding-volumes">Merging Bounding Volumes</h1>
+<p>During bottom-up construction an alternative to the rather costly
+operation of fitting the bounding volume directly to the data is to
+merge the child volumes themselves into a new bounding volume.</p>
+<h2 id="merging-two-aabbs">Merging Two AABBs</h2>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the AABB a of AABBs a0 and a1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">AABBEnclosingAABBs</span><span class="params">(AABB &amp;a, AABB a0, AABB a1)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">        a.min[i] = <span class="built_in">Min</span>(a<span class="number">0.</span>min[i], a<span class="number">1.</span>min[i]);</span><br><span class="line">        a.max[i] = <span class="built_in">Max</span>(a<span class="number">0.</span>max[i], a<span class="number">1.</span>max[i]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="merging-two-spheres">Merging Two Spheres</h2>
+<p>The calculation is best split into two cases:</p>
+<ul>
+<li>Either sphere is fully enclosed by the other.</li>
+<li>They are either partially overlapping or disjoint.</li>
+</ul>
+<p>Let two sphere <span class="math inline">\(S_0\)</span> and <span
+class="math inline">\(S_1\)</span>, the distance between two centers is
+<span class="math inline">\(d = \| C_1 - C_0 \|\)</span>. If <span
+class="math inline">\(|d_1 - d_0| \geq d\)</span>, then one sphere is
+fully inside the other.</p>
+<figure>
+<img
+src="/assets/images/2022-04-06-bounding-volume-hierarchies/merge-spheres.png"
+alt="Merging spheres S0 and S1." />
+<figcaption aria-hidden="true">Merging spheres <em>S</em>0 and
+<em>S</em>1.</figcaption>
+</figure>
+<p>Merging spheres <em>S</em>0 and <em>S</em>1.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the bounding sphere s of spheres s0 and s1</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">SphereEnclosingSpheres</span><span class="params">(Sphere &amp;s, Sphere s0, Sphere s1)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Compute the squared distance between the sphere centers</span></span><br><span class="line">    Vector d = s<span class="number">1.</span>c - s<span class="number">0.</span>c;</span><br><span class="line">    <span class="type">float</span> dist2 = <span class="built_in">Dot</span>(d, d);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Sqr</span>(s<span class="number">1.</span>r - s<span class="number">0.</span>r) &gt;= dist2) &#123;</span><br><span class="line">        <span class="comment">// The sphere with the larger radius encloses the other;</span></span><br><span class="line">        <span class="comment">// just set s to be the larger of the two spheres</span></span><br><span class="line">        <span class="keyword">if</span> (s<span class="number">1.</span>r &gt;= s<span class="number">0.</span>r)</span><br><span class="line">            s = s1;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            s = s0;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Spheres partially overlapping or disjoint</span></span><br><span class="line">        <span class="type">float</span> dist = <span class="built_in">Sqrt</span>(dist2);</span><br><span class="line">        s.r = (dist + s<span class="number">0.</span>r + s<span class="number">1.</span>r) * <span class="number">0.5f</span>;</span><br><span class="line">        s.c = s<span class="number">0.</span>c;</span><br><span class="line">        <span class="keyword">if</span> (dist &gt; EPSILON)</span><br><span class="line">            s.c += ((s.r - s<span class="number">0.</span>r) / dist) * d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="efficient-tree-representation-and-traversal">Efficient Tree
+Representation and Traversal</h1>
+<h2 id="array-representation">Array Representation</h2>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// First level</span></span><br><span class="line">array[<span class="number">0</span>] = *(root);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Second level</span></span><br><span class="line">array[<span class="number">1</span>] = *(root-&gt;left);</span><br><span class="line">array[<span class="number">2</span>] = *(root-&gt;right);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Third level</span></span><br><span class="line">array[<span class="number">3</span>] = *(root-&gt;left-&gt;left); ...</span><br></pre></td></tr></table></figure>
+<figure>
+<img
+src="source/assets/images/2022-04-06-bounding-volume-hierarchies/binary-tree.png"
+alt="A binary tree (top) stored using a pointerless array representation (bottom). Children of node at array position i can be found at positions 2i + 1 and 2i + 2. Note wasted memory (shown in gray)." />
+<figcaption aria-hidden="true">A binary tree (top) stored using a
+pointerless array representation (bottom). Children of node at array
+position <em>i</em> can be found at positions 2<em>i</em> + 1 and
+2<em>i</em> + 2. Note wasted memory (shown in gray).</figcaption>
+</figure>
+<h1 id="grouping-queries">Grouping Queries</h1>
+<p>In games it is not uncommon to have a number of test queries
+originating from the same general area. A common example is testing the
+wheels of a vehicle for collision with the ground. If the wheels are
+tested for collision independently, because the vehicle is small with
+respect to the world the query traversals throught the topmost part of
+the world hierarchy. As such, <strong>it is benefitial to move all
+queries together throught the world hierrarchy up untial the point where
+they start branching out into different parts of the tree.</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Sphere s[NUM_SPHERES];</span><br><span class="line">...</span><br><span class="line"><span class="comment">// Compute a bounding sphere for the query spheres</span></span><br><span class="line">Sphere bs = <span class="built_in">BoundingSphere</span>(&amp;s[<span class="number">0</span>], NUM_SPHERES); </span><br><span class="line"></span><br><span class="line"><span class="built_in">BeginGroupedQueryTestVolume</span>(bs, worldHierarchy);</span><br><span class="line"><span class="comment">// Do the original queries just as before</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; NUM_SPHERES; i++)</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">SphereTreeCollision</span>(s[i], worldHierarchy))</span><br><span class="line">        ...</span><br><span class="line"><span class="comment">// Reset everything back to not used a grouped query</span></span><br><span class="line"><span class="built_in">EndGroupedQueryTestVolume</span>();</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h1 id="improved-queries-through-caching">Improved Queries Through
+Caching</h1>
+<h2 id="front-tracking">Front Tracking</h2>
+<p>A number of node-node comparisons are made when two object
+hierarchies are tested agianst each other. These node pairs can be seen
+as forming the nodes of a three, the <strong>collision
+tree</strong>.</p>
+<p>When the two objects are not colliding, as tree traversal stops when
+a node-node pair is not overlapping, all internal nodes of the collision
+tree correspond to colliding node-node pairs, and the leaves are the
+node-node pairs where noncollision was first determined. Consequently,
+the collection of these leaf nodes, forming what is known as <strong>the
+front of the tree</strong>.</p>
+<p>Instead of repeatedly building and traversing the collision tree from
+the root, this coherence can be utilized by keeping track of and reusing
+the front between queries, incrementally updating only the portions that
+change.</p>
+<figure>
+<img
+src="/assets/images/2022-04-06-bounding-volume-hierarchies/front-tracking.png"
+alt="(a) The hierarchy for one object. (b) The hierarchy for another object. (c) The collision tree formed by an alternating traversal. The shaded area indicates a front in which the objects are (hypothetically) found noncolliding." />
+<figcaption aria-hidden="true">(a) The hierarchy for one object. (b) The
+hierarchy for another object. (c) The collision tree formed by an
+alternating traversal. The shaded area indicates a front in which the
+objects are (hypothetically) found noncolliding.</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/" title="Bounding Volume Hierarchies">https://aquietzero.github.io/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/" rel="prev" title="Basic Primitive Tests">
+                  <i class="fa fa-angle-left"></i> Basic Primitive Tests
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/08/reading/realtime-collision-detection/2022-04-10-spatial-partitioning/" rel="next" title="Spatial Partitioning">
+                  Spatial Partitioning <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

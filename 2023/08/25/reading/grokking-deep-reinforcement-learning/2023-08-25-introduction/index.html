@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Deep reinforcement learning Deep reinforcement learning (DRL) is a machine learning approach to artificial intelligence concerned with creating computer programs that can solve problems requiring inte">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction">
+<meta property="og:url" content="https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Deep reinforcement learning Deep reinforcement learning (DRL) is a machine learning approach to artificial intelligence concerned with creating computer programs that can solve problems requiring inte">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2023-08-25-introduction/experience-tuples.png">
+<meta property="article:published_time" content="2023-08-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.528Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2023-08-25-introduction/experience-tuples.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/","path":"2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/","title":"Introduction"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Introduction | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#deep-reinforcement-learning"><span class="nav-number">1.</span> <span class="nav-text">Deep reinforcement learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-is-a-machine-learning-approach-to-artificial-intelligence"><span class="nav-number">1.1.</span> <span class="nav-text">Deep
+reinforcement learning is a machine learning approach to artificial
+intelligence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-is-concerned-with-creating-computer-programs"><span class="nav-number">1.2.</span> <span class="nav-text">Deep
+reinforcement learning is concerned with creating computer programs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-agents-can-solve-problems-that-require-intelligence"><span class="nav-number">1.3.</span> <span class="nav-text">Deep
+reinforcement learning agents can solve problems that require
+intelligence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-agents-improve-their-behavior"><span class="nav-number">1.4.</span> <span class="nav-text">Deep
+reinforcement learning agents improve their behavior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-agents-learn-from-sequential-feedback"><span class="nav-number">1.5.</span> <span class="nav-text">Deep
+reinforcement learning agents learn from sequential feedback</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-agents-learn-from-evaluative-feedback"><span class="nav-number">1.6.</span> <span class="nav-text">Deep
+reinforcement learning agents learn from evaluative feedback</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deep-reinforcement-learning-agents-learn-from-sampled-feedback"><span class="nav-number">1.7.</span> <span class="nav-text">Deep
+reinforcement learning agents learn from sampled feedback</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#the-suitability-of-deep-reinforcement-learning"><span class="nav-number">2.</span> <span class="nav-text">The suitability
+of deep reinforcement learning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#strengths"><span class="nav-number">2.1.</span> <span class="nav-text">Strengths</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weaknesses"><span class="nav-number">2.2.</span> <span class="nav-text">Weaknesses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#comparison-of-different-algorithmic-approaches-to-deep-reinforcement-learning"><span class="nav-number">2.3.</span> <span class="nav-text">Comparison
+of different algorithmic approaches to deep reinforcement learning</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Introduction | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-25 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-25T00:00:00+08:00">2023-08-25</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>938</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="deep-reinforcement-learning">Deep reinforcement learning</h2>
+<p><strong>Deep reinforcement learning (DRL)</strong> is a machine
+learning approach to artificial intelligence concerned with creating
+computer programs that can solve problems requiring intelligence. The
+distinct property of DRL programs is learning through trial and error
+from feedback that’s simultaneously sequential, evaluative, and sampled
+by leveraging powerful non-linear function approximation.</p>
+<h3
+id="deep-reinforcement-learning-is-a-machine-learning-approach-to-artificial-intelligence">Deep
+reinforcement learning is a machine learning approach to artificial
+intelligence</h3>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/subfields-of-artificial-intelligence.png"
+alt="subfields-of-artificial-intelligence" />
+<figcaption
+aria-hidden="true">subfields-of-artificial-intelligence</figcaption>
+</figure>
+<p>There are three main branches of ML: supervised, unsupervised, and
+reinforcement learning.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/main-branches-of-machine-learning.png"
+alt="main-branches-of-machine-learning" />
+<figcaption
+aria-hidden="true">main-branches-of-machine-learning</figcaption>
+</figure>
+<ul>
+<li><strong>Supervised learning (SL)</strong>: is the task of learning
+from labeled data.</li>
+<li><strong>Unsupervised learning (UL)</strong>: is the task of learning
+from unlabeled data.</li>
+<li><strong>Reinforcement learning (RL)</strong>: is the task of
+learning through trial and error.</li>
+</ul>
+<p><strong>Deep learning (DL)</strong> is a collection of techniques and
+methods for using neural networks to solve ML tasks, whether SL, UL, or
+RL. <em>DRL is simply the use of DL to solve RL tasks</em>.</p>
+<h3
+id="deep-reinforcement-learning-is-concerned-with-creating-computer-programs">Deep
+reinforcement learning is concerned with creating computer programs</h3>
+<p>DRL is about complex sequential decision-making problems under
+uncertainty.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/the-synergy-between-similar-fields.png"
+alt="the-synergy-between-similar-fields" />
+<figcaption
+aria-hidden="true">the-synergy-between-similar-fields</figcaption>
+</figure>
+<p>In DRL, the computer programs that solve complex decision-making
+problems under uncertainty are called <strong>agents</strong>.</p>
+<h3
+id="deep-reinforcement-learning-agents-can-solve-problems-that-require-intelligence">Deep
+reinforcement learning agents can solve problems that require
+intelligence</h3>
+<p>On the other side of the agent is the <strong>environment</strong>.
+The strict boundary between the agent and the environment is that:
+<em>the agent can only have a single role: making decisions</em>.
+Everything that comes after the decision gets bundled into the
+environment.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/boundary-between-agent-and-environment.png"
+alt="boundary-between-agent-and-environment" />
+<figcaption
+aria-hidden="true">boundary-between-agent-and-environment</figcaption>
+</figure>
+<p>The environment is represented by a set of variables related to the
+problem. This set of variables and all the possible values that they can
+take are referred to as the <strong>state space</strong>. A
+<strong>state</strong> is an instantiation of the state space, a set of
+values the variables take. Often, agents don’t have access to the actual
+full state of the environment. The part of a state that the agent can
+observe is called an <strong>observation</strong>.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/states-vs-observations.png"
+alt="states-vs-observations" />
+<figcaption aria-hidden="true">states-vs-observations</figcaption>
+</figure>
+<p>At each state, the environment makes available a set of actions the
+agent can choose from. The agent influences the environment through
+these actions. The environment may change states as a response to the
+agent’s action. The function that’s responsible for this mapping is
+called the <strong>transition function</strong>. The environment may
+also provide a reward signal as a response. The function responsible for
+this mapping is called the <strong>reward function</strong>. The set of
+transition and reward functions is referred to as the
+<strong>model</strong> of the environment.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/the-reinforcement-learning-cycle.png"
+alt="the-reinforcement-learning-cycle" />
+<figcaption
+aria-hidden="true">the-reinforcement-learning-cycle</figcaption>
+</figure>
+<p>The agent has a three-step process:</p>
+<ol type="1">
+<li>the agent interacts with the environment,</li>
+<li>the agent evaluates its behavior,</li>
+<li>and the agent improves its responses.</li>
+</ol>
+<p>The agent can be designed to learn mappings from observations to
+actions called <strong>policies</strong>. The agent can be designed to
+learn the model of the environment on mappings called
+<strong>models</strong>. The agent can be designed to learn to estimate
+the reward-to-go on mappings called <strong>value</strong>
+<em>functions</em>.</p>
+<h3 id="deep-reinforcement-learning-agents-improve-their-behavior">Deep
+reinforcement learning agents improve their behavior</h3>
+<p>The interactions between the agent and the environment go on for
+several cycles. Each cycle is called a <strong>time step</strong>. At
+each time step, the agent observes the environment, takes action, and
+receives a new observation and reward. The set of the state, the action,
+the reward, and the new state is called an <strong>experience</strong>.
+Every experience has an opportunity for learning and improving
+performance.</p>
+<figure>
+<img src="/assets/images/2023-08-25-introduction/experience-tuples.png"
+alt="experience-tuples" />
+<figcaption aria-hidden="true">experience-tuples</figcaption>
+</figure>
+<p>The task the agent is trying to solve may or may not have a natrual
+ending. Tasks that have a natrual ending, such as a game, are called
+<strong>episodic tasks</strong>. Conversely, tasks that don’t are called
+<strong>continuing tasks</strong>. The sequence of time steps from the
+beginning to the end of an episodic task is called an
+<strong>episode</strong>.</p>
+<h3
+id="deep-reinforcement-learning-agents-learn-from-sequential-feedback">Deep
+reinforcement learning agents learn from sequential feedback</h3>
+<p>The action taken by the agent may have delayed consequences. The
+reward may be sparse and only manifest after several time steps. Thus
+the agent must be able to learn from sequential feedback. Sequential
+feedback gives rise to a problem referred to as the <strong>temporal
+credit assignment problem</strong>.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/the-difficulty-of-the-temporal-credit-assignment-problem.png"
+alt="the-difficulty-of-the-temporal-credit-assignment-problem" />
+<figcaption
+aria-hidden="true">the-difficulty-of-the-temporal-credit-assignment-problem</figcaption>
+</figure>
+<h3
+id="deep-reinforcement-learning-agents-learn-from-evaluative-feedback">Deep
+reinforcement learning agents learn from evaluative feedback</h3>
+<p>The reward received by the agent may be weak. The agent must be able
+to learn from <strong>evaluative feedback</strong>. Evaluative feedback
+gives rise to the need for <strong>exploration</strong>. The agent must
+be able to balance the gathering of information with the
+<strong>exploitation</strong> of the current information.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/the-difficulty-of-the-exploration-vs-exploitation-trade-off.png"
+alt="the-difficulty-of-the-exploration-vs-exploitation-trade-off" />
+<figcaption
+aria-hidden="true">the-difficulty-of-the-exploration-vs-exploitation-trade-off</figcaption>
+</figure>
+<h3
+id="deep-reinforcement-learning-agents-learn-from-sampled-feedback">Deep
+reinforcement learning agents learn from sampled feedback</h3>
+<p>The reward received by the agent is merely a sample, and the agent
+doesn’t have access to the reward function. The agent must be able to
+learn from sampled feedback, and it must be able to generalize.</p>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/the-difficulty-of-learning-from-sampled-feedback.png"
+alt="the-difficulty-of-learning-from-sampled-feedback" />
+<figcaption
+aria-hidden="true">the-difficulty-of-learning-from-sampled-feedback</figcaption>
+</figure>
+<p>Agents that are designed to approximate policies are called
+<strong>policy-based</strong>; agents that are designed to approximate
+value functions are called <strong>value-based</strong>; agents that are
+designed to approximate models are called <strong>model-based</strong>;
+and agents that are designed to approximate both policies and value
+functions are called <strong>actor-critic</strong>. Agents can be
+designed to approximate one or more of these components.</p>
+<h2 id="the-suitability-of-deep-reinforcement-learning">The suitability
+of deep reinforcement learning</h2>
+<h3 id="strengths">Strengths</h3>
+<p>RL is good at concrete, well specified tasks. Unlike SL (Supervised
+Learning), in which generalization is the goal.</p>
+<h3 id="weaknesses">Weaknesses</h3>
+<p>One of the most significant issues is that agents need millions of
+samples to learn well-performed policies. Another issue with DRL is with
+reward functions and understanding the meaning of rewards.</p>
+<h3
+id="comparison-of-different-algorithmic-approaches-to-deep-reinforcement-learning">Comparison
+of different algorithmic approaches to deep reinforcement learning</h3>
+<figure>
+<img
+src="/assets/images/2023-08-25-introduction/comparison-of-different-algorithmic%20approaches.png"
+alt="comparison-of-different-algorithmic approaches" />
+<figcaption aria-hidden="true">comparison-of-different-algorithmic
+approaches</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/" title="Introduction">https://aquietzero.github.io/2023/08/25/reading/grokking-deep-reinforcement-learning/2023-08-25-introduction/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/07/reading/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BF%9B%E9%98%B6-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/2023-08-07-word2vec/" rel="prev" title="word2vec">
+                  <i class="fa fa-angle-left"></i> word2vec
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/09/02/reading/grokking-deep-reinforcement-learning/2023-09-02-mathematical-foundations-of-reinforcement-learning/" rel="next" title="Mathematical foundations of reinforcement learning">
+                  Mathematical foundations of reinforcement learning <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

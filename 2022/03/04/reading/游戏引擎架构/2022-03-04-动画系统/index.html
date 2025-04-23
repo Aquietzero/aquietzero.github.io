@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="游戏会围绕一些角色进行——通常是人类或人性角色，有时候也会是动物或异形。引擎中的角色动画系统（character animation system）负责为角色灌输自然的动作。 角色动画的类型 赛璐璐动画 所有动画技术的前身是传统动画，或手绘动画。这种动画的动感由连续快速显示一串静止图片所产生，这些图片称为帧。赛璐璐动画（cel animation）是传统动画的一个种类。赛璐璐是透明的塑料片，上面可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动画系统">
+<meta property="og:url" content="https://aquietzero.github.io/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="游戏会围绕一些角色进行——通常是人类或人性角色，有时候也会是动物或异形。引擎中的角色动画系统（character animation system）负责为角色灌输自然的动作。 角色动画的类型 赛璐璐动画 所有动画技术的前身是传统动画，或手绘动画。这种动画的动感由连续快速显示一串静止图片所产生，这些图片称为帧。赛璐璐动画（cel animation）是传统动画的一个种类。赛璐璐是透明的塑料片，上面可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/%E8%92%99%E7%9A%AE%E5%8F%98%E6%8D%A2.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/%E6%96%B9%E5%90%91%E6%80%A7%E8%BF%90%E5%8A%A8.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%8A%A8%E7%94%BB%E7%AE%A1%E9%81%93.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%85%B1%E4%BA%AB%E5%8A%A8%E7%94%BB%E8%B5%84%E6%BA%90UML.png">
+<meta property="article:published_time" content="2022-03-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.532Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="动画">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/%E8%92%99%E7%9A%AE%E5%8F%98%E6%8D%A2.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/","path":"2022/03/04/reading/游戏引擎架构/2022-03-04-动画系统/","title":"动画系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>动画系统 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%92%E8%89%B2%E5%8A%A8%E7%94%BB%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">角色动画的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%9B%E7%92%90%E7%92%90%E5%8A%A8%E7%94%BB"><span class="nav-number">1.1.</span> <span class="nav-text">赛璐璐动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9A%E6%80%A7%E5%B1%82%E9%98%B6%E5%BC%8F%E5%8A%A8%E7%94%BB"><span class="nav-number">1.2.</span> <span class="nav-text">刚性层阶式动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%8F%E9%A1%B6%E7%82%B9%E5%8A%A8%E7%94%BB%E5%8F%8A%E5%8F%98%E5%BD%A2%E7%9B%AE%E6%A0%87"><span class="nav-number">1.3.</span> <span class="nav-text">每顶点动画及变形目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%92%99%E7%9A%AE%E5%8A%A8%E7%94%BB"><span class="nav-number">1.4.</span> <span class="nav-text">蒙皮动画</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%A8%E9%AA%BC"><span class="nav-number">2.</span> <span class="nav-text">骨骼</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A7%BF%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%91%E5%AE%9A%E5%A7%BF%E5%8A%BF"><span class="nav-number">3.1.</span> <span class="nav-text">绑定姿势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E5%A7%BF%E5%8A%BF"><span class="nav-number">3.2.</span> <span class="nav-text">局部姿势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%A7%BF%E5%8A%BF"><span class="nav-number">3.3.</span> <span class="nav-text">全局姿势</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E7%89%87%E6%AE%B5"><span class="nav-number">4.</span> <span class="nav-text">动画片段</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E6%97%B6%E9%97%B4%E7%BA%BF"><span class="nav-number">4.1.</span> <span class="nav-text">局部时间线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E6%97%B6%E9%97%B4%E7%BA%BF"><span class="nav-number">4.2.</span> <span class="nav-text">全局时间线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%8A%A8%E7%94%BB%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">4.3.</span> <span class="nav-text">简单的动画数据格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%92%99%E7%9A%AE%E5%8F%8A%E7%94%9F%E6%88%90%E7%9F%A9%E9%98%B5%E8%B0%83%E8%89%B2%E6%9D%BF"><span class="nav-number">4.4.</span> <span class="nav-text">蒙皮及生成矩阵调色板</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%92%99%E7%9A%AE%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.1.</span> <span class="nav-text">蒙皮矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%B0%83%E8%89%B2%E6%9D%BF"><span class="nav-number">4.4.2.</span> <span class="nav-text">矩阵调色板</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%B7%B7%E5%90%88"><span class="nav-number">5.</span> <span class="nav-text">动画混合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E6%B7%B7%E5%90%88"><span class="nav-number">5.1.</span> <span class="nav-text">线性插值混合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%A7%BF%E5%8A%BF"><span class="nav-number">5.2.</span> <span class="nav-text">核心姿势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E6%80%A7%E6%B7%B7%E5%90%88"><span class="nav-number">5.3.</span> <span class="nav-text">时间性混合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E5%90%91%E6%80%A7%E8%BF%90%E5%8A%A8"><span class="nav-number">5.4.</span> <span class="nav-text">方向性运动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E7%9A%84%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E6%B7%B7%E5%90%88"><span class="nav-number">5.5.</span> <span class="nav-text">复杂的线性插值混合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%BB%B4%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E6%B7%B7%E5%90%88"><span class="nav-number">5.5.1.</span> <span class="nav-text">一维线性插值混合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E6%B7%B7%E5%90%88"><span class="nav-number">5.5.2.</span> <span class="nav-text">二维线性插值混合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%A8%E9%AA%BC%E5%88%86%E9%83%A8%E6%B7%B7%E5%90%88"><span class="nav-number">5.6.</span> <span class="nav-text">骨骼分部混合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95%E6%B7%B7%E5%90%88"><span class="nav-number">5.7.</span> <span class="nav-text">加法混合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E5%99%AA%E5%A3%B0"><span class="nav-number">5.7.1.</span> <span class="nav-text">移动噪声</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E6%9C%9F%E5%A4%84%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">后期处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%BC%8F%E5%8A%A8%E7%94%BB"><span class="nav-number">6.1.</span> <span class="nav-text">程序式动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E8%BF%90%E5%8A%A8%E5%AD%A6"><span class="nav-number">6.2.</span> <span class="nav-text">逆运动学</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E6%9E%B6%E6%9E%84%E7%B3%BB%E7%BB%9F"><span class="nav-number">7.</span> <span class="nav-text">动画架构系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E7%AE%A1%E9%81%93"><span class="nav-number">7.1.</span> <span class="nav-text">动画管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">7.2.</span> <span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE%E8%B5%84%E6%BA%90"><span class="nav-number">7.2.1.</span> <span class="nav-text">共享数据资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">7.2.2.</span> <span class="nav-text">实例数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">8.</span> <span class="nav-text">动作状态机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB%E7%8A%B6%E6%80%81"><span class="nav-number">8.1.</span> <span class="nav-text">动画状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1"><span class="nav-number">8.2.</span> <span class="nav-text">过渡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%B8%A1%E7%9F%A9%E9%98%B5"><span class="nav-number">8.2.1.</span> <span class="nav-text">过渡矩阵</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="动画系统 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          动画系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-04 00:00:00" itemprop="dateCreated datePublished" datetime="2022-03-04T00:00:00+08:00">2022-03-04</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/04/reading/游戏引擎架构/2022-03-04-动画系统/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>19 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>游戏会围绕一些角色进行——通常是人类或人性角色，有时候也会是动物或异形。引擎中的<strong>角色动画系统（character
+animation system）</strong>负责为角色灌输自然的动作。</p>
+<h1 id="角色动画的类型">角色动画的类型</h1>
+<h2 id="赛璐璐动画">赛璐璐动画</h2>
+<p>所有动画技术的前身是<strong>传统动画</strong>，或<strong>手绘动画</strong>。这种动画的动感由连续快速显示一串静止图片所产生，这些图片称为<strong>帧</strong>。<strong>赛璐璐动画（cel
+animation）</strong>是传统动画的一个种类。赛璐璐是透明的塑料片，上面可以绘画，把一连串含动画的赛璐璐放置在固定的手绘背景上，就能产生动感。</p>
+<h2 id="刚性层阶式动画">刚性层阶式动画</h2>
+<p>实现三维角色动画，最初的方法称为刚性层阶式动画（rigid hierarchical
+animation）。此方法中，角色由一堆刚性部分建模而成。</p>
+<h2 id="每顶点动画及变形目标">每顶点动画及变形目标</h2>
+<p><strong>每顶点动画（per-vertex
+animation）</strong>由画师为网格的顶点添加动画，这些动作数据导出游戏引擎之后，就能告诉引擎在运行时如何移动顶点。但由于这是一项数据密集的技术，所以在实时游戏中很少会用到。</p>
+<p><strong>变形目标动画（morph target
+animation）</strong>虽然也是由画师移动网格的顶点，但是仅制作相对少量的固定姿势，运行时将姿势混合，并且将过度状态进行线性插值。</p>
+<h2 id="蒙皮动画">蒙皮动画</h2>
+<p><strong>蒙皮动画（skinned
+animation）</strong>中，骨骼是由刚性的骨头构建而成的，这与刚性层阶动画一样，但是这些刚性的部件并不会显示，而是始终隐藏起来的。称为<strong>皮肤（skin）</strong>的圆滑三角形网格会绑定于骨骼上，其顶点会追踪<strong>关节（joint）</strong>移动。蒙皮上的每个顶点按照权重绑定多个关节，当关节移动的时候，蒙皮可以自然拉伸。</p>
+<h1 id="骨骼">骨骼</h1>
+<p><strong>骨骼（skeleton）</strong>由刚性的<strong>关节（joint）</strong>层阶结构所构成。由于骨骼是一个层级树状结构，所以可以通过关节树来表示。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Joint</span> &#123;</span><br><span class="line">    Matrix4x3 m_invBindPose; <span class="comment">// 绑定姿势的逆变换</span></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* m_name; <span class="comment">// 人类可阅读的关节名字</span></span><br><span class="line">    U8 m_iParent; <span class="comment">// 父索引</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Skeleton</span> &#123;</span><br><span class="line">    U32 m_joinCount; <span class="comment">// 关节数目</span></span><br><span class="line">    Joint* m_aJoint; <span class="comment">// 关节数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="姿势">姿势</h1>
+<p>把关节任意旋转，平移，甚至缩放，就能为骨骼摆出各种姿势。一个关节的姿势定义为关节相对参考系的位置，定向和缩放。骨骼的姿势仅仅是其所有关节的姿势集合。</p>
+<h2 id="绑定姿势">绑定姿势</h2>
+<p><strong>绑定姿势（bind
+pose）</strong>是指把网格当做正常，没有蒙皮，完全不涉及骨骼的三角形网格来渲染的姿势。又叫
+<strong>T
+姿势（T-pose）</strong>，这是由于角色通常会站着，双腿稍微分开，双臂向左右伸直，形成
+T 字形。</p>
+<h2 id="局部姿势">局部姿势</h2>
+<p>关节姿势最常见是相对于父关节指定的。相对父关节的姿势能令关节自然地移动。<strong>局部姿势（local
+pose）</strong>用于描述相对父的姿势，<strong>局部姿势存储为 SQT
+格式（scale 缩放，quaternion 旋转以及 translation 平移）</strong>。</p>
+<p>关节姿势就是一个仿射变换，第 j 个关节可以表示为 <span
+class="math inline">\(4 \times 4\)</span> 仿射变换矩阵 <span
+class="math inline">\(\textbf{P}_j\)</span>，此矩阵由一个平移矢量 <span
+class="math inline">\(\textbf{T}_j\)</span>，<span
+class="math inline">\(3 \times 3\)</span> 对角缩放矩阵 <span
+class="math inline">\(\textbf{S}_j\)</span>，及 <span
+class="math inline">\(3 \times 3\)</span> 旋转矩阵 <span
+class="math inline">\(\textbf{R}_j\)</span> 所构成，整个骨骼的姿势 <span
+class="math inline">\(\textbf{P}^{skeleton}\)</span> 可以写成所有姿势
+<span class="math inline">\(\textbf{P}_j\)</span> 的集合。</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{P}_j &amp;=
+\begin{bmatrix}
+\textbf{S}_j \textbf{R}_j &amp; \textbf{0} \\
+\textbf{T}_j &amp; 1
+\end{bmatrix} \\
+\textbf{P}^{skeleton} &amp;= \{ \textbf{P}_j \} \mid ^{N-1}_{j = 0}
+\end{align}
+\]</span></p>
+<aside>
+<p>💡 有些引擎不容许关节缩放，就会忽略 <span
+class="math inline">\(\textbf{S}_j\)</span>，将其假定为单位矩阵。有些引擎会假设，如果用缩放，就使用统一缩放，即三个维度上缩放都相同。这样的好处是包围球不会变成椭球，也能减少存储空间。</p>
+</aside>
+<p>关节姿势表示如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">JointPose</span> &#123;</span><br><span class="line">    Quaternion m_rot; <span class="comment">// Q</span></span><br><span class="line">    Vector3 m_trans; <span class="comment">// T</span></span><br><span class="line">    F32 m_scale; <span class="comment">// S 为统一缩放</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SkeletonPose</span> &#123;</span><br><span class="line">  Skeleton* m_pSkeleton; <span class="comment">// 骨骼 + 关节数量</span></span><br><span class="line">    JoinPose* m_aLocalPose; <span class="comment">// 多个局部关节姿势</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="全局姿势">全局姿势</h2>
+<p>把关节姿势表示为模型空间或世界空间会很方便。这称为<strong>全局姿势（global
+pose）</strong>。任何关节的全局姿势（关节至模型空间的变换）可以写成：</p>
+<p><span class="math display">\[
+\textbf{P}_{j \to M} = \prod^0_{i=j} \textbf{P}_{i \to \text{parent}(i)}
+\]</span></p>
+<p><code>SkeletonPose</code> 可以扩展为将全局姿势也存储在内。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">SkeletonPose</span> &#123;</span><br><span class="line">  Skeleton* m_pSkeleton; <span class="comment">// 骨骼 + 关节数量</span></span><br><span class="line">    JoinPose* m_aLocalPose; <span class="comment">// 多个局部关节姿势</span></span><br><span class="line">    Matrix44* m_aGlobalPose; <span class="comment">// 多个全局关节姿势</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="动画片段">动画片段</h1>
+<p>游戏是互动体验，玩家能全权控制角色，因此游戏的动画不可能是一串很长的连续的帧。取而代之，游戏角色的移动都必须拆分为大量小粒度的动作。我们称这些个别的动作为<strong>动画片段（animation
+clip）</strong>，有时候简称动画。</p>
+<h2 id="局部时间线">局部时间线</h2>
+<p>每个动画片段各自有一条<strong>局部时间线（local
+timeline）</strong>，该时间线通常使用自变量 <span
+class="math inline">\(t\)</span> 表示。变量 <span
+class="math inline">\(t\)</span> 的每个值称为时间索引。</p>
+<p>动画师会在片段中指定的时间点上设置一些重要的姿势，这些姿势称为<strong>关键姿势（key
+pose）</strong>或<strong>关键帧（key
+frame）</strong>，然后计算机会采用线性或基于曲线的插值计算中间的姿势。由于动画引擎能够对姿势插值，我们实际上能在片段间的任何时间采样，不一定要在整数帧索引上采样。所以动画片段的时间线是<strong>连续</strong>的。</p>
+<h2 id="全局时间线">全局时间线</h2>
+<p>正如每个动画片段都有一个局部时间线，游戏里的每个角色都有一个全局时间线。要把动画片段映射至全局时间线，需要以下的信息：</p>
+<ul>
+<li>全局起始时间 <span
+class="math inline">\(\tau_{\text{start}}\)</span></li>
+<li>其播放速率 <span class="math inline">\(R\)</span></li>
+<li>其持续时间 <span class="math inline">\(T\)</span></li>
+<li>循环次数 <span class="math inline">\(N\)</span></li>
+</ul>
+<p>这样映射的方式如下，其中 <span class="math inline">\(t\)</span>
+为局部时间，<span class="math inline">\(\tau\)</span> 为全局时间。</p>
+<p><span class="math display">\[
+\begin{align}
+t &amp;= R(\tau - \tau_{\text{start}}) \\
+\tau &amp;= \tau_{\text{start}} + \frac{1}{R}t
+\end{align}
+\]</span></p>
+<h2 id="简单的动画数据格式">简单的动画数据格式</h2>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">AnimationSample</span> &#123;</span><br><span class="line">    JointPose* m_aJointPose; <span class="comment">// 关节姿势数组</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AnimationClip</span> &#123;</span><br><span class="line">    Skeleton* m_pSkeleton;</span><br><span class="line">    F32 m_framePerSecond;</span><br><span class="line">    U32 m_frameCount;</span><br><span class="line">    AnimationSample* m_aSamples; <span class="comment">// 采样数组</span></span><br><span class="line">    <span class="type">bool</span> m_isLooping;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="蒙皮及生成矩阵调色板">蒙皮及生成矩阵调色板</h2>
+<p>把三维网格顶点联系至骨骼的过程，称为<strong>蒙皮（skinning）</strong>。蒙皮用的网格是通过其顶点系上骨骼的，每个顶点可以绑定一个或多个关节。如果绑定一个关节，则其完全随关节移动，如果绑定至多个关节，则该顶点的位置就等于把它逐一绑至个别关节后的位置，再取加权平均。</p>
+<p>蒙皮的结构如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">SkinnedVertex</span> &#123;</span><br><span class="line">    <span class="type">float</span> m_position[<span class="number">3</span>]; <span class="comment">// (Px, Py, Pz)</span></span><br><span class="line">    <span class="type">float</span> m_normal[<span class="number">3</span>]; <span class="comment">// (Nx, Ny, Nz)</span></span><br><span class="line">    <span class="type">float</span> m_u, m_v; <span class="comment">// 纹理坐标 (u, v)</span></span><br><span class="line">    U8 m_jointIndx[<span class="number">4</span>]; <span class="comment">// 关节索引</span></span><br><span class="line">    <span class="type">float</span> m_jointWeight[<span class="number">3</span>]; <span class="comment">// 关节权重，略去最后一个</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="蒙皮矩阵">蒙皮矩阵</h3>
+<p>蒙皮网络的顶点会追随其绑定的关节而移动。<strong>蒙皮矩阵（skinning
+matrix）</strong>将网格顶点从原来的位置（绑定姿势）变换至骨骼的当前姿势。</p>
+<p>令模型空间下标为 <span
+class="math inline">\(M\)</span>，唯一关节的空间为 <span
+class="math inline">\(J\)</span>，最初的绑定姿势为 <span
+class="math inline">\(B\)</span>，当前姿势为 <span
+class="math inline">\(C\)</span>。考虑一个蒙皮至这个关节的顶点，在绑定姿势时，该顶点的空间位置为
+<span
+class="math inline">\(\textbf{V}^B_M\)</span>，蒙皮过程要计算出该顶点在当前姿势的模型空间位置
+<span class="math inline">\(\textbf{V}^C_M\)</span>。</p>
+<p><img src="/assets/images/2022-03-04-动画系统/蒙皮变换.png" /></p>
+<p>用矩阵 <span class="math inline">\(\textbf{B}_{j \to M}\)</span>
+表示关节在模型空间的绑定姿势。此矩阵把点或矢量从关节 <span
+class="math inline">\(j\)</span> 的空间变换至模型空间。用 <span
+class="math inline">\(\textbf{C}_{j \to
+M}\)</span>表示关节的当前姿势，吧顶点从绑定姿势变换为当前姿势的方程如下。</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{v}^C_M &amp;= \textbf{v}_j \textbf{C}_{j \to M} \\
+&amp;= \textbf{v}^B_M(\textbf{B}_{j \to M})^{-1} \textbf{C}_{j \to M} \\
+&amp;= \textbf{v}^B_M \textbf{K}_j
+\end{align}
+\]</span></p>
+<p>其中联合后的矩阵 <span class="math inline">\(\textbf{K}_j =
+(\textbf{B}_{j \to M})^{-1} \textbf{C}_{j \to M}\)</span>
+称为<strong>蒙皮矩阵</strong>。</p>
+<h3 id="矩阵调色板">矩阵调色板</h3>
+<p>我们要为每个关节 <span class="math inline">\(j\)</span>
+计算其蒙皮矩阵 <span
+class="math inline">\(\textbf{K}_j\)</span>，此数组称为<strong>矩阵调色板（matrix
+palette）</strong>。当要渲染一个蒙皮网格时，矩阵调色板便要传送至渲染引擎。渲染引擎为每个顶点查找调试板中合适的关节蒙皮矩阵，并用该矩阵把顶点从绑定姿势变换至当前姿势。</p>
+<aside>
+<p>💡 角色姿势随时间改变，其当前姿势矩阵 <span
+class="math inline">\(\textbf{C}_{j \to M}\)</span>
+就需要每帧更新。但绑定姿势是模型创建的时候确定下来的，所以 <span
+class="math inline">\((\textbf{B}_{j \to M})^{-1}\)</span>
+通常会缓存于骨骼。动画引擎会预先计算每个关节的局部姿势 <span
+class="math inline">\(\textbf{C}_{j \to
+p(j)}\)</span>，然后再将这些矩阵转换至全局姿势 <span
+class="math inline">\(\textbf{C}_{j \to
+M}\)</span>，最后把全局姿势乘以对应的绑定姿势逆矩阵，以生成每个关节的蒙皮矩阵
+<span class="math inline">\(\textbf{K}_j\)</span>。</p>
+</aside>
+<p>当将一个顶点蒙皮至 <span class="math inline">\(N\)</span>
+个关节的时候，关节索引为 <span class="math inline">\(j_0\)</span> 至
+<span class="math inline">\(j_{N-1}\)</span>，权重为 <span
+class="math inline">\(w_0\)</span> 至 <span class="math inline">\(w_{N -
+1}\)</span>，则加权蒙皮矩阵的方程变为</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{v}^C_M
+&amp;= \sum^{N - 1}_{i = 0} w_{ij}\textbf{v}^B_M \textbf{K}_{j_i}
+\end{align}
+\]</span></p>
+<p>其中 <span class="math inline">\(\textbf{K}_{j_i}\)</span> 是关节
+<span class="math inline">\(j_i\)</span> 的蒙皮矩阵。</p>
+<h1 id="动画混合">动画混合</h1>
+<p>动画混合（animation
+blending）是指能令一个以上的动画片段对角色最终姿势起作用的技术。更准确地说，混合是把两个或更多的<strong>输入姿势</strong>结合，产生骨骼的<strong>输出姿势</strong>。</p>
+<aside>
+<p>💡
+混合作用结合两个或以上的动画，自动产生大量新动画。比如通过混合负伤的及无负伤
+的步行动画，可以生成两者之间不同负伤程度的步行动画。</p>
+</aside>
+<h2 id="线性插值混合">线性插值混合</h2>
+<p>给定两个骨骼姿势 <span
+class="math inline">\(\textbf{P}_A^{\text{skeleton}} =
+\{(\textbf{P}_A)_j\} |^{N - 1}_{j = 0}\)</span> 及 <span
+class="math inline">\(\textbf{P}_B^{\text{skeleton}} =
+\{(\textbf{P}_B)_j\} |^{N - 1}_{j =
+0}\)</span>，我们希望求出此两极端的中间姿势 <span
+class="math inline">\(\textbf{P}_\text{LERP}^\text{skeleton}\)</span>，可表达为</p>
+<p><span class="math display">\[
+\begin{align}(\textbf{P}_\text{LERP})_j &amp;=
+\text{LERP}[(\textbf{P}_A)_j, (\textbf{P}_B)_j, \beta] \\
+&amp;= (1 - \beta)(\textbf{P}_A)_j
++ \beta(\textbf{P}_B)_j\end{align}
+\]</span></p>
+<p>而整个骨骼的插值后姿势，仅仅是所有关节插值后姿势的集合：</p>
+<p><span class="math display">\[
+\textbf{P}_\text{LERP}^{\text{skeleton}} =
+\{(\textbf{P}_\text{LERP})_j\} |^{N - 1}_{j = 0}
+\]</span></p>
+<aside>
+<p>💡
+对两个骨骼姿势进行线性插值时，最自然的中间姿势通常是令关节独立在其父关节中间进行插值。换句话说，姿势混合通常在局部姿势进行。如果直接在模型空间混合全局姿势，其结果从生物力学上看显得不真实。</p>
+</aside>
+<h2 id="核心姿势">核心姿势</h2>
+<p>动画师通常会制定一组核心姿势（core
+pose），例如包括一个直立的核心姿势，一个蹲下姿势，一个躺下姿势等。只要确保角色的每个动画片段以某核心姿势开始，并以某核心姿势结束，就能简单把核心姿势匹配的片段链接成具
+<span class="math inline">\(C^0\)</span> 连续性动画。</p>
+<h2 id="时间性混合">时间性混合</h2>
+<p>给定两个于时间点 <span class="math inline">\(t_1\)</span> 和 <span
+class="math inline">\(t_2\)</span>
+的姿势采样，一下方程可以求出位于此期间时间点 <span
+class="math inline">\(t\)</span> 的姿势：</p>
+<p><span class="math display">\[
+\begin{align}\textbf{P}_j(t) &amp;=
+\text{LERP}[\textbf{P}_j(t_1), \textbf{P}_j(t_2), \beta(t)] \\
+&amp;= (1 - \beta(t))\textbf{P}_j(t_1)
++ \beta(t)\textbf{P}_j(t_2)\end{align}
+\]</span></p>
+<p>其中的混合因子 <span class="math inline">\(\beta(t)\)</span>
+为时间比率</p>
+<p><span class="math display">\[
+\beta(t) = \frac{t - t_1}{t_2 - t_1}
+\]</span></p>
+<h2 id="方向性运动">方向性运动</h2>
+<ul>
+<li><strong>轴转移动（pivotal
+movement）</strong>，因为转身的时候是以垂直轴进行旋转的。</li>
+<li><strong>靶向移动（targeted
+movement）</strong>，使移动方向和面向方向相互独立的移动。</li>
+</ul>
+<p><img src="/assets/images/2022-03-04-动画系统/方向性运动.png" /></p>
+<h2 id="复杂的线性插值混合">复杂的线性插值混合</h2>
+<h3 id="一维线性插值混合">一维线性插值混合</h3>
+<p><img
+src="/assets/images/2022-03-04-动画系统/一维线性插值混合.png" /></p>
+<p>LERP
+混合可以扩展至多于两个动画片段，此技术称为<strong>一维线性插值混合（one-dimensional
+LERP blending）</strong>。任意数量的片段至于一个范围内，给定任意的 <span
+class="math inline">\(b\)</span>
+值，选取两个最近于该值的片段，并用以下方程混合两者。</p>
+<p><span class="math display">\[
+\begin{align}\textbf{P}_j(t) &amp;=
+\text{LERP}[\textbf{P}_j(t_1), \textbf{P}_j(t_2), \beta(t)] \\
+&amp;= (1 - \beta(t))\textbf{P}_j(t_1)
++ \beta(t)\textbf{P}_j(t_2)\end{align}
+\]</span></p>
+<p>其中 <span class="math inline">\(\beta\)</span> 为</p>
+<p><span class="math display">\[
+\beta = \frac{b - b_i}{b_{i+1} - b_i}, b \in [b_i, b_{i+1}]
+\]</span></p>
+<p>靶向移动可以看成是特殊的一维线性插值混合。</p>
+<p><img
+src="/assets/images/2022-03-04-动画系统/靶向运动与混合.png" /></p>
+<h3 id="二维线性插值混合">二维线性插值混合</h3>
+<p>有时候我们想圆滑地同时改变角色动作的两个方面。例如我希望角色能用武器在水平及垂直方向瞄准。二维混合致涉及
+4 个动画片段，这些片段位于正方形的四角。</p>
+<ul>
+<li>利用水平混合因子 <span class="math inline">\(b_x\)</span>
+求出两个中间姿势，一个在顶边两个动画片段中间，一个在底边两个片段中间。这两个姿势用简单的一维
+LERP 混合求得。</li>
+<li>再使用垂直混合因子 <span
+class="math inline">\(b_y\)</span>，把两个中间姿势用一维 LERP
+混合求出最终姿势。</li>
+</ul>
+<p><img
+src="/assets/images/2022-03-04-动画系统/二维线性插值混合.png" /></p>
+<h2 id="骨骼分部混合">骨骼分部混合</h2>
+<p>人可以独立控制身体的不同部位。实现这种动作的方法之一是，<strong>骨骼分部混合（partial-skeleton
+blending）</strong>技术。骨骼分部混合在每关节设置不同的混合百分比，对每个关节
+<span class="math inline">\(j\)</span> 定义一个独立的混合百分比 <span
+class="math inline">\(\beta_j\)</span>。整个骨骼的混合百分比集合 <span
+class="math inline">\(\{\beta_j\} |^{N-1}_{j=0}\)</span>
+有时候称为<strong>混合遮罩（blend
+mask）</strong>，因为这可以把某些关节混合百分比设置为
+0，来掩盖那些关节。</p>
+<h2 id="加法混合">加法混合</h2>
+<p><strong>加法混合（additive
+blending）</strong>引入一种称为<strong>区别片段（difference
+clip）</strong>的新类型动画。区别动画代表两段正常动画的区别，将其加进普通的动画片段，可以产生一些有趣的姿势和动作变化。</p>
+<p>给定骨骼中每个关节 <span class="math inline">\(j\)</span> 的来源姿势
+<span class="math inline">\(\textbf{S}_j\)</span> 和参考姿势 <span
+class="math inline">\(\textbf{R}_j\)</span>，区别姿势 <span
+class="math inline">\(\textbf{D}_j\)</span> 可定义如下</p>
+<p><span class="math display">\[
+\textbf{D}_j = \textbf{S}_j \textbf{R}_j^{-1}
+\]</span></p>
+<p>把区别姿势 <span class="math inline">\(\textbf{D}_j\)</span>
+“加进”目标姿势 <span class="math inline">\(\textbf{T}_j\)</span>
+会产生新的加法姿势 <span
+class="math inline">\(\textbf{A}_j\)</span>。</p>
+<p><span class="math display">\[
+\textbf{A}_j = \textbf{D}_j \textbf{T}_j = (\textbf{S}_j
+\textbf{R}_j^{-1}) \textbf{T}_j
+\]</span></p>
+<h3 id="移动噪声">移动噪声</h3>
+<p>人在跑步的时候动作不尽相同，肯定会有所变化。加法混合可用于在完全重复的移动周期上叠加上随机性，反应和分心的表现。</p>
+<h1 id="后期处理">后期处理</h1>
+<p>一旦一个或多个动画片段生成骨骼的姿势，然后通过线性插值或加法混合把结果混合成一个姿势，在渲染角色之前，通常还要再修改姿势，此修改称为<strong>动画后期处理（animation
+post-processing）</strong>。</p>
+<h2 id="程序式动画">程序式动画</h2>
+<p><strong>程序式动画（procedural
+animation）</strong>是指任何在运行时生成的动画，这些动画并非由动画工具导出的数据所驱动的。</p>
+<h2 id="逆运动学">逆运动学</h2>
+<p><strong>正向运动学（forward
+kinematics）</strong>的输入是一组局部姿势，输出是一个全局姿势，以及每关节的蒙皮矩阵。<strong>逆运动学（inverse
+kinematics</strong>）输入是某关节想要的全局姿势，此输入称为<strong>末端受动器（end
+effector）</strong>，要求输出其他关节的局部姿势，是末端受动器能达到指定的位置。</p>
+<h1 id="动画架构系统">动画架构系统</h1>
+<p>多数动画系统由 3 个分明的软件层组成。</p>
+<ul>
+<li><strong>动画管道（animation pipeline）</strong>
+<ul>
+<li>对于游戏中每个含动画的角色及物体，动画管道为它们取得一个或多个动画片段及对应的混合因子作为输入，把这些片段混合后产生一个局部骨骼姿势作为输出。</li>
+<li>为骨骼计算一个全局姿势，以及生成蒙皮矩阵调色板供渲染引擎使用。</li>
+<li>为后期处理提供钩子，以便生成全局姿势及蒙版矩阵前可以修改局部姿势。</li>
+</ul></li>
+<li><strong>动作状态机（ASM，action state machine）</strong>
+<ul>
+<li>ASM
+位于动画管道之上，并提供以状态驱动的动画接口供所有高层游戏代码之用。</li>
+<li>ASM 确保角色从一个状态圆滑地过渡到另一个状态。</li>
+</ul></li>
+<li><strong>动画控制器（animation controller）</strong>
+<ul>
+<li>每个控制器是特别为管理某个角色行为模式而设置的。</li>
+</ul></li>
+</ul>
+<h2 id="动画管道">动画管道</h2>
+<p>此管道的各个阶段如下</p>
+<ul>
+<li><strong>片段解压及姿势提取</strong>：在此阶段中，每个片段的数据会被压缩，并提取所需时间索引的静态姿势。此阶段的输出是每个输入片段一个局部骨骼姿势。</li>
+<li><strong>姿势混合</strong>：通过全身 LERP 混合，分部 LERP
+混合，或加法混合，把输入姿势结合在一起。本阶段的输出是一个对应骨骼中所有关节的局部姿势。</li>
+<li><strong>全局姿势生成</strong>：遍历骨骼层次结构，把局部关节串接以产生骨骼的全局姿势。</li>
+<li><strong>后期处理（可选）</strong>：输出最终姿势之前，有机会修改骨骼的局部及全局姿势。</li>
+<li><strong>重新计算全局姿势</strong>：许多种类的后期处理都需要全局姿势作为输入，但却只生成局部姿势作为输出，当执行了这种后期处理步骤，我们必须从修改后的局部姿势重新计算全局姿势。</li>
+<li><strong>矩阵调色板生成</strong>：把每个关节的全局姿势矩阵乘以对应的逆绑定姿势矩阵。本阶段的输出为渲染引擎所用的蒙皮矩阵调色板。</li>
+</ul>
+<figure>
+<img src="/assets/images/2022-03-04-动画系统/动画管道.png"
+alt="典型的动画管道" />
+<figcaption aria-hidden="true">典型的动画管道</figcaption>
+</figure>
+<p>典型的动画管道</p>
+<h2 id="数据结构">数据结构</h2>
+<h3 id="共享数据资源">共享数据资源</h3>
+<ul>
+<li><strong>骨骼</strong>：描述关节层次结构及其绑定姿势。</li>
+<li><strong>蒙皮网格</strong>：一个或多个可蒙皮至单个骨骼的网格。</li>
+<li><strong>动画片段</strong>：为每个角色骨骼制作的数百甚至数千个动画片段。</li>
+</ul>
+<figure>
+<img src="/assets/images/2022-03-04-动画系统/共享动画资源UML.png"
+alt="共享动画资源的 UML 图" />
+<figcaption aria-hidden="true">共享动画资源的 UML 图</figcaption>
+</figure>
+<p>共享动画资源的 UML 图</p>
+<h3 id="实例数据">实例数据</h3>
+<ul>
+<li><strong>片段状态</strong>：每个播放片段包含局部时钟和播放速率。</li>
+<li><strong>混合规格</strong>：描述哪些动画片段正在播放，以及这些片段如何混合在一起。</li>
+<li><strong>分部骨骼关节权重</strong>：每个节点对最终姿势的影响力会存储为一组关节权重。</li>
+<li><strong>局部姿势</strong>：一个 SQT 数组的数据结构，每个 SQT
+对应于一个关节，存储成相对于父关节的骨骼最终姿势。</li>
+<li><strong>全局姿势</strong>：每个元素对应于一个关节，存储模型空间或者世界空间的最终骨骼姿势。</li>
+<li><strong>矩阵调色板</strong>：每个元素对应于一个关节，存储蒙皮矩阵，供渲染引擎之用。</li>
+</ul>
+<h1 id="动作状态机">动作状态机</h1>
+<p>在底层管道和游戏角色/其他动画系统客户端之间，通常会引入一个软件层。此软件层会实现为状态机，称为<strong>动作状态机（action
+state machine）</strong>或<strong>动画状态机（animation state
+machine）</strong>。</p>
+<h2 id="动画状态">动画状态</h2>
+<p>动画师，游戏设计师和程序员通常会一起合作创造游戏里中心角色的动画及控制系统。这些开发者需要一种方式描述角色
+ASM 的状态，编排每个混合树结构，并在混合树种选择片段做输入。</p>
+<p>只需要四种原子混合节点类型就能构建任意复杂的混合树。分别为：</p>
+<ul>
+<li>片段</li>
+<li>二元 LERP 混合</li>
+<li>二元加法混合</li>
+<li>三元 LERP 混合</li>
+</ul>
+<p>下面是一个 Scheme 的状态描述例子</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">define-state</span> simple</span><br><span class="line">    <span class="symbol">:name</span> <span class="string">&quot;pirate-b-bump-back&quot;</span></span><br><span class="line">    <span class="symbol">:clip</span> <span class="string">&quot;pirate-b-bump-back&quot;</span></span><br><span class="line">    <span class="symbol">:flags</span> (<span class="name">anim-state-flag</span> no-adjst-to-ground)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">(<span class="name">define-state</span> complex</span><br><span class="line">    <span class="symbol">:name</span> <span class="string">&quot;move-l-to-r:</span></span><br><span class="line"><span class="string">    :tree</span></span><br><span class="line"><span class="string">        (anim-node-lerp</span></span><br><span class="line"><span class="string">            (anim-node-clip &quot;</span>walk-l-to-r<span class="string">&quot;)</span></span><br><span class="line"><span class="string">            (anim-node-clip &quot;</span>run-l-to-r<span class="string">&quot;)</span></span><br><span class="line"><span class="string">        )</span></span><br><span class="line"><span class="string">)</span></span><br></pre></td></tr></table></figure>
+<h2 id="过渡">过渡</h2>
+<p>为了制作高质量的角色动画，我们必须小心处理动作状态机中的状态过渡，以确保动画链接之处不会出现突兀或粗糙的感觉。</p>
+<p>除非来源状态的最终姿势和目标状态的初始姿势完全一致，否则需要过渡来将状态从来源状态跳到目标状态。淡入和淡出是一个选项，但是有时候也需要在状态机中引入特殊的过渡状态来达到目的。</p>
+<p>过渡的参数可以为下面列出的</p>
+<ul>
+<li>来源及目标状态</li>
+<li>过渡类型</li>
+<li>持续时间</li>
+<li>淡入淡出的曲线类型</li>
+<li>过渡窗口（某些过渡只有在来源动画的局部时间位于某个窗口内才能进行）</li>
+</ul>
+<h3 id="过渡矩阵">过渡矩阵</h3>
+<p>过渡矩阵表明所有状态之间的过渡。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/03/04/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-04-%E5%8A%A8%E7%94%BB%E7%B3%BB%E7%BB%9F/" title="动画系统">https://aquietzero.github.io/2022/03/04/reading/游戏引擎架构/2022-03-04-动画系统/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+              <a href="/tags/%E5%8A%A8%E7%94%BB/" rel="tag"># 动画</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/23/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-02-23-%E6%B8%B2%E6%9F%93%E5%BC%95%E6%93%8E/" rel="prev" title="渲染引擎">
+                  <i class="fa fa-angle-left"></i> 渲染引擎
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/10/reading/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E6%9E%B6%E6%9E%84/2022-03-10-%E7%A2%B0%E6%92%9E%E5%8F%8A%E5%88%9A%E4%BD%93%E5%8A%A8%E5%8A%9B%E5%AD%A6/" rel="next" title="碰撞及刚体动力学">
+                  碰撞及刚体动力学 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

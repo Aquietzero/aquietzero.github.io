@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Closest-point Computations Given the closest points between two objects, the distance between the objects is obtained. If the combined maximum movement of two objects is less than the distance between">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basic Primitive Tests">
+<meta property="og:url" content="https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="Closest-point Computations Given the closest points between two objects, the distance between the objects is obtained. If the combined maximum movement of two objects is less than the distance between">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-19T07:11:29.530Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="读书笔记">
+<meta property="article:tag" content="游戏引擎">
+<meta property="article:tag" content="碰撞检测">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/","path":"2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/","title":"Basic Primitive Tests"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Basic Primitive Tests | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#closest-point-computations"><span class="nav-number">1.</span> <span class="nav-text">Closest-point Computations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-point-on-plane-to-point"><span class="nav-number">1.1.</span> <span class="nav-text">Closest Point on Plane to
+Point</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-point-on-line-segment-to-point"><span class="nav-number">1.2.</span> <span class="nav-text">Closest Point on Line
+Segment to Point</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#distance-of-point-to-segment"><span class="nav-number">1.2.1.</span> <span class="nav-text">Distance of Point to Segment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-point-on-aabb-to-point"><span class="nav-number">1.3.</span> <span class="nav-text">Closest Point on AABB to
+Point</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#distance-of-point-to-aabb"><span class="nav-number">1.3.1.</span> <span class="nav-text">Distance of Point to AABB</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-point-on-triangle-to-point"><span class="nav-number">1.4.</span> <span class="nav-text">Closest Point on Triangle to
+Point</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#closest-points-of-two-lines"><span class="nav-number">1.5.</span> <span class="nav-text">Closest Points of Two Lines</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#testing-primitives"><span class="nav-number">2.</span> <span class="nav-text">Testing Primitives</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#separating-axis-test"><span class="nav-number">2.1.</span> <span class="nav-text">Separating-axis Test</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-sphere-against-plane"><span class="nav-number">2.2.</span> <span class="nav-text">Testing Sphere Against Plane</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-box-against-plane"><span class="nav-number">2.3.</span> <span class="nav-text">Testing Box Against Plane</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-sphere-against-aabb"><span class="nav-number">2.4.</span> <span class="nav-text">Testing Sphere Against AABB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-sphere-against-triangle"><span class="nav-number">2.5.</span> <span class="nav-text">Testing Sphere Against
+Triangle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-aabb-agianst-triangle"><span class="nav-number">2.6.</span> <span class="nav-text">Testing AABB Agianst
+Triangle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#testing-triangle-against-triangle"><span class="nav-number">2.7.</span> <span class="nav-text">Testing Triangle Against
+Triangle</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#intersecting-lines-rays-and-directed-segments"><span class="nav-number">3.</span> <span class="nav-text">Intersecting
+Lines, Rays, and (Directed) Segments</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#intersecting-segment-against-plane"><span class="nav-number">3.1.</span> <span class="nav-text">Intersecting Segment Against
+Plane</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#intersecting-ray-or-segment-against-sphere"><span class="nav-number">3.2.</span> <span class="nav-text">Intersecting Ray or
+Segment Against Sphere</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#intersection-ray-or-segment-against-box"><span class="nav-number">3.3.</span> <span class="nav-text">Intersection Ray or
+Segment Against Box</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#intersecting-line-against-triangle"><span class="nav-number">3.4.</span> <span class="nav-text">Intersecting Line Against
+Triangle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#intersecting-ray-or-segment-against-triangle"><span class="nav-number">3.5.</span> <span class="nav-text">Intersecting Ray
+or Segment Against Triangle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#intersection-of-two-planes"><span class="nav-number">3.6.</span> <span class="nav-text">Intersection of Two Planes</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-intersection-tests"><span class="nav-number">4.</span> <span class="nav-text">Dynamic Intersection Tests</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#interval-halving-for-intersecting-moving-objects"><span class="nav-number">4.1.</span> <span class="nav-text">Interval
+Halving for Intersecting Moving Objects</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Basic Primitive Tests | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Basic Primitive Tests
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-05 00:00:00" itemprop="dateCreated datePublished" datetime="2022-04-05T00:00:00+08:00">2022-04-05</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="closest-point-computations">Closest-point Computations</h1>
+<p>Given the closest points between two objects, the distance between
+the objects is obtained. If the combined maximum movement of two objects
+is less than the distance between them, a collision can be ruled
+out.</p>
+<h2 id="closest-point-on-plane-to-point">Closest Point on Plane to
+Point</h2>
+<p>Given a plane <span class="math inline">\(\pi\)</span>, defined by a
+point <span class="math inline">\(P\)</span> and a normal <span
+class="math inline">\(\textbf{n}\)</span>, all points <span
+class="math inline">\(X\)</span> on the plane satisfy the equation <span
+class="math inline">\(\textbf{n} \cdot (X - P) = 0\)</span>. The closest
+point on the plane to the given point is <span
+class="math inline">\(R\)</span>, which is <span class="math inline">\(R
+= Q - t\textbf{n}\)</span> for some value <span
+class="math inline">\(t\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/closest-point-to-plane.png"
+alt="Plane π given by P and n. Orthogonal projection of Q onto π gives R, the closest point on π to Q." />
+<figcaption aria-hidden="true">Plane π given by <em>P</em> and
+<strong>n</strong>. Orthogonal projection of <em>Q</em> onto π gives
+<em>R</em>, the closest point on π to <em>Q</em>.</figcaption>
+</figure>
+<p>Plane π given by <em>P</em> and <strong>n</strong>. Orthogonal
+projection of <em>Q</em> onto π gives <em>R</em>, the closest point on π
+to <em>Q</em>.</p>
+<p>Substitute <span class="math inline">\(R\)</span> into the plane
+equation gives</p>
+<p><span class="math display">\[
+R = Q - \frac{\textbf{n} \cdot (Q - P)}{\textbf{n} \cdot \textbf{n}}
+\textbf{n}
+\]</span></p>
+<p>When <span class="math inline">\(\textbf{n}\)</span> is of unit
+length, <span class="math inline">\(R\)</span> simplifies to</p>
+<p><span class="math display">\[
+R = Q - (\textbf{n} \cdot (Q - P))\textbf{n}
+\]</span></p>
+<h2 id="closest-point-on-line-segment-to-point">Closest Point on Line
+Segment to Point</h2>
+<p>Let <span class="math inline">\(AB\)</span> be a line segment
+specified by the endpoint <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span>. Given an arbitrary point <span
+class="math inline">\(C\)</span>, the problem is to determine the point
+<span class="math inline">\(D\)</span> on <span
+class="math inline">\(AB\)</span> closest to <span
+class="math inline">\(C\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/closest-point-on-segment-to-point.png"
+alt="The three cases of C projecting onto AB: (a) outside AB on side of A, (b) inside AB, and (c) outside AB on side of B." />
+<figcaption aria-hidden="true">The three cases of <em>C</em> projecting
+onto <em>AB</em>: (a) outside <em>AB</em> on side of <em>A</em>, (b)
+inside <em>AB</em>, and (c) outside <em>AB</em> on side of
+<em>B</em>.</figcaption>
+</figure>
+<p>The three cases of <em>C</em> projecting onto <em>AB</em>: (a)
+outside <em>AB</em> on side of <em>A</em>, (b) inside <em>AB</em>, and
+(c) outside <em>AB</em> on side of <em>B</em>.</p>
+<p>Any point on the line through <span class="math inline">\(AB\)</span>
+can be expressed parametrically as <span class="math inline">\(P(t) = A
++ t(B - A)\)</span>. The <span class="math inline">\(t\)</span>
+corresponding to the projection of <span
+class="math inline">\(C\)</span> onto the line is given by <span
+class="math inline">\(t = (C - A) \cdot \textbf{n} / \| B -
+A\|\)</span>, where <span class="math inline">\(\textbf{n} = (B - A) /
+\|B - A\|\)</span> is a unit vector in the direction of <span
+class="math inline">\(AB\)</span> .</p>
+<h3 id="distance-of-point-to-segment">Distance of Point to Segment</h3>
+<p>The squared distance between a point <span
+class="math inline">\(C\)</span> and a segment <span
+class="math inline">\(AB\)</span> can be directly computed withouth
+explicitly computing the point <span class="math inline">\(D\)</span> on
+<span class="math inline">\(AB\)</span> closest to <span
+class="math inline">\(C\)</span>.</p>
+<ul>
+<li><p>When <span class="math inline">\(AC \cdot AB \leq 0\)</span>,
+<span class="math inline">\(A\)</span> is closest to <span
+class="math inline">\(C\)</span> and the squared distance is given by
+<span class="math inline">\(AC \cdot AC\)</span>.</p></li>
+<li><p>When <span class="math inline">\(AC \cdot AB \geq AB \cdot
+AB\)</span>, <span class="math inline">\(B\)</span> is closest to <span
+class="math inline">\(C\)</span> and the squared distance is given by
+<span class="math inline">\(BC \cdot BC\)</span>.</p></li>
+<li><p>When <span class="math inline">\(0 &lt; AC \cdot AB &lt; AB \cdot
+AB\)</span>, the squared distance is given by <span
+class="math inline">\(CD \cdot CD\)</span>, where</p>
+<p><span class="math display">\[
+  D = A + \frac{AC \cdot AB}{AB \cdot AB}AB
+  \]</span></p>
+<p>then <span class="math inline">\(CD \cdot CD\)</span> simplifies
+to</p>
+<p><span class="math display">\[
+  AC \cdot AC - \frac{(AC \cdot AB)^2}{AB \cdot AB}
+  \]</span></p></li>
+</ul>
+<h2 id="closest-point-on-aabb-to-point">Closest Point on AABB to
+Point</h2>
+<p>Let <span class="math inline">\(B\)</span> be an AABB and <span
+class="math inline">\(P\)</span> an arbitrary point in space.</p>
+<ul>
+<li>When <span class="math inline">\(P\)</span> is inside <span
+class="math inline">\(B\)</span>, then the clamped point is <span
+class="math inline">\(P\)</span> itself.</li>
+<li>When <span class="math inline">\(P\)</span> is in the Voronoi region
+of <span class="math inline">\(B\)</span>, the clamping operation will
+bring <span class="math inline">\(P\)</span> to that face of <span
+class="math inline">\(B\)</span>.</li>
+<li>When <span class="math inline">\(P\)</span> is in the vertex Voronoi
+region of <span class="math inline">\(B\)</span>, clamping <span
+class="math inline">\(P\)</span> gives the vertex as a result.</li>
+<li>When <span class="math inline">\(P\)</span> is in the edge Voronoi
+region of <span class="math inline">\(B\)</span>, clamping <span
+class="math inline">\(P\)</span> corresponds to an orthogonal projection
+onto the edge.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/closest-point-to-aabb.png"
+alt="Clamping P to the bounds of B gives the closest point Q on B to P: (a) for an edge Voronoi region, (b) for a vertex Voronoi region." />
+<figcaption aria-hidden="true">Clamping <em>P</em> to the bounds of
+<em>B</em> gives the closest point <em>Q</em> on <em>B</em> to
+<em>P</em>: (a) for an edge Voronoi region, (b) for a vertex Voronoi
+region.</figcaption>
+</figure>
+<p>Clamping <em>P</em> to the bounds of <em>B</em> gives the closest
+point <em>Q</em> on <em>B</em> to <em>P</em>: (a) for an edge Voronoi
+region, (b) for a vertex Voronoi region.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Given point p, return the point q on or in AABB b that is closest to p</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ClosestPtPointAABB</span><span class="params">(Point p, AABB b, Point &amp;q)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// For each coordinate axis, if the point coordinate value is</span></span><br><span class="line">    <span class="comment">// outside box, clamp it to the box, else keep it as is</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">        <span class="type">float</span> v = p[i];</span><br><span class="line">        <span class="keyword">if</span> (v &lt; b.min[i]) v = b.min[i]; <span class="comment">// v = max(v, b.min[i])</span></span><br><span class="line">        <span class="keyword">if</span> (v &gt; b.max[i]) v = b.max[i]; <span class="comment">// v = min(v, b.max[i])</span></span><br><span class="line">        q[i] = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="distance-of-point-to-aabb">Distance of Point to AABB</h3>
+<p>When the point <em>Q</em> on an AABB <em>B</em> closest to a given
+point <em>P</em> is computed only to determine the distance between
+<em>P</em> and <em>Q</em>, the distance can be calculated with- out
+explicitly obtaining <em>Q</em>.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Computes the square distance between a point p and an AABB b</span></span><br><span class="line"><span class="function"><span class="type">float</span> <span class="title">SqDistPointAABB</span><span class="params">(Point p, AABB b)</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> sqDist = <span class="number">0.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// For each axis count any excess distance outside box extents</span></span><br><span class="line">        <span class="type">float</span> v = p[i];</span><br><span class="line">        <span class="keyword">if</span> (v &lt; b.min[i]) sqDist += (b.min[i] - v) * (b.min[i] - v);</span><br><span class="line">        <span class="keyword">if</span> (v &gt; b.max[i]) sqDist += (v - b.max[i]) * (v - b.max[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sqDist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="closest-point-on-triangle-to-point">Closest Point on Triangle to
+Point</h2>
+<p>Given a triangle <span class="math inline">\(ABC\)</span> and a point
+<span class="math inline">\(P\)</span>, let <span
+class="math inline">\(Q\)</span> describe the point on <span
+class="math inline">\(ABC\)</span> closest to <span
+class="math inline">\(P\)</span>. The better solution to the problem is
+to compute which of the triangle’s Voronoi feature regions <span
+class="math inline">\(P\)</span> is in.</p>
+<figure>
+<img
+src="source/assets/images/2022-04-05-basic-primitive-tests/closest-point-to-triangle.png"
+alt="The Voronoi region of vertex A,VR(A), is the intersection of the negative half spaces of the two planes (X – A) · (B – A) = 0 and (X – A) · (C – A) = 0." />
+<figcaption aria-hidden="true">The Voronoi region of vertex
+<em>A</em>,<em>VR</em>(<em>A</em>), is the intersection of the negative
+half spaces of the two planes (<em>X</em> – <em>A</em>) · (<em>B</em> –
+<em>A</em>) = 0 and (<em>X</em> – <em>A</em>) · (<em>C</em> –
+<em>A</em>) = 0.</figcaption>
+</figure>
+<p>The Voronoi region of vertex <em>A</em>,<em>VR</em>(<em>A</em>), is
+the intersection of the negative half spaces of the two planes
+(<em>X</em> – <em>A</em>) · (<em>B</em> – <em>A</em>) = 0 and
+(<em>X</em> – <em>A</em>) · (<em>C</em> – <em>A</em>) = 0.</p>
+<p>The Voronoi region of <span class="math inline">\(A\)</span> can be
+determined as the intersection of the negative halfspaces of two planes
+through <span class="math inline">\(A\)</span>, one with a normal <span
+class="math inline">\(B - A\)</span> and the other with the normal <span
+class="math inline">\(C - A\)</span>.</p>
+<p>The Voronoi region of the edge can be obtained by computing the
+barycentric coordinates of the orthogonal projection <span
+class="math inline">\(R\)</span> of <span
+class="math inline">\(P\)</span> onto <span
+class="math inline">\(ABC\)</span>.</p>
+<p>Let <span class="math inline">\(\textbf{n}\)</span> be the normal of
+<span class="math inline">\(ABC\)</span> and let <span
+class="math inline">\(R = P - t\textbf{n}\)</span> for some <span
+class="math inline">\(t\)</span>. The barycentric coordinates <span
+class="math inline">\((u, v, w)\)</span> of <span
+class="math inline">\(R\)</span>, <span class="math inline">\(R = uA +
+vB + wC\)</span> can then be computed from the quantities listed
+below.</p>
+<p><span class="math display">\[
+\textbf{n} = AB \times AC \\
+rab = \textbf{n} \cdot (RA \times RB) \\
+rbc = \textbf{n} \cdot (RB \times RC) \\
+rca = \textbf{n} \cdot (RC \times RA) \\
+abc = rab + rbc + rca \\
+u = \frac{rbc}{abc},
+v = \frac{rca}{abc},
+w = \frac{rab}{abc}
+\]</span></p>
+<h2 id="closest-points-of-two-lines">Closest Points of Two Lines</h2>
+<p>The closest points of two lines can be determined as follows. Let the
+lines <span class="math inline">\(L_1\)</span> and <span
+class="math inline">\(L_2\)</span> be specified parametrically by the
+poitns <span class="math inline">\(P_1\)</span> and <span
+class="math inline">\(Q_1\)</span> and <span
+class="math inline">\(P_2\)</span> and <span
+class="math inline">\(Q_2\)</span>:</p>
+<p><span class="math display">\[
+L_1(s) = P_1 + s\textbf{d}_1, \textbf{d}_1 = Q_1 - P_1 \\
+L_2(t) = P_2 + t\textbf{d}_2, \textbf{d}_2 = Q_2 - P_2
+\]</span></p>
+<p>For some pair of values for <span class="math inline">\(s\)</span>
+and <span class="math inline">\(t\)</span>, <span
+class="math inline">\(L_1(s)\)</span> and <span
+class="math inline">\(L_2(t)\)</span> correspond to the closest points
+on the lines, and <span class="math inline">\(\textbf{v}(s, t) = L_1(s)
+- L_2(t)\)</span> describes a vector between them.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/closest-point-between-segments.png"
+alt="The vector v(s, t) connecting the two closest points of two lines, L1(s) and L2(t), is always perpendicular to both lines." />
+<figcaption aria-hidden="true">The vector <strong>v</strong>(<em>s</em>,
+<em>t</em>) connecting the two closest points of two lines,
+<em>L</em>1(<em>s</em>) and <em>L</em>2(<em>t</em>), is always
+perpendicular to both lines.</figcaption>
+</figure>
+<p>The vector <strong>v</strong>(<em>s</em>, <em>t</em>) connecting the
+two closest points of two lines, <em>L</em>1(<em>s</em>) and
+<em>L</em>2(<em>t</em>), is always perpendicular to both lines.</p>
+<p>Solving the equations</p>
+<p><span class="math display">\[
+\textbf{d}_1 \cdot \textbf{v}(s, t) = 0 \\
+\textbf{d}_2 \cdot \textbf{v}(s, t) = 0
+\]</span></p>
+<p>gives</p>
+<p><span class="math display">\[
+s = (bf - ce)/d \\
+t = (af - bc)/d
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{r} &amp;= P1 - P2 \\
+a &amp;= \textbf{d}_1 \cdot \textbf{d}_1 \\
+b &amp;= \textbf{d}_1 \cdot \textbf{d}_2 \\
+c &amp;= \textbf{d}_1 \cdot \textbf{r} \\
+e &amp;= \textbf{d}_2 \cdot \textbf{d}_2 \\
+f &amp;= \textbf{d}_2 \cdot \textbf{r} \\
+d = ae - b^2 &amp;= (\|\textbf{d}_1\| \|\textbf{d}_1\| \sin(\theta))^2
+\end{align}
+\]</span></p>
+<h1 id="testing-primitives">Testing Primitives</h1>
+<p>The testing of primitives is less general than the computation of
+distance between them. Generally, a test will indicate only that the
+primitives are intersectiing, not determine where or how they are
+intersecting.</p>
+<h2 id="separating-axis-test">Separating-axis Test</h2>
+<aside>
+<p>💡 <strong>Separating Hyperplane Theorem</strong>: Given two convex
+sets <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, either the two sets are intersecting
+or there exists a separating hyperplane <span
+class="math inline">\(P\)</span> such that <span
+class="math inline">\(A\)</span> is on one side of <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(B\)</span> is on the other.</p>
+</aside>
+<p>Given a hyperplane <span class="math inline">\(P\)</span> separating
+<span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span>, a <strong>separating axis</strong> is
+a line <span class="math inline">\(L\)</span> perpendicular to <span
+class="math inline">\(P\)</span>. It is called a separating axis because
+the orthogonal projections of <span class="math inline">\(A\)</span> and
+<span class="math inline">\(B\)</span> onto <span
+class="math inline">\(L\)</span> result in two nonoverlapping
+intervals.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/separating-axis.png"
+alt="Two objects are separated if the sum of the radius (halfwidth) of their projections is less than the distance between their center projections." />
+<figcaption aria-hidden="true">Two objects are separated if the sum of
+the radius (halfwidth) of their projections is less than the distance
+between their center projections.</figcaption>
+</figure>
+<p>Two objects are separated if the sum of the radius (halfwidth) of
+their projections is less than the distance between their center
+projections.</p>
+<p>To test the separability of two polyhedral objcts the following axes
+must be tested.</p>
+<ul>
+<li>Axes parallel to face normals of object <span
+class="math inline">\(A\)</span>.</li>
+<li>Axes parallel to face normals of object <span
+class="math inline">\(B\)</span>.</li>
+<li>Axes parallel to the vectors resulting from the cross product of all
+edges in <span class="math inline">\(A\)</span> with all edges in <span
+class="math inline">\(B\)</span>.</li>
+</ul>
+<p><strong>For two general polytopes with the same number of faces
+(<span class="math inline">\(F\)</span>) and edges (<span
+class="math inline">\(E\)</span>) there are <span
+class="math inline">\(2F + E^2\)</span> potential separating
+axes.</strong></p>
+<aside>
+<p>💡 A potential problem with the separating-axis test is robustness in
+the case of a separating axis being formed by the cross product of an
+edge from each object. When these two edges become parallel, the result
+is the zero vector and all projections onto this aixs, and sums of these
+projections, are therefore zero.</p>
+</aside>
+<h2 id="testing-sphere-against-plane">Testing Sphere Against Plane</h2>
+<p>Let a sphere <span class="math inline">\(S\)</span> be specified by a
+center position <span class="math inline">\(C\)</span> and a radius
+<span class="math inline">\(r\)</span>, and let a plane <span
+class="math inline">\(\pi\)</span> be specified by <span
+class="math inline">\(\textbf{n} \cdot X = d\)</span>, where <span
+class="math inline">\(\textbf{n}\)</span> is a unit vector; that is,
+<span class="math inline">\(\|\textbf{n}\| = 1\)</span>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/sphere-against-plane.png"
+alt="Illustrating the three sphere-plane tests. (a) Spheres intersecting the plane. (b) Spheres fully behind the plane. (c) Spheres intersecting the negative halfspace of the plane. Spheres testing true are shown in gray." />
+<figcaption aria-hidden="true">Illustrating the three sphere-plane
+tests. (a) Spheres intersecting the plane. (b) Spheres fully behind the
+plane. (c) Spheres intersecting the negative halfspace of the plane.
+Spheres testing true are shown in gray.</figcaption>
+</figure>
+<p>Illustrating the three sphere-plane tests. (a) Spheres intersecting
+the plane. (b) Spheres fully behind the plane. (c) Spheres intersecting
+the negative halfspace of the plane. Spheres testing true are shown in
+gray.</p>
+<h2 id="testing-box-against-plane">Testing Box Against Plane</h2>
+<h2 id="testing-sphere-against-aabb">Testing Sphere Against AABB</h2>
+<p>Testing whether a sphere intersects an axis-aligned bounding box is
+best done by computing the distance between the sphere center and the
+AABB and comparing this distance with the sphere radius.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Returns true if sphere s intersects AABB b, false otherwise</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestSphereAABB</span><span class="params">(Sphere s, AABB b)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Compute squared distance between sphere center and AABB</span></span><br><span class="line">    <span class="type">float</span> sqDist = <span class="built_in">SqDistPointAABB</span>(s.c, b);</span><br><span class="line">    <span class="comment">// Sphere and AABB intersect if the (squared) distance</span></span><br><span class="line">    <span class="comment">// between them is less than the (squared) sphere radius</span></span><br><span class="line">    <span class="keyword">return</span> sqDist &lt;= s.r * s.r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="testing-sphere-against-triangle">Testing Sphere Against
+Triangle</h2>
+<p>The point <span class="math inline">\(P\)</span> on the triangle
+closest to the sphere center is computed. The distance between <span
+class="math inline">\(P\)</span> and the sphere cetner is then compared
+against the sphere radius to detect possible intersection.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Returns true if sphere s intersects triangle ABC, false otherwise.</span></span><br><span class="line"><span class="comment">// The point p on abc closest to the sphere center is also returned</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestSphereTriangle</span><span class="params">(Sphere s, Point a, Point b, Point c, Point &amp;p)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Find point P on triangle ABC closest to sphere center</span></span><br><span class="line">    p = <span class="built_in">ClosestPtPointTriangle</span>(s.c, a, b, c);</span><br><span class="line">    <span class="comment">// Sphere and triangle intersect if the (squared) distance from sphere</span></span><br><span class="line">    <span class="comment">// center to point p is less than the (squared) sphere radius</span></span><br><span class="line">    Vector v = p - s.c;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Dot</span>(v, v) &lt;= s.r * s.r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="testing-aabb-agianst-triangle">Testing AABB Agianst
+Triangle</h2>
+<p>The test of a triangle <span class="math inline">\(T\)</span>
+intersecting a box <span class="math inline">\(B\)</span> can be
+efficiently implemented using a separating-axis approach. There are 13
+axes that must be considered for projection:</p>
+<ol type="1">
+<li>Three face normals from the AABB.</li>
+<li>One face normal from the triangle.</li>
+<li>Nine axes given by the cross products of combination of edges from
+both.</li>
+</ol>
+<p><strong>It has been suggested that the most efficient order in which
+to perform these three set of tests is 3-1-2.</strong></p>
+<p>The AABB is given by center <span class="math inline">\(C\)</span>,
+local axes normal vectors <span class="math inline">\(\textbf{u}_1 = (1,
+0, 0), \textbf{u}_2 = (0, 1, 0), \textbf{u}_3 = (0, 0, 1)\)</span> and
+extends <span class="math inline">\(e_0, e_1\)</span> and <span
+class="math inline">\(e_2\)</span>. The triangle is given by three
+points <span class="math inline">\(V_0 = (v_{0x}, v_{0y}, v_{0z}), V_1 =
+(v_{1x}, v_{1y}, v_{1z}), V_2 = (v_{2x}, v_{2y}, v_{2z})\)</span>.</p>
+<ol type="1">
+<li>Test the AABB of the triangle and the box.</li>
+<li>Test the box and the plane in which the triangle lies.</li>
+<li>Test the nine axes by the following procedures.
+<ol type="1">
+<li><p>Move the box to the origin and update the triangle
+correspondingly by <span class="math inline">\(V_1 = V_1 - C, V_2 = V_2
+- C\)</span> and <span class="math inline">\(V_3 = V_3 -
+C\)</span>.</p></li>
+<li><p>Calculate the edge of the triangle. <span
+class="math inline">\(\textbf{f_0} = V_1 - V_0, \textbf{f}_1 = V_2 -
+V_1\)</span> and <span class="math inline">\(\textbf{f}_2 = V_0 -
+V_2\)</span>.</p></li>
+<li><p>The nine axes can be specified by <span
+class="math inline">\(\textbf{a}_{ij} = \textbf{u}_i \times
+\textbf{f}_j\)</span>. Since <span
+class="math inline">\(\textbf{u}_i\)</span> is normal, so the axes can
+be given directly as follows:</p>
+<p><span class="math display">\[
+\begin{align}
+\textbf{a}_{00} &amp;= \textbf{u}_0 \times \textbf{f}_0 &amp;= (1, 0, 0)
+\times \textbf{f}_0 &amp;= (0, -f_{0z}, f_{0y}) \\
+\textbf{a}_{01} &amp;= \textbf{u}_0 \times \textbf{f}_1 &amp;= (1, 0, 0)
+\times \textbf{f}_1 &amp;= (0, -f_{1z}, f_{1y}) \\
+\textbf{a}_{02} &amp;= \textbf{u}_0 \times \textbf{f}_2 &amp;= (1, 0, 0)
+\times \textbf{f}_2 &amp;= (0, -f_{2z}, f_{2y}) \\
+\textbf{a}_{10} &amp;= \textbf{u}_1 \times \textbf{f}_0 &amp;= (0, 1, 0)
+\times \textbf{f}_0 &amp;= (f_{0z}, 0, -f_{0x}) \\
+\textbf{a}_{11} &amp;= \textbf{u}_1 \times \textbf{f}_1 &amp;= (0, 1, 0)
+\times \textbf{f}_1 &amp;= (f_{1z}, 0, -f_{1x}) \\
+\textbf{a}_{12} &amp;= \textbf{u}_1 \times \textbf{f}_2 &amp;= (0, 1, 0)
+\times \textbf{f}_2 &amp;= (f_{2z}, 0, -f_{2x}) \\
+\textbf{a}_{20} &amp;= \textbf{u}_2 \times \textbf{f}_0 &amp;= (0, 0, 1)
+\times \textbf{f}_0 &amp;= (-f_{0y}, f_{0x}, 0) \\
+\textbf{a}_{21} &amp;= \textbf{u}_2 \times \textbf{f}_1 &amp;= (0, 0, 1)
+\times \textbf{f}_1 &amp;= (-f_{1y}, f_{1x}, 0) \\
+\textbf{a}_{22} &amp;= \textbf{u}_2 \times \textbf{f}_2 &amp;= (0, 0, 1)
+\times \textbf{f}_2 &amp;= (-f_{2y}, f_{2x}, 0)
+\end{align}
+\]</span></p></li>
+<li><p>The projection of a box with respect to an axis <span
+class="math inline">\(\textbf{n}\)</span> is given by</p>
+<p><span class="math display">\[
+r = e_0|\textbf{u}_0 \cdot \textbf{n}| + e_1|\textbf{u}_1 \cdot
+\textbf{n}| + e_2|\textbf{u}_2 \cdot \textbf{n}|
+\]</span></p>
+<p>The projection of a triangle onto an axis <span
+class="math inline">\(\textbf{n}\)</span> results in the projection
+interval <span class="math inline">\([\min(p_0, p_1, p_2), \max(p_0,
+p_1, p_2)]\)</span>, where <span class="math inline">\(p_0, p_1\)</span>
+and <span class="math inline">\(p_2\)</span> are the distances from the
+origin to the projections of the triangle vertices onto <span
+class="math inline">\(\textbf{n}\)</span>.</p></li>
+<li><p>If the projection intervals <span class="math inline">\([-r,
+r]\)</span> and <span class="math inline">\([\min(p_0, p_1, p_2),
+\max(p_0, p_1, p_2)]\)</span> are disjoint for the given axis, namely
+<span class="math inline">\(\max(-\max(p_i, p_j), \min(p_i, p_j)) &gt;
+r\)</span>, the axis is a separating axis and the triangle and the AABB
+do not overlap.</p></li>
+</ol></li>
+</ol>
+<h2 id="testing-triangle-against-triangle">Testing Triangle Against
+Triangle</h2>
+<p>The most straightforward test is based on the fact that in general
+when two triangles intersect either two edges of one triangle pierce the
+interior of the other or one edge from each triangle pierces the
+interior of the other triangle.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/triangle-against-triangle.png"
+alt="In the general case,two triangles intersect (a) when two edges of one triangle pierce the interior of the other or (b) when one edge from each pierces the interior of the other." />
+<figcaption aria-hidden="true">In the general case,two triangles
+intersect (a) when two edges of one triangle pierce the interior of the
+other or (b) when one edge from each pierces the interior of the
+other.</figcaption>
+</figure>
+<p>In the general case,two triangles intersect (a) when two edges of one
+triangle pierce the interior of the other or (b) when one edge from each
+pierces the interior of the other.</p>
+<h1 id="intersecting-lines-rays-and-directed-segments">Intersecting
+Lines, Rays, and (Directed) Segments</h1>
+<h2 id="intersecting-segment-against-plane">Intersecting Segment Against
+Plane</h2>
+<p>The plane is given by <span class="math inline">\((\textbf{n} \cdot
+X) = d\)</span> and the segment is given by <span
+class="math inline">\(S(t) = A + t(B - A)\)</span> for <span
+class="math inline">\(t \in [0, 1]\)</span>. Substituting the segment
+equation into the plane equation, we get</p>
+<p><span class="math display">\[
+(\textbf{n} \cdot (A + t(B - A)))= d
+\]</span></p>
+<p>Solving for <span class="math inline">\(t\)</span> gives</p>
+<p><span class="math display">\[
+t = \frac{d - \textbf{n} \cdot A}{\textbf{n} \cdot (B - A)}
+\]</span></p>
+<p>Sustitute <span class="math inline">\(t\)</span> into the segment
+equation to obtain the intersection point.</p>
+<h2 id="intersecting-ray-or-segment-against-sphere">Intersecting Ray or
+Segment Against Sphere</h2>
+<p>The ray is given by <span class="math inline">\(R(t) = P +
+t\textbf{d}\)</span>, where <span class="math inline">\(t &gt;
+0\)</span>, <span class="math inline">\(P\)</span> is the ray origin and
+<span class="math inline">\(\textbf{d}\)</span> a normalized direction
+vector. The sphere is given by <span class="math inline">\((X -
+C)\cdot(X - C) = r^2\)</span>. To find the intersection point,
+substitute <span class="math inline">\(R(t)\)</span> into the sphere
+equation, gives</p>
+<p><span class="math display">\[
+(P + t \textbf{d} - C) \cdot (P + t \textbf{d} - C) = r^2
+\]</span></p>
+<p>Let <span class="math inline">\(\textbf{m} = P - C\)</span>, then the
+above equation can be formalized into the following quadratic
+equation,</p>
+<p><span class="math display">\[
+t^2 + 2(\textbf{m} \cdot \textbf{d})t + (\textbf{m}\cdot\textbf{m}) -
+r^2 = 0
+\]</span></p>
+<p>the solution is given by <span class="math inline">\(t = -b \pm
+\sqrt{b^2 - c}\)</span>. There are three cases of the solution.</p>
+<ul>
+<li>if <span class="math inline">\(b^2 - c &lt; 0\)</span>, then the ray
+missing the sphere completely.</li>
+<li>if <span class="math inline">\(b^2 = c\)</span>, then the ray is
+hitting the sphere tengentially in a point.</li>
+<li>if <span class="math inline">\(b^2 - c &gt; 0\)</span>, then the ray
+enters the sphere and then leaves it.</li>
+</ul>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/ray-against-sphere.png"
+alt="Different cases of ray-sphere intersection: (a) ray intersects sphere (twice) with t &gt; 0, (b) false intersection with t &lt; 0, (c) ray intersects sphere tangentially, (d) ray starts inside sphere, and (e) no intersection." />
+<figcaption aria-hidden="true">Different cases of ray-sphere
+intersection: (a) ray intersects sphere (twice) with <em>t</em> &gt; 0,
+(b) false intersection with <em>t</em> &lt; 0, (c) ray intersects sphere
+tangentially, (d) ray starts inside sphere, and (e) no
+intersection.</figcaption>
+</figure>
+<p>Different cases of ray-sphere intersection: (a) ray intersects sphere
+(twice) with <em>t</em> &gt; 0, (b) false intersection with <em>t</em>
+&lt; 0, (c) ray intersects sphere tangentially, (d) ray starts inside
+sphere, and (e) no intersection.</p>
+<h2 id="intersection-ray-or-segment-against-box">Intersection Ray or
+Segment Against Box</h2>
+<p>A test for intersecting a ray against a box therefore only needs to
+compute the intersection intervals of the ray wih the planes of the
+slabs and perform some simple comparison operations to maintain the
+logical intersection of all intersection intervals along the ray.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/ray-against-aabb.png"
+alt="Ray R1 does not intersect the box because its intersections with the x slab and the y slab do not overlap. Ray R2 does intersect the box because the slab intersections overlap." />
+<figcaption aria-hidden="true">Ray <em>R</em>1 does not intersect the
+box because its intersections with the <em>x</em> slab and the
+<em>y</em> slab do not overlap. Ray <em>R</em>2 does intersect the box
+because the slab intersections overlap.</figcaption>
+</figure>
+<p>Ray <em>R</em>1 does not intersect the box because its intersections
+with the <em>x</em> slab and the <em>y</em> slab do not overlap. Ray
+<em>R</em>2 does intersect the box because the slab intersections
+overlap.</p>
+<p>The ray is given by <span class="math inline">\(R(t) = P +
+t\textbf{d}\)</span>, the slab planes are given by <span
+class="math inline">\(X \cdot \textbf{n}_i = d_i\)</span>. Solving for
+<span class="math inline">\(t\)</span> gives <span
+class="math inline">\(t = (d - P \cdot \textbf{n}_i) / (\textbf{d} \cdot
+\textbf{n}_i)\)</span>.</p>
+<h2 id="intersecting-line-against-triangle">Intersecting Line Against
+Triangle</h2>
+<p>Given a triangle <span class="math inline">\(ABC\)</span> and a line
+through <span class="math inline">\(PQ\)</span>. The line <span
+class="math inline">\(PQ\)</span> intersects <span
+class="math inline">\(ABC\)</span> if the point <span
+class="math inline">\(R\)</span> of intersection between the line and
+the plane of <span class="math inline">\(ABC\)</span> lies inside the
+triangle.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/ray-against-triangle.png"
+alt="Intersecting the line through P and Q against the triangle ABC." />
+<figcaption aria-hidden="true">Intersecting the line through <em>P</em>
+and <em>Q</em> against the triangle <em>ABC</em>.</figcaption>
+</figure>
+<p>Intersecting the line through <em>P</em> and <em>Q</em> against the
+triangle <em>ABC</em>.</p>
+<p>Consider three scalar products</p>
+<p><span class="math display">\[
+u = [PQ \ PC \ PB] \\
+v = [PQ \ PA \ PC] \\
+w = [PQ \ PB \ PA]
+\]</span></p>
+<p>If <span class="math inline">\(ABC\)</span> is counterclockwise, for
+<span class="math inline">\(PQ\)</span> to pass to the left of the edges
+<span class="math inline">\(BC, CA\)</span> and <span
+class="math inline">\(AB\)</span> the expressions <span
+class="math inline">\(u \geq 0, v \geq 0\)</span> and <span
+class="math inline">\(w \geq 0\)</span> must be true.</p>
+<p>For obtaining the intersection point with <span
+class="math inline">\(ABC\)</span>, it can be shown that <span
+class="math inline">\(u, v, w\)</span> are proportional to <span
+class="math inline">\(u^*, v^*, w^*\)</span>:</p>
+<p><span class="math display">\[
+u^* = ku = [PQ \ PC \ PB] \\
+v^* = kv = [PQ \ PA \ PC] \\
+w^* = kw = [PQ \ PB \ PA]
+\]</span></p>
+<p>where <span class="math inline">\(k = \|PR\|/\|PQ\|\)</span>.</p>
+<aside>
+<p>💡 <span class="math inline">\(PQ\)</span> is in the plane of <span
+class="math inline">\(ABC\)</span> when <span class="math inline">\(u =
+v = w= 0\)</span>.</p>
+</aside>
+<h2 id="intersecting-ray-or-segment-against-triangle">Intersecting Ray
+or Segment Against Triangle</h2>
+<p>Let a directed line segment between the two points <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(Q\)</span> be defined parametrically as <span
+class="math inline">\(R(t) = P+ t(Q - P), 0 \leq t \leq 1\)</span>. And
+the triangle be given by <span class="math inline">\(T(u, v, w) = uA +
+vB + wC\)</span>. Rearrange it with <span class="math inline">\(u = 1 -
+v - w\)</span> gives <span class="math inline">\(T(v, w) = A + v(B - A)
++ w(C - A)\)</span>. Finding the intersection point is the same as
+solving the following equation.</p>
+<p><span class="math display">\[
+T(v, w) = R(t) \iff \\
+(P - Q)t + (B - A)v + (C - A)w = P - A
+\]</span></p>
+<p>In matrix notion</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+(P - Q) &amp; (B - A) &amp; (C - A)
+\end{bmatrix}
+\begin{bmatrix}
+t \\ v \\ w
+\end{bmatrix} =
+\begin{bmatrix}
+(P - A)
+\end{bmatrix}
+\]</span></p>
+<p>Solving the equation gives</p>
+<p><span class="math display">\[
+\begin{align}
+t &amp;= (P - A) \cdot \textbf{n} / d \\
+v &amp;= (C - A) \cdot \textbf{e} / d \\
+w &amp;= -(B - A) \cdot \textbf{e} / d \\
+\end{align}
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\begin{aligned}
+\textbf{n} &amp;= (B - A) \times (C - A) \\
+d &amp;= (P - Q) \cdot \textbf{n} \\
+\textbf{e} &amp;= (P - Q) \times (P - A)
+\end{aligned}
+\]</span></p>
+<aside>
+<p>💡 If <span class="math inline">\(d &lt; 0\)</span> the segment
+points away from the triangle, and if <span class="math inline">\(d =
+0\)</span> the segment runs parallel to the plane of the triangle.</p>
+</aside>
+<h2 id="intersection-of-two-planes">Intersection of Two Planes</h2>
+<p>Let two planes <span class="math inline">\(\pi_1\)</span> and <span
+class="math inline">\(\pi_2\)</span> given by equations <span
+class="math inline">\(\textbf{n}_1 \cdot X = d_1\)</span> and <span
+class="math inline">\(\textbf{n}_2 \cdot X = d_2\)</span>. Then the
+planes are not parallel, they intersect in a line <span
+class="math inline">\(L = P + t\textbf{d}\)</span>. Since <span
+class="math inline">\(L\)</span> lies in both of the planes, it must be
+perpendicular to the normals of both planes, so <span
+class="math inline">\(\textbf{d} = \textbf{n}_1 \times
+\textbf{n}_2\)</span>. <strong>If <span
+class="math inline">\(\textbf{d}\)</span> is a zero vector, then the
+planes are parallel or coincident.</strong></p>
+<p><img
+src="/assets/images/2022-04-05-basic-primitive-tests/intersection-of-two-planes.png" /></p>
+<p>Since the point <span class="math inline">\(P\)</span> can be spaned
+by <span class="math inline">\(\textbf{n}_1\)</span> and <span
+class="math inline">\(\textbf{n}_2\)</span>, so we have the following
+equations</p>
+<p><span class="math display">\[
+\textbf{n}_1 \cdot (k_1 \textbf{n}_1 + k_2 \textbf{n}_2) = d_1 \\
+\textbf{n}_2 \cdot (k_1 \textbf{n}_1 + k_2 \textbf{n}_2) = d_2
+\]</span></p>
+<p>Expanding the dot product gives</p>
+<p><span class="math display">\[
+k_1 (\textbf{n}_1 \cdot \textbf{n}_1) + k_2 (\textbf{n}_1 \cdot
+\textbf{n}_2) = d_1 \\
+k_1 (\textbf{n}_1 \cdot \textbf{n}_2) + k_2 (\textbf{n}_2 \cdot
+\textbf{n}_2) = d_2
+\]</span></p>
+<p>Solving with Cramer’s rule to give the solution.</p>
+<p><span class="math display">\[
+k_1 = \frac{d_1(\textbf{n}_2 \cdot \textbf{n}_2) - d_2(\textbf{n}_1
+\cdot \textbf{n}_2)}{denom} \\
+k_2 = \frac{d_2(\textbf{n}_1 \cdot \textbf{n}_1) - d_1(\textbf{n}_1
+\cdot \textbf{n}_2)}{denom}
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\begin{align}
+denom &amp;= (\textbf{n}_1 \cdot \textbf{n}_1)(\textbf{n}_2 \cdot
+\textbf{n}_2) - (\textbf{n}_1 \cdot \textbf{n}_2)^2 \\
+&amp;= (\textbf{n}_1 \times \textbf{n}_2) \cdot (\textbf{n}_1 \times
+\textbf{n}_2) \\
+&amp;= \textbf{d} \cdot \textbf{d}
+\end{align}
+\]</span></p>
+<p>And finally the point <span class="math inline">\(P\)</span> is given
+by</p>
+<p><span class="math display">\[
+P = (d_1 \textbf{n}_2 - d_2 \textbf{n}_1) \times \textbf{d} /
+(\textbf{d} \cdot \textbf{d}) \\
+\textbf{d} = \textbf{n}_1 \times \textbf{n}_2
+\]</span></p>
+<h1 id="dynamic-intersection-tests">Dynamic Intersection Tests</h1>
+<p>A problem with static testing is that as the object movement
+increases between one point in time and the next so does the likelihood
+of an object simply jumping past another object. This unwanted
+phenomenon is called <strong>tunneling</strong>.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/dynamic-intersection-tests.png"
+alt="Dynamic collision tests. (a) Testing only at the start point and endpoint of an object’s movement suffers from tunneling. (b) A swept test finds the exact point of collision, but may not be possible to compute for all objects and movements. (c) Sampled motion may require a lot of tests and still exhibit tunneling in the region indicated by the black triangle." />
+<figcaption aria-hidden="true">Dynamic collision tests. (a) Testing only
+at the start point and endpoint of an object’s movement suffers from
+tunneling. (b) A swept test finds the exact point of collision, but may
+not be possible to compute for all objects and movements. (c) Sampled
+motion may require a lot of tests and still exhibit tunneling in the
+region indicated by the black triangle.</figcaption>
+</figure>
+<p>Dynamic collision tests. (a) Testing only at the start point and
+endpoint of an object’s movement suffers from tunneling. (b) A swept
+test finds the exact point of collision, but may not be possible to
+compute for all objects and movements. (c) Sampled motion may require a
+lot of tests and still exhibit tunneling in the region indicated by the
+black triangle.</p>
+<p><strong>Continuous swept test</strong> is expensive and complicated
+for most of the real-time application. A compromise is to
+<strong>sample</strong> the path of the object and perform several
+static object tests during a single object ovement.</p>
+<h2 id="interval-halving-for-intersecting-moving-objects">Interval
+Halving for Intersecting Moving Objects</h2>
+<p>Somewhere halfway between the sampling method and performing a
+contnuous swept test lies a method based on performing a recursive
+binary search over the object movement to find the time of collision, if
+any.</p>
+<figure>
+<img
+src="/assets/images/2022-04-05-basic-primitive-tests/interval-halving-for-intersecting-moving-objects.png"
+alt="A few steps of determining the collision of a moving sphere against a stationary object using an interval-halving method." />
+<figcaption aria-hidden="true">A few steps of determining the collision
+of a moving sphere against a stationary object using an interval-halving
+method.</figcaption>
+</figure>
+<p>A few steps of determining the collision of a moving sphere against a
+stationary object using an interval-halving method.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Intersect sphere s0 moving in direction d over time interval t0 &lt;= t &lt;= t1, against</span></span><br><span class="line"><span class="comment">// a stationary sphere s1. If found intersecting, return time t of collision</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">TestMovingSphereSphere</span><span class="params">(Sphere s0, Vector d, <span class="type">float</span> t0, <span class="type">float</span> t1, Sphere s1, <span class="type">float</span> &amp;t)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Compute sphere bounding motion of s0 during time interval from t0 to t1</span></span><br><span class="line">    Sphere b;</span><br><span class="line">    <span class="type">float</span> mid = (t0 + t1) * <span class="number">0.5f</span>;</span><br><span class="line">    b.c = s<span class="number">0.</span>c + d * mid;</span><br><span class="line">    b.r = (mid – t0) * <span class="built_in">Length</span>(d) + s<span class="number">0.</span>r;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If bounding sphere not overlapping s1, then no collision in this interval</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">TestSphereSphere</span>(b, s1)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Cannot rule collision out: recurse for more accurate testing. To terminate the</span></span><br><span class="line">    <span class="comment">// recursion, collision is assumed when time interval becomes sufficiently small</span></span><br><span class="line">    <span class="keyword">if</span> (t1 - t0 &lt; INTERVAL_EPSILON) &#123;</span><br><span class="line">        t = t0;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Recursively test first half of interval; return collision if detected</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">TestMovingSphereSphere</span>(s0, d, t0, mid, s1, t)) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Recursively test second half of interval</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">TestMovingSphereSphere</span>(s0, d, mid, t1, s1, t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/" title="Basic Primitive Tests">https://aquietzero.github.io/2022/04/05/reading/realtime-collision-detection/2022-04-05-basic-primitive-tests/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E/" rel="tag"># 游戏引擎</a>
+              <a href="/tags/%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/" rel="tag"># 碰撞检测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/26/reading/realtime-collision-detection/2022-03-26-bounding-volumes/" rel="prev" title="Bounding Volumes">
+                  <i class="fa fa-angle-left"></i> Bounding Volumes
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/06/reading/realtime-collision-detection/2022-04-06-bounding-volume-hierarchies/" rel="next" title="Bounding Volume Hierarchies">
+                  Bounding Volume Hierarchies <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">17:34</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
