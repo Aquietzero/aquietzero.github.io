@@ -18,15 +18,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="#解码 #推理   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合，输入输出都是向量（张量）。 const output:">
+    <meta name="description" content="#解码 #解码策略 #推理 #上下文学习 #思维链   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合，输入输出都是向量（张">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AI学习时间 05 - 解码与推理">
 <meta property="og:url" content="https://aquietzero.github.io/2025/04/22/computer/AI%E5%AD%A6%E4%B9%A0/%E8%A7%A3%E7%A0%81%E4%B8%8E%E6%8E%A8%E7%90%86/index.html">
 <meta property="og:site_name" content="NullSpace">
-<meta property="og:description" content="#解码 #推理   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合，输入输出都是向量（张量）。 const output:">
+<meta property="og:description" content="#解码 #解码策略 #推理 #上下文学习 #思维链   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合，输入输出都是向量（张">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-21T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-23T07:06:42.793Z">
+<meta property="article:modified_time" content="2025-04-23T07:41:06.190Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -262,7 +262,8 @@
     
     
     <div class="post-body" itemprop="articleBody"><div class="theme-color-blue" data-markdown="1">
-<p><code>#解码</code> <code>#推理</code></p>
+<p><code>#解码</code> <code>#解码策略</code> <code>#推理</code>
+<code>#上下文学习</code> <code>#思维链</code></p>
 </div>
 <style>
 canvas {
@@ -285,7 +286,6 @@ canvas {
 <blockquote>
 <p>训练是学习的过程，解码是推理的过程。</p>
 </blockquote>
-<h2 id="解码策略">解码策略</h2>
 <p>一种朴素的自回归解码流程是，模型 <span
 class="math inline">\(\mathcal{M}\)</span> 每次根据当前上下文词元序列
 <span class="math inline">\(\textbf{u} = [u_1, u_2, \dots, u_t]\)</span>
@@ -294,6 +294,7 @@ class="math inline">\(P\)</span>，然后根据<strong>解码策略</strong>选�
 <span class="math inline">\(u&#39;\)</span>，之后再将 $ u'$
 作为新的上下文重复上述步骤，直到结束或者达到最大长度为止。</p>
 <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">decode</span> = (<span class="params"><span class="attr">input</span>: <span class="built_in">string</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> output = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> (_.<span class="title function_">last</span>(output !== <span class="string">&#x27;END&#x27;</span>)) &#123;</span><br><span class="line">        <span class="comment">// 大语言模型计算下一个次的概率分布</span></span><br><span class="line">        <span class="keyword">const</span> logits = <span class="title class_">Model</span>(input)</span><br><span class="line">        <span class="comment">// 根据概率分布采样下一个单词</span></span><br><span class="line">        <span class="keyword">const</span> next_token = <span class="title function_">sample</span>(logits)</span><br><span class="line">        <span class="comment">// 将下一个单词添加到输入中作为新的上下文</span></span><br><span class="line">        input += next_token</span><br><span class="line">        <span class="comment">// 将下一个单词添加到输出中</span></span><br><span class="line">        output += next_token</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="解码策略">解码策略</h2>
 <h3 id="贪心搜索">贪心搜索</h3>
 <p>大预言模型主要是通过语言建模任务进行训练的，也就是通过预训练学习，大预言模型预测给定上文的下文的概率分布，所以最直观的策略无疑是贪心策略，直接选取最大概率的那个词作为下文。</p>
 <p><span class="math display">\[
