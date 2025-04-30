@@ -26,7 +26,7 @@
 <meta property="og:description" content="#解码 #解码策略 #推理 #上下文学习 #思维链   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  大模型：一个将输入转换为输出的函数，本质是一系列向量变换的组合，输入输出都是向量（张">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-21T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-23T07:41:06.190Z">
+<meta property="article:modified_time" content="2025-04-23T09:55:50.333Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -133,7 +133,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">122</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -144,7 +144,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">55</span>
+        <span class="site-state-item-count">60</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -296,7 +296,7 @@ class="math inline">\(P\)</span>，然后根据<strong>解码策略</strong>选�
 <figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">decode</span> = (<span class="params"><span class="attr">input</span>: <span class="built_in">string</span></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> output = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> (_.<span class="title function_">last</span>(output !== <span class="string">&#x27;END&#x27;</span>)) &#123;</span><br><span class="line">        <span class="comment">// 大语言模型计算下一个次的概率分布</span></span><br><span class="line">        <span class="keyword">const</span> logits = <span class="title class_">Model</span>(input)</span><br><span class="line">        <span class="comment">// 根据概率分布采样下一个单词</span></span><br><span class="line">        <span class="keyword">const</span> next_token = <span class="title function_">sample</span>(logits)</span><br><span class="line">        <span class="comment">// 将下一个单词添加到输入中作为新的上下文</span></span><br><span class="line">        input += next_token</span><br><span class="line">        <span class="comment">// 将下一个单词添加到输出中</span></span><br><span class="line">        output += next_token</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="解码策略">解码策略</h2>
 <h3 id="贪心搜索">贪心搜索</h3>
-<p>大预言模型主要是通过语言建模任务进行训练的，也就是通过预训练学习，大预言模型预测给定上文的下文的概率分布，所以最直观的策略无疑是贪心策略，直接选取最大概率的那个词作为下文。</p>
+<p>大语言模型主要是通过语言建模任务进行训练的，也就是通过预训练学习，大语言模型预测给定上文的下文的概率分布，所以最直观的策略无疑是贪心策略，直接选取最大概率的那个词作为下文。</p>
 <p><span class="math display">\[
 u_i = \arg \max_u P(u | \textbf{u}_{&lt;i})
 \]</span></p>
@@ -392,7 +392,7 @@ style="display: flex; flex-direction: row; justify-content: center">
 <code>coffee then</code> 和
 <code>coffee and</code>），继续往后进行推理。由此也可以看出，随着 <span
 class="math inline">\(n\)</span>
-增大，计算成本会指数级增加，所以实践中束大小一般在 <span
+增大，计算成本会增加，所以实践中束大小一般在 <span
 class="math inline">\([3, 6]\)</span> 这个范围内。</p>
 <h3 id="概率采样">概率采样</h3>
 <p><strong>概率采样</strong>直接采用大语言模型预测的概率分布进行采样。</p>
@@ -520,7 +520,7 @@ class="math inline">\(k = 100, p = 0.95\)</span>。</li>
 <li>在预测句子前缀“小明有三块糖，给了小红两块糖，还剩下<strong>一块糖</strong>”中的“一块糖”时，则是在进行数学算术任务的语义学习。</li>
 </ul>
 <p>由于用于预训练的大语言模型的数据量非常庞大，语料非常丰富，涵盖我们生活中的各种内容，所以可以列举出来更多类似的例子，覆盖更广的任务范围。因此，基于大规模文本语料的预训练任务能够潜在地学习到解决众多任务的相关知识与能力。</p>
-<p>更深层次地看这个问题，人类沟通的方式正是通过语言进行，而语言把我们脑海中抽象的逻辑具象化了，并且语言可以看成是逻辑具象化的一个万能载体，我们会有很多内在逻辑，比如感情的逻辑，理解世界的逻辑，作为社会人的行为逻辑等，这些逻辑完全是通过语言进行传递的，所以大预言模型通过学习语言，实际上也“约等于”在学习我们的内在逻辑。</p>
+<p>更深层次地看这个问题，人类沟通的方式正是通过语言进行，而语言把我们脑海中抽象的逻辑具象化了，并且语言可以看成是逻辑具象化的一个万能载体，我们会有很多内在逻辑，比如感情的逻辑，理解世界的逻辑，作为社会人的行为逻辑等，这些逻辑完全是通过语言进行传递的，所以大语言模型通过学习语言，实际上也“约等于”在学习我们的内在逻辑。</p>
 <p>所以看上去十分“机械”的<strong>预训练过程</strong>，实际上是在学习世界知识的内在逻辑。而看上去同样十分机械的<strong>解码过程</strong>，则是基于一个巨大概率模型的支撑而将逻辑具象化。</p>
 <blockquote>
 <p>这意味着我们如果希望大语言模型具备某些能力的话，我们可以在提示里构造对应的逻辑结构。</p>
@@ -614,6 +614,9 @@ Beam Search 优化。</li>
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2025/04/27/computer/2025-04-27-conda%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/" rel="next" title="conda 安装配置与使用">
+                  conda 安装配置与使用 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -649,13 +652,13 @@ Beam Search 优化。</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">290k</span>
+    <span title="站点总字数">293k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">17:34</span>
+    <span title="站点阅读时长">17:46</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
