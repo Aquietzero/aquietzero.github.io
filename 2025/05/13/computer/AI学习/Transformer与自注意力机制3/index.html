@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="#大语言模型 #Transformer #自注意力机制   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  Transformer 架构：对输入进行了理解（编码），再把理解转化为输出（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 08 - Transformer 与自注意力机制 3">
+<meta property="og:url" content="https://aquietzero.github.io/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="#大语言模型 #Transformer #自注意力机制   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  Transformer 架构：对输入进行了理解（编码），再把理解转化为输出（">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-05-14T04:22:46.176Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="自注意力机制">
+<meta property="article:tag" content="大语言模型架构">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/","path":"2025/05/13/computer/AI学习/Transformer与自注意力机制3/","title":"AI学习时间 08 - Transformer 与自注意力机制 3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 08 - Transformer 与自注意力机制 3 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">复习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%A0%E5%AF%86%E5%90%91%E9%87%8F%E7%A9%BA%E9%97%B4"><span class="nav-number">2.</span> <span class="nav-text">稠密向量空间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%82%B9%E7%A7%AF%E8%A1%A1%E9%87%8F%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">使用点积衡量相关性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%8D%E8%B0%88%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">3.</span> <span class="nav-text">再谈自注意力</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%91%E7%9B%92%E6%8A%BD%E8%B1%A1%E7%9A%84%E9%AD%85%E5%8A%9B"><span class="nav-number">3.1.</span> <span class="nav-text">黑盒抽象的魅力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.2.</span> <span class="nav-text">上下文是什么?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">自注意力机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">3.4.</span> <span class="nav-text">多头自注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%89%B9%E5%BE%81%E5%AD%A6%E4%B9%A0"><span class="nav-number">3.5.</span> <span class="nav-text">多特征学习</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">124</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 08 - Transformer 与自注意力机制 3 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 08 - Transformer 与自注意力机制 3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-13T00:00:00+08:00">2025-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/05/13/computer/AI学习/Transformer与自注意力机制3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><script src="/assets/lib/plot.js" />
+</script>
+<div class="theme-color-blue" data-markdown="1">
+<p><code>#大语言模型</code> <code>#Transformer</code>
+<code>#自注意力机制</code></p>
+</div>
+<style>
+canvas {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px;
+  border:1px solid #ddd;
+  width:400px;
+  height:400px;
+}
+</style>
+<h1 id="复习">复习</h1>
+<ul>
+<li><strong>Transformer
+架构</strong>：对输入进行了理解（编码），再把理解转化为输出（解码）。</li>
+<li><strong>理解</strong>：所谓的“理解”，实际上是一个高维稠密的向量空间。</li>
+</ul>
+<h1 id="稠密向量空间">稠密向量空间</h1>
+<p>把字符转化为向量可以说是一个很天才的设计，通过这样的方式，离散的字符转化为连续的向量。这种设计有几个重要考虑，回忆之前提到过的概念：</p>
+<ul>
+<li>大模型的输入输出是向量（张量）</li>
+<li>Transformer 架构本质是一个函数，函数内部是向量与矩阵的运算</li>
+<li>连续变量才能求导，进行反向传播，进行学习训练</li>
+<li>连续变量可以构成一个度量空间，可以进行距离计算</li>
+</ul>
+<p>大语言模型通过嵌入层将输入转化为向量，后续 Transformer
+使用这些向量进行运算。</p>
+<canvas id="vector-space">
+</canvas>
+<script>
+const p1 = new Plot('vector-space');
+const d = () => Math.random() * 0.5;
+const texts = [
+    { p: [1, 1], text: '红' },
+    { p: [1, 2], text: '蓝' },
+    { p: [2, 1], text: '绿' },
+    { p: [2, 2], text: '黄' },
+
+    { p: [-1, -1], text: '快' },
+    { p: [-2, -1], text: '慢' },
+    { p: [-2, -2], text: '香' },
+
+    { p: [-2, 1], text: '桌' },
+    { p: [-1, 1], text: '椅' },
+
+    { p: [1, -1], text: '狗' },
+    { p: [2, -1], text: '猫' },
+    { p: [3, -1], text: '豹' },
+    { p: [2, -2], text: '鹿' },
+    { p: [1, -2], text: '马' },
+]
+texts.forEach(({ p, text }) => {
+    const [x, y] = p
+    const [x1, y1] = [x + d(), y + d()]
+    p1.drawPoints([[x1 - 0.3, y1 - 0.3]], { color: '#ddd' })
+    p1.drawText([x1, y1], text);
+})
+</script>
+<h2 id="使用点积衡量相关性">使用点积衡量相关性</h2>
+<p>最初等的衡量距离方式是勾股定理，对于两个向量 <span
+class="math inline">\(\textbf{a} = [x_1, y_1]\)</span> 与 <span
+class="math inline">\(\textbf{b} = [x_2,
+y_2]\)</span>，它们之间的距离是：</p>
+<p><span class="math display">\[
+d = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}
+\]</span></p>
+<p>但这种方式有个缺点，就是计算量很大，因为要开根号。而且这个开根号是一个非线性函数，是不能随便去掉的。所以对于大语言模型来说，嵌入维度一般很大，所以用这种方式的计算量也很大。</p>
+<p>而两个向量的点积可以表示它们之间的“距离”（相关性），即：</p>
+<p><span class="math display">\[
+\textbf{a} \cdot \textbf{b} = x_1 x_2 + y_1 y_2 =
+|\textbf{a}||\textbf{b}| \cos \theta
+\]</span></p>
+<p>从一个极端的例子可以感受到这个相关性的概念，假设两个向量相互垂直，那么夹角余弦值就为
+<span class="math inline">\(\cos (\pi / 2) = 0\)</span>，整个点积为
+<span class="math inline">\(0\)</span>
+意味着两者毫无关联。点积的计算量很小，所以在大语言模型中，使用点积来衡量两个向量之间的<strong>相关性</strong>。</p>
+<h1 id="再谈自注意力">再谈自注意力</h1>
+<p>Transformer 只是一个架构，只是一个函数，而自注意力，是 Transformer
+内部最重要的一个机制，也就是函数的定义。之前提到朴素的网络处理时序数据有一个问题，那就是丢失了时序信息，因为每次处理一个输入字符的时候，就会对这个字符进行运算，然后叠加到一个隐藏态上，到最后整个输入结束的时候，就只有一个隐藏态，字符的先后顺序已经淹没在隐藏态里了。</p>
+<p>上次提到的一个及其简单的例子，假设输入为 <span
+class="math inline">\(\textbf{X} = [x_1, x_2, \dots,
+x_T]\)</span>（注意，这里的 <span class="math inline">\(x_t\)</span>
+已经是经过嵌入层转化的向量），如果在编码器部分使用求和算法，那么整个时间序列处理结束之后得到的隐藏状态就是所有输入之和。</p>
+<p><span class="math display">\[
+\textbf{H} = \sum_{t=1}^T x_t
+\]</span></p>
+<p>所有 <span class="math inline">\(x_t\)</span>
+的顺序淹没在隐藏状态中。</p>
+<h2 id="黑盒抽象的魅力">黑盒抽象的魅力</h2>
+<p>前几次课均提到黑盒抽象，比如将 Transformer
+看成是一个将输入转化为输出的黑盒，从而把抽象的“理解”看成是黑盒里面实现的内容。我们平时进行的函数提取，其实也是一种黑盒抽象。既然上面单纯叠加的方式丢失了很多信息，那我们假设有一个黑盒，能保留这种信息。</p>
+<p><span class="math display">\[
+\text{getContext}(x_t) = c_t
+\]</span></p>
+<p>代入到上面的公式，我们得到</p>
+<p><span class="math display">\[
+\textbf{H} = \sum_{t=1}^T \text{getContext}(x_t) = \sum_{t=1}^T c_t
+\]</span></p>
+<p>这个 <span class="math inline">\(\text{getContext}\)</span>
+函数做了几件事情</p>
+<ul>
+<li>将单纯的字符 <span class="math inline">\(x_t\)</span>
+转化为了一个“带有上下文信息”的向量 <span
+class="math inline">\(c_t\)</span>（自注意力机制）</li>
+<li>保留了字符的时序信息，因为下标 <span
+class="math inline">\(t\)</span>
+其实也可以作为一个计算上下文的参数（掩码）</li>
+<li>转为上下文向量进行叠加，就是“理解的叠加”，而不是单纯“输入的叠加”了</li>
+</ul>
+<p>由此可见，我们通过引入黑盒抽象，直接赋予了上面那个简单的求和公式一个新的含义，而从形式上来说，只是多套了一个函数而已。</p>
+<h2 id="上下文是什么">上下文是什么?</h2>
+<p>既然 <span class="math inline">\(\text{getContext}\)</span> “提取了”
+某个字符 <span class="math inline">\(x_t\)</span>
+的上下文信息，那么上下文信息是什么呢？对于当前的某个 <span
+class="math inline">\(x_t\)</span>
+来说，它只有上文，因为它的下文还没出现，所以对于 <span
+class="math inline">\(x_t\)</span>
+来说，它的上下文信息就是它前面的所有字符。</p>
+<p>而要衡量这些字符对 <span class="math inline">\(x_t\)</span>
+的整体相关性，最简单的办法就是做一个加权平均。</p>
+<p><span class="math display">\[
+c_t = \sum_{i=1}^T w_i x_i
+\]</span></p>
+<p>其中 <span class="math inline">\(w_i\)</span> 是一个权重，它表示
+<span class="math inline">\(x_i\)</span> 对 <span
+class="math inline">\(x_t\)</span>
+的重要性。举个简单的例子，对于句子“今天天气很好”来说，我们可以构建像下面这样的权重矩阵。</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>今 (<span class="math inline">\(x_0\)</span>)</th>
+<th>天 (<span class="math inline">\(x_1\)</span>)</th>
+<th>天 (<span class="math inline">\(x_2\)</span>)</th>
+<th>气 (<span class="math inline">\(x_3\)</span>)</th>
+<th>很 (<span class="math inline">\(x_4\)</span>)</th>
+<th>好 (<span class="math inline">\(x_5\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>今 (<span class="math inline">\(x_0\)</span>)</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>天 (<span class="math inline">\(x_1\)</span>)</td>
+<td>0.5</td>
+<td>0.5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>天 (<span class="math inline">\(x_2\)</span>)</td>
+<td>0.25</td>
+<td>0.25</td>
+<td>0.5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>气 (<span class="math inline">\(x_3\)</span>)</td>
+<td>0.1</td>
+<td>0.2</td>
+<td>0.3</td>
+<td>0.4</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>很 (<span class="math inline">\(x_4\)</span>)</td>
+<td>0.05</td>
+<td>0.1</td>
+<td>0.25</td>
+<td>0.27</td>
+<td>0.33</td>
+<td>0</td>
+</tr>
+<tr>
+<td>好 (<span class="math inline">\(x_5\)</span>)</td>
+<td>0.05</td>
+<td>0.05</td>
+<td>0.1</td>
+<td>0.2</td>
+<td>0.3</td>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+<p>那么对于对于第二个“天”来说，它的上下文可以通过下面的方式计算。</p>
+<p><span class="math display">\[
+\begin{align*}
+c_2 = \  &amp; 0.25 \cdot \text{Embedding}(x_0) \ + \\
+&amp; 0.25 \cdot \text{Embedding}(x_1) \ + \\
+&amp; 0.5 \cdot \text{Embedding}(x_2) \\
+\end{align*}
+\]</span></p>
+<p>但从上面的例子也能感受到，这些所谓的“权重”应该如何得来呢？</p>
+<h2 id="自注意力机制">自注意力机制</h2>
+<p>回到上面的计算公式，进一步进行黑盒抽象。</p>
+<p><span class="math display">\[
+c_t = \sum_{i=1}^T w_i x_i
+\]</span></p>
+<p>假如此时我们不关注如何具体地计算“权重”，而是单纯假设有一个函数能做到这件事情，令这个函数为
+<span
+class="math inline">\(\text{getWeight}\)</span>，同时我们也不直接使用
+<span class="math inline">\(x_i\)</span>
+的值，而是同样地包裹一个函数进行抽象，这个函数“单纯”用来获取 <span
+class="math inline">\(x_i\)</span>
+的<strong>值（value）</strong>，将其称为 <span
+class="math inline">\(\text{getValue}\)</span>，那么我们有</p>
+<p><span class="math display">\[
+c_t = \sum_{i=1}^T \text{getWeight}(x_t, x_i) \cdot \text{getValue}(x_i)
+\]</span></p>
+<p>注意到，这个函数必须接受两个参数的，因为这个权重是当前字符 <span
+class="math inline">\(x_t\)</span> 与它之前的某个字符 <span
+class="math inline">\(x_i\)</span>
+的权重（回想上面的查权重表的过程）。但这依然非常抽象，这个 <span
+class="math inline">\(\text{getWeight}\)</span>
+里面做了什么事情呢？考虑到之前提到的点积，我们可以用点积来表示两个向量之间的相关性。借用一下信息检索领域的词汇：“我们现在有一个向量
+<span class="math inline">\(x_t\)</span>，我们想查它跟向量 <span
+class="math inline">\(x_i\)</span>
+之间的相关性”，那么我们可以通过以下步骤实现。</p>
+<ol type="1">
+<li>我们在查找信息的时候，需要有一个“<strong>查询（query）</strong>”，继续使用黑盒抽象，假设我们有一个函数
+<span class="math inline">\(\text{getQuery}\)</span>，它能将 <span
+class="math inline">\(x_t\)</span> 转化为一个“查询”，那么我们有 <span
+class="math display">\[
+q_t = \text{getQuery}(x_t)
+\]</span></li>
+<li>我们需要有一个“<strong>键（key）</strong>”，继续使用黑盒抽象，假设我们有一个函数
+<span class="math inline">\(\text{getKey}\)</span>，它能将 <span
+class="math inline">\(x_i\)</span> 转化为一个“键”，那么我们有 <span
+class="math display">\[
+k_i = \text{getKey}(x_i)
+\]</span></li>
+<li>有了这两个值，我们就可以通过点击计算其相关性了，即 <span
+class="math display">\[
+\text{getWeight}(x_t, x_i) = q_t \cdot k_i = \text{getQuery}(x_t) \cdot
+\text{getKey}(x_i)
+\]</span></li>
+</ol>
+<p>再把这一切抽象放回到原来的公式里，我们有</p>
+<p><span class="math display">\[
+c_t = \sum_{i=1}^T \text{getQuery}(x_t) \cdot \text{getKey}(x_i) \cdot
+\text{getValue}(x_i)
+\]</span></p>
+<p>结合之前提到的“函数无非是矩阵运算”，我们可以将上面的 <span
+class="math inline">\(\text{get*}\)</span>
+函数定义为一个矩阵运算（忽略偏置），所以是实际上 <span
+class="math inline">\(\text{get*}(\textbf{X}) = \textbf{W} \cdot
+\textbf{X}\)</span>，用对应的字母大写表示，就有整个上下文变量是通过如下方式得到的
+<strong>（这里忽略了一些细节，但不影响理解，忽略的部分包括矩阵形状，维度缩放，以及掩码机制）</strong>。</p>
+<p><span class="math display">\[
+\textbf{C} = \textbf{Q} \cdot \textbf{K} \cdot \textbf{V} \cdot
+\textbf{X}
+\]</span></p>
+<p>真正的公式为</p>
+<p><span class="math display">\[
+\text{Attention}(\textbf{Q}, \textbf{K}, \textbf{V})
+= \text{softmax}\bigg(
+\frac{\textbf{Q}\textbf{K}^\intercal}{\sqrt{D}}\bigg)\textbf{V}
+\]</span></p>
+<p>下面是这个计算过程的流程图</p>
+<pre class="mermaid">graph TD
+    %% 输入部分
+    Input["输入序列 $\textbf{X}$"] --> Split["序列分割"]
+    
+    subgraph attention["自注意力"]
+        %% 查询、键、值矩阵
+        Split --> Q["查询矩阵 $\textbf{Q}$"]
+        Split --> K["键矩阵 $\textbf{K}$"]
+        Split --> V["值矩阵 $\textbf{V}$"]
+        
+        %% 注意力计算
+        Q & K --> Scores["注意力分数<br/> $\textbf{Q} \cdot \textbf{K}^T$"]
+        Scores --> Softmax["Softmax归一化<br/>$\text{softmax}(\textbf{Q}\cdot\textbf{K}^T/\sqrt{d})$"]
+        
+        %% 加权求和
+        Softmax & V --> WeightedSum["加权求和<br/>$\text{Attention}(\textbf{Q},\textbf{K},\textbf{V})$"]
+    end
+    
+    %% 输出
+    WeightedSum --> Output["上下文向量 $\textbf{C}$"]
+    
+    %% 样式设置
+    style attention fill:#f5f5f5,stroke:#333
+    style Q fill:#e1f5fe
+    style K fill:#e1f5fe
+    style V fill:#e1f5fe
+    style Scores fill:#fff
+    style Softmax fill:#fff
+    style WeightedSum fill:#fff</pre>
+<p>这个“上下文抽象”的机制，就成为<strong>自注意力机制</strong>。在此稍作提点的是，<span
+class="math inline">\(\textbf{Q} \cdot \textbf{K}\)</span>
+是权重，权重需要归一化，也就是和必须为 <span
+class="math inline">\(1\)</span>，所以需要使用 <span
+class="math inline">\(\text{softmax}\)</span>
+函数。而除以维度是基于训练稳定性的考虑。为了后面描述方便，我们将自注意力机制表示为一个黑盒。</p>
+<p><span class="math display">\[
+\textbf{C} = \text{Attention}_{\textbf{Q}, \textbf{K},
+\textbf{V}}(\textbf{X})
+\]</span></p>
+<h2 id="多头自注意力">多头自注意力</h2>
+<p>在上面的阐述中，针对某个输入，我们只有一个上下文变量，但对于语言来说，上下文信息其实非常丰富，对于同一个字有很多意思，对于同一个字在不同的上下文里，也有很多意思。对于上面形式化的自注意力机制表示，我们可以直接通过增加下标的方式来增加上下文信息。</p>
+<p><span class="math display">\[
+\begin{align*}
+\textbf{C}_1 &amp;= \text{Attention}_{\textbf{Q}_1, \textbf{K}_1,
+\textbf{V}_1}(\textbf{X}) \\
+\textbf{C}_2 &amp;= \text{Attention}_{\textbf{Q}_2, \textbf{K}_2,
+\textbf{V}_1}(\textbf{X}) \\
+&amp; \vdots \\
+\textbf{C}_n &amp;= \text{Attention}_{\textbf{Q}_n, \textbf{K}_n,
+\textbf{V}_1}(\textbf{X}) \\
+\end{align*}
+\]</span></p>
+<p>通过并行计算，我们同时从 <span
+class="math inline">\(\textbf{X}\)</span> 中计算 <span
+class="math inline">\(n\)</span>
+个上下文变量。比如对于句子“今天天气很好”来说，这些上下文可能是</p>
+<ul>
+<li>这句话描述的是“今天”</li>
+<li>这句话在谈论“天气”</li>
+<li>对于今天的天气来说“很好”</li>
+</ul>
+<p>对于我们来说很容易理解这些上下文，而对于自注意力机制来说，这些上下文信息就是一个稠密向量，这些“理解”内化在了
+<span class="math inline">\(\textbf{Q}, \textbf{K}, \textbf{V}\)</span>
+中。<strong>多头自注意力（Multi-head
+self-attention，MHA）</strong>就是指这种通过多上下文的方式来理解输入的机制。将上面的下标重新拼接在一起，便得到了多头自注意力模块。在文献里这里提到的上下文向量会被称为头（head）。</p>
+<p><span class="math display">\[
+\text{MHA}(\textbf{X}) = \text{concat}(\textbf{C}_1, \textbf{C}_2,
+\dots, \textbf{C}_n)
+\]</span></p>
+<p>下面是多头注意力机制的架构图，实际上是并行执行 <span
+class="math inline">\(n\)</span>
+个自注意力，然后再把各自的上下文向量拼接起来，作为统一的上下文输出。</p>
+<pre class="mermaid">graph LR
+    Input["输入序列 $\textbf{X}$"] --> Split["序列分割"]
+    
+    subgraph mha["多头自注意力"]
+        Split --> Head1["注意力头 $1$"]
+        Split --> Head2["注意力头 $2$"]
+        Split --> HeadN["注意力头 $n$"]
+        
+        Head1 --> C1["上下文 $\textbf{C}_1$"]
+        Head2 --> C2["上下文 $\textbf{C}_2$"]
+        HeadN --> CN["上下文 $\textbf{C}_n$"]
+        
+        C1 & C2 & CN --> Concat["拼接层"]
+        Concat --> Linear["线性变换"]
+    end
+    
+    Linear --> Output["输出 $\textbf{C}$"]
+    
+    %% 样式设置
+    style mha fill:#f5f5f5,stroke:#333
+    style Head1 fill:#e1f5fe
+    style Head2 fill:#e1f5fe
+    style HeadN fill:#e1f5fe
+    style Concat fill:#fff
+    style Linear fill:#fff</pre>
+<p>可以通过一个可视化工具（<a
+target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1hXIQ77A4TYS4y3UthWF-Ci7V7vVUoxmQ?usp=sharing#scrollTo=-QnRteSLP0Hm">BertViz</a>）来感受多头自注意力机制。不过实际机制层数很多，而且隐藏层很难解释，所以只能看看。</p>
+<h2 id="多特征学习">多特征学习</h2>
+<p>其实多头自注意力的机制，本质是一个多特征学习的机制，在图像识别领域很早就应用上了，所以从这个角度来看，多头自注意力机制实际上是将这种方法迁移到大语言模型里了。我们再从抽象的方式来看看这个思路。</p>
+<blockquote>
+<p>设计一个识别图片是否为一只猫的模型。</p>
+</blockquote>
+<p>从最顶层的抽象来看，我们有</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">input</span>: <span class="title class_">Image</span>): <span class="built_in">boolean</span></span><br></pre></td></tr></table></figure>
+<p>作为人类，我们如何识别一张图片是不是一只猫呢？在我们的“知识”里，我们对猫的认知，实际上也是特征的集合，比如</p>
+<ul>
+<li>猫是有毛的</li>
+<li>猫是有四只脚的</li>
+<li>猫是有尾巴的</li>
+<li>猫有胡子</li>
+<li>猫的脸相对较圆</li>
+<li>等等...</li>
+</ul>
+<p>假设我们有一堆函数做这些事情，那 <code>Model</code>
+的实现就变成了</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> fur = <span class="title function_">getFur</span>(image)</span><br><span class="line">  <span class="keyword">const</span> legs = <span class="title function_">getLegs</span>(image)</span><br><span class="line">  <span class="keyword">const</span> tail = <span class="title function_">getTail</span>(image)</span><br><span class="line">  <span class="keyword">const</span> head = <span class="title function_">getHead</span>(image)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但其实我们有时候也说不清这些特征，为了避免进行精确的建模，我们可以把这个工作交给一个“黑盒”，这个黑盒会帮我们把这些特征提取出来。同样地，我们使用形式化符号来替换上面的具体方法。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> feature1 = <span class="title function_">getFeature1</span>(image)</span><br><span class="line">  <span class="keyword">const</span> feature2 = <span class="title function_">getFeature2</span>(image)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">const</span> featureN = <span class="title function_">getFeatureN</span>(image)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过这种方式，我们只需要设置获取多少个特征就好了，而不是对这些特征分别具体地实现。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> features = <span class="title function_">getFeatures</span>(image, N)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而下一步，可能是更为抽象的一些，比如我们对猫会有一些抽象的印象，比如</p>
+<ul>
+<li>猫是可爱的</li>
+<li>猫比狗体型小一点</li>
+<li>猫的五官比较集中，而马，鹿会比较分散</li>
+<li>等等...</li>
+</ul>
+<p>我们可以再对第一层抽象进行二次抽象，得到</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> features = <span class="title function_">getFeatures</span>(image, N)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> lovely = <span class="title function_">getLovely</span>(features)</span><br><span class="line">  <span class="keyword">const</span> size = <span class="title function_">getSize</span>(features)</span><br><span class="line">  <span class="keyword">const</span> face = <span class="title function_">getFace</span>(features)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用同样的方法，我们不想关注具体特征，于是我们再次把这些特证交给一个黑盒，不过这次需要给
+<code>getFeatures</code>
+增加一个层数作为下标了，刚才的是第一层，现在到了第二层。同理我们可以进行
+<code>L</code> 层。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> features</span><br><span class="line">  features = <span class="title function_">getFeatures1</span>(image, N)</span><br><span class="line">  features = <span class="title function_">getFeatures2</span>(features)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  features = <span class="title function_">getFeaturesL</span>(features)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过这种方式我们根据“经验和需要”，设置需要特征抽取的层数。最后的特征足够明确之后，我们便可以通过查表，或者一个简单的线性映射直接得到对应的类别。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = (<span class="attr">image</span>: <span class="title class_">Image</span>): <span class="function"><span class="params">boolean</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> features = <span class="title function_">getFeatures</span>(image, N, L)</span><br><span class="line">  <span class="keyword">const</span> isCat = <span class="title function_">getType</span>(features) === <span class="string">&#x27;cat&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> isCat</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是这个过程的一个直观的图。</p>
+<p><img
+src="/assets/images/2025-05-13-AI学习-Transformer与自注意力机制3/猫的特征提取.png" /></p>
+<p>而这个而是卷积神经网络的一个类比过程。再次对比上面多头自注意力机制可以发现，对于猫的特征提取这个黑盒过程，与对输入进行上下文提取的黑盒过程思路是一样的，只是对于上下文提取，仅仅抽象了一层，也就是
+<code>getQuery</code>，<code>getKey</code>，<code>getValue</code>，对于猫来说，我们多了很多层的特征提取而已。</p>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>稠密向量空间</strong>：输入通过嵌入层转化之后得到高维向量，这些高维向量构成一个稠密的向量空间，而
+Transformer 在这个空间里进行计算。</li>
+<li><strong>点积</strong>：用于描述两个向量的相关性，计算量比一般的距离函数要少。</li>
+<li><strong>自注意力机制</strong>：自注意力机制本质是对每一个输入符号都产生一个上下文向量。</li>
+<li><strong>上下文向量</strong>：一个符号的上下文向量是这个符号前面符号的加权平均。</li>
+<li><strong>多头自注意力</strong>：通过多个上下文向量来理解输入。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/05/13/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B63/" title="AI学习时间 08 - Transformer 与自注意力机制 3">https://aquietzero.github.io/2025/05/13/computer/AI学习/Transformer与自注意力机制3/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" rel="tag"># 自注意力机制</a>
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84/" rel="tag"># 大语言模型架构</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/07/computer/AI%E5%AD%A6%E4%B9%A0/Transformer%E4%B8%8E%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B62/" rel="prev" title="AI学习时间 07 - Transformer 与自注意力机制 2">
+                  <i class="fa fa-angle-left"></i> AI学习时间 07 - Transformer 与自注意力机制 2
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">300k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">18:12</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
