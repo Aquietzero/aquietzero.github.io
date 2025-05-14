@@ -26,7 +26,7 @@
 <meta property="og:description" content="#大语言模型 #Transformer #自注意力机制   canvas {   display: block;   margin: auto;   margin-bottom: 20px;   border:1px solid #ddd;   width:400px;   height:400px; }  复习  Transformer 架构：对输入进行了理解（编码），再把理解转化为输出（">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-14T04:22:46.176Z">
+<meta property="article:modified_time" content="2025-05-14T07:09:11.496Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -388,7 +388,7 @@ class="math inline">\(x_t\)</span>
 <p>而要衡量这些字符对 <span class="math inline">\(x_t\)</span>
 的整体相关性，最简单的办法就是做一个加权平均。</p>
 <p><span class="math display">\[
-c_t = \sum_{i=1}^T w_i x_i
+c_t = \sum_{i=1}^t w_{ti} x_i
 \]</span></p>
 <p>其中 <span class="math inline">\(w_i\)</span> 是一个权重，它表示
 <span class="math inline">\(x_i\)</span> 对 <span
@@ -474,17 +474,13 @@ class="math inline">\(x_t\)</span>
 </table>
 <p>那么对于对于第二个“天”来说，它的上下文可以通过下面的方式计算。</p>
 <p><span class="math display">\[
-\begin{align*}
-c_2 = \  &amp; 0.25 \cdot \text{Embedding}(x_0) \ + \\
-&amp; 0.25 \cdot \text{Embedding}(x_1) \ + \\
-&amp; 0.5 \cdot \text{Embedding}(x_2) \\
-\end{align*}
+c_2 = 0.25 \cdot x_0 + 0.25 \cdot x_1 + 0.5 \cdot x_2
 \]</span></p>
 <p>但从上面的例子也能感受到，这些所谓的“权重”应该如何得来呢？</p>
 <h2 id="自注意力机制">自注意力机制</h2>
 <p>回到上面的计算公式，进一步进行黑盒抽象。</p>
 <p><span class="math display">\[
-c_t = \sum_{i=1}^T w_i x_i
+c_t = \sum_{i=1}^t w_{ti} x_i
 \]</span></p>
 <p>假如此时我们不关注如何具体地计算“权重”，而是单纯假设有一个函数能做到这件事情，令这个函数为
 <span
@@ -495,7 +491,7 @@ class="math inline">\(x_i\)</span>
 的<strong>值（value）</strong>，将其称为 <span
 class="math inline">\(\text{getValue}\)</span>，那么我们有</p>
 <p><span class="math display">\[
-c_t = \sum_{i=1}^T \text{getWeight}(x_t, x_i) \cdot \text{getValue}(x_i)
+c_t = \sum_{i=1}^t \text{getWeight}(x_t, x_i) \cdot \text{getValue}(x_i)
 \]</span></p>
 <p>注意到，这个函数必须接受两个参数的，因为这个权重是当前字符 <span
 class="math inline">\(x_t\)</span> 与它之前的某个字符 <span
@@ -519,7 +515,7 @@ class="math inline">\(x_i\)</span> 转化为一个“键”，那么我们有 <s
 class="math display">\[
 k_i = \text{getKey}(x_i)
 \]</span></li>
-<li>有了这两个值，我们就可以通过点击计算其相关性了，即 <span
+<li>有了这两个值，我们就可以通过点积算其相关性了，即 <span
 class="math display">\[
 \text{getWeight}(x_t, x_i) = q_t \cdot k_i = \text{getQuery}(x_t) \cdot
 \text{getKey}(x_i)
