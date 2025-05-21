@@ -26,7 +26,7 @@
 <meta property="og:description" content="#指令微调 #人类对齐 #大语言模型训练流程  复习  训练：通过不断地尝试，来得到模型的参数。     graph LR       Data[训练数据] --&gt; Model[模型]       Model --&gt; Output[模型输出]       Target[期望输出] --&gt; Loss[损失函数]       Output --&gt; Loss       Loss --&gt; Optimi">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-20T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-21T07:22:05.419Z">
+<meta property="article:modified_time" content="2025-05-21T07:51:26.608Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -246,7 +246,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4k</span>
+      <span>4.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -404,6 +404,9 @@ src="/assets/images/2025-05-21-AI学习-指令微调与人类对齐/rlhf.png" />
 <li><strong>奖励模型训练</strong>：先使用语言模型针对任务指令生成一定数量的候选输出。随后，邀请标注员对于输出文本进行偏好标注，这个标注过程可以采用多种形式，其中最常用的是对候选文本进行排序标注，这样可以有效减少多个标注员之间的不一致情况。进一步，使用人工标注的偏好数据进行奖励模型的训练。</li>
 <li><strong>强化学习训练</strong>：语言模型对齐被转化为一个强化学习问题。具体来说，待对齐语言模型担任策略实施者的角色（称为策略模型），它接收提示作为输入并返回输出文本，其动作空间是词汇表中的所有词元，状态指的是当前已生成的词元序列。奖励模型则根据当前语言模型的状态提供相应的奖励分数，用于指导策略模型的优化。为了避免当前训练轮次的语言模型明显偏离初始（强化学习训练之前）的语言模型，通常会在原始优化目标中加入一个惩罚项（如KL散度）。</li>
 </ul>
+<p>下面给出强化学习流程的伪代码，省略了比较多的细节，仅为了表达基础流程，方便理解。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> instructModel = <span class="keyword">new</span> <span class="title class_">InstructModel</span>()</span><br><span class="line"><span class="keyword">const</span> rewardModel = <span class="keyword">new</span> <span class="title class_">RewardModel</span>()</span><br><span class="line"><span class="keyword">const</span> data = <span class="title function_">prepareData</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">train</span> = (<span class="params">instructModel, rewardModel</span>) =&gt; &#123;</span><br><span class="line">  _.<span class="title function_">each</span>(data, <span class="function"><span class="params">ask</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 使用待对齐模型生成输出</span></span><br><span class="line">    <span class="keyword">const</span> answer = instructModel.<span class="title function_">forward</span>(ask)</span><br><span class="line">    <span class="comment">// 2. 人类反馈</span></span><br><span class="line">    <span class="keyword">const</span> score = rewardModel.<span class="title function_">forward</span>(answer)</span><br><span class="line">    <span class="comment">// 3. 计算损失</span></span><br><span class="line">    <span class="keyword">const</span> loss = <span class="title class_">Loss</span>(score, instructModel)</span><br><span class="line">    <span class="comment">// 4. 训练</span></span><br><span class="line">    loss.<span class="title function_">update</span>(instructModel)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>整个训练过程中，通过奖励模型不断对待对齐模型的输出进行评分，从而使得待对齐模型的输出尽量获得更高的分数，也就是更符合人类的偏好。</p>
 <h1 id="大语言模型训练流程总结">大语言模型训练流程总结</h1>
 <p>通过这段时间的学习，下面总结一下大语言模型整个训练流程。</p>
 <ol type="1">
@@ -509,13 +512,13 @@ src="/assets/images/2025-05-21-AI学习-指令微调与人类对齐/rlhf.png" />
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">304k</span>
+    <span title="站点总字数">305k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">18:27</span>
+    <span title="站点阅读时长">18:28</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
