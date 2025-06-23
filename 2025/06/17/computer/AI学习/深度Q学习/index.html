@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content=".gridworld {   display: block;   margin: auto;   margin-bottom: 20px;   font-family: sans-serif;   color: black; } .button {   font-family: sans-serif;   border: solid 1px black;   padding: 2px">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 12 - 深度Q学习">
+<meta property="og:url" content="https://aquietzero.github.io/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content=".gridworld {   display: block;   margin: auto;   margin-bottom: 20px;   font-family: sans-serif;   color: black; } .button {   font-family: sans-serif;   border: solid 1px black;   padding: 2px">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-18T06:04:23.304Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="深度Q学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/","path":"2025/06/17/computer/AI学习/深度Q学习/","title":"AI学习时间 12 - 深度Q学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 12 - 深度Q学习 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">复习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gridworld-%E7%9A%84%E5%90%AF%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">GridWorld 的启示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%81%BE%E9%9A%BE%E6%80%A7%E9%81%97%E5%BF%98"><span class="nav-number">3.</span> <span class="nav-text">灾难性遗忘</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">位置编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E5%8F%A0%E5%8A%A0%E7%BC%96%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">状态叠加编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E5%9B%9E%E6%94%BE"><span class="nav-number">3.3.</span> <span class="nav-text">经验回放</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6-q-%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">深度 Q 学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">129</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">65</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 12 - 深度Q学习 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 12 - 深度Q学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-17 00:00:00" itemprop="dateCreated datePublished" datetime="2025-06-17T00:00:00+08:00">2025-06-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/06/17/computer/AI学习/深度Q学习/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><script src="/assets/lib/gridworld.js"></script>
+<script src="/assets/lib/plot.js" />
+</script>
+<script src="/assets/lib/graph.js" />
+</script>
+<style>
+.gridworld {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px;
+  font-family: sans-serif;
+  color: black;
+}
+.button {
+  font-family: sans-serif;
+  border: solid 1px black;
+  padding: 2px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+canvas {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px;
+  border:1px solid #ddd;
+  width:300px;
+  height:300px;
+}
+</style>
+<div class="theme-color-blue" data-markdown="1">
+<p><code>#强化学习</code> <code>#灾难性遗忘</code>
+<code>#状态叠加编码</code> <code>#深度Q学习</code></p>
+</div>
+<h1 id="复习">复习</h1>
+<ul>
+<li><strong>Q
+函数</strong>：价值函数，计算状态或在在某个状态下的执行某个动作的价值。</li>
+</ul>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph LR
+    S[状态s] --> Q["Q(s, a)"]
+    A[动作a] --> Q["Q(s, a)"]
+    Q --->|计算出一个值| V["比如 0.9"]</pre>
+<ul>
+<li><strong>改进的 Q 函数</strong>：通过状态计算出动作的 Q 值分布。</li>
+</ul>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph LR
+    S[状态s] --> Q["Q'(s)"]
+    Q --->|计算出一个分布| V["0.1<br>0.9<br>-0.2<br>-0.7<br>"]</pre>
+<ul>
+<li><strong>Q 学习</strong>：一种强化学习方法。在学习过程中，使用 Q
+函数辅助决策，通过未来收益不断调整 Q 值，最终形成一个最优策略。</li>
+</ul>
+<p><span class="math display">\[
+\overbrace{Q(S_t, A_t)}^\text{更新的 Q 值}
+=
+\overbrace{Q(S_t, A_t)}^\text{当前的 Q 值} +
+\alpha[
+\underbrace{R_{t+1}}_\text{奖励} +
+\gamma \underbrace{\max Q(S_{t+1}, a)}_\text{所有动作里的最大 Q 值} -
+Q(S_t, A_t)
+]
+\]</span></p>
+<h1 id="gridworld-的启示">GridWorld 的启示</h1>
+<p>在我们上次的例子里，GridWorld
+是如下的一个格子世界。格子有三种类型，带惩罚的红色格子，带奖励的绿色格子，以及可以自由行走的普通白色格子。</p>
+<div id="g1" class="gridworld" style="width: 400px; height: 400px;">
+
+</div>
+<script>
+  const c1 = document.getElementById('g1');
+  const g1 = new GridWorld('g1', c1, 6, {
+    showTriangles: false,
+  });
+  
+  // 设置奖励点和惩罚点
+  g1.setRewards([[5, 5]], 1);  // 两个奖励点，值为1
+  g1.setPenalties([[1, 1], [2, 2], [5, 0], [2, 4]], -1); // 两个惩罚点，值为-1
+</script>
+<p>上次的问题是，训练出一个智能体，希望这个智能体在这个 GridWorld
+里探索的时候能够尽可能拿到更好的奖励。再次回忆我们上次用到的方法。</p>
+<ol type="1">
+<li>让智能体随便走</li>
+<li>当某一条路径走到终点（假如是奖励格子）</li>
+<li>我们反向改变智能体在每一个路径格子的动作权重</li>
+</ol>
+<div id="g23" class="gridworld" style="width: 400px; height: 400px;">
+
+</div>
+<script>
+  const c23 = document.getElementById('g23');
+  const g23 = new GridWorld('g23', c23, 6, {
+    showTriangles: false,
+    pathColor: 'rgba(0, 0, 0, 0.3)',
+    pathWidth: 8,
+  });
+  
+  // 设置奖励点和惩罚点
+  g23.setRewards([[5, 5]], 1);  // 两个奖励点，值为1
+  g23.setPenalties([[1, 1], [2, 2], [5, 0], [2, 4]], -1); // 两个惩罚点，值为-1
+  const p23 = [
+    [0, 0],
+    [1, 0],
+    [2, 0],
+    [3, 0],
+    [3, 1],
+    [3, 2],
+    [3, 3],
+    [4, 3],
+    [5, 3],
+    [5, 4],
+    [5, 5],
+  ];
+  g23.showPath(p23);
+  g23.showText([5, 4], `A = 右 \n R = ${1 * Math.pow(0.9, 1).toFixed(2)}`);
+  g23.showText([5, 3], `A = 右 \n R = ${1 * Math.pow(0.9, 2).toFixed(2)}`);
+  g23.showText([4, 3], `A = 下 \n R = ${1 * Math.pow(0.9, 3).toFixed(2)}`);
+  g23.showText([3, 3], `A = 下 \n R = ${1 * Math.pow(0.9, 4).toFixed(2)}`);
+  g23.showText([3, 2], `A = 右 \n R = ${1 * Math.pow(0.9, 5).toFixed(2)}`);
+  g23.showText([3, 1], `A = 右 \n R = ${1 * Math.pow(0.9, 6).toFixed(2)}`);
+  g23.showText([3, 0], `A = 右 \n R = ${1 * Math.pow(0.9, 7).toFixed(2)}`);
+  g23.showText([2, 0], `A = 下 \n R = ${1 * Math.pow(0.9, 8).toFixed(2)}`);
+  g23.showText([1, 0], `A = 下 \n R = ${1 * Math.pow(0.9, 9).toFixed(2)}`);
+  g23.showText([0, 0], `A = 下 \n R = ${1 * Math.pow(0.9, 10).toFixed(2)}`);
+</script>
+<p>通过这种方式，我们最终得到的策略可能是如下的样子。</p>
+<div style="width: 420px; margin: auto;">
+<p><img
+src="/assets/images/2025-06-17-AI学习-深度Q学习/gw-train.png" /></p>
+</div>
+<p>这里需要留意的是，我们训练这个智能体的时候，使用的是一个固定的
+GridWorld，也就是奖励点以及惩罚点每次都是固定的。这意味着，这个智能体只学到了“这个”
+GridWorld。要是我们换一个
+GridWorld，奖励点和惩罚点的位置都发生变化之后，这个策略明显是行不通的，目前尝试去避免惩罚点的决策，很有可能在新的
+GridWorld 里是走向惩罚点的。</p>
+<p>换个角度说，智能体此时学到的是“走到 <code>[1, 1]</code>
+这个格子不太好”（在这个例子里 <code>[1, 1]</code>
+是惩罚点）。并不是学到“走到惩罚点不太好”。这个区别非常关键，考虑一个新的问题</p>
+<blockquote>
+<p>训练一个智能体，使其能尽量远离惩罚点，并到达奖励点获得奖励。</p>
+</blockquote>
+<p>这个新问题意味着，当我们把智能体放到任意随机的 GridWorld
+的时候，我们都希望它能够避开惩罚点。</p>
+<h1 id="灾难性遗忘">灾难性遗忘</h1>
+<p><strong>灾难性遗忘（Catastrophic
+Forgetting）</strong>在这类问题里非常普遍，我们先看看这个问题。在上面的新问题中，我们喂给智能体的是各种随机
+GridWorld，下面随便给出两个例子。</p>
+<div style="display:flex;flex-direction:row;">
+<div id="g31" class="gridworld" style="width: 300px; height: 300px;">
+
+</div>
+<div id="g32" class="gridworld" style="width: 300px; height: 300px;">
+
+</div>
+</div>
+<script>
+  const c31 = document.getElementById('g31');
+  const g31 = new GridWorld('g31', c31, 6, {
+    showTriangles: true,
+    pathColor: 'rgba(0, 0, 0, 0.3)',
+    pathWidth: 8,
+  });
+  
+  // 设置奖励点和惩罚点
+  g31.setRewards([[2, 4]], 1);  // 奖励点，值为 1
+  g31.setPenalties([[2, 2]], -1); // 惩罚点，值为 -1
+  g31.setAgent([2, 3]);
+  g31.showActionValues([2, 3], {
+    up: 0.5,
+    right: 0.8,
+    down: 0.5,
+    left: 0.1
+  });
+
+  const c32 = document.getElementById('g32');
+  const g32 = new GridWorld('g32', c32, 6, {
+    showTriangles: true,
+    pathColor: 'rgba(0, 0, 0, 0.3)',
+    pathWidth: 8,
+  });
+  
+  // 设置奖励点和惩罚点
+  g32.setRewards([[2, 2]], 1);  // 奖励点，值为 1
+  g32.setPenalties([[2, 4]], -1); // 惩罚点，值为 -1
+  g32.setAgent([2, 3]);
+  g32.showActionValues([2, 3], {
+    up: 0.5,
+    right: 0.8,
+    down: 0.5,
+    left: 0.1
+  });
+</script>
+<p>上面两个 GridWorld 的奖励点与惩罚点是刚好相反的，如果智能体在左边的
+GridWorld 里学到，在 <code>[3, 2]</code>
+这个位置应该往右走，那么它带着这个策略走右边的
+GridWorld，将会直接走到惩罚点。此时有人可能会问，当训练到右边的
+GridWorld
+的时候，智能体会不会就修正自己的权重呢？但你要想的是，按照之前提到的 Q
+值更新方法，会导致智能体把 Q
+值修正。那么如果再给智能体左边的图，它就要陷入这种死循环里了。</p>
+<h2 id="位置编码">位置编码</h2>
+<p>之前一直没有提到的一个细节是，我们在训练智能体的时候，GridWorld
+是如何被编码的，也就是强化学习的环境，究竟是如何编码的？</p>
+<p>考虑到改进后的 Q 函数具有以下的形式：</p>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph LR
+    S[状态s] --> Q["Q'(s)"]
+    Q --->|计算出一个分布| V["0.1<br>0.9<br>-0.2<br>-0.7<br>"]</pre>
+<p>最容易想到的一种编码方式就是坐标编码，这种编码方式表明智能体当前的位置。比如
+<code>s = [2, 3]</code> 表明智能体当前在 <code>[2, 3]</code>
+这个位置。这种编码方式也是非常直观的，在这种编码方式下，执行动作并且改变状态这个过程非常直观。比如这种方式可以通过下面的方式实现。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> up = (<span class="attr">s</span>: <span class="title class_">State</span>): <span class="function"><span class="params">State</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> [row, col] = s</span><br><span class="line">  <span class="keyword">return</span> [row - <span class="number">1</span>, col]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> s1 = [<span class="number">2</span>, <span class="number">3</span>] <span class="comment">// 当前智能体在 [2, 3] 这个位置</span></span><br><span class="line"><span class="keyword">const</span> s2 = <span class="title function_">up</span>(s1) <span class="comment">// 当前智能体在 [1, 3] 这个位置</span></span><br></pre></td></tr></table></figure>
+<p>这种编码方式虽然很简单很直观，但是最致命的弱点是智能体没有学到世界的所有信息，它只知道在“当前这个世界下”，在某个位置是否安全，或者在这个位置向左走，或者向右走会大概有什么结果。它并不清楚世界里，有奖励点，有惩罚点。<strong>但我们的目标是希望智能体能够辨别奖励点，惩罚点。</strong>只有它能够辨别，才能在另一个随机世界里也能做出正确的决策，避开惩罚点，到达奖励点。</p>
+<h2 id="状态叠加编码">状态叠加编码</h2>
+<p>为了解决这个问题，我们需要将尽量多的环境信息编码到状态。这个涉及到训练设计的问题，不过一种很常规，并且很容易理解的办法是将各种信息分类分层，然后再叠加在一起。</p>
+<p>比如在这个简单例子的 GridWorld 里，位置信息有三种</p>
+<ol type="1">
+<li>惩罚点位置信息</li>
+<li>奖励点位置信息</li>
+<li>智能体位置信息</li>
+</ol>
+<p>也就是对于最初是的 GridWorld，我们拆分出了三层信息。</p>
+<div style="display:flex;flex-direction:row;align-items:center;">
+<div id="g41" class="gridworld" style="width: 150px; height: 150px;">
+
+</div>
+<div style="margin-bottom: 20px">
+=
+</div>
+<div id="g42" class="gridworld" style="width: 150px; height: 150px;">
+
+</div>
+<div style="margin-bottom: 20px">
++
+</div>
+<div id="g43" class="gridworld" style="width: 150px; height: 150px;">
+
+</div>
+<div style="margin-bottom: 20px">
++
+</div>
+<div id="g44" class="gridworld" style="width: 150px; height: 150px;">
+
+</div>
+</div>
+<script>
+  const c41 = document.getElementById('g41');
+  const g41 = new GridWorld('g41', c41, 6, { showTriangles: false });
+  
+  g41.setRewards([[5, 5]], 1);  // 奖励点，值为1
+  g41.setPenalties([[1, 1], [2, 2], [5, 0], [2, 4]], -1); // 两个惩罚点，值为-1
+
+  const c42 = document.getElementById('g42');
+  const g42 = new GridWorld('g42', c42, 6, { showTriangles: false });
+  
+  g42.setRewards([[5, 5]], 1);  // 奖励点，值为1
+  g42.placeAgent(true);
+
+  const c43 = document.getElementById('g43');
+  const g43 = new GridWorld('g43', c43, 6, { showTriangles: false });
+  
+  g43.setPenalties([[1, 1], [2, 2], [5, 0], [2, 4]], -1); // 惩罚点，值为-1
+  g43.placeAgent(true);
+
+  const c44 = document.getElementById('g44');
+  const g44 = new GridWorld('g44', c44, 6, { showTriangles: false });
+</script>
+<p>这种信息转化为代码，天然是一个非常整齐的张量格式。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> state = [</span><br><span class="line">  [ <span class="comment">// 奖励点信息</span></span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">  ],</span><br><span class="line">  [ <span class="comment">// 惩罚点信息</span></span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">  ],</span><br><span class="line">  [ <span class="comment">// 智能体位置</span></span><br><span class="line">    [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">    [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>],</span><br><span class="line">  ],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>注意到，这种实现其实也并不困难，在环境中会有 <code>getState</code>
+方法，通过这个方法可以获取当前环境的状态。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Env</span> &#123;</span><br><span class="line">  <span class="title function_">getState</span>(): <span class="title class_">State</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">rewards</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">penalties</span>,</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">getAgentState</span>(),</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中的 <code>getAgentState</code>
+方法用于获取智能体当前位置，然后转化为这种张量格式，它所处位置的数组元素为
+<code>1</code>，数组其余位置都是
+<code>0</code>。这种编码方式可以让智能体在学习的过程中，“学会”这些信息之间的关联。</p>
+<h2 id="经验回放">经验回放</h2>
+<p>回想之前讨论的训练过程，为了让学习过程更快收敛，学习的结果更为准确，其中一个技巧是<strong>小批量学习</strong>。</p>
+<div style="display: flex;flex-direction: row">
+<canvas id="learn-by-one-point-y=2x">
+</canvas>
+<canvas id="learn-by-few-points-y=2x">
+</canvas>
+</div>
+<script>
+const p8 = new Plot('learn-by-one-point-y=2x');
+p8.draw(x => 2*x);
+p8.draw(x => -3*x + 5, { color: 'green' });
+p8.draw(x => 3*x - 1, { color: 'blue' });
+p8.drawPoints([[1, 2]], { color: 'black', radius: 3});
+
+const p9 = new Plot('learn-by-few-points-y=2x');
+const p9Points = [[-1, -2], [-0.8, -1.6], [0.2, 0.4]];
+p9.draw(x => 2*x);
+p9.drawPoints(p9Points, {
+  color: 'black', radius: 3,
+  func: x => -3*x + 5,
+  showDistance: true,
+  distanceColor: 'green',
+});
+p9.drawPoints(p9Points, {
+  color: 'black', radius: 3,
+  func: x => 3*x - 1,
+  showDistance: true,
+  distanceColor: 'blue',
+});
+p9.draw(x => -3*x + 5, { color: 'green' });
+p9.draw(x => 3*x - 1, { color: 'blue' });
+</script>
+<p>经验回放其实与小批量的思路是一致的，就是一次迭代过程中，传入批量的<strong>经验数据</strong>。有了上面的编码之后，在一次迭代中</p>
+<ol type="1">
+<li>获取当前状态 <code>state</code></li>
+<li>选择动作 <code>action</code></li>
+<li>执行动作</li>
+<li>环境更新状态
+<code>nextState</code>，同时反馈（奖励）<code>reward</code></li>
+<li>一般环境更新状态的同时会给出此次探索是否终止 <code>done</code></li>
+</ol>
+<p>这样一条经验数据为
+<code>[state, action, nextState, reward, done]</code>。当智能体在环境中自由探索，并且没有终结之前，就能持续获得经验数据。这样在一次探索中，最后获得一组经验数据。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 一条经验数据</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Experience</span> = [<span class="title class_">State</span>, <span class="title class_">Action</span>, <span class="title class_">State</span>, <span class="title class_">Reward</span>, <span class="title class_">Done</span>]</span><br><span class="line"><span class="comment">// 一次探索里得到的一组经验数据</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Episode</span> = <span class="title class_">Experience</span>[]</span><br></pre></td></tr></table></figure>
+<p>经验回放在训练过程中起到收集经验数据，然后组织为批量数据作为训练的输入的作用。</p>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph LR
+    Env[环境] --> |迭代与变化| Exp[经验收集器]
+    Exp --> |经验数据| Agent[智能体]
+    Agent --->|选择与执行| Action[动作]
+    Action ---> |作用于| Env
+    Action ---> Exp</pre>
+<h1 id="深度-q-学习">深度 Q 学习</h1>
+<p>上次我们说到的 Q 学习，可以直接迁移到深度网络中。Q 学习的核心在于 Q
+值的更新，而上次使用的是确定性的 Q 值更新方法，也就是</p>
+<p><span class="math display">\[
+\overbrace{Q(S_t, A_t)}^\text{更新的 Q 值}
+=
+\overbrace{Q(S_t, A_t)}^\text{当前的 Q 值} +
+\alpha[
+\underbrace{R_{t+1}}_\text{奖励} +
+\gamma \underbrace{\max Q(S_{t+1}, a)}_\text{所有动作里的最大 Q 值} -
+Q(S_t, A_t)
+]
+\]</span></p>
+<p>在代码中我们也是用确定性方法进行实现。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">updateQValue</span> = (<span class="params">state, action, reward, nextState</span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 当前状态的 Q 值</span></span><br><span class="line">    <span class="keyword">const</span> currentQ = <span class="variable language_">this</span>.<span class="property">qTable</span>[state][action];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算下一个状态的最大Q值</span></span><br><span class="line">    <span class="keyword">let</span> maxNextQ = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (!done) &#123;</span><br><span class="line">        maxNextQ = <span class="title class_">Math</span>.<span class="title function_">max</span>(...<span class="title class_">Object</span>.<span class="title function_">values</span>(<span class="variable language_">this</span>.<span class="property">qTable</span>[nextState]));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 更新公式: Q(s,a) = Q(s,a) + α * [r + γ * max(Q(s&#x27;,a&#x27;)) - Q(s,a)]</span></span><br><span class="line">    <span class="keyword">const</span> newQ = currentQ + learningRate * </span><br><span class="line">                (reward + discountFactor * maxNextQ - currentQ);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 更新 Q 表</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">qTable</span>[state][action] = newQ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但经过这段时间的学习，我们应该慢慢能感受到非确定性方法所带来的魅力。在解决复杂问题的时候，非确定性方法可以不显式指定规则，通过学习的方式将“规则”内化到智能体内。<strong>所以深度
+Q 学习，实际上是将 Q 值的计算交给深度神经网络进行计算</strong>，原来的
+<code>updateQValue</code> 方法是用来存储一个巨大的 Q
+值表，但现在通过神经网络计算的话，这个 Q
+值表，实际上变成了网络内部的参数表示了。</p>
+<p>结合经验回放，下面是整个深度 Q 学习的流程图。</p>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph TD
+    Env["环境状态$S_{t+1}$"] --> |"产生经验$[s, a, s_{t+1}, r_{t+1}]$"| Exp[经验收集器]
+    Exp --> |经验数据| Q[深度Q网络]
+    Q --->|预测Q值| Action["$\epsilon$-贪心策略"]
+    Action ---> |执行动作$a$| Env
+    Env ---> |"奖励$R_{t+1}$"| Env</pre>
+<p>下面是深度 Q 学习的循环伪代码，可以与之前的进行对比。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">step</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 获取当前状态</span></span><br><span class="line">    <span class="keyword">const</span> state = <span class="variable language_">this</span>.<span class="title function_">getState</span>()</span><br><span class="line">    <span class="comment">// 获取当前状态下的经验数据</span></span><br><span class="line">    <span class="keyword">const</span> experience = <span class="variable language_">this</span>.<span class="title function_">getExperience</span>()</span><br><span class="line">    <span class="comment">// 追加到经验回放器</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">experienceReplay</span>.<span class="title function_">push</span>(experience)</span><br><span class="line">    <span class="comment">// 获取小批量经验数据</span></span><br><span class="line">    <span class="keyword">const</span> experiences = <span class="variable language_">this</span>.<span class="property">experienceReplay</span>.<span class="title function_">getBatch</span>()</span><br><span class="line">    <span class="comment">// 使用深度 Q 网络计算 Q 值</span></span><br><span class="line">    <span class="keyword">const</span> qValues = <span class="variable language_">this</span>.<span class="title function_">deepQNetwork</span>(state, experiences)</span><br><span class="line">    <span class="comment">// 使用 ε-贪心策略选择动作</span></span><br><span class="line">    <span class="keyword">const</span> action = <span class="variable language_">this</span>.<span class="title function_">selectAction</span>(qValues)</span><br><span class="line">    <span class="comment">// 执行动作</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">env</span>.<span class="title function_">takeAction</span>(action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="小结">小结</h1>
+<ul>
+<li>为了让智能体“真正学会”奖励点与惩罚点，需要
+<ul>
+<li>通过<strong>叠加状态的编码</strong>方式传递环境信息</li>
+<li>通过<strong>经验重放</strong>来避免灾难性遗忘</li>
+</ul></li>
+<li><strong>Q 学习</strong> 使用”巨大的 Q 值表“来维护与更新 Q 值</li>
+<li><strong>深度 Q 学习</strong> 是使用深度网络来预测 Q 值</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/" title="AI学习时间 12 - 深度Q学习">https://aquietzero.github.io/2025/06/17/computer/AI学习/深度Q学习/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度Q学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/11/computer/AI%E5%AD%A6%E4%B9%A0/Q%E5%AD%A6%E4%B9%A0/" rel="prev" title="AI学习时间 11 - Q学习">
+                  <i class="fa fa-angle-left"></i> AI学习时间 11 - Q学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">316k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">19:09</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
