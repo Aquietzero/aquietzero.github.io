@@ -26,7 +26,7 @@
 <meta property="og:description" content="小结  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld 这个例子里，如果我们希望训练一个智能体能学到不同类型">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-23T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-06-27T04:36:18.414Z">
+<meta property="article:modified_time" content="2025-06-27T04:55:15.260Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="强化学习">
@@ -119,7 +119,7 @@
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
             <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gridworld-%E9%87%8C%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">GridWorld
-里的强化学习思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%8A%B6%E6%80%81%E8%BF%9E%E7%BB%AD%E5%8A%A8%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">连续状态，连续动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E4%BC%98%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">动作优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#actor-critic-%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">多头模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+里的强化学习思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%8A%B6%E6%80%81%E8%BF%9E%E7%BB%AD%E5%8A%A8%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">连续状态，连续动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E4%BC%98%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">动作优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#actor-critic-%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">多头模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">场景学习与应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -245,14 +245,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>2.9k</span>
+      <span>3.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
+      <span>12 分钟</span>
     </span>
 </div>
 
@@ -414,12 +414,33 @@ Actor-Critic 模型进行训练。</p>
 <p><img
 src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/ac-training.png" /></p>
 <p>上面的流程图展示的是延时更新参数的方式，“单组训练”既可以是小批量经验学习，也可以是一次尝试里的所有经验。</p>
+<h1 id="场景学习与应用">场景学习与应用</h1>
+<p>强化学习相关知识比较难直接应用在生产，因为现实环境比较复杂，需要有足够的建模知识，训练技巧，甚至硬件设施才有可能真正使用强化学习解决问题。为了解决这种学习与生产的巨大落差感，业界也有不少工具方便与帮助学习的。</p>
+<p><a target="_blank" rel="noopener" href="https://gymnasium.farama.org/">Gymnasium</a>
+是其中一个很优秀的例子，这个工具对强化学习的常见环境进行了封装，提供环境相关的接口以及可视化方法，使用者只需要自己实现强化学习智能体即可。</p>
+<p><img
+src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/gym.png" /></p>
+<p>上面是 Cart-Pole 例子的文档截图，在这个简单的环境可以看到，Gymnasium
+将环境抽象为 <code>ActionSpace</code> 以及
+<code>ObservationSpace</code>。</p>
+<ul>
+<li><code>ActionSpace</code>：我们一直提到的动作空间，也就是智能体可以选择什么动作，在
+Cart-Pole 环境中，智能体只能向左或者向右，所以 <code>ActionSpace</code>
+是一个两个元素的数组。</li>
+<li><code>ObservationSpace</code>：观察空间实际上是环境的状态，也就是我们能从环境中获取到的对状态的描述向量。在
+Cart-Pole
+例子里，环境是车子和棍子，车子有位置以及速度两个状态，棍子有竖直角度以及旋转角速度两个状态，所以在这个例子里，<code>ObservationSpace</code>
+就是一个四个元素的数组。</li>
+</ul>
+<p>通过 Gymnasium
+可以尝试强化学习算法在不同环境中的效果，也可以在同一个环境中对比不同强化学习算法的效果，为强化学习提供了非常好的帮助与支持。</p>
 <h1 id="小结-1">小结</h1>
 <ul>
 <li><strong>连续性</strong>：在连续性环境中，动作以及状态都是连续的，需要将动作转换为动作分布，并且使用动作优势进行训练，因为单纯靠试验结果作为奖励会较弱。</li>
 <li><strong>动作优势</strong>：动作价值与状态价值之差。</li>
 <li><strong>Actor-Critic方法</strong>：基于动作优势进行学习，Actor网络预测动作分布，Critic网络预测状态价值。</li>
 <li><strong>Actor-Critic训练</strong>：使用<strong>多头网络</strong>同时预测策略（动作分布）与状态价值，结合各种延时学习的策略提高稳定性与准确性。</li>
+<li><strong>Gymnasium</strong>：一个强化学习的工具，提供一些基础环境的封装与可视化，方便强化学习的实验。</li>
 </ul>
 
     </div>
@@ -514,7 +535,7 @@ src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/ac-training.png" /></
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">19:20</span>
+    <span title="站点阅读时长">19:21</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
