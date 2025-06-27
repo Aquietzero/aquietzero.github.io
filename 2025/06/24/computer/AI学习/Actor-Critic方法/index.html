@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="小结  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld 这个例子里，如果我们希望训练一个智能体能学到不同类型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 13 - Actor-Critic 方法">
+<meta property="og:url" content="https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="小结  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld 这个例子里，如果我们希望训练一个智能体能学到不同类型">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-27T04:36:18.414Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="强化学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Actor-Critic方法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/","path":"2025/06/24/computer/AI学习/Actor-Critic方法/","title":"AI学习时间 13 - Actor-Critic 方法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 13 - Actor-Critic 方法 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gridworld-%E9%87%8C%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">GridWorld
+里的强化学习思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%8A%B6%E6%80%81%E8%BF%9E%E7%BB%AD%E5%8A%A8%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">连续状态，连续动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E4%BC%98%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">动作优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#actor-critic-%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">多头模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">130</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 13 - Actor-Critic 方法 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 13 - Actor-Critic 方法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-06-24 00:00:00" itemprop="dateCreated datePublished" datetime="2025-06-24T00:00:00+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/06/24/computer/AI学习/Actor-Critic方法/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="小结">小结</h1>
+<ul>
+<li>为了让智能体“真正学会”奖励点与惩罚点，需要
+<ul>
+<li>通过<strong>叠加状态的编码</strong>方式传递环境信息</li>
+<li>通过<strong>经验重放</strong>来避免灾难性遗忘</li>
+</ul></li>
+<li><strong>Q 学习</strong> 使用”巨大的 Q 值表“来维护与更新 Q 值</li>
+<li><strong>深度 Q 学习</strong> 是使用深度网络来预测 Q 值</li>
+</ul>
+<h1 id="gridworld-里的强化学习思路整理">GridWorld
+里的强化学习思路整理</h1>
+<p>之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld
+这个例子里，如果我们希望训练一个智能体能学到不同类型的格子，能努力走到奖励点，训练过程如下</p>
+<ol type="1">
+<li>开始一次尝试</li>
+<li>状态叠加编码，交给深度 Q 网络预测动作 Q 值分布</li>
+<li>通过 <span
+class="math inline">\(\varepsilon\)</span>-贪心策略选择一个动作</li>
+<li>执行这个动作，环境给与反馈（是否终止）</li>
+<li>如果没终止就回到 2，终止的话
+<ul>
+<li>到达惩罚点，削弱这次尝试所选择的动作概率</li>
+<li>到达奖励点，增强这次尝试所选择的动作概率</li>
+</ul></li>
+</ol>
+<p>当然在 4
+我们还会收集这条经验信息，将其放到经验回放器里，然后通过小批量的方式训练深度
+Q 网络。不过从这个训练过程我们看到一个问题，那就是
+<strong>每次尝试，都需要到达终点（惩罚点或者奖励点），我们才能强化这条路径上的动作</strong>。</p>
+<p>这种方法对于下棋，或者 GridWorld
+这类环境来说是没问题的，因为在这些环境里，环境都有一种离散的明确的规则：</p>
+<ul>
+<li>下一步棋，走一步，环境发生确定性变化</li>
+<li>有一个终止</li>
+<li>终止有明确奖励（或惩罚）</li>
+</ul>
+<p>这样才能满足上面的训练流程。</p>
+<h2 id="连续状态连续动作">连续状态，连续动作</h2>
+<p>在大多数真实环境里，环境是连续的，动作可能也是连续的，这样在尝试过后，很难对“具体”的环境状态及动作进行强化。比如我们要使用强化学习对火箭回收进行训练与学习，在火箭降落的过程中，整个过程中火箭的位置是连续的，在每个位置，需要根据当时的风向，气压，温度等综合条件（环境），进行不同方向的喷射（动作）而调整火箭的方向与角度，最终安全降落（奖励），整个降落过程中的任意失误，比如火箭角度出问题，下降速度过快等，都会造成火箭爆炸或者降落失败（惩罚）。在这个场景下，每两次（模拟）尝试都不会有相同的环境与动作序列，在这种情况下，应该如何进行强化学习呢？</p>
+<p>在强化学习之后，火箭是需要在真实环境中进行回收操作的，而在真实环境中又是一个连续多变的场景，这要求我们对学习训练进行如下的改变：</p>
+<ul>
+<li>指导动作选择的 Q 值是一个概率分布，而不是一些枚举动作的 Q
+值，因为动作也是连续的，无法枚举。</li>
+<li>任何过程中的惩罚都是灾难性的，不能等到有最后结果才加强过程中的动作，而是在选择之后就需要尽快得到合适的强化手段。比如某次喷射会导致火箭失衡（到一定程度），那就需要减少该喷射的参数。</li>
+</ul>
+<p>对于第一点来说比较容易做到，我们之前使用深度 Q 网络来预测 Q
+值，先在只需要将深度 Q 网络改为预测 Q
+值分布即可。在计算机里，其实分布也是一个离散函数，只是用更多的值来模拟而已。</p>
+<pre class="mermaid">%%{
+  init: {
+    'themeVariables': {
+      'edgeLabelBackground': '#fff',
+      'edgeLabelColor': '#333',
+      'edgeLabelFontSize': '14px'
+    }
+  }
+}%%
+graph LR
+    State[状态] -->|输入| Q[深度Q网络] 
+    Q --->|输出| Dist[动作Q值分布]</pre>
+<p>而对于第二点来说，我们希望在每一次动作之后就能有一个即时反馈（而不是等到整个试验结束），此时需要引入一个<strong>动作优势（action
+advantage）</strong>概念。</p>
+<h1 id="动作优势">动作优势</h1>
+<p>回顾我们之前提到的两个价值函数，<strong>状态价值函数</strong>与<strong>动作价值函数</strong>。状态价值函数对状态进行评价，将当前状态量化为一个评分数值。</p>
+<pre class="mermaid">graph LR
+    S[状态] --> F[状态价值函数] 
+    F --> V[价值]</pre>
+<p>而动作价值函数是在某一状态下，执行某一个动作的价值。</p>
+<pre class="mermaid">graph LR
+    S[状态] --> F[动作价值函数] 
+    A[动作] --> F[动作价值函数] 
+    F --> V[价值]</pre>
+<p>而动作优势函数是，计算在当前状态下执行这个动作，能给我带来多少增益？从公式上来看非常简单，它是动作价值函数与状态价值函数之差。</p>
+<p><span class="math display">\[
+\text{Q}_\text{advantage}(s, a) = \text{Q}_\text{action}(s, a) -
+\text{Q}_\text{state}(s)
+\]</span></p>
+<p>其中 <span class="math inline">\(s\)</span> 为状态，<span
+class="math inline">\(a\)</span>
+为动作。从公式上来看很容易理解，当我在状态 <span
+class="math inline">\(s\)</span> 下执行 <span
+class="math inline">\(a\)</span> 动作之后得到的价值是 <span
+class="math inline">\(\text{Q}_\text{action}(s, a)\)</span>，而原本状态
+<span class="math inline">\(s\)</span> 的价值为 <span
+class="math inline">\(\text{Q}_\text{state}(s)\)</span>，那么做这个动作带来的增益，就是两者之差了。</p>
+<p>将对动作价值的估计，改为对动作优势估计的一类方法，被称为
+<strong>Actor-Critic</strong> 方法。从命名也可以看出，Actor
+实际上是智能体遵循一定的策略执行动作，然后这个动作会被进行评判
+Critic，这样就能在动作执行之后立刻被评判（评判的是动作的优势），解决了上面提到的第二个问题。</p>
+<h1 id="actor-critic-方法">Actor-Critic 方法</h1>
+<p>下面是整个 Actor-Critic 方法的流程图。</p>
+<p><img
+src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/ac-method-flow.png" /></p>
+<p>既然计算动作优势需要动作价值函数与状态价值函数之差，这里可以很形象地引入两个角色，一个是<strong>执行者（Actor）</strong>，一个是<strong>批判者（Critic）</strong>。</p>
+<ul>
+<li>执行者自己内部有一套决策机制（策略网络），用于决定执行什么动作。</li>
+<li>批判者内部也有一套决策机制（价值网络），用于判断执行者执行的动作究竟是好是坏。</li>
+</ul>
+<p>这套架构和生成对抗网络（后面课程会讲述）有异曲同工之妙，可以更抽象地看为一套很基础的方法论。</p>
+<p>从上面的流程图我们看到的两个角色，执行者以及批判者都有自己的网络，但实际训练的过程中，训练一个网络是比训练两个网络要方便很多的，所以在
+Actor-Critic 方法在实现的时候，会将两个网络合并为一个。</p>
+<p><img
+src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/advantage-ac-method.png" /></p>
+<p>由于策略网络主要用来选择动作，并通过动作优势来加强，而价值网络则主要用来预测状态的价值，那将两者合二为一之后，我们便希望网络可以同时输出这两个值。从动作优势的公式
+<span class="math inline">\(\text{Q}_\text{advantage}(s, a) =
+\text{Q}_\text{action}(s, a) - \text{Q}_\text{state}(s)\)</span>
+来看，它需要两个值，这两个值正是模型预测出来的两个值，然后最后使用动作优势的误差进行训练。</p>
+<h2 id="多头模型">多头模型</h2>
+<p>多头模型是指一个模型有多个输出。我们之前提到的模型基本上都是一个输入一个输出，输入输出都是张量。但其实认真想一下会发现，模型本身只是一个函数，模型内的层只是一系列的函数嵌套，每个函数有其自身的参数。如果我们希望一个模型有多个输出，那实际上只需要在中间某一层的输出之后分成两条路，再分别经过多层输出即可。</p>
+<p>从上面的 Actor-Critic 方法里可以看到，如果我们希望统一训练
+Actor-Critic
+模型，我们要求它有双头输出，也就是同时输出状态价值以及动作分布，其流程图如下所示。</p>
+<pre class="mermaid">graph LR
+    S[状态] --> AC[Actor-Critic模型] 
+    AC --> SValue[状态价值]
+    AC --> Actions[动作分布]</pre>
+<p>下面的示意图稍微将这个流程图扩展为模型架构。</p>
+<pre class="mermaid">graph LR
+    S[状态] --> L1[Layer 1] 
+
+    subgraph ac[Actor-Critic模型]
+        L1[公共层] --> dots[...]
+        dots --> LN[公共层]
+        LN --> A1[Actor层]
+        A1 --> dots1[...]
+        dots1 --> A2[Actor层]
+        LN --> C1[Critic层]
+        C1 --> dots2[...]
+        dots2 --> C2[Critic层]
+    end
+
+    A2 --> Actions[动作分布]
+    C2 --> SV[状态价值]</pre>
+<h2 id="模型训练">模型训练</h2>
+<p>在强化学习模型训练里有一个很重要的概念，称为<strong>在线学习（Online
+Training）</strong>与<strong>离线学习（Offline Training）</strong>。</p>
+<p><img
+src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/ac-online-training.png" /></p>
+<p>从上面的训练主流程来看，注意到蓝色高亮部分是一个闭环，在强化学习的场景里，每一次尝试都是多步的，每一步都能获得奖励，通过这些奖励对某些动作进行强化。这意味着，在做下一次动作选择之前，动作选择的分布就已经被上一个动作所获得的奖励强化了。这种在训练的同时使用模型，在使用中训练模型的方式，称为在线学习。而离线学习可以简单地以分类学习来理解，分类学习里都是明确区分训练与使用环节的。</p>
+<p>在线学习一个最大的问题就是“踩着空气上升”，因为无法确保学习过程中学到的经验就是有效的，进一步基于这些经验进行决策，可能会向着错误的方向越走越远，而学习本质是参数更新，为了解决这个问题，一些模型训练的变种会采取一种通用的策略，那便是“在适当的时候更新参数”。这个“适当的时候”催生出很多优化方法。比如：</p>
+<ul>
+<li>使用两个网络，一个网络进行决策，一个网络进行学习，然后周期性将学习网络同步至决策网络。</li>
+<li>延时更新参数，在学到一定程度，再进行参数更新。</li>
+<li>使用多个网络，同步进行学习，然后将多个网络进行均值处理，这种方式称为<strong>分布式学习</strong>。</li>
+</ul>
+<p>下面是整个训练的示意图，其中的 Actor-Critic
+模型使用的架构就是上面的双头模型架构，每个循环里同时计算状态值以及动作概率，从而计算动作优势，用动作优势对
+Actor-Critic 模型进行训练。</p>
+<p><img
+src="/assets/images/2025-06-24-AI学习-Actor-Critic方法/ac-training.png" /></p>
+<p>上面的流程图展示的是延时更新参数的方式，“单组训练”既可以是小批量经验学习，也可以是一次尝试里的所有经验。</p>
+<h1 id="小结-1">小结</h1>
+<ul>
+<li><strong>连续性</strong>：在连续性环境中，动作以及状态都是连续的，需要将动作转换为动作分布，并且使用动作优势进行训练，因为单纯靠试验结果作为奖励会较弱。</li>
+<li><strong>动作优势</strong>：动作价值与状态价值之差。</li>
+<li><strong>Actor-Critic方法</strong>：基于动作优势进行学习，Actor网络预测动作分布，Critic网络预测状态价值。</li>
+<li><strong>Actor-Critic训练</strong>：使用<strong>多头网络</strong>同时预测策略（动作分布）与状态价值，结合各种延时学习的策略提高稳定性与准确性。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/" title="AI学习时间 13 - Actor-Critic 方法">https://aquietzero.github.io/2025/06/24/computer/AI学习/Actor-Critic方法/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Actor-Critic%E6%96%B9%E6%B3%95/" rel="tag"># Actor-Critic方法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/17/computer/AI%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6Q%E5%AD%A6%E4%B9%A0/" rel="prev" title="AI学习时间 12 - 深度Q学习">
+                  <i class="fa fa-angle-left"></i> AI学习时间 12 - 深度Q学习
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">319k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">19:20</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
