@@ -18,15 +18,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="小结  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld 这个例子里，如果我们希望训练一个智能体能学到不同类型">
+    <meta name="description" content="#强化学习 #Actor-Critic #动作优势 #在线学习  复习  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 Gr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AI学习时间 13 - Actor-Critic 方法">
 <meta property="og:url" content="https://aquietzero.github.io/2025/06/24/computer/AI%E5%AD%A6%E4%B9%A0/Actor-Critic%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="NullSpace">
-<meta property="og:description" content="小结  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 GridWorld 这个例子里，如果我们希望训练一个智能体能学到不同类型">
+<meta property="og:description" content="#强化学习 #Actor-Critic #动作优势 #在线学习  复习  为了让智能体“真正学会”奖励点与惩罚点，需要  通过叠加状态的编码方式传递环境信息 通过经验重放来避免灾难性遗忘  Q 学习 使用”巨大的 Q 值表“来维护与更新 Q 值 深度 Q 学习 是使用深度网络来预测 Q 值  GridWorld 里的强化学习思路整理 之前我们一直在基于 GridWorld 谈论强化学习，在 Gr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-23T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-06-27T04:55:15.260Z">
+<meta property="article:modified_time" content="2025-06-27T06:24:32.988Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="强化学习">
@@ -118,8 +118,8 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gridworld-%E9%87%8C%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">GridWorld
-里的强化学习思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%8A%B6%E6%80%81%E8%BF%9E%E7%BB%AD%E5%8A%A8%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">连续状态，连续动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E4%BC%98%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">动作优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#actor-critic-%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">多头模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">场景学习与应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">复习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gridworld-%E9%87%8C%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">GridWorld
+里的强化学习思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E7%8A%B6%E6%80%81%E8%BF%9E%E7%BB%AD%E5%8A%A8%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">连续状态，连续动作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E4%BC%98%E5%8A%BF"><span class="nav-number">3.</span> <span class="nav-text">动作优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#actor-critic-%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Actor-Critic 方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.1.</span> <span class="nav-text">多头模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">场景学习与应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -262,7 +262,11 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="小结">小结</h1>
+    <div class="post-body" itemprop="articleBody"><div class="theme-color-blue" data-markdown="1">
+<p><code>#强化学习</code> <code>#Actor-Critic</code>
+<code>#动作优势</code> <code>#在线学习</code></p>
+</div>
+<h1 id="复习">复习</h1>
 <ul>
 <li>为了让智能体“真正学会”奖励点与惩罚点，需要
 <ul>
@@ -434,7 +438,7 @@ Cart-Pole
 </ul>
 <p>通过 Gymnasium
 可以尝试强化学习算法在不同环境中的效果，也可以在同一个环境中对比不同强化学习算法的效果，为强化学习提供了非常好的帮助与支持。</p>
-<h1 id="小结-1">小结</h1>
+<h1 id="小结">小结</h1>
 <ul>
 <li><strong>连续性</strong>：在连续性环境中，动作以及状态都是连续的，需要将动作转换为动作分布，并且使用动作优势进行训练，因为单纯靠试验结果作为奖励会较弱。</li>
 <li><strong>动作优势</strong>：动作价值与状态价值之差。</li>
