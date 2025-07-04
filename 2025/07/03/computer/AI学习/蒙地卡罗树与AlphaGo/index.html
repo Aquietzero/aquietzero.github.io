@@ -26,7 +26,7 @@
 <meta property="og:description" content="围棋与AlphaGo的一些背景 围棋作为一种古老的运动，已经被人们深爱了几千年，其规则简单，变化复杂的特点让一代又一代的棋士所着迷，前赴后继地希望能领悟到神之一手。计算机面世之后，科学家们就希望通过科学的手段攻克各种棋类运动。相比于围棋，状态数量较为少的国际象棋，五子棋等相继被攻克，而围棋好像一直苦苦地支撑着这涉及到人类尊严的最后领地。 2015年AlphaGo横空出世，在2016年与李世石的对弈">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-07-04T03:10:32.393Z">
+<meta property="article:modified_time" content="2025-07-04T06:39:11.322Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="学习">
 <meta property="article:tag" content="AI">
@@ -244,7 +244,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>4.9k</span>
+      <span>4.8k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -484,15 +484,15 @@ class="math inline">\(s\)</span>
 是当前状态，其子状态都是胜利的状态，胜利叶节点会被赋值为 1，表明胜率是
 100%（毕竟棋局结束在胜利状态）。</p>
 <pre class="mermaid">graph TD
-    s[当前状态<br>V=1<br>N=2] --> s1[胜<br>V = 1<br>N=1]
-    s --> s2[胜<br>V = 1<br>N=1]</pre>
+    s[当前状态<br>V=1, N=2] --> s1[胜<br>V=1, N=1]
+    s --> s2[胜<br>V=1, N=1]</pre>
 <p>图中的 N 表示经过的次数，V
 表示价值。由于当前状态到达了两个胜利点，所以平均价值是
 1，表明只要到达了这个状态，那就能必胜了。</p>
 <p>再看下面的情况。</p>
 <pre class="mermaid">graph TD
-    s[当前状态<br>V=0.5<br>N=2] --> s1[胜<br>V = 1<br>N=1]
-    s --> s2[负<br>V = 0<br>N=1]</pre>
+    s[当前状态<br>V=0.5, N=2] --> s1[胜<br>V=1, N=1]
+    s --> s2[负<br>V=0, N=1]</pre>
 <p>由于当前状态可能会发展为两个子状态，一胜一负，这就导致当前状态依然处于一个比较焦灼的状态，下一步的选择会左右最终棋局的发展。所以其价值的加权平均是
 0.5，表示 50% 的输赢概率。</p>
 <p>而 AlphaGo
