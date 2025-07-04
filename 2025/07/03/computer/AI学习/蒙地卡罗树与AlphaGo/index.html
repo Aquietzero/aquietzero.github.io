@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="围棋与AlphaGo的一些背景 围棋作为一种古老的运动，已经被人们深爱了几千年，其规则简单，变化复杂的特点让一代又一代的棋士所着迷，前赴后继地希望能领悟到神之一手。计算机面世之后，科学家们就希望通过科学的手段攻克各种棋类运动。相比于围棋，状态数量较为少的国际象棋，五子棋等相继被攻克，而围棋好像一直苦苦地支撑着这涉及到人类尊严的最后领地。 2015年AlphaGo横空出世，在2016年与李世石的对弈">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI学习时间 14 - 蒙地卡罗树与AlphaGo">
+<meta property="og:url" content="https://aquietzero.github.io/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="围棋与AlphaGo的一些背景 围棋作为一种古老的运动，已经被人们深爱了几千年，其规则简单，变化复杂的特点让一代又一代的棋士所着迷，前赴后继地希望能领悟到神之一手。计算机面世之后，科学家们就希望通过科学的手段攻克各种棋类运动。相比于围棋，状态数量较为少的国际象棋，五子棋等相继被攻克，而围棋好像一直苦苦地支撑着这涉及到人类尊严的最后领地。 2015年AlphaGo横空出世，在2016年与李世石的对弈">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-07-04T03:10:32.393Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="蒙地卡罗树">
+<meta property="article:tag" content="AlphaGo">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/","path":"2025/07/03/computer/AI学习/蒙地卡罗树与AlphaGo/","title":"AI学习时间 14 - 蒙地卡罗树与AlphaGo"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI学习时间 14 - 蒙地卡罗树与AlphaGo | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%B4%E6%A3%8B%E4%B8%8Ealphago%E7%9A%84%E4%B8%80%E4%BA%9B%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">围棋与AlphaGo的一些背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%B4%E6%A3%8B%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">围棋基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%A6%81%E7%B4%A0"><span class="nav-number">2.1.</span> <span class="nav-text">基本要素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%A7%84%E5%88%99"><span class="nav-number">2.2.</span> <span class="nav-text">基本规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%9C%E5%88%A9%E7%9B%AE%E6%A0%87"><span class="nav-number">2.3.</span> <span class="nav-text">胜利目标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98%E4%B8%8E%E6%80%9D%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">基本问题与思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%90%9C%E7%B4%A2%E6%A0%91mct"><span class="nav-number">4.</span> <span class="nav-text">蒙地卡罗搜索树（MCT）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E7%AE%97%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">蒙地卡罗算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mct%E7%9A%84%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E7%B4%A2"><span class="nav-number">4.2.</span> <span class="nav-text">MCT的利用与探索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mct%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="nav-number">4.3.</span> <span class="nav-text">MCT的不足</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#alphago"><span class="nav-number">5.</span> <span class="nav-text">AlphaGo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%8B%E7%9B%98%E7%8A%B6%E6%80%81%E7%BC%96%E7%A0%81"><span class="nav-number">5.1.</span> <span class="nav-text">棋盘状态编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alphago-%E6%9E%B6%E6%9E%84%E6%80%BB%E8%A7%88"><span class="nav-number">5.2.</span> <span class="nav-text">AlphaGo 架构总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E7%9B%91%E7%9D%A3%E7%9A%84%E7%AD%96%E7%95%A5%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83"><span class="nav-number">5.3.</span> <span class="nav-text">有监督的策略网络训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E5%AF%B9%E5%BC%88"><span class="nav-number">5.4.</span> <span class="nav-text">自我对弈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alphago-%E7%9A%84-mct-%E6%90%9C%E7%B4%A2"><span class="nav-number">5.5.</span> <span class="nav-text">AlphaGo 的 MCT 搜索</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI学习时间 14 - 蒙地卡罗树与AlphaGo | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI学习时间 14 - 蒙地卡罗树与AlphaGo
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-03 00:00:00" itemprop="dateCreated datePublished" datetime="2025-07-03T00:00:00+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/03/computer/AI学习/蒙地卡罗树与AlphaGo/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>18 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="围棋与alphago的一些背景">围棋与AlphaGo的一些背景</h1>
+<p>围棋作为一种古老的运动，已经被人们深爱了几千年，其规则简单，变化复杂的特点让一代又一代的棋士所着迷，前赴后继地希望能领悟到神之一手。计算机面世之后，科学家们就希望通过科学的手段攻克各种棋类运动。相比于围棋，状态数量较为少的国际象棋，五子棋等相继被攻克，而围棋好像一直苦苦地支撑着这涉及到人类尊严的最后领地。</p>
+<p>2015年AlphaGo横空出世，在2016年与李世石的对弈成为了全球的焦点，无论是否是围棋爱好者，都会或多或少看到相关的新闻。我记得当时我在摸鱼看直播，那个时候我对人工智能一无所知，只是出于一种盲目的对人类生物性智力的崇拜，真心希望李世石能守住这最后的一丁点阵地。可惜，最后的结果令人失望，AlphaGo以4-1大比分获得胜利。李世石赢的这一局，恐怕是人类能赢AI的最后一局了。</p>
+<p>后面事情的发展当然还是不错的。我以为在AI大获胜利之后，人类会对这些东西失去兴趣，毕竟它让围棋从一个不确定性的竞技（人与人的对弈）变为一个确定性的竞技（人与顶尖AI），然而人类还是能善于从这些事情中寻找乐趣，顶尖棋手开始使用AI研究新战术，向AI学习。</p>
+<p>很难想象AlphaGo已经是十年前的东西了，当时让人惊奇的技术到现在已经成了非常基础日常的东西，在内部论坛搜了一下，还能发现不少当时研究，复现AlphaGo的文章，公司内部貌似也自己训练了一个。现在回头看这些技术，其背后的原理，发展历程，依然让人惊叹，是AI领域非常重要的一环，本篇将试图系统阐述一下AlphaGo背后的原理。</p>
+<h1 id="围棋基础">围棋基础</h1>
+<p>在阐述AlphaGo之前，适当说明围棋规则是有必要的，毕竟不是一项非常普及的大众运动，其规则还是需要稍作说明。</p>
+<h2 id="基本要素">基本要素</h2>
+<p>围棋的基本要素只有两个</p>
+<ul>
+<li>棋盘：围棋的棋盘为纵横各19路，算上边缘，总共有19x19=361个交点。</li>
+<li>棋子：围棋分黑白双方，交替下子，棋子下在交点上。</li>
+</ul>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/board.png" /></p>
+<h2 id="基本规则">基本规则</h2>
+<ul>
+<li>黑白双方交替下子。</li>
+<li>每个棋子上下左右相邻的交点是这个棋子的“气”，如果“气”被对方棋子占了，那这个棋子就失去了一口气，如果这个棋子没有气，那这个棋子就要被提走。</li>
+</ul>
+<div style="width: 200px; margin: auto">
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/liberty.png" /></p>
+</div>
+<p>上图表明了黑子的“气”，如果这四口气都消失了，那么这些黑子就要被提走。</p>
+<h2 id="胜利目标">胜利目标</h2>
+<p>每种竞技都有一个胜利目标，也就是整个竞技过程的终止条件，围棋竞技目标是占领尽量多的地盘，而地盘是通过交点数量来衡量的。当一个区域被己方的棋子围着，并且对方无法提走这部分棋子，那么这个区域就属于自己。</p>
+<p>最后胜负的判断条件就是谁占领的地盘较大（也就是看谁围着的交点数量更大）。</p>
+<p>这些基本信息足够了解围棋的大体规则，细致的规则，比如“打劫”，或者细致的地结算统计，让子等规则不影响本文阐述的内容，在此暂不详述。</p>
+<h1 id="基本问题与思路">基本问题与思路</h1>
+<p>AlphaGo 要解决的问题是：训练一个会下围棋的智能体。</p>
+<p>当然，从深蓝计算机击败国际象棋冠军之后开始，人们便开始希望能通过计算机方法实现一个智能围棋高手，希望能击败围棋的世界冠军。在深度学习横空出世之前，人们解决问题的办法都是相对确定的办法。</p>
+<p>抽象来看，解决问题实际上是“一个在有很多状态的空间里寻找一个符合要求的状态的过程”。比如</p>
+<ul>
+<li>用一个天平找出20个小球里的残次品（重量与正常的小球不同），这实际上是在很多次称量（状态）的过程中，找出合适的那个状态（某一次称量最后确认到残次品小球）。</li>
+<li>寻路问题中，也是从很多的路径（状态）里，寻找我们希望能从起点到终点的那条路径（某个状态）。</li>
+</ul>
+<p>这个过程可以用下图表示。</p>
+<pre class="mermaid">graph LR
+    s11[状态_1_1] --> r1[规则1]
+    s12[状态_1_2] --> r1[规则1]
+    s13[状态_1_3] --> r1[规则1]
+    s14["..."] --> r1[规则1]
+
+    r1 --> s21[状态_2_1]
+    r1 --> s22[状态_2_2]
+    r1 --> s23["..."]
+
+    s21 --> r2[规则2]
+    s22 --> r2[规则2]
+    s23 --> r2[规则2]
+
+    r2 --> rx["..."]
+    rx --> sn["状态_n_1(答案)"]</pre>
+<p>由此可见，解决问题的过程就被抽象为</p>
+<pre class="mermaid">graph LR
+    p[问题] --> r[规则集合]
+    r --> a["解答(符合要求的状态)"]</pre>
+<p>而对于巨大搜索空间，需要编写非常有效的规则，并且能一步一步编写规则，才有可能解决问题，对于围棋来说，状态实在太多，并且下棋的方式很灵活，不容易通过这种方式解决问题。稍微想象一下，在这个19x19路的棋盘上，第一步就有361种下棋的可能性，第二步有360种可能性，虽然一局棋的结束并不需要把棋盘填满，但事实上这些可能性的乘积已经是一个巨大的天文数字了。</p>
+<p>所以要解决围棋这个问题，我们需要两个改变：</p>
+<ol type="1">
+<li>不通过显式规则来解决问题</li>
+<li>寻找一种效率更高的“规则”来对筛选胜率高的状态</li>
+</ol>
+<h1 id="蒙地卡罗搜索树mct">蒙地卡罗搜索树（MCT）</h1>
+<p>为了解决第一个问题，我们需要先了解整个棋局的进行规律。对于下棋来说，取得胜利其实是可以分解为一系列子问题的。因为棋是一步一步下的，如果我们做好每一步的抉择，是更有可能将我们引领到胜利的结果。（当然不排除前期下了一步看着很好的棋，到最后这步棋成了导致败局的昏招）</p>
+<p>蒙地卡罗树是一种状态树，从某一个状态开始，这个状态即为树的根节点，然后下一步棋，此时会产生一个新状态，这个新状态正是根节点的子节点，然后重复这个步骤，便能得到一个蒙地卡罗树。但蒙地卡罗树还会记录一个统计数据，那就是从这个节点开始进行下去，双方赢的次数。如果整个过程重复的次数足够多，那么我们有理由相信，此时选择赢得多的那个位置是非常有利的。</p>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/mct.png" /></p>
+<h2 id="蒙地卡罗算法">蒙地卡罗算法</h2>
+<p>所以蒙地卡罗算法在每一个状态只有如下三个步骤：</p>
+<ol type="1">
+<li>下一步棋，把新状态添加到蒙地卡罗树</li>
+<li>从这个新状态开始继续下</li>
+<li>在过程中持续更新统计数据</li>
+</ol>
+<p>重复进行这个过程，这样树的第一层的统计结果将会给出最有优势的下法。下面给出这个方法的伪代码。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Agent</span> &#123;</span><br><span class="line">    <span class="title function_">play</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> state = game.<span class="title function_">getCurrentState</span>()</span><br><span class="line">        <span class="comment">// 进行蒙地卡罗模拟</span></span><br><span class="line">        <span class="keyword">const</span> mct = <span class="title class_">MCTSimulation</span>(state)</span><br><span class="line">        <span class="comment">// 对统计数据进行排序，排序依据为下一步下棋的一方</span></span><br><span class="line">        _.<span class="title function_">sortBy</span>(mct.<span class="property">root</span>.<span class="property">children</span>, &#123; <span class="attr">player</span>: game.<span class="title function_">getNextPlayer</span>() &#125;)</span><br><span class="line">        <span class="comment">// 选择胜利次数最高的子节点对应的那一步作为下一步</span></span><br><span class="line">        <span class="keyword">const</span> bestChild = mct.<span class="property">root</span>.<span class="property">children</span>[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> bestChild.<span class="title function_">getMove</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而上面最关键的函数是蒙地卡罗模拟<code>MCTSimulation</code>，这个函数的作用是从给定状态开始，进行随机下棋模拟的过程。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">MCTSimulation</span> = (<span class="params">state</span>) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 以给定状态为根节点构建 MCT</span></span><br><span class="line">    <span class="keyword">const</span> tree = <span class="keyword">new</span> <span class="title function_">MCT</span>(state)</span><br><span class="line">    <span class="comment">// 克隆当前棋局，因为 MCT 是模拟后面的进程</span></span><br><span class="line">    <span class="keyword">const</span> game = game.<span class="title function_">clone</span>()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">iter</span> = (<span class="params">node</span>) =&gt; &#123;</span><br><span class="line">        game.<span class="title function_">randomPlay</span>(state)</span><br><span class="line">        <span class="keyword">const</span> nextState = game.<span class="title function_">nextState</span>()</span><br><span class="line">        <span class="comment">// 把新状态添加到当前节点的子节点里</span></span><br><span class="line">        <span class="keyword">const</span> newNode = node.<span class="property">children</span>.<span class="title function_">add</span>(nextState)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果棋局没结束，基于新状态继续下棋</span></span><br><span class="line">        <span class="keyword">if</span> (!game.<span class="title function_">isOver</span>()) <span class="keyword">return</span> <span class="title function_">iter</span>(newNode)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 棋局结束，完整模拟了一次</span></span><br><span class="line">        counter += <span class="number">1</span></span><br><span class="line">        <span class="comment">// 从这个结束节点反向更新整个路径的统计数据</span></span><br><span class="line">        <span class="comment">// 如果是黑子赢了，整个路径的黑子胜利数加一，白子亦然</span></span><br><span class="line">        tree.<span class="title function_">updateResult</span>(newNode, game.<span class="title function_">getWinner</span>())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> counter = <span class="number">0</span></span><br><span class="line">    <span class="comment">// 从当前状态开始尝试预先设定的模拟次数</span></span><br><span class="line">    <span class="keyword">while</span> (counter &lt; <span class="variable constant_">MAX_SIMULATION_COUNT</span>) &#123;</span><br><span class="line">        <span class="title function_">iter</span>(tree.<span class="property">root</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="mct的利用与探索">MCT的利用与探索</h2>
+<p><strong>利用（exploitation）</strong>与<strong>探索（exploration）</strong>是强化学习里两个很重要的概念，一句话简单解释，“利用是深度搜索，探索是广度搜索”。</p>
+<p>从上面的算法来看，在每一个状态下，我们都需要进行很多次后续棋局的模拟，才能得到一个比较合理的选择。但每一步棋如果有无限时间，那么理论上我们可以无穷地枚举所有状态，这样得到的统计数据就是精确值，但显然，我们必须对此问题做一个限制，不然对于第一步来说，所需要的时间将是天文数字。</p>
+<p>从当前状态出发，进行几次模拟之后，MCT就已经有一些节点，有一些统计数据，此时在MCT的某一层，我们面临下面两个选择：</p>
+<ol type="1">
+<li>利用：从当前层的子节点里选择胜算最高的节点进行下去</li>
+<li>探索：采取一个新的下法，创建一个新的子节点</li>
+</ol>
+<p>下面展示了利用与探索的MCT扩展方式。</p>
+<div style="width: 75%; margin: auto">
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/mct-exploitation.png" /></p>
+</div>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/mct-exploration.png" /></p>
+<p>由此，通过蒙地卡罗树的抽象，下棋问题变成一般化了，与具体规则无关，就是探索一条到胜利概率更高的路径。通过利用与探索，搜索问题的速度加快了，不需要真的枚举所有状态。</p>
+<h2 id="mct的不足">MCT的不足</h2>
+<p>从上面的MCT算法描述可以看出，MCT算法是一种随机算法，它虽然通用，并且有一定程度的准确性，但是它本质是一个试错随机算法，不含有任何学习过程。也就是说，它并不是真正理解局面，识别模式，而只是单纯枚举，试错，然后得到局部答案。下一次遇到相似，甚至相同场景的时候，它依然要进行同样的过程。</p>
+<p>所以MCT有如下的不足：</p>
+<ul>
+<li>计算量大</li>
+<li>没有学习过程</li>
+</ul>
+<p>而AlphaGo，甚至后面的AlphaGo Zero，正是为了解决这些问题而诞生。</p>
+<h1 id="alphago">AlphaGo</h1>
+<p>为了解决上面的问题，深度学习网络是一个很好的工具。深度学习范式将传统问题解决方式转变为“学习”过程，深度学习网络是一个内化了规则的黑盒，范式从</p>
+<pre class="mermaid">graph LR
+    p[问题] --> r[规则集合]
+    r --> a["解答(符合要求的状态)"]</pre>
+<p>变为了</p>
+<pre class="mermaid">graph LR
+    p[问题] --> l[学习]
+    l --> r["智能体（内化了规则集合）"]</pre>
+<p>MCT的计算量大是因为对局面毫无认识，需要通过随机的方式推演，然后通过统计信息选择优势下法，如果我们能直接通过一个网络计算这个“优势”，那就省去了一个随机推演的过程，也就省去了庞大的计算量。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Agent</span> &#123;</span><br><span class="line">    <span class="title function_">play</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> state = game.<span class="title function_">getCurrentState</span>()</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取可以下棋的地方</span></span><br><span class="line">        <span class="keyword">const</span> actions = game.<span class="title function_">getActions</span>(state)</span><br><span class="line">        <span class="comment">// 计算当前状态下，执行每一个动作的价值</span></span><br><span class="line">        <span class="keyword">const</span> actionValues = _.<span class="title function_">map</span>(actions, <span class="function"><span class="params">action</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                action,</span><br><span class="line">                <span class="attr">value</span>: <span class="title class_">AlphaGo</span>.<span class="title function_">getValue</span>(state, action)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 选取价值最高的那一步作为下一步</span></span><br><span class="line">        _.<span class="title function_">sortBy</span>(actionValues, <span class="string">&#x27;value&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> actionValues[<span class="number">0</span>].<span class="property">action</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时深度学习网络本身能累积经验，经过训练之后的结果都会内化到网络参数中，由此可以解决上面提到的两个主要问题。</p>
+<h2 id="棋盘状态编码">棋盘状态编码</h2>
+<p>深度学习网络本质是一个函数。其输入输出都是张量（多维数组）形式。</p>
+<pre class="mermaid">graph LR
+    i["输入（张量）"] --> f["深度网络（函数）"]
+    f --> o["输出(张量)"]</pre>
+<p>所以我们首先要对棋盘进行编码。一种最直观的棋盘编码方式，无异是使用一个二维数组进行编码，比如使用<code>0</code>表示空位，<code>1</code>表示黑子，<code>2</code>表示白子。但这样编码存在一些问题：</p>
+<ul>
+<li>没有表明下一步是谁来下，下一步谁来下对决策至关重要</li>
+<li>没有表明一些棋局的关键信息
+<ul>
+<li>哪些棋子将要被提走，如果某些子将要被提走，那在下一步就必须要保护这些棋子</li>
+<li>有多少个棋子将要被提走，这个涉及到“打劫”的规则</li>
+<li>一些没有气的空位置是不能下的</li>
+</ul></li>
+<li>...</li>
+</ul>
+<p>为了增加更多的状态信息，我们可以使用状态叠加的方法，将尽可能多的重要状态编码到输入。通过将不同类型的状态叠加在一起，形成一个总的输入状态。这些不同类型的状态一般被称为<strong>特征</strong>。</p>
+<pre class="mermaid">graph LR
+    s[棋盘状态] --> f1[特征1]
+    s[棋盘状态] --> f2[特征1]
+    s[棋盘状态] --> f3[特征1]
+    s[棋盘状态] --> fn[...]
+
+    f1 --> i
+    f2 --> i
+    f3 --> i
+    fn --> i
+
+    i["输入（张量）"] --> f["深度网络（函数）"]
+    f --> o["输出(张量)"]</pre>
+<p>在真实的AlphaGo实现中，使用如下一些特征：</p>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>棋子颜色</td>
+<td>当前玩家棋子颜色·对手棋子颜色·空白</td>
+</tr>
+<tr>
+<td>经过步数</td>
+<td>表明每个棋子下了之后经过了多少轮</td>
+</tr>
+<tr>
+<td>气的数量</td>
+<td>表明每个棋子有多少个气</td>
+</tr>
+<tr>
+<td>提子数量</td>
+<td>表明有多少个敌方棋子要被提走</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<h2 id="alphago-架构总览">AlphaGo 架构总览</h2>
+<p>下面在进一步描述 AlphaGo 原理之前，先简述一下 AlphaGo 的架构。</p>
+<div style="width: 70%; margin: auto">
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/alphago-architecture.png" /></p>
+</div>
+<p>从上图可以看出 AlphaGo
+包含三个深度学习网络，分别为<strong>快速策略网络</strong>，<strong>增强策略网络</strong>，<strong>价值网络</strong>。</p>
+<ul>
+<li>快速策略网络：网络规模相对较小，计算速度快，进行快速决策，用于MCT树搜索。</li>
+<li>增强策略网络：网络规模相对更大，用于更准确的下子判断。</li>
+<li>价值网络：用于评估当前棋局的状态价值。</li>
+</ul>
+<h2 id="有监督的策略网络训练">有监督的策略网络训练</h2>
+<p>有监督的网络训练阶段主要是训练快速策略网络与增强策略网络。有监督训练使用的是人类有史以来有记录的棋局，这些棋局大约有
+160000 局，而每一个棋局都能按照分步拆分为不同状态，实际上 AlphaGo
+用来训练的状态有 3 亿左右。</p>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/policy-network-sl.png" /></p>
+<p>这个训练过程可以与大语言模型的预训练进行类比，大语言模型的预训练任务是“预测下一个词”，而策略网络的有监督训练，是“预测下一步棋”。而预测下一个词的时候使用的损失函数是目标词与预测词的向量差，对于下一步棋来说，误差则是人类下的“正确的位置”与“预测位置”之间的差。</p>
+<h2 id="自我对弈">自我对弈</h2>
+<p>但人类棋局是有限的，并且不会快速增长。为了让智能体有更大规模的训练量，最好的办法是自我对弈。在有监督训练之后，可以获得一个“会下棋”的智能体，AlphaGo
+训练的后半阶段是通过不断自我对弈来增强能力。</p>
+<p>刚才提到，使用MCT算法的时候，我们是随机选择扩展的，现在有了第一阶段训练的策略网络，我们可以使用策略网络进行选择了。</p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">policyRollout</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> nextPlayer = game.<span class="title function_">getNextPlayer</span>()</span><br><span class="line">    <span class="keyword">while</span> (game.<span class="title function_">isNotOver</span>()) &#123;</span><br><span class="line">        <span class="keyword">const</span> state = game.<span class="title function_">getState</span>()</span><br><span class="line">        <span class="comment">// 使用快速策略网络进行棋局演进模拟</span></span><br><span class="line">        <span class="keyword">const</span> moveProbabilities = <span class="title class_">AlphaGo</span>.<span class="property">fastPolicy</span>.<span class="title function_">predict</span>(state)</span><br><span class="line">        <span class="keyword">const</span> move = <span class="title function_">max</span>(moveProbabilities)</span><br><span class="line">        <span class="keyword">const</span> nextState = game.<span class="title function_">apply</span>(move)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> game.<span class="title function_">getResult</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自我对弈最关键的一个环节在于价值网络的学习，这个网络的作用在于直接估算某个棋局状态的分数。</p>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/value-network.png" /></p>
+<p>所以大家目前看围棋直播的时候，通常会看到一个当前状态的胜率条，用于展示哪一方的胜率较大，这个实际上是直接将状态输入给价值网络计算出来的。（当然大家也不会去看围棋直播）</p>
+<h2 id="alphago-的-mct-搜索">AlphaGo 的 MCT 搜索</h2>
+<p>下面是整个 AlphaGo 的 MCT 搜索过程。</p>
+<p><img
+src="/assets/images/2025-07-03-AI学习-AlphaGo与强化学习/alphago-mct-search.png" /></p>
+<ol type="1">
+<li><strong>选择</strong>: 选择最大化价值的节点进行推演。</li>
+<li><strong>扩展</strong>:
+需要扩展一个节点的时候，通过增强策略网络给出一些候选项，并记录下它们的先验概率。</li>
+<li><strong>价值估算</strong>:
+叶子节点的价值通过对快速网络推演结果以及价值网络的估值进行加权平均得到。</li>
+<li><strong>更新</strong>: 针对推演结果更新遍历到的子节点的价值。</li>
+</ol>
+<p>这里举一个简单的理解方式。观察以下子树，状态 <span
+class="math inline">\(s\)</span>
+是当前状态，其子状态都是胜利的状态，胜利叶节点会被赋值为 1，表明胜率是
+100%（毕竟棋局结束在胜利状态）。</p>
+<pre class="mermaid">graph TD
+    s[当前状态<br>V=1<br>N=2] --> s1[胜<br>V = 1<br>N=1]
+    s --> s2[胜<br>V = 1<br>N=1]</pre>
+<p>图中的 N 表示经过的次数，V
+表示价值。由于当前状态到达了两个胜利点，所以平均价值是
+1，表明只要到达了这个状态，那就能必胜了。</p>
+<p>再看下面的情况。</p>
+<pre class="mermaid">graph TD
+    s[当前状态<br>V=0.5<br>N=2] --> s1[胜<br>V = 1<br>N=1]
+    s --> s2[负<br>V = 0<br>N=1]</pre>
+<p>由于当前状态可能会发展为两个子状态，一胜一负，这就导致当前状态依然处于一个比较焦灼的状态，下一步的选择会左右最终棋局的发展。所以其价值的加权平均是
+0.5，表示 50% 的输赢概率。</p>
+<p>而 AlphaGo
+使用深度网络之所以更快，是因为这个价值是通过网络直接估算出来，而不是通过大量随机的
+MCT 扩展统计出来。</p>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>MCT</strong>：蒙地卡罗树是一种随机状态树，可以通用地表征一个问题随着时间不断发展所产生的各种状态及其关系。</li>
+<li><strong>MCT搜索</strong>：MCT搜索涉及两个选择的平衡，<strong>利用</strong>与<strong>探索</strong>。
+<ul>
+<li><strong>利用</strong>：选择分数最高的节点深入扩展。</li>
+<li><strong>探索</strong>：在同一层进行展开，选择没走过的路进行扩展。</li>
+</ul></li>
+<li><strong>棋盘编码</strong>：采用各种围棋特征组成一个多维张量。</li>
+<li><strong>AlphaGo架构</strong>：AlphaGo 主要由三个网络构成
+<ul>
+<li><strong>快速策略网络</strong>：用于基于当前状态往后进行推演。</li>
+<li><strong>增强策略网络</strong>：在当前状态下给出下一步的先验概率估算。</li>
+<li><strong>价值网络</strong>：给出下一步的价值估算。</li>
+</ul></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/07/03/computer/AI%E5%AD%A6%E4%B9%A0/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91%E4%B8%8EAlphaGo/" title="AI学习时间 14 - 蒙地卡罗树与AlphaGo">https://aquietzero.github.io/2025/07/03/computer/AI学习/蒙地卡罗树与AlphaGo/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag"># 学习</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E8%92%99%E5%9C%B0%E5%8D%A1%E7%BD%97%E6%A0%91/" rel="tag"># 蒙地卡罗树</a>
+              <a href="/tags/AlphaGo/" rel="tag"># AlphaGo</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/30/life/%E5%BE%80%E4%BA%8B%E7%B3%BB%E5%88%97/2025-06-30-%E9%9A%8F%E6%83%B3/" rel="prev" title="随想 - 2025/06/30">
+                  <i class="fa fa-angle-left"></i> 随想 - 2025/06/30
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">326k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">19:44</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
