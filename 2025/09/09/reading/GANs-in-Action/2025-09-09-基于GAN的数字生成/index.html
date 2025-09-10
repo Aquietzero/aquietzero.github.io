@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="GAN 前文提到 VAE 及其局限性，面对现实问题，背后的模型肯定是一个复杂的多维模型，我们无法简单通过“建模”的方式猜中实际的模型，既然有这种“必然”的模型误差，那我们就没有这个建模的必要性。 GAN 背后的原理实际上非常直观，也可以说比较天才。其中包含两个主要角色：  生成器（Generator）：基于随机数生成输出，目标是尽量让鉴别器把生成的输出判别为真。 鉴别器（Discriminator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于GAN的数字生成">
+<meta property="og:url" content="https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="GAN 前文提到 VAE 及其局限性，面对现实问题，背后的模型肯定是一个复杂的多维模型，我们无法简单通过“建模”的方式猜中实际的模型，既然有这种“必然”的模型误差，那我们就没有这个建模的必要性。 GAN 背后的原理实际上非常直观，也可以说比较天才。其中包含两个主要角色：  生成器（Generator）：基于随机数生成输出，目标是尽量让鉴别器把生成的输出判别为真。 鉴别器（Discriminator">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/output1.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/output2.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/output3.png">
+<meta property="article:published_time" content="2025-09-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-10T09:44:05.454Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="GAN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/output1.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/","path":"2025/09/09/reading/GANs-in-Action/2025-09-09-基于GAN的数字生成/","title":"基于GAN的数字生成"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于GAN的数字生成 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#gan"><span class="nav-number">1.</span> <span class="nav-text">GAN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-gan-%E7%94%9F%E6%88%90%E6%95%B0%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">基于 GAN 生成数字</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">2.2.</span> <span class="nav-text">定义生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E9%89%B4%E5%88%AB%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text">定义鉴别器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-gan"><span class="nav-number">2.4.</span> <span class="nav-text">定义 GAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.5.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.6.</span> <span class="nav-text">可视化</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于GAN的数字生成 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于GAN的数字生成
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-09 00:00:00" itemprop="dateCreated datePublished" datetime="2025-09-09T00:00:00+08:00">2025-09-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/09/09/reading/GANs-in-Action/2025-09-09-基于GAN的数字生成/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="gan">GAN</h1>
+<p>前文提到 VAE
+及其局限性，面对现实问题，背后的模型肯定是一个复杂的多维模型，我们无法简单通过“建模”的方式猜中实际的模型，既然有这种“必然”的模型误差，那我们就没有这个建模的必要性。</p>
+<p>GAN
+背后的原理实际上非常直观，也可以说比较天才。其中包含两个主要角色：</p>
+<ul>
+<li><strong>生成器（Generator）</strong>：基于随机数生成输出，目标是尽量让鉴别器把生成的输出判别为真。</li>
+<li><strong>鉴别器（Discriminator）</strong>：判断输入为真的概率，目标是尽量将生成器的输出鉴别为假。</li>
+</ul>
+<p>下面是整个 GAN 的流程图。</p>
+<p><img
+src="/assets/images/2025-09-09-基于GAN的数字生成/gan-流程图.png" /></p>
+<p>下面是 GAN 的训练算法流程，对比上面的图来看一目了然。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">for 每个训练循环 do:</span><br><span class="line">  1. 训练鉴别器:</span><br><span class="line">      1.1. 在真实数据集里随机取出一个小批量 x</span><br><span class="line">      1.2. 取出一个小批量随机数 z 并生成一个小批量假数据 G(z) = x*</span><br><span class="line">      1.3. 计算 D(x) 和 D(x*) 的分类错误，反向传播训练鉴别器，让错误最小化</span><br><span class="line">  2. 训练生成器:</span><br><span class="line">      1. 取出一个小批量随机数 z 并生成一个小批量假数据 G(z) = x*</span><br><span class="line">      2. 计算鉴别器的分类错误 D(x*)，反向传播训练生成器，让错误最大化</span><br><span class="line">end for</span><br></pre></td></tr></table></figure>
+<h1 id="基于-gan-生成数字">基于 GAN 生成数字</h1>
+<p>大体流程与上面流程图一致，训练使用 keras 实现。</p>
+<h2 id="准备工作">准备工作</h2>
+<p>首先引入基础库。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Input, Dense, Reshape, Flatten, LeakyReLU</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> Adam</span><br></pre></td></tr></table></figure>
+<p>定义全局变量。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">img_rows = <span class="number">28</span></span><br><span class="line">img_cols = <span class="number">28</span></span><br><span class="line">channels = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">img_shape = (img_rows, img_cols, channels)</span><br><span class="line"><span class="comment"># 随机噪声的维度是 100x1，这是生成器输入的张量</span></span><br><span class="line">z_dim = <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<h2 id="定义生成器">定义生成器</h2>
+<p>下面是生成器实现，其接收一个 <code>z</code> 作为输入，输出
+<code>28x28x1</code> 的图片。</p>
+<pre class="mermaid">graph LR
+    z["noise(100x1)"] --> Generator
+    Generator --> img["image(28x28x1)"]</pre>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build_generator</span>(<span class="params">img_shape, z_dim</span>):</span><br><span class="line">    model = Sequential()</span><br><span class="line"></span><br><span class="line">    model.add(Dense(<span class="number">128</span>, input_dim=z_dim))</span><br><span class="line">    model.add(LeakyReLU(negative_slope=<span class="number">0.01</span>))</span><br><span class="line">    model.add(Dense(img_rows * img_cols * channels, activation=<span class="string">&#x27;tanh&#x27;</span>))</span><br><span class="line">    model.add(Reshape(img_shape))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+<h2 id="定义鉴别器">定义鉴别器</h2>
+<p>鉴别器接收一张图片，给出这张图片是真的概率。</p>
+<pre class="mermaid">graph LR
+    i["image(28x28x1)"] --> Discriminator
+    Discriminator --> o["p([0, 1])"]</pre>
+<p>下面是鉴别器的定义。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build_discriminator</span>(<span class="params">img_shape</span>):</span><br><span class="line">    model = Sequential()</span><br><span class="line">    </span><br><span class="line">    model.add(Flatten(input_shape=img_shape))</span><br><span class="line">    model.add(Dense(<span class="number">128</span>))</span><br><span class="line">    model.add(LeakyReLU(negative_slope=<span class="number">0.01</span>))</span><br><span class="line">    model.add(Dense(<span class="number">1</span>, activation=<span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+<h2 id="定义-gan">定义 GAN</h2>
+<p>将编码器和解码器结合可得到 GAN。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build_gan</span>(<span class="params">generator, discriminator</span>):</span><br><span class="line">    model = Sequential()</span><br><span class="line"></span><br><span class="line">    model.add(generator)</span><br><span class="line">    model.add(discriminator)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure>
+<p>下面初始化训练网络各部分的实例。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">discriminator = build_discriminator(img_shape)</span><br><span class="line">discriminator.<span class="built_in">compile</span>(loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>,</span><br><span class="line">                      optimizer=Adam(),</span><br><span class="line">                      metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">generator = build_generator(img_shape, z_dim)</span><br><span class="line"></span><br><span class="line">gan = build_gan(generator, discriminator)</span><br><span class="line">gan.<span class="built_in">compile</span>(loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>, optimizer=Adam())</span><br><span class="line">gan.summary()</span><br></pre></td></tr></table></figure>
+<p>下面是这个简单的 GAN 架构的参数。</p>
+<table>
+<thead>
+<tr>
+<th>Layer(type)</th>
+<th>Output Shape</th>
+<th>Param #</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generator</td>
+<td>(None, 28, 28, 1)</td>
+<td>114,064</td>
+</tr>
+<tr>
+<td>discriminator</td>
+<td>(None, 1)</td>
+<td>100,609</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Total params: 214,673 (838.57 KB)</span><br><span class="line">Trainable params: 214,673 (838.57 KB)</span><br><span class="line">Non-trainable params: 0 (0.00 B)</span><br></pre></td></tr></table></figure>
+<p>上面的模型采用 <code>binary_crossentropy</code> 作为误差，原因是 GAN
+最后的输出是鉴别器的输出，也就是“真假概率”，这是一个二元判断，所以采用这个误差。另外优化器使用
+<code>Adam</code> 动量策略，这个也是 GAN
+常用的优化策略，对于一个新问题的训练新阶段，可以先直接选择这个策略。</p>
+<h2 id="训练">训练</h2>
+<p>下面是训练主流程代码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">losses = []</span><br><span class="line">accuracies = []</span><br><span class="line">iteration_checkpoints = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">iterations, batch_size, sample_interval</span>):</span><br><span class="line">    <span class="comment"># 加载 MNIST 数据集</span></span><br><span class="line">    (X_train, _), (_, _) = mnist.load_data()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将图片的灰度值置为 [-1, 1]，原本是 [0, 255]</span></span><br><span class="line">    X_train = X_train / <span class="number">127.5</span> - <span class="number">1.0</span></span><br><span class="line">    X_train = np.expand_dims(X_train, axis=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    real = np.ones((batch_size, <span class="number">1</span>))</span><br><span class="line">    fake = np.zeros((batch_size, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> iteration <span class="keyword">in</span> <span class="built_in">range</span>(iterations):</span><br><span class="line">        <span class="comment"># --------</span></span><br><span class="line">        <span class="comment"># 训练鉴别器</span></span><br><span class="line">        <span class="comment"># --------</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 取一个小批量真图</span></span><br><span class="line">        idx = np.random.randint(<span class="number">0</span>, X_train.shape[<span class="number">0</span>], batch_size)</span><br><span class="line">        imgs = X_train[idx]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 生成一批假图</span></span><br><span class="line">        z = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, (batch_size, <span class="number">100</span>))</span><br><span class="line">        gen_imgs = generator.predict(z, verbose=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 开启鉴别器的反向传播</span></span><br><span class="line">        discriminator.trainable = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 用一个小批次训练鉴别器</span></span><br><span class="line">        d_loss_real = discriminator.train_on_batch(imgs, real)</span><br><span class="line">        d_loss_fake = discriminator.train_on_batch(gen_imgs, fake)</span><br><span class="line">        d_loss, accuracy = <span class="number">0.5</span> * np.add(d_loss_real, d_loss_fake)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># --------</span></span><br><span class="line">        <span class="comment"># 训练生成器</span></span><br><span class="line">        <span class="comment"># --------</span></span><br><span class="line">        <span class="comment"># 生成一批假图</span></span><br><span class="line">        z = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, (batch_size, <span class="number">100</span>))</span><br><span class="line">        gen_imgs = generator.predict(z, verbose=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 关闭鉴别器的反向传播</span></span><br><span class="line">        discriminator.trainable = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        g_loss = gan.train_on_batch(z, real)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 周期性保存学习中间结果以及展示生成效果</span></span><br><span class="line">        <span class="keyword">if</span> (iteration + <span class="number">1</span>) % sample_interval == <span class="number">0</span>:</span><br><span class="line">            losses.append((d_loss, g_loss))</span><br><span class="line">            accuracies.append(<span class="number">100.0</span> * accuracy)</span><br><span class="line">            iteration_checkpoints.append(iteration + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;%d [D loss: %f, acc.: %.2f%%] [G loss: %f]&quot;</span> %</span><br><span class="line">                  (iteration + <span class="number">1</span>, d_loss, <span class="number">100.0</span> * accuracy, g_loss))</span><br><span class="line"></span><br><span class="line">            sample_images(generator)</span><br></pre></td></tr></table></figure>
+<p>上面的代码基本上是对 GAN
+算法的基础实现，里面有一个关键问题需要注意。在训练鉴别器的时候，需要将鉴别器的
+<code>trainable</code> 打开，而当到了训练 GAN 的时候，需要将鉴别器的
+<code>trainable</code>
+关闭。从实际逻辑上看，生成器和鉴别器应该是两个网络，但从实现角度，我们将生成器和鉴别器统一连接成
+GAN，所以我们在使用 GAN
+的时候，实际上是需要训练生成器，所以此时需要把鉴别器的
+<code>trainable</code> 关闭。</p>
+<p>另外，在检查点，使用当前的生成器生成一批图，可以从中看到生成器的进化过程。</p>
+<p>开始训练。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">iterations = <span class="number">20000</span></span><br><span class="line">batch_size = <span class="number">128</span></span><br><span class="line">sample_interval = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line">train(iterations, batch_size, sample_interval)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1000 [D loss: 0.032495, acc.: 99.09%] [G loss: 4.764819]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 18ms/step</span><br><span class="line">2000 [D loss: 0.046790, acc.: 98.66%] [G loss: 5.103865]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">3000 [D loss: 0.063818, acc.: 97.97%] [G loss: 5.507373]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step</span><br><span class="line">4000 [D loss: 0.077605, acc.: 97.37%] [G loss: 5.583810]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">5000 [D loss: 0.103135, acc.: 96.31%] [G loss: 5.521878]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">6000 [D loss: 0.130106, acc.: 95.19%] [G loss: 5.384779]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step</span><br><span class="line">7000 [D loss: 0.154531, acc.: 94.18%] [G loss: 5.217308]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">8000 [D loss: 0.172533, acc.: 93.40%] [G loss: 5.082361]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">9000 [D loss: 0.189438, acc.: 92.67%] [G loss: 4.970886]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">10000 [D loss: 0.207242, acc.: 91.91%] [G loss: 4.853372]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step</span><br><span class="line">11000 [D loss: 0.224148, acc.: 91.17%] [G loss: 4.732558]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step</span><br><span class="line">12000 [D loss: 0.239915, acc.: 90.45%] [G loss: 4.611139]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">13000 [D loss: 0.253116, acc.: 89.83%] [G loss: 4.503053]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">14000 [D loss: 0.264800, acc.: 89.27%] [G loss: 4.399367]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">15000 [D loss: 0.273353, acc.: 88.85%] [G loss: 4.304996]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">16000 [D loss: 0.280571, acc.: 88.48%] [G loss: 4.219489]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step</span><br><span class="line">17000 [D loss: 0.286978, acc.: 88.14%] [G loss: 4.139498]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">18000 [D loss: 0.292156, acc.: 87.87%] [G loss: 4.065353]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step</span><br><span class="line">19000 [D loss: 0.297137, acc.: 87.60%] [G loss: 3.995753]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step</span><br><span class="line">20000 [D loss: 0.301584, acc.: 87.36%] [G loss: 3.930545]</span><br><span class="line">1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step</span><br></pre></td></tr></table></figure>
+<p>上面展示了整个训练过程的一些数据。从数据库可以看出，生成器的误差是在逐步减少的，这意味着生成器生成的图片越来越真，从鉴别器的准确率下降也能看到这点。</p>
+<h2 id="可视化">可视化</h2>
+<p>下面截取了一些训练过程中的截图。</p>
+<div style="display: flex;width: 50%; margin: auto;">
+<p><img src="/assets/images/2025-09-09-基于GAN的数字生成/output1.png" />
+<img src="/assets/images/2025-09-09-基于GAN的数字生成/output2.png" />
+<img src="/assets/images/2025-09-09-基于GAN的数字生成/output3.png" />
+<img
+src="/assets/images/2025-09-09-基于GAN的数字生成/output4.png" /></p>
+</div>
+<p>从上面的图可以看到生成效果逐渐变好的过程。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="基于GAN的数字生成">https://aquietzero.github.io/2025/09/09/reading/GANs-in-Action/2025-09-09-基于GAN的数字生成/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" rel="prev" title="基于VAE的数字生成">
+                  <i class="fa fa-angle-left"></i> 基于VAE的数字生成
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">337k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">20:24</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

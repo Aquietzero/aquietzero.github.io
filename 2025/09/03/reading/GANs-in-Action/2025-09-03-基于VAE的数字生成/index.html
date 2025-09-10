@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto+Serif+SC:300,300italic,400,400italic,700,700italic%7CAgbalumo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="VAE 简介 本文以一个简单的例子讲述 VAE 相关概念，以及使用 VAE 架构生成数字的基本代码。 VAE 架构定义 自编码器 自编码器（Autoencoder） 就是使用“编码器-解码器”架构对数据进行学习，从而得到可以将数据进行压缩表达的编码器。 graph LR     datap[&quot;数据&quot;] --&gt; encoder[&quot;编码器&quot;]     encoder --&gt; h[&quot;隐藏空间&quot;]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于VAE的数字生成">
+<meta property="og:url" content="https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="VAE 简介 本文以一个简单的例子讲述 VAE 相关概念，以及使用 VAE 架构生成数字的基本代码。 VAE 架构定义 自编码器 自编码器（Autoencoder） 就是使用“编码器-解码器”架构对数据进行学习，从而得到可以将数据进行压缩表达的编码器。 graph LR     datap[&quot;数据&quot;] --&gt; encoder[&quot;编码器&quot;]     encoder --&gt; h[&quot;隐藏空间&quot;]">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-09-09T08:20:00.011Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="VAE">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/","path":"2025/09/03/reading/GANs-in-Action/2025-09-03-基于VAE的数字生成/","title":"基于VAE的数字生成"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于VAE的数字生成 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section">分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vae-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">VAE 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#vae-%E6%9E%B6%E6%9E%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">VAE 架构定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">自编码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">变分自编码器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-vae-%E7%94%9F%E6%88%90%E6%95%B0%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">基于 VAE 生成数字</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">2.2.</span> <span class="nav-text">定义编码器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text">定义解码器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">2.4.</span> <span class="nav-text">整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%AE%9A%E4%B9%89"><span class="nav-number">2.5.</span> <span class="nav-text">损失定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83"><span class="nav-number">2.6.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.7.</span> <span class="nav-text">可视化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BD%9C%E7%A9%BA%E9%97%B4%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.7.1.</span> <span class="nav-text">潜空间可视化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%BD%9C%E7%A9%BA%E9%97%B4%E7%94%9F%E6%88%90%E6%95%B0%E5%AD%97"><span class="nav-number">2.7.2.</span> <span class="nav-text">基于潜空间生成数字</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vae-%E7%9A%84%E4%B8%80%E4%BA%9B%E8%80%83%E8%99%91%E4%B8%8E%E6%8C%91%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">VAE 的一些考虑与挑战</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">138</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">72</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于VAE的数字生成 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于VAE的数字生成
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-09-03 00:00:00" itemprop="dateCreated datePublished" datetime="2025-09-03T00:00:00+08:00">2025-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Reading/" itemprop="url" rel="index"><span itemprop="name">Reading</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/09/03/reading/GANs-in-Action/2025-09-03-基于VAE的数字生成/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="vae-简介">VAE 简介</h1>
+<p>本文以一个简单的例子讲述 VAE 相关概念，以及使用 VAE
+架构生成数字的基本代码。</p>
+<h2 id="vae-架构定义">VAE 架构定义</h2>
+<h3 id="自编码器">自编码器</h3>
+<p><strong>自编码器（Autoencoder）</strong>
+就是使用“编码器-解码器”架构对数据进行学习，从而得到可以将数据进行压缩表达的编码器。</p>
+<pre class="mermaid">graph LR
+    datap["数据"] --> encoder["编码器"]
+    encoder --> h["隐藏空间"]
+    h --> decoder["解码器"]
+    decoder --> data*["生成数据"]</pre>
+<p>在学习之后，<code>data</code>与<code>data*</code>误差很小，隐藏层<code>hidden space</code>的维度也比<code>data</code>要小，这样编码器就起到了自编码的效果，对数据自身进行编码，得到一个更小的表达，而这个更小的表达是可以通过解码器解码回来的。</p>
+<h3 id="变分自编码器">变分自编码器</h3>
+<p>在自编码器中，隐藏层是一个张量，也就是一组数字，这些数字并不包含任何显式含义，这意味着我们无法控制生成结果。如果我们希望控制生成结果，那就意味着我们需要了解隐藏层的结构。</p>
+<p>最简单的 <strong>变分自编码器（Variational Autoencoder）</strong>
+的隐藏层不是一个张量，而是
+<strong>一组控制某个分布的参数</strong>，这个分布一般会采用高斯分布。拿最简单的高斯分布作为例子，高斯分布由两个参数控制，均值
+<span class="math inline">\(\mu\)</span> 以及方差 <span
+class="math inline">\(\delta\)</span>，也就是通过这两个值可以直接控制一个分布。由此
+VAE 的基本架构如下。</p>
+<pre class="mermaid">graph LR
+    data["数据"] --> encoder["编码器"]
+    encoder --> params["参数"]
+    params --> dist["高斯分布(参数)"]
+    dist --> decoder["解码器"]
+    decoder --> data*["生成数据"]</pre>
+<p>中间的部分实际上是使用“参数控制分布，然后从分布中进行采样，得到输出”这条链路来对输出进行“适当”的控制。其优点在于使得生成过程可以在一个连续的空间上进行。</p>
+<h1 id="基于-vae-生成数字">基于 VAE 生成数字</h1>
+<h2 id="准备工作">准备工作</h2>
+<p>首先引入基础库。数字库依然采用习以为常的<code>mnist</code>，这里需要注意的是<code>keras</code>的<code>backend</code>有些方法是无法使用的，所以同时直接引入<code>tensorflow</code>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Input, Dense, Lambda</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> losses </span><br><span class="line"><span class="keyword">from</span> keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<p>定义全局变量。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">batch_size = <span class="number">100</span>       <span class="comment"># 批大小</span></span><br><span class="line">original_dim = <span class="number">28</span> * <span class="number">28</span> <span class="comment"># mnist图像是28x28，输入时候转为以为数组</span></span><br><span class="line">latent_dim = <span class="number">2</span>         <span class="comment"># 潜空间维度</span></span><br><span class="line">intermediate_dim = <span class="number">256</span> <span class="comment"># 中间层维度</span></span><br><span class="line">nb_epoch = <span class="number">20</span>          <span class="comment"># 训练轮数</span></span><br></pre></td></tr></table></figure>
+<p>定义采样函数。在这个基础架构中，VAE的潜空间被建模为基础的高斯分布，高斯分布由两个参数定义，一个是均值，一个是标准差。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sampling</span>(<span class="params">args</span>):</span><br><span class="line">    z_mean, z_log_var = args</span><br><span class="line">    epsilon = tf.random.normal(</span><br><span class="line">        shape=(batch_size, latent_dim),</span><br><span class="line">        mean=<span class="number">0.</span></span><br><span class="line">        stddev=<span class="number">1.0</span>)</span><br><span class="line">    <span class="keyword">return</span> z_mean + tf.exp(z_log_var / <span class="number">2</span>) * epsilon</span><br></pre></td></tr></table></figure>
+<p>采样函数在基础高斯分布上进行采样。</p>
+<h2 id="定义编码器">定义编码器</h2>
+<p>下面是编码器的定义。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># creating the encoder</span></span><br><span class="line">x = Input(shape=(original_dim,), name=<span class="string">&#x27;input&#x27;</span>)</span><br><span class="line">h = Dense(intermediate_dim, activation=<span class="string">&#x27;relu&#x27;</span>, name=<span class="string">&#x27;encoding&#x27;</span>)(x)</span><br><span class="line">z_mean = Dense(latent_dim, name=<span class="string">&#x27;mean&#x27;</span>)(h)</span><br><span class="line">z_log_var = Dense(latent_dim, name=<span class="string">&#x27;log_var&#x27;</span>)(h)</span><br><span class="line">z = Lambda(sampling, output_shape=(latent_dim,), name=<span class="string">&#x27;z&#x27;</span>)([z_mean, z_log_var])</span><br><span class="line">encoder = Model(x, [z_mean, z_log_var, z], name=<span class="string">&#x27;encoder&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>输入先经过一个隐藏层<code>h</code>，然后经过两个线性层直接得到潜空间高斯分布的两个参数<code>z_mean</code>与<code>z_log_var</code>，通过<code>Lambda</code>层得到<code>z</code>。编码器是一个一进三出的模型，下面是带张量尺寸的示意图。</p>
+<pre class="mermaid">flowchart LR
+    x["x(784,)"] --> h["Dense(784x256)"]
+    subgraph encoder
+        h --> d1["Dense(256x2)"]
+        h --> d2["Dense(256x2)"]
+        d1 --> mean
+        d2 --> log_var
+    end
+
+    mean --> z_mean
+    log_var --> z_log_var
+    mean --> z
+    log_var --> z</pre>
+<h2 id="定义解码器">定义解码器</h2>
+<p>下面是解码器的定义。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># creating the decoder</span></span><br><span class="line">input_decoder = Input(shape=(latent_dim, ), name=<span class="string">&quot;decoder_input&quot;</span>)</span><br><span class="line">decoder_h = Dense(intermediate_dim, activation=<span class="string">&quot;relu&quot;</span>, name=<span class="string">&quot;decoder_h&quot;</span>)(input_decoder)</span><br><span class="line">x_decoded = Dense(original_dim, activation=<span class="string">&quot;sigmoid&quot;</span>, name=<span class="string">&quot;flat_decoder&quot;</span>)(decoder_h)</span><br><span class="line">decoder = Model(input_decoder, x_decoded, name=<span class="string">&quot;decoded&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>解码器是编码器的反向过程，将潜空间维度扩展为原始维度，中间每一步都是编码器的反向过程。</p>
+<pre class="mermaid">flowchart LR
+    z["z(2,)"] --> h["h(2x256)"]
+    subgraph decoder
+        h --> d["Dense(256x784)"]
+    end
+
+    d --> y["y(784)"]</pre>
+<h2 id="整体架构">整体架构</h2>
+<p>将编码器和解码器结合可得到整体架构。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">output_combined = decoder(encoder(x)[<span class="number">2</span>])</span><br><span class="line">vae = Model(x, output_combined)</span><br><span class="line">vae.summary()</span><br></pre></td></tr></table></figure>
+<p>下面是这个简单的 VAE 架构的参数。</p>
+<table>
+<thead>
+<tr>
+<th>Layer(type)</th>
+<th>Output Shape</th>
+<th>Param #</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input (<code>InputLayer</code>)</td>
+<td>(None, 784)</td>
+<td>0</td>
+</tr>
+<tr>
+<td>encoder (<code>Functional</code>)</td>
+<td>[(None, 2), (None, 2), (None, 2)]</td>
+<td>201,988</td>
+</tr>
+<tr>
+<td>decoder (<code>Functional</code>)</td>
+<td>(None, 784)</td>
+<td>202,256</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Total params: 404,244 (1.54 MB)</span><br><span class="line">Trainable params: 404,244 (1.54 MB)</span><br><span class="line">Non-trainable params: 0 (0.00 B)</span><br></pre></td></tr></table></figure>
+<h2 id="损失定义">损失定义</h2>
+<p>下面是损失定义。其中使用到 KL 散度，KL
+散度是用于衡量两个分布差异的数学概念。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">vae_loss</span>(<span class="params">y_true, y_pred</span>):</span><br><span class="line">    <span class="comment"># 从模型中获取z_mean和z_log_var</span></span><br><span class="line">    z_mean, z_log_var, _ = encoder(y_true)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算损失</span></span><br><span class="line">    xent_loss = original_dim * losses.binary_crossentropy(y_true, y_pred)</span><br><span class="line">    kl_loss = -<span class="number">0.5</span> * tf.reduce_sum(<span class="number">1</span> + z_log_var - tf.square(z_mean) - tf.exp(z_log_var), axis=-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> xent_loss + kl_loss</span><br></pre></td></tr></table></figure>
+<h2 id="训练">训练</h2>
+<p>编译一下模型。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">vae.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;rmsprop&#x27;</span>, loss=vae_loss)</span><br></pre></td></tr></table></figure>
+<p>对数据进行初步处理。从 mnist 数据集取出数据，全部转化为 <span
+class="math inline">\([0, 1]\)</span> 之间的浮点数。然后将数据修改为
+<code>(60000, 784)</code>
+的形状。第一维是逐条数据，第二维是平铺图片后得到的一维数组。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line"></span><br><span class="line">x_train = x_train.astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255.</span></span><br><span class="line">x_test = x_test.astype(<span class="string">&#x27;float32&#x27;</span>) / <span class="number">255.</span></span><br><span class="line">x_train = x_train.reshape((<span class="built_in">len</span>(x_train), np.prod(x_train.shape[<span class="number">1</span>:])))</span><br><span class="line">x_test = x_test.reshape((<span class="built_in">len</span>(x_test), np.prod(x_test.shape[<span class="number">1</span>:])))</span><br></pre></td></tr></table></figure>
+<p>开始训练。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">vae.fit(x_train, x_train,</span><br><span class="line">        shuffle=<span class="literal">True</span>,</span><br><span class="line">        epochs=nb_epoch,</span><br><span class="line">        batch_size=batch_size,</span><br><span class="line">        validation_data=(x_test, x_test), verbose=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Epoch 1/20</span><br><span class="line">600/600 ━━━━━━━━━━━━━━━━━━━━ 2s 3ms/step - loss: 224.2419 - val_loss: 173.2919</span><br><span class="line">Epoch 2/20</span><br><span class="line">600/600 ━━━━━━━━━━━━━━━━━━━━ 2s 3ms/step - loss: 172.8654 - val_loss: 168.8551</span><br><span class="line">...</span><br><span class="line">Epoch 19/20</span><br><span class="line">600/600 ━━━━━━━━━━━━━━━━━━━━ 2s 3ms/step - loss: 154.4506 - val_loss: 155.2631</span><br><span class="line">Epoch 20/20</span><br><span class="line">600/600 ━━━━━━━━━━━━━━━━━━━━ 2s 3ms/step - loss: 154.5143 - val_loss: 155.0309</span><br></pre></td></tr></table></figure>
+<p>从训练过程的输出可以监测损失是否逐步递减。</p>
+<h2 id="可视化">可视化</h2>
+<h3 id="潜空间可视化">潜空间可视化</h3>
+<p>由于在这个简单的 VAE
+模型中，潜空间只是一个二维高斯分布，所以可以比较简单地可视化出来。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># display a 2D plot of the digit classes in the latent space</span></span><br><span class="line">x_test_encoded = encoder.predict(x_test, batch_size=batch_size)[<span class="number">0</span>]</span><br><span class="line">plt.figure(figsize=(<span class="number">6</span>, <span class="number">6</span>))</span><br><span class="line">plt.scatter(x_test_encoded[:,<span class="number">0</span>], x_test_encoded[:,<span class="number">1</span>], c=y_test, cmap=<span class="string">&#x27;viridis&#x27;</span>)</span><br><span class="line">plt.colorbar()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>上面的代码取出数据集的测试数据<code>x_test</code>，将这些数据输入编码器<code>encoder</code>，由于编码器一进三出，其中的前两个输出是高斯分布的均值以及方差，由这两者作为散点图的两个维度，同时使用这些测试数据对应的结果<code>y_test</code>作为颜色。由此得到下图。</p>
+<figure>
+<img
+src="/assets/images/2025-09-03-基于VAE的数字生成/潜空间数字分布.png"
+alt="潜空间中的数字分布" />
+<figcaption aria-hidden="true">潜空间中的数字分布</figcaption>
+</figure>
+<p>从上图可以看到，同样的数字（同样颜色的点）分布在比较集中的区域，这意味着高斯分布模拟的比较好，相同的类别聚集在一起，并且不同类别之间有柔和的过渡。</p>
+<h3 id="基于潜空间生成数字">基于潜空间生成数字</h3>
+<p>下面使用潜空间生成数字。</p>
+<ul>
+<li>定义一个 15x15 的网格</li>
+<li>每个网格显示一个 28x28 的数字图片</li>
+<li>两层循环，逐行逐列生成
+<ul>
+<li>采样点就是对应格点的 <code>x</code> 和 <code>y</code></li>
+<li>将采样点作为输入传入解码器，得到一个数字图片的输出</li>
+<li>将其渲染在整个网格中具体的位置</li>
+</ul></li>
+</ul>
+<p>下面是对应的代码。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> norm</span><br><span class="line"></span><br><span class="line"><span class="comment"># display a 2D manifold of the digits</span></span><br><span class="line">n = <span class="number">15</span>  <span class="comment"># figure with 15x15 digits</span></span><br><span class="line">digit_size = <span class="number">28</span></span><br><span class="line">figure = np.zeros((digit_size * n, digit_size * n))</span><br><span class="line"><span class="comment"># linearly spaced coordinates on the unit square were transformed through the inverse CDF (ppf) of the Gaussian</span></span><br><span class="line"><span class="comment"># to produce values of the latent variables z, since the prior of the latent space is Gaussian</span></span><br><span class="line">grid_x = norm.ppf(np.linspace(<span class="number">0.05</span>, <span class="number">0.95</span>, n))</span><br><span class="line">grid_y = norm.ppf(np.linspace(<span class="number">0.05</span>, <span class="number">0.95</span>, n))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, yi <span class="keyword">in</span> <span class="built_in">enumerate</span>(grid_x):</span><br><span class="line">    <span class="keyword">for</span> j, xi <span class="keyword">in</span> <span class="built_in">enumerate</span>(grid_y):</span><br><span class="line">        z_sample = np.array([[xi, yi]])</span><br><span class="line">        x_decoded = decoder.predict(z_sample)</span><br><span class="line">        digit = x_decoded[<span class="number">0</span>].reshape(digit_size, digit_size)</span><br><span class="line">        figure[i * digit_size: (i + <span class="number">1</span>) * digit_size,</span><br><span class="line">               j * digit_size: (j + <span class="number">1</span>) * digit_size] = digit</span><br><span class="line"></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>, <span class="number">10</span>))</span><br><span class="line">plt.imshow(figure, cmap=<span class="string">&#x27;Greys_r&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<figure>
+<img
+src="/assets/images/2025-09-03-基于VAE的数字生成/潜空间生成数字.png"
+alt="潜空间生成数字" />
+<figcaption aria-hidden="true">潜空间生成数字</figcaption>
+</figure>
+<p>从上图可以看出几个特点</p>
+<ul>
+<li>相同的数字基本集中于同样的区域。</li>
+<li>数字之间的变化是比较模糊并连续的，这得益于 VAE
+架构是由一个连续高斯分布来控制输出。</li>
+</ul>
+<h1 id="vae-的一些考虑与挑战">VAE 的一些考虑与挑战</h1>
+<p>上面的建模有比较关键的一个考虑，那就是潜空间用了单峰的高斯分布。这其实只是一个
+<strong>假设</strong>，如果真实的分布并不是如此，那最后生成的效果不一定好，因为编码器学习的时候，就等于在一个不正确的模型上进行学习。</p>
+<p><img
+src="/assets/images/2025-09-03-基于VAE的数字生成/双峰高斯分布.png" /></p>
+<p>上面展示了一个例子。横坐标上面的黑色十字是样本，假设其真实分布是一个双峰的高斯分布，但我们事实上并不知道。如果我们用单峰的高斯分布去学习以及模拟，那无疑是不对的。更麻烦的一点在于，从图上来看，用单峰高斯分布生成的话会有大概率生成在中间区域，而中间区域甚至连一个样本都没有，这意味着生成出来的结果质量会很差。</p>
+<p>再次看上面的数字分布图，因为我们使用了单峰高斯分布，所以样本数字都比较集中于原点位置。想象一下如果我们的数据不是手写数字，而是人脸，人脸的特点千差万别，用单峰高斯分布就不会得到什么好结果了。</p>
+<p>在现实生活的诸多例子里，背后的潜空间肯定是一个更为复杂的分布，在建模的时候不太可能得到与实际一样的分布，这就会产生模型误差，而这也是
+VAE 建模的挑战与局限。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-%E5%9F%BA%E4%BA%8EVAE%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="基于VAE的数字生成">https://aquietzero.github.io/2025/09/03/reading/GANs-in-Action/2025-09-03-基于VAE的数字生成/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+              <a href="/tags/VAE/" rel="tag"># VAE</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/09/03/reading/GANs-in-Action/index/" rel="prev" title="GANs in Action">
+                  <i class="fa fa-angle-left"></i> GANs in Action
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/09/09/reading/GANs-in-Action/2025-09-09-%E5%9F%BA%E4%BA%8EGAN%E7%9A%84%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" rel="next" title="基于GAN的数字生成">
+                  基于GAN的数字生成 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">337k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">20:24</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
