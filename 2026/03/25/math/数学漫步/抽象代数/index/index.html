@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="抽象代数是现代数学的基石，它研究的是代数结构的抽象性质，从群、环、域到伽罗瓦理论，构成了解析几何、数论等学科的重要基础。这个系列主要是介绍抽象代数的基本概念和学习路径。 为什么需要抽象代数？ 在中学阶段，我们学习了多项式、方程、矩阵等具体的代数对象。到了大学阶段，接触的数学概念越来越多，就会发现这些概念及其运算有很强的“相似性”。而抽象代数，就是在代数上再进一步抽象，探索这些看似不同的对象之间的深">
+<meta property="og:type" content="article">
+<meta property="og:title" content="抽象代数概览">
+<meta property="og:url" content="https://aquietzero.github.io/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="抽象代数是现代数学的基石，它研究的是代数结构的抽象性质，从群、环、域到伽罗瓦理论，构成了解析几何、数论等学科的重要基础。这个系列主要是介绍抽象代数的基本概念和学习路径。 为什么需要抽象代数？ 在中学阶段，我们学习了多项式、方程、矩阵等具体的代数对象。到了大学阶段，接触的数学概念越来越多，就会发现这些概念及其运算有很强的“相似性”。而抽象代数，就是在代数上再进一步抽象，探索这些看似不同的对象之间的深">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-27T07:34:41.716Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/","path":"2026/03/25/math/数学漫步/抽象代数/index/","title":"抽象代数概览"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>抽象代数概览 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">为什么需要抽象代数？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%80%E8%A7%88"><span class="nav-number">2.</span> <span class="nav-text">核心概念一览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E8%B7%AF%E5%BE%84"><span class="nav-number">3.</span> <span class="nav-text">学习路径</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E7%9A%84%E9%80%92%E8%BF%9B%E4%B8%8E%E5%8C%85%E5%90%AB%E5%85%B3%E7%B3%BB"><span class="nav-number">4.</span> <span class="nav-text">概念的递进与包含关系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E8%BF%9B%E5%85%B3%E7%B3%BB%E5%9B%9B%E5%B1%82%E5%A4%A7%E5%8E%A6"><span class="nav-number">4.1.</span> <span class="nav-text">递进关系：四层大厦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E5%90%AB%E5%85%B3%E7%B3%BB%E5%AD%90%E7%BB%93%E6%9E%84%E7%9A%84%E8%AF%9E%E7%94%9F"><span class="nav-number">4.2.</span> <span class="nav-text">包含关系：子结构的诞生</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BE%A4%E8%AE%BA%E4%B8%AD%E7%9A%84%E5%8C%85%E5%90%AB%E9%93%BE"><span class="nav-number">4.2.1.</span> <span class="nav-text">群论中的包含链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF%E8%AE%BA%E4%B8%AD%E7%9A%84%E5%8C%85%E5%90%AB%E9%93%BE"><span class="nav-number">4.2.2.</span> <span class="nav-text">环论中的包含链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E6%89%A9%E5%BC%A0%E4%B8%AD%E7%9A%84%E5%8C%85%E5%90%AB%E9%93%BE"><span class="nav-number">4.2.3.</span> <span class="nav-text">域扩张中的包含链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB%E7%BE%A4%E4%B8%8E%E7%8E%AF%E7%9A%84%E5%B9%B3%E8%A1%8C"><span class="nav-number">4.3.</span> <span class="nav-text">对应关系：群与环的平行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E7%94%A8%E6%95%B4%E6%95%B0%E4%B8%B2%E8%B5%B7%E6%89%80%E6%9C%89%E6%A6%82%E5%BF%B5"><span class="nav-number">5.</span> <span class="nav-text">例子：用整数串起所有概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E9%9B%86%E5%90%88%E5%88%B0%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">1. 从集合到群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%BE%A4%E4%B8%8E%E5%BE%AA%E7%8E%AF%E7%BE%A4"><span class="nav-number">5.2.</span> <span class="nav-text">2. 子群与循环群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E8%A7%84%E5%AD%90%E7%BE%A4%E4%B8%8E%E5%95%86%E7%BE%A4"><span class="nav-number">5.3.</span> <span class="nav-text">3. 正规子群与商群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="nav-number">5.4.</span> <span class="nav-text">4. 环结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E6%83%B3"><span class="nav-number">5.5.</span> <span class="nav-text">5. 理想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A0%E7%90%86%E6%83%B3%E4%B8%8E%E6%9E%81%E5%A4%A7%E7%90%86%E6%83%B3"><span class="nav-number">5.6.</span> <span class="nav-text">6. 素理想与极大理想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E6%89%A9%E5%BC%A0%E4%B8%8E%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA"><span class="nav-number">5.7.</span> <span class="nav-text">7. 域扩张与伽罗瓦理论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-number">7.</span> <span class="nav-text">目录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="抽象代数概览 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          抽象代数概览
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-25 00:00:00" itemprop="dateCreated datePublished" datetime="2026-03-25T00:00:00+08:00">2026-03-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/03/25/math/数学漫步/抽象代数/index/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>抽象代数是现代数学的基石，它研究的是代数结构的抽象性质，从群、环、域到伽罗瓦理论，构成了解析几何、数论等学科的重要基础。这个系列主要是介绍抽象代数的基本概念和学习路径。</p>
+<h1 id="为什么需要抽象代数">为什么需要抽象代数？</h1>
+<p>在中学阶段，我们学习了多项式、方程、矩阵等具体的代数对象。到了大学阶段，接触的数学概念越来越多，就会发现这些概念及其运算有很强的“相似性”。而抽象代数，就是在代数上再进一步抽象，探索这些看似不同的对象之间的深层的共同结构。</p>
+<p>例如：</p>
+<ul>
+<li>整数加法与向量加法、矩阵加法在"封闭性""结合律"等性质上惊人相似</li>
+<li>置换的复合与数的乘法在"可逆性"上具有共同特征</li>
+</ul>
+<p>“代数”，实际上是使用符号来代替数，数能进行运算，代数也能进行运算。在代数的整个领域中，最基本的两个概念莫过于<strong>集合</strong>与<strong>操作</strong>，而抽象代数就是对这些集合，操作的共性进行抽象。</p>
+<h1 id="核心概念一览">核心概念一览</h1>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>群</td>
+<td>带有一个二元运算的集合</td>
+<td><span class="math inline">\((\mathbb{Z}, +)\)</span>、<span
+class="math inline">\(S_n\)</span></td>
+</tr>
+<tr>
+<td>环</td>
+<td>带有两个二元运算的集合</td>
+<td><span class="math inline">\((\mathbb{Z}, +, \times)\)</span></td>
+</tr>
+<tr>
+<td>域</td>
+<td>环且除法运算良好</td>
+<td><span class="math inline">\((\mathbb{Q}, +, \times)\)</span></td>
+</tr>
+<tr>
+<td>同态</td>
+<td>保持运算的映射</td>
+<td><span class="math inline">\(f(x+y)=f(x)+f(y)\)</span></td>
+</tr>
+<tr>
+<td>同构</td>
+<td>双射的同态</td>
+<td>结构完全相同的映射</td>
+</tr>
+</tbody>
+</table>
+<h1 id="学习路径">学习路径</h1>
+<ol type="1">
+<li><strong>集合论基础</strong>：理解映射、等价关系、商集</li>
+<li><strong>群论</strong>：从具体群到抽象群，理解子群、商群、群同态</li>
+<li><strong>环与域</strong>：引入第二个运算，理解理想与商环</li>
+<li><strong>伽罗瓦理论</strong>：连接域扩张与群论，解决方程根的问题</li>
+</ol>
+<p>抽象代数的学习是一个从具体到抽象、再从抽象回归具体的过程。建议在学习时始终联系具体的例子，在抽象概念与具体对象之间反复跳转，最终达到融会贯通。</p>
+<h1 id="概念的递进与包含关系">概念的递进与包含关系</h1>
+<h2 id="递进关系四层大厦">递进关系：四层大厦</h2>
+<p>抽象代数的概念可以分成四个递进的层次：</p>
+<ul>
+<li><strong>第一层</strong>：集合 → 映射 → 等价关系 → 商集</li>
+<li><strong>第二层</strong>：群 → 子群 → 正规子群 → 商群 → 群同态</li>
+<li><strong>第三层</strong>：环 → 理想 → 商环 → 域</li>
+<li><strong>第四层</strong>：域扩张 → 伽罗瓦群 → 伽罗瓦对应</li>
+</ul>
+<p>每一层都是对前一层的"升级"：</p>
+<ul>
+<li><strong>集合</strong>：最基础的概念，所有其他概念都基于集合</li>
+<li><strong>从集合到群</strong>：给集合加上一个运算，要求运算可逆</li>
+<li><strong>从群到环</strong>：再增加一个运算（乘法），要求乘法对加法有分配律</li>
+<li><strong>从环到域</strong>：要求乘法也可逆（除零外）</li>
+<li><strong>从域到伽罗瓦理论</strong>：研究域的对称性（自同构群）</li>
+</ul>
+<h2 id="包含关系子结构的诞生">包含关系：子结构的诞生</h2>
+<h3 id="群论中的包含链">群论中的包含链</h3>
+<p><span class="math display">\[
+\begin{align}
+\text{群} &amp;\supset \text{阿贝尔群} \supset \text{循环群} \\
+\text{群} &amp;\supset \text{置换群} \supset \text{交错群}
+\end{align}
+\]</span></p>
+<p><strong>群</strong>：满足封闭性、结合律、单位元、逆元的代数结构</p>
+<p><strong>阿贝尔群</strong>（交换群）：在群的基础上增加交换律 <span
+class="math inline">\(ab = ba\)</span></p>
+<ul>
+<li>例如：<span class="math inline">\((\mathbb{Z}, +)\)</span>、<span
+class="math inline">\((\mathbb{Q}^\times, \times)\)</span>、<span
+class="math inline">\((\mathbb{R}^n, +)\)</span></li>
+<li>反例：<span
+class="math inline">\(GL_n(\mathbb{R})\)</span>（矩阵乘法一般不交换）</li>
+</ul>
+<p><strong>循环群</strong>：由一个元素生成的群，同构于 <span
+class="math inline">\(\mathbb{Z}\)</span> 或 <span
+class="math inline">\(\mathbb{Z}_n\)</span></p>
+<ul>
+<li>例子：<span class="math inline">\(\mathbb{Z}_6 = \langle [1]
+\rangle\)</span>，每个元素都是 <span class="math inline">\([1]\)</span>
+的幂</li>
+<li>所有循环群都是阿贝尔群（因为 <span class="math inline">\(a^n \cdot
+a^m = a^{n+m} = a^m \cdot a^n\)</span>）</li>
+</ul>
+<p><strong>置换群 <span
+class="math inline">\(S_n\)</span></strong>：<span
+class="math inline">\(n\)</span> 个元素的所有置换组成的群，<span
+class="math inline">\(|S_n| = n!\)</span></p>
+<ul>
+<li><span class="math inline">\(S_1\)</span>: 1个元素，只有恒等变换</li>
+<li><span class="math inline">\(S_2\)</span>: 2个元素，<span
+class="math inline">\(\{e, (12)\}\)</span></li>
+<li><span class="math inline">\(S_3\)</span>:
+6个元素，最小的非阿贝尔群</li>
+<li>特点：<span class="math inline">\(S_n\)</span>（<span
+class="math inline">\(n \geq 3\)</span>）都不是阿贝尔群</li>
+</ul>
+<p><strong>交错群 <span
+class="math inline">\(A_n\)</span></strong>：<span
+class="math inline">\(S_n\)</span> 中所有偶置换组成的子群，<span
+class="math inline">\(|A_n| = n!/2\)</span></p>
+<ul>
+<li><span class="math inline">\(A_3 = \{e, (123), (132)\}\)</span>
+同构于 <span class="math inline">\(\mathbb{Z}_3\)</span></li>
+<li><span class="math inline">\(A_4\)</span>:
+12阶，没有非平凡正规子群（<strong>单群</strong>）</li>
+<li><span class="math inline">\(A_5\)</span>:
+60阶，最小的非交换单群，在伽罗瓦理论中起关键作用</li>
+</ul>
+<h3 id="环论中的包含链">环论中的包含链</h3>
+<p><span class="math display">\[
+\begin{align}
+\text{环} &amp;\supset \text{整环} \supset \text{域} \\
+\text{环} &amp;\supset \text{主理想环}
+\end{align}
+\]</span></p>
+<p><strong>环</strong>：带有加法和乘法两个运算的集合</p>
+<ul>
+<li>加法构成阿贝尔群</li>
+<li>乘法构成半群（有结合律）</li>
+<li>乘法对加法满足分配律</li>
+</ul>
+<p><strong>整环</strong>：没有零因子的环（若 <span
+class="math inline">\(ab = 0\)</span>，则 <span class="math inline">\(a
+= 0\)</span> 或 <span class="math inline">\(b = 0\)</span>）</p>
+<ul>
+<li>例如：<span class="math inline">\(\mathbb{Z}\)</span>、<span
+class="math inline">\(\mathbb{Z}[x]\)</span>、<span
+class="math inline">\(\mathbb{Q}[x]\)</span></li>
+<li>反例：<span class="math inline">\(\mathbb{Z}_6\)</span>
+不是整环，因为 <span class="math inline">\(2 \times 3 = 0\)</span></li>
+</ul>
+<p><strong>域</strong>：每个非零元素都有乘法逆元的环（可做除法）</p>
+<ul>
+<li>例如：<span class="math inline">\(\mathbb{Q}\)</span>、<span
+class="math inline">\(\mathbb{R}\)</span>、<span
+class="math inline">\(\mathbb{C}\)</span>、<span
+class="math inline">\(\mathbb{Z}_p\)</span>（<span
+class="math inline">\(p\)</span> 为素数）</li>
+<li>所有域都是整环（因为 <span class="math inline">\(ab = 0\)</span> 且
+<span class="math inline">\(a \neq 0\)</span>，则 <span
+class="math inline">\(b = a^{-1} \cdot 0 = 0\)</span>）</li>
+</ul>
+<p><strong>主理想环</strong>：所有理想都由单个元素生成的环</p>
+<ul>
+<li>例如：<span class="math inline">\(\mathbb{Z}\)</span>、<span
+class="math inline">\(k[x]\)</span>（<span
+class="math inline">\(k\)</span> 为域）</li>
+<li><span class="math inline">\(\mathbb{Z}[x]\)</span>
+不是主理想环（<span class="math inline">\((2, x)\)</span>
+不是主理想）</li>
+</ul>
+<h3 id="域扩张中的包含链">域扩张中的包含链</h3>
+<p><span class="math display">\[\text{域扩张} \supset \text{代数扩张}
+\supset \text{有限扩张} \supset \text{伽罗瓦扩张}\]</span></p>
+<p><strong>域扩张</strong>：<span class="math inline">\(K/F\)</span>
+表示 <span class="math inline">\(F\)</span> 是 <span
+class="math inline">\(K\)</span> 的子域</p>
+<ul>
+<li>例如：<span
+class="math inline">\(\mathbb{R}/\mathbb{Q}\)</span>、<span
+class="math inline">\(\mathbb{C}/\mathbb{R}\)</span>、<span
+class="math inline">\(\mathbb{Q}(\sqrt{2})/\mathbb{Q}\)</span></li>
+</ul>
+<p><strong>代数扩张</strong>：扩张中每个元素都是其下方域的代数元</p>
+<ul>
+<li><span class="math inline">\(\mathbb{Q}(\sqrt{2})/\mathbb{Q}\)</span>
+是代数的（<span class="math inline">\(\sqrt{2}\)</span> 是 <span
+class="math inline">\(x^2 - 2\)</span> 的根）</li>
+<li><span class="math inline">\(\mathbb{R}/\mathbb{Q}\)</span>
+不是代数的（<span class="math inline">\(\pi\)</span> 是超越元）</li>
+</ul>
+<p><strong>有限扩张</strong>：扩张次数 <span
+class="math inline">\([K:F]\)</span> 有限</p>
+<ul>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt{2}) : \mathbb{Q}] =
+2\)</span></li>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt[3]{2}, \omega) :
+\mathbb{Q}] = 6\)</span></li>
+<li>所有有限扩张都是代数扩张</li>
+</ul>
+<p><strong>伽罗瓦扩张</strong>：正规可分扩张</p>
+<ul>
+<li><strong>正规</strong>：<span class="math inline">\(K\)</span>
+是某多项式的分裂域</li>
+<li><strong>可分</strong>：最小多项式没有重根</li>
+<li><span class="math inline">\(|\text{Gal}(K/F)| = [K : F]\)</span>
+是伽罗瓦扩张的标志</li>
+<li>例如：<span
+class="math inline">\(\mathbb{Q}(\sqrt{2})/\mathbb{Q}\)</span>
+是伽罗瓦的</li>
+<li>例如：<span
+class="math inline">\(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q}\)</span>
+不是正规的（缺复根）</li>
+</ul>
+<p>每当我们给代数结构加上新条件时，就会产生新的子类。这些子类各有其特点和用途：</p>
+<h2 id="对应关系群与环的平行">对应关系：群与环的平行</h2>
+<table>
+<thead>
+<tr>
+<th>群论概念</th>
+<th>环论概念</th>
+<th>本质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>子群</td>
+<td>子环</td>
+<td>保持运算的子集</td>
+</tr>
+<tr>
+<td>正规子群</td>
+<td>理想</td>
+<td>可作商运算的子集</td>
+</tr>
+<tr>
+<td>商群</td>
+<td>商环</td>
+<td>对商集的运算</td>
+</tr>
+<tr>
+<td>同态的核</td>
+<td>同态的核</td>
+<td>正规子群/理想</td>
+</tr>
+<tr>
+<td>同构定理</td>
+<td>同构定理</td>
+<td>保持结构的映射</td>
+</tr>
+</tbody>
+</table>
+<h1 id="例子用整数串起所有概念">例子：用整数串起所有概念</h1>
+<p>我们用整数集 <span class="math inline">\(\mathbb{Z}\)</span>
+来演示这些概念如何层层展开：</p>
+<h2 id="从集合到群">1. 从集合到群</h2>
+<p><span class="math inline">\(\mathbb{Z}\)</span>
+配上<strong>加法</strong>运算：</p>
+<ul>
+<li>封闭性：整数之和还是整数，满足封闭性</li>
+<li>结合律：<span class="math inline">\((a+b)+c = a+(b+c)\)</span></li>
+<li>单位元：<span class="math inline">\(0\)</span>，<span
+class="math inline">\(0+a=a+0=a\)</span></li>
+<li>逆元：<span class="math inline">\(-a\)</span>，<span
+class="math inline">\(a+(-a)=0\)</span></li>
+</ul>
+<p>由于整数加法满足交换律，所以 <span class="math inline">\((\mathbb{Z},
++)\)</span> 是一个<strong>阿贝尔群</strong></p>
+<h2 id="子群与循环群">2. 子群与循环群</h2>
+<p><span class="math inline">\(2\mathbb{Z} = \{\ldots, -4, -2, 0, 2, 4,
+\ldots\}\)</span> 是 <span class="math inline">\(\mathbb{Z}\)</span>
+的<strong>子群</strong>，且： <span class="math inline">\(\mathbb{Z} =
+\langle 1 \rangle = \{1^n \mid n \in \mathbb{Z}\}\)</span> → <span
+class="math inline">\((\mathbb{Z}, +)\)</span>
+是<strong>循环群</strong>（因为每个元素都是 <span
+class="math inline">\(1\)</span>
+的"幂"，对一个操作重复执行产生整个集合，循环群 <span
+class="math inline">\(\langle 1 \rangle\)</span> 基于整数 <span
+class="math inline">\(1\)</span> 以及加法，生成整个整数集）</p>
+<h2 id="正规子群与商群">3. 正规子群与商群</h2>
+<p><span class="math inline">\(6\mathbb{Z}\)</span> 是 <span
+class="math inline">\(\mathbb{Z}\)</span>
+的<strong>正规子群</strong>（因为 <span
+class="math inline">\(\mathbb{Z}\)</span>
+是阿贝尔群，所有子群都正规）。</p>
+<p>商群： <span class="math display">\[\mathbb{Z}/6\mathbb{Z} = \{[0],
+[1], [2], [3], [4], [5]\}\]</span></p>
+<p>这是模 <span class="math inline">\(6\)</span> 的剩余类环，<span
+class="math inline">\(|[1]| = 6\)</span>，<span
+class="math inline">\(|[2]| = 3\)</span>，<span
+class="math inline">\(|[3]| = 2\)</span>。</p>
+<p>→ 拉格朗日定理：<span class="math inline">\(6\mathbb{Z}\)</span>
+的指数是 <span class="math inline">\(6\)</span>，<span
+class="math inline">\(|\mathbb{Z}/6\mathbb{Z}| = 6\)</span></p>
+<h2 id="环结构">4. 环结构</h2>
+<p><span class="math inline">\(\mathbb{Z}\)</span>
+加上<strong>乘法</strong>，变成<strong>环</strong>：</p>
+<ul>
+<li>加法：阿贝尔群</li>
+<li>乘法：半群（有结合律）</li>
+<li>分配律：<span class="math inline">\(a \times (b+c) = a \times b + a
+\times c\)</span></li>
+<li>单位元：<span class="math inline">\(1\)</span></li>
+</ul>
+<p>但 <span class="math inline">\(\mathbb{Z}\)</span>
+<strong>不是域</strong>（<span class="math inline">\(2\)</span>
+没有乘法逆元！）</p>
+<h2 id="理想">5. 理想</h2>
+<p><span class="math inline">\((6) = 6\mathbb{Z}\)</span> 是 <span
+class="math inline">\(\mathbb{Z}\)</span>
+的<strong>理想</strong>（实际上由 <span class="math inline">\(6\)</span>
+生成的主理想）：</p>
+<ul>
+<li>对加法封闭：<span class="math inline">\(6a + 6b = 6(a+b) \in
+(6)\)</span></li>
+<li>吸收性：<span class="math inline">\(n \cdot 6k = 6(nk) \in
+(6)\)</span></li>
+</ul>
+<p>商环 <span class="math inline">\(\mathbb{Z}/(6) \cong
+\mathbb{Z}_6\)</span></p>
+<h2 id="素理想与极大理想">6. 素理想与极大理想</h2>
+<ul>
+<li><span class="math inline">\((5)\)</span>
+是<strong>素理想</strong>（因为 <span
+class="math inline">\(\mathbb{Z}/(5) \cong \mathbb{Z}_5\)</span>
+是整环）</li>
+<li><span class="math inline">\((5)\)</span>
+也是<strong>极大理想</strong>（因为 <span
+class="math inline">\(\mathbb{Z}_5\)</span> 是域）</li>
+<li><span class="math inline">\((6)\)</span> 不是素理想（因为 <span
+class="math inline">\([2] \times [3] = [0]\)</span>，但 <span
+class="math inline">\([2] \neq [0]\)</span>，<span
+class="math inline">\([3] \neq [0]\)</span>）</li>
+</ul>
+<h2 id="域扩张与伽罗瓦理论">7. 域扩张与伽罗瓦理论</h2>
+<p>最后，进入域的领域：</p>
+<p>取 <span class="math inline">\(\mathbb{Q}\)</span>（有理数域），添加
+<span class="math inline">\(\sqrt{2}\)</span>： <span
+class="math display">\[\mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b
+\in \mathbb{Q}\}\]</span></p>
+<ul>
+<li>这是一个<strong>单扩张</strong></li>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt{2}) : \mathbb{Q}] =
+2\)</span>（因为 <span class="math inline">\(1, \sqrt{2}\)</span>
+是基）</li>
+<li>最小多项式：<span class="math inline">\(x^2 -
+2\)</span>（不可约）</li>
+<li><strong>伽罗瓦群</strong>：<span
+class="math inline">\(\text{Gal}(\mathbb{Q}(\sqrt{2})/\mathbb{Q}) \cong
+\mathbb{Z}_2\)</span>，由 <span class="math inline">\(\sqrt{2} \mapsto
+-\sqrt{2}\)</span> 生成</li>
+</ul>
+<p>→ 这是最简单的<strong>伽罗瓦扩张</strong>例子！</p>
+<hr />
+<h1 id="总结">总结</h1>
+<p>从 <span class="math inline">\(\mathbb{Z}\)</span>
+出发，我们看到了：</p>
+<ol type="1">
+<li><strong>集合层面</strong>：<span
+class="math inline">\(\mathbb{Z}\)</span> 是集合</li>
+<li><strong>群层面</strong>：<span class="math inline">\((\mathbb{Z},
++)\)</span> 是循环群，有子群 <span
+class="math inline">\(n\mathbb{Z}\)</span>、商群 <span
+class="math inline">\(\mathbb{Z}/n\mathbb{Z}\)</span></li>
+<li><strong>环层面</strong>：<span class="math inline">\((\mathbb{Z}, +,
+\times)\)</span> 是环，有理想 <span
+class="math inline">\((n)\)</span>、商环 <span
+class="math inline">\(\mathbb{Z}_n\)</span></li>
+<li><strong>域层面</strong>：<span
+class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 的二次扩张，其伽罗瓦群是 <span
+class="math inline">\(\mathbb{Z}_2\)</span></li>
+</ol>
+<p>这条路径就是学习抽象代数的完整旅程——从具体整数出发，一步步走向抽象的伽罗瓦理论！</p>
+<h1 id="目录">目录</h1>
+<ul>
+<li><a href="/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-25-%E9%9B%86%E5%90%88/" title="集合论 - 映射与运算">集合论 - 映射与运算</a></li>
+<li><a href="/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-25-%E7%AD%89%E4%BB%B7%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%88%92%E5%88%86/" title="等价关系与划分 - 抽象的分类法">等价关系与划分 - 抽象的分类法</a></li>
+<li><a href="/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E7%BE%A4/" title="群 - 从具体到抽象">群 - 从具体到抽象</a></li>
+<li><a href="/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/" title="子群与陪集：群的内部结构">子群与陪集：群的内部结构</a></li>
+<li><a href="/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/" title="循环群与生成元：最&quot;简单&quot;的群">循环群与生成元：最&quot;简单&quot;的群</a></li>
+<li><a href="/2026/04/07/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-07-%E7%BD%AE%E6%8D%A2%E7%BE%A4%E4%B8%8E%E5%AF%B9%E7%A7%B0%E7%BE%A4/" title="置换群与对称群：有限群的核心">置换群与对称群：有限群的核心</a></li>
+<li><a href="/2026/04/08/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-08-%E6%AD%A3%E8%A7%84%E5%AD%90%E7%BE%A4%E4%B8%8E%E5%95%86%E7%BE%A4/" title="正规子群与商群：陪集的代数结构">正规子群与商群：陪集的代数结构</a></li>
+<li><a href="/2026/04/09/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-09-%E7%BE%A4%E5%90%8C%E6%80%81%E4%B8%8E%E5%90%8C%E6%9E%84/" title="群同态与同构：群之间的映射">群同态与同构：群之间的映射</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/index/" title="抽象代数概览">https://aquietzero.github.io/2026/03/25/math/数学漫步/抽象代数/index/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/03/life/%E5%BE%80%E4%BA%8B%E7%B3%BB%E5%88%97/2026-02-03-%E9%9A%8F%E6%83%B3/" rel="prev" title="随想 - 2026/02/03">
+                  <i class="fa fa-angle-left"></i> 随想 - 2026/02/03
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-25-%E9%9B%86%E5%90%88/" rel="next" title="集合论 - 映射与运算">
+                  集合论 - 映射与运算 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">385k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:21</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

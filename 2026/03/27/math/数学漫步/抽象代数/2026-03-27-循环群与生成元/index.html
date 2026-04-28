@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="循环群是最简单的一类群，它们由一个元素反复运算生成。循环群的结构完全清晰——它们要么同构于整数加法群，要么同构于模 \(n\) 剩余类加法群。理解循环群是理解更复杂群结构的起点。 循环群的定义 定义 若存在 \(a \in G\)，使得 \(G &#x3D; \langle a \rangle &#x3D; \{a^n \mid n \in \mathbb{Z}\}\)，则称 \(G\) 是循环群，\(a\)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="循环群与生成元：最&quot;简单&quot;的群">
+<meta property="og:url" content="https://aquietzero.github.io/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="循环群是最简单的一类群，它们由一个元素反复运算生成。循环群的结构完全清晰——它们要么同构于整数加法群，要么同构于模 \(n\) 剩余类加法群。理解循环群是理解更复杂群结构的起点。 循环群的定义 定义 若存在 \(a \in G\)，使得 \(G &#x3D; \langle a \rangle &#x3D; \{a^n \mid n \in \mathbb{Z}\}\)，则称 \(G\) 是循环群，\(a\)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-08T03:02:22.378Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta property="article:tag" content="循环群">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/","path":"2026/03/27/math/数学漫步/抽象代数/2026-03-27-循环群与生成元/","title":"循环群与生成元：最\"简单\"的群"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>循环群与生成元：最"简单"的群 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">循环群的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">1.2.</span> <span class="nav-text">通俗解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">循环群的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E5%8A%A0%E6%B3%95%E7%BE%A4-mathbbz"><span class="nav-number">2.1.</span> <span class="nav-text">整数加法群 \(\mathbb{Z}\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1-n-%E5%8A%A0%E6%B3%95%E7%BE%A4-mathbbz_n"><span class="nav-number">2.2.</span> <span class="nav-text">模 \(n\)
+加法群 \(\mathbb{Z}_n\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#n-%E6%AC%A1%E5%8D%95%E4%BD%8D%E6%A0%B9%E7%BE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">\(n\)
+次单位根群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">循环群的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%BE%AA%E7%8E%AF%E7%BE%A4%E5%90%8C%E6%9E%84%E5%AE%9A%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">定理：循环群同构定理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%85%83%E7%9A%84%E5%88%A4%E5%AE%9A"><span class="nav-number">4.</span> <span class="nav-text">生成元的判定</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86mathbbz_n-%E7%9A%84%E7%94%9F%E6%88%90%E5%85%83"><span class="nav-number">4.1.</span> <span class="nav-text">定理：\(\mathbb{Z}_n\) 的生成元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%AE%BA%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0"><span class="nav-number">4.2.</span> <span class="nav-text">推论：欧拉函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E5%AD%90%E7%BE%A4"><span class="nav-number">5.</span> <span class="nav-text">循环群的子群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E5%AD%90%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">定理：循环群的子群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90mathbbz_12-%E7%9A%84%E5%AD%90%E7%BE%A4"><span class="nav-number">5.2.</span> <span class="nav-text">例子：\(\mathbb{Z}_{12}\) 的子群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86%E5%BE%AA%E7%8E%AF%E7%BE%A4%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">中国剩余定理：循环群的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E4%B8%AD%E5%9B%BD%E5%89%A9%E4%BD%99%E5%AE%9A%E7%90%86%E7%BE%A4%E8%AE%BA%E7%89%88%E6%9C%AC"><span class="nav-number">6.1.</span> <span class="nav-text">定理：中国剩余定理（群论版本）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%AE%BA%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E7%9A%84%E4%B9%98%E6%B3%95%E5%85%AC%E5%BC%8F"><span class="nav-number">6.2.</span> <span class="nav-text">推论：欧拉函数的乘法公式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">8.</span> <span class="nav-text">概念关系图</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="循环群与生成元：最"简单"的群 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          循环群与生成元：最"简单"的群
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-27 00:00:00" itemprop="dateCreated datePublished" datetime="2026-03-27T00:00:00+08:00">2026-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/03/27/math/数学漫步/抽象代数/2026-03-27-循环群与生成元/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="/assets/lib/2d-graph/graph2d.js"></script>
+<p><link rel="stylesheet" href="/assets/lib/2d-graph/graph2d.css"></p>
+<p>循环群是最简单的一类群，它们由一个元素反复运算生成。循环群的结构完全清晰——它们要么同构于整数加法群，要么同构于模
+<span class="math inline">\(n\)</span>
+剩余类加法群。理解循环群是理解更复杂群结构的起点。</p>
+<h1 id="循环群的定义">循环群的定义</h1>
+<h2 id="定义">定义</h2>
+<p>若存在 <span class="math inline">\(a \in G\)</span>，使得 <span
+class="math inline">\(G = \langle a \rangle = \{a^n \mid n \in
+\mathbb{Z}\}\)</span>，则称 <span class="math inline">\(G\)</span>
+是<strong>循环群</strong>，<span class="math inline">\(a\)</span> 称为
+<span class="math inline">\(G\)</span>
+的一个<strong>生成元</strong>。</p>
+<h2 id="通俗解释">通俗解释</h2>
+<p>循环群就是可以"绕圈"的群。从一个元素 <span
+class="math inline">\(a\)</span> 出发，不断做运算 <span
+class="math inline">\(a, a^2, a^3,
+\ldots\)</span>，如果最后能回到单位元，那就形成一个有限的"圈"；如果永远回不来，那就是一个无限的"链"。</p>
+<blockquote>
+<p>💡 想象一个时钟：指针从 <span class="math inline">\(12\)</span>
+点出发，转到 <span class="math inline">\(1\)</span> 点、再转到 <span
+class="math inline">\(2\)</span> 点……转了一圈后又回到 <span
+class="math inline">\(12\)</span> 点。</p>
+</blockquote>
+<h1 id="循环群的例子">循环群的例子</h1>
+<h2 id="整数加法群-mathbbz">整数加法群 <span
+class="math inline">\(\mathbb{Z}\)</span></h2>
+<p><span class="math inline">\(\mathbb{Z} = \langle 1 \rangle =
+\{\ldots, -2, -1, 0, 1, 2, \ldots\}\)</span>，是无限循环群。</p>
+<p>注意 <span class="math inline">\(\langle 1 \rangle = \{1^n \mid n \in
+\mathbb{Z}\}\)</span>，这里 <span class="math inline">\(1^n\)</span>
+在加法群中就是 <span class="math inline">\(n \cdot 1 =
+n\)</span>。关键在于 <span class="math inline">\(n\)</span>
+取遍<strong>所有整数</strong>，不只是正整数：</p>
+<ul>
+<li><span class="math inline">\(n = 1, 2, 3, \ldots\)</span> 得到 <span
+class="math inline">\(1, 2, 3, \ldots\)</span>（反复加 <span
+class="math inline">\(1\)</span>）</li>
+<li><span class="math inline">\(n = 0\)</span> 得到 <span
+class="math inline">\(0\)</span>（单位元）</li>
+<li><span class="math inline">\(n = -1, -2, -3, \ldots\)</span> 得到
+<span class="math inline">\(-1, -2, -3, \ldots\)</span>（反复加 <span
+class="math inline">\(1\)</span> 的逆元 <span
+class="math inline">\(-1\)</span>）</li>
+</ul>
+<p>所以"生成"不只是朝一个方向累加，还包括朝逆方向累加——<span
+class="math inline">\(-1\)</span> 正是 <span
+class="math inline">\(1\)</span> 的逆元，<span
+class="math inline">\(-2\)</span> 就是两次加逆元，以此类推。</p>
+<p>同理，<span class="math inline">\((-1)\)</span> 也是生成元，因为
+<span class="math inline">\(\langle -1 \rangle = \{\ldots, 2, 1, 0, -1,
+-2, \ldots\} = \mathbb{Z}\)</span>。</p>
+<h2 id="模-n-加法群-mathbbz_n">模 <span class="math inline">\(n\)</span>
+加法群 <span class="math inline">\(\mathbb{Z}_n\)</span></h2>
+<p><span class="math inline">\(\mathbb{Z}_n = \{[0], [1], \ldots,
+[n-1]\}\)</span> 在加法下是 <span class="math inline">\(n\)</span>
+阶循环群。</p>
+<p>例如 <span class="math inline">\(\mathbb{Z}_6 = \langle [1]
+\rangle\)</span>：</p>
+<ul>
+<li><span class="math inline">\([1]^1 = [1]\)</span></li>
+<li><span class="math inline">\([1]^2 = [2]\)</span></li>
+<li><span class="math inline">\([1]^3 = [3]\)</span></li>
+<li><span class="math inline">\([1]^4 = [4]\)</span></li>
+<li><span class="math inline">\([1]^5 = [5]\)</span></li>
+<li><span class="math inline">\([1]^6 = [6] = [0]\)</span></li>
+</ul>
+<p><span class="math inline">\([2]\)</span> 不是生成元，因为 <span
+class="math inline">\(\langle [2] \rangle = \{[0], [2],
+[4]\}\)</span>。</p>
+<h2 id="n-次单位根群"><span class="math inline">\(n\)</span>
+次单位根群</h2>
+<p>复数乘法群 <span class="math inline">\(\mathbb{C}^\times\)</span>
+中的 <span class="math inline">\(n\)</span> 次单位根： <span
+class="math display">\[\mu_n = \{e^{2\pi i k/n} \mid k = 0, 1, \ldots,
+n-1\}\]</span></p>
+<p>在乘法下构成 <span class="math inline">\(n\)</span>
+阶循环群，生成元是 <span class="math inline">\(e^{2\pi
+i/n}\)</span>。</p>
+<p>以 <span class="math inline">\(n = 6\)</span> 为例，6
+次单位根均匀分布在复平面的单位圆上：</p>
+<div id="unit-roots-graph">
+
+</div>
+<script>
+  ;(function () {
+    const n = 6
+    const g = new Graph2D('#unit-roots-graph', {
+      width: 460,
+      height: 460,
+      xRange: [-1.6, 1.6],
+      yRange: [-1.6, 1.6],
+      padding: 40,
+      background: '#fafbfc',
+      defaultStroke: '#b0b8c4',
+      defaultLineWidth: 1,
+      pointColor: '#4a90d9',
+      pointRadius: 5,
+    })
+
+    // 坐标轴 + 单位圆
+    g.drawGrid({ color: '#f0f0f0' })
+    g.drawAxes({ xLabel: 'Re', yLabel: 'Im' })
+    g.circle(0, 0, 1, { stroke: '#b0b8c4', lineWidth: 1, fill: false })
+
+    // 画各个单位根以及连线
+    const roots = []
+    for (let k = 0; k < n; k++) {
+      const angle = (2 * Math.PI * k) / n
+      roots.push([Math.cos(angle), Math.sin(angle)])
+    }
+
+    // 连接相邻单位根（展示循环结构）
+    for (let k = 0; k < n; k++) {
+      const [x1, y1] = roots[k]
+      const [x2, y2] = roots[(k + 1) % n]
+      g.line(x1, y1, x2, y2, { stroke: '#4a90d9', lineWidth: 1, dash: [4, 3] })
+    }
+
+    // 从原点到生成元的向量
+    g.line(0, 0, roots[1][0], roots[1][1], {
+      stroke: '#e74c3c',
+      lineWidth: 1.5,
+    })
+
+    // 标注每个单位根
+    const labels = [
+      '$1$',
+      '$e^{2\\pi i/6}$',
+      '$e^{4\\pi i/6}$',
+      '$e^{6\\pi i/6}$',
+      '$e^{8\\pi i/6}$',
+      '$e^{10\\pi i/6}$',
+    ]
+    const offsets = [
+      [8, -8],     // k=0 (1,0) → 右上
+      [8, -12],    // k=1 → 右上
+      [-90, -12],  // k=2 → 左上
+      [-20, 10],   // k=3 (-1,0) → 左下
+      [-90, 8],    // k=4 → 左下
+      [8, 8],      // k=5 → 右下
+    ]
+
+    for (let k = 0; k < n; k++) {
+      const [x, y] = roots[k]
+      g.point(x, y, {
+        color: '#4a90d9',
+        label: labels[k],
+        labelOffset: offsets[k],
+        labelColor: '#333',
+      })
+    }
+
+    g.render()
+  })()
+</script>
+<h1 id="循环群的结构">循环群的结构</h1>
+<h2 id="定理循环群同构定理">定理：循环群同构定理</h2>
+<ol type="1">
+<li><strong>无限循环群</strong>：无限循环群同构于 <span
+class="math inline">\((\mathbb{Z}, +)\)</span></li>
+<li><strong>有限循环群</strong>：<span class="math inline">\(n\)</span>
+阶循环群同构于 <span class="math inline">\((\mathbb{Z}_n,
++)\)</span></li>
+</ol>
+<aside data-title="证明">
+<p>设 <span class="math inline">\(G = \langle a \rangle\)</span>
+是循环群。</p>
+<p>定义映射 <span class="math inline">\(\phi: \mathbb{Z} \to
+G\)</span>，<span class="math inline">\(n \mapsto a^n\)</span>：</p>
+<ul>
+<li>若 <span class="math inline">\(G\)</span> 无限，则 <span
+class="math inline">\(\phi\)</span> 是双射，且 <span
+class="math inline">\(\phi(m+n) = a^{m+n} = a^m a^n =
+\phi(m)\phi(n)\)</span>，故 <span class="math inline">\(G \cong
+\mathbb{Z}\)</span></li>
+<li>若 <span class="math inline">\(|G| = n\)</span>，则 <span
+class="math inline">\(a^n = e\)</span>，令 <span
+class="math inline">\(\bar{n}\)</span> 表示 <span
+class="math inline">\(n\)</span> 的等价类，则 <span
+class="math inline">\(\phi(\bar{k}) =
+a^k\)</span>，易验证这是双射且保持运算，故 <span class="math inline">\(G
+\cong \mathbb{Z}_n\)</span></li>
+</ul>
+</aside>
+<p>这个定理告诉我们：所有循环群"本质上"就是 <span
+class="math inline">\(\mathbb{Z}\)</span> 或 <span
+class="math inline">\(\mathbb{Z}_n\)</span>！所以循环群的结构是完全清楚的。</p>
+<h1 id="生成元的判定">生成元的判定</h1>
+<h2 id="定理mathbbz_n-的生成元">定理：<span
+class="math inline">\(\mathbb{Z}_n\)</span> 的生成元</h2>
+<p>在 <span class="math inline">\(\mathbb{Z}_n\)</span> 中，<span
+class="math inline">\([a]\)</span> 是生成元当且仅当 <span
+class="math inline">\(\gcd(a, n) = 1\)</span>。</p>
+<aside data-title="证明">
+<p><span class="math inline">\(\langle [a] \rangle = \{[ka] \mid k \in
+\mathbb{Z}\}\)</span>。 若 <span class="math inline">\(\gcd(a, n) = d
+&gt; 1\)</span>，则 <span class="math inline">\(a = d \cdot
+a&#39;\)</span>，<span class="math inline">\(n = d \cdot
+n&#39;\)</span>，有 <span class="math inline">\(na = d \cdot n&#39;
+\cdot a&#39; = 0\)</span> 在 <span
+class="math inline">\(\mathbb{Z}_n\)</span> 中，所以循环子群的阶为 <span
+class="math inline">\(n/d &lt; n\)</span>，不能生成整个群。</p>
+若 <span class="math inline">\(\gcd(a, n) = 1\)</span>，则存在整数 <span
+class="math inline">\(s, t\)</span> 使得 <span class="math inline">\(sa
++ tn = 1\)</span>（贝祖定理），于是 <span class="math inline">\([1] =
+[sa + tn] = [s][a]\)</span>，故 <span class="math inline">\([1]\)</span>
+可以由 <span class="math inline">\([a]\)</span>
+的幂表示，故整个群可以生成。
+</aside>
+<h2 id="推论欧拉函数">推论：欧拉函数</h2>
+<p><span class="math inline">\(\mathbb{Z}_n^\times = \{[a] \in
+\mathbb{Z}_n \mid \gcd(a, n) = 1\}\)</span> 是乘法群，其阶为 <span
+class="math inline">\(\varphi(n)\)</span>（欧拉函数）。</p>
+<p>例如：</p>
+<ul>
+<li><span class="math inline">\(\mathbb{Z}_6^\times = \{[1],
+[5]\}\)</span>，<span class="math inline">\(\varphi(6) = 2\)</span></li>
+<li><span class="math inline">\(\mathbb{Z}_7^\times = \{[1], [2], [3],
+[4], [5], [6]\}\)</span>，<span class="math inline">\(\varphi(7) =
+6\)</span>（因为 <span class="math inline">\(7\)</span> 是素数）</li>
+</ul>
+<blockquote>
+<p>💡 费马小定理：若 <span class="math inline">\(\gcd(a, p) =
+1\)</span>，则 <span class="math inline">\(a^{p-1} \equiv 1
+\pmod{p}\)</span>，这正是 <span class="math inline">\(|
+\mathbb{Z}_p^\times | = p-1\)</span> 的拉格朗日定理的直接推论！</p>
+</blockquote>
+<h1 id="循环群的子群">循环群的子群</h1>
+<h2 id="定理循环群的子群">定理：循环群的子群</h2>
+<p>设 <span class="math inline">\(G = \langle a \rangle\)</span>
+是循环群。</p>
+<ol type="1">
+<li><span class="math inline">\(G\)</span> 的每个子群都是循环群</li>
+<li>若 <span class="math inline">\(|G| = n\)</span>，则对每个 <span
+class="math inline">\(d \mid n\)</span>，恰好有一个 <span
+class="math inline">\(d\)</span> 阶子群</li>
+</ol>
+<aside data-title="证明">
+<p>设 <span class="math inline">\(H \leq G\)</span>。若 <span
+class="math inline">\(H = \{e\}\)</span>，则 <span
+class="math inline">\(H = \langle e \rangle\)</span> 是循环群。</p>
+<p>若 <span class="math inline">\(H \neq \{e\}\)</span>，设 <span
+class="math inline">\(k\)</span> 是使得 <span class="math inline">\(a^k
+\in H\)</span> 的最小正整数。先证 <span class="math inline">\(H =
+\langle a^k \rangle\)</span>：</p>
+<ul>
+<li>由构造，<span class="math inline">\(a^k \in H\)</span>，故 <span
+class="math inline">\(\langle a^k \rangle \subseteq H\)</span></li>
+<li>对任意 <span class="math inline">\(a^m \in H\)</span>，用带余除法
+<span class="math inline">\(m = qk + r\)</span>，其中 <span
+class="math inline">\(0 \leq r &lt; k\)</span>，则 <span
+class="math inline">\(a^r = a^{m-qk} \in H\)</span>，由 <span
+class="math inline">\(k\)</span> 的最小性得 <span
+class="math inline">\(r = 0\)</span>，故 <span class="math inline">\(a^m
+= (a^k)^q \in \langle a^k \rangle\)</span></li>
+</ul>
+<p>故 <span class="math inline">\(H = \langle a^k \rangle\)</span>
+是循环群。</p>
+若 <span class="math inline">\(|G| = n\)</span>，设 <span
+class="math inline">\(H = \langle a^k \rangle\)</span>，则 <span
+class="math inline">\(|H| = n / \gcd(k, n)\)</span>。反之，对每个 <span
+class="math inline">\(d \mid n\)</span>，取 <span
+class="math inline">\(k = n/d\)</span>，则 <span
+class="math inline">\(a^k\)</span> 生成的子群阶为 <span
+class="math inline">\(n/k = d\)</span>。
+</aside>
+<h2 id="例子mathbbz_12-的子群">例子：<span
+class="math inline">\(\mathbb{Z}_{12}\)</span> 的子群</h2>
+<p><span class="math inline">\(12\)</span> 的因子有 <span
+class="math inline">\(1, 2, 3, 4, 6, 12\)</span>，故 <span
+class="math inline">\(\mathbb{Z}_{12}\)</span> 有唯一的：</p>
+<ul>
+<li><span class="math inline">\(1\)</span> 阶子群：<span
+class="math inline">\(\{[0]\}\)</span></li>
+<li><span class="math inline">\(2\)</span> 阶子群：<span
+class="math inline">\(\{[0], [6]\}\)</span></li>
+<li><span class="math inline">\(3\)</span> 阶子群：<span
+class="math inline">\(\{[0], [4], [8]\}\)</span></li>
+<li><span class="math inline">\(4\)</span> 阶子群：<span
+class="math inline">\(\{[0], [3], [6], [9]\}\)</span></li>
+<li><span class="math inline">\(6\)</span> 阶子群：<span
+class="math inline">\(\{[0], [2], [4], [6], [8], [10]\}\)</span></li>
+<li><span class="math inline">\(12\)</span> 阶子群：<span
+class="math inline">\(\mathbb{Z}_{12}\)</span> 本身</li>
+</ul>
+<h1 id="中国剩余定理循环群的应用">中国剩余定理：循环群的应用</h1>
+<h2 id="定理中国剩余定理群论版本">定理：中国剩余定理（群论版本）</h2>
+<p>若 <span class="math inline">\(\gcd(m, n) = 1\)</span>，则 <span
+class="math inline">\(\mathbb{Z}_{mn} \cong \mathbb{Z}_m \times
+\mathbb{Z}_n\)</span>。</p>
+<aside data-title="证明">
+<p>定义 <span class="math inline">\(\phi: \mathbb{Z}_{mn} \to
+\mathbb{Z}_m \times \mathbb{Z}_n\)</span>，<span
+class="math inline">\([k]_{mn} \mapsto ([k]_m, [k]_n)\)</span>。</p>
+<p>由于 <span class="math inline">\(\gcd(m, n) =
+1\)</span>，映射是：</p>
+<ul>
+<li><strong>单射</strong>：若 <span class="math inline">\(\phi([k]) =
+\phi([l])\)</span>，则 <span class="math inline">\(k \equiv l
+\pmod{m}\)</span> 且 <span class="math inline">\(k \equiv l
+\pmod{n}\)</span>，由中国剩余定理，<span class="math inline">\(k \equiv
+l \pmod{mn}\)</span>，故 <span class="math inline">\([k] =
+[l]\)</span></li>
+<li><strong>满射</strong>：两个有限群阶相等 (<span
+class="math inline">\(mn = mn\)</span>)，单射即满射</li>
+</ul>
+故为同构。
+</aside>
+<h2 id="推论欧拉函数的乘法公式">推论：欧拉函数的乘法公式</h2>
+<p>若 <span class="math inline">\(\gcd(m, n) = 1\)</span>，则 <span
+class="math inline">\(\varphi(mn) = \varphi(m) \cdot
+\varphi(n)\)</span>。</p>
+<p>因为 <span class="math inline">\(|\mathbb{Z}_{mn}^\times| =
+\varphi(mn)\)</span>，而 <span
+class="math inline">\(|\mathbb{Z}_m^\times \times \mathbb{Z}_n^\times| =
+\varphi(m)\varphi(n)\)</span>，同构给出相等。</p>
+<h1 id="小结">小结</h1>
+<ul>
+<li>循环群由一个元素生成，结构完全清楚</li>
+<li>无限循环群同构于 <span
+class="math inline">\(\mathbb{Z}\)</span>，<span
+class="math inline">\(n\)</span> 阶循环群同构于 <span
+class="math inline">\(\mathbb{Z}_n\)</span></li>
+<li><span class="math inline">\(\mathbb{Z}_n\)</span> 的生成元是那些与
+<span class="math inline">\(n\)</span> 互质的元素，个数为 <span
+class="math inline">\(\varphi(n)\)</span></li>
+<li>循环群的子群仍是循环群，对每个因子 <span class="math inline">\(d
+\mid n\)</span>，有唯一的 <span class="math inline">\(d\)</span>
+阶子群</li>
+<li>循环群是理解更复杂群结构的基石</li>
+</ul>
+<h1 id="概念关系图">概念关系图</h1>
+<p>下图展示了本篇核心概念——循环群、生成元、结构定理、子群、应用——及其内部结构和相互关系：</p>
+<div class="concept-graph"
+data-src="/assets/data/graphs/cyclic-group-generator.json">
+
+</div>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/03/27/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-27-%E5%BE%AA%E7%8E%AF%E7%BE%A4%E4%B8%8E%E7%94%9F%E6%88%90%E5%85%83/" title="循环群与生成元：最&quot;简单&quot;的群">https://aquietzero.github.io/2026/03/27/math/数学漫步/抽象代数/2026-03-27-循环群与生成元/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+              <a href="/tags/%E5%BE%AA%E7%8E%AF%E7%BE%A4/" rel="tag"># 循环群</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E7%BE%A4/" rel="prev" title="群 - 从具体到抽象">
+                  <i class="fa fa-angle-left"></i> 群 - 从具体到抽象
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%90%86%E6%83%B3%E4%B8%8E%E5%95%86%E7%8E%AF%EF%BC%9A%E7%8E%AF%E7%9A%84%22%E6%AD%A3%E8%A7%84%E5%AD%90%E7%BE%A4%22/" rel="next" title="理想与商环：环的"正规子群"">
+                  理想与商环：环的"正规子群" <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">385k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:21</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

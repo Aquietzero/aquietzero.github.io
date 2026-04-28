@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="伽罗瓦理论是抽象代数最辉煌的成就之一，它建立了域扩张与群论之间的深刻联系。用伽罗瓦理论，我们可以彻底回答&quot;五次方程为什么没有求根公式&quot;这个数学史上悬而未决的千年难题。 问题的起源：方程可解性 从一次到四次 数学史上，寻找多项式方程的&quot;求根公式&quot;是一条漫长的路：  一次方程 \(ax + b &#x3D; 0\)：显然可解，\(x &#x3D; -b&#x2F;a\) 二次方程 \(ax^2 + bx + c &#x3D; 0\)：古巴比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="伽罗瓦理论：群与方程的千年谜题">
+<meta property="og:url" content="https://aquietzero.github.io/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="伽罗瓦理论是抽象代数最辉煌的成就之一，它建立了域扩张与群论之间的深刻联系。用伽罗瓦理论，我们可以彻底回答&quot;五次方程为什么没有求根公式&quot;这个数学史上悬而未决的千年难题。 问题的起源：方程可解性 从一次到四次 数学史上，寻找多项式方程的&quot;求根公式&quot;是一条漫长的路：  一次方程 \(ax + b &#x3D; 0\)：显然可解，\(x &#x3D; -b&#x2F;a\) 二次方程 \(ax^2 + bx + c &#x3D; 0\)：古巴比">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-08T03:03:43.311Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="抽象代数">
+<meta property="article:tag" content="伽罗瓦理论">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/","path":"2026/04/02/math/数学漫步/抽象代数/2026-04-10-伽罗瓦理论：群与方程的千年谜题/","title":"伽罗瓦理论：群与方程的千年谜题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>伽罗瓦理论：群与方程的千年谜题 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E7%9A%84%E8%B5%B7%E6%BA%90%E6%96%B9%E7%A8%8B%E5%8F%AF%E8%A7%A3%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">问题的起源：方程可解性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%B8%80%E6%AC%A1%E5%88%B0%E5%9B%9B%E6%AC%A1"><span class="nav-number">1.1.</span> <span class="nav-text">从一次到四次</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E8%B4%9D%E5%B0%94-%E9%B2%81%E8%8F%B2%E5%B0%BC%E5%AE%9A%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">阿贝尔-鲁菲尼定理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%BD%E7%BD%97%E7%93%A6%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">伽罗瓦群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">2.2.</span> <span class="nav-text">通俗解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90textgalmathbbqsqrt2mathbbq"><span class="nav-number">2.3.</span> <span class="nav-text">例子：\(\text{Gal}(\mathbb{Q}(\sqrt{2})&#x2F;\mathbb{Q})\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90textgalmathbbqsqrt32-omegamathbbq"><span class="nav-number">2.4.</span> <span class="nav-text">例子：\(\text{Gal}(\mathbb{Q}(\sqrt[3]{2},
+\omega)&#x2F;\mathbb{Q})\)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%BD%E7%BD%97%E7%93%A6%E6%89%A9%E5%BC%A0"><span class="nav-number">3.</span> <span class="nav-text">伽罗瓦扩张</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A-1"><span class="nav-number">3.2.</span> <span class="nav-text">通俗解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%BD%E7%BD%97%E7%93%A6%E5%9F%BA%E6%9C%AC%E5%AE%9A%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">伽罗瓦基本定理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E4%BC%BD%E7%BD%97%E7%93%A6%E5%AF%B9%E5%BA%94"><span class="nav-number">4.1.</span> <span class="nav-text">定理：伽罗瓦对应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">通俗理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E4%BE%8B%E5%AD%90x3---2-%E7%9A%84%E4%BC%BD%E7%BD%97%E7%93%A6%E5%AF%B9%E5%BA%94"><span class="nav-number">4.3.</span> <span class="nav-text">完整例子：\(x^3 - 2\) 的伽罗瓦对应</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E6%96%B9%E7%A8%8B%E7%9A%84%E6%A0%B9%E5%BC%8F%E5%8F%AF%E8%A7%A3%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">应用：方程的根式可解性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E5%BC%8F%E6%89%A9%E5%BC%A0%E4%B8%8E%E5%8F%AF%E8%A7%A3%E7%BE%A4"><span class="nav-number">5.1.</span> <span class="nav-text">根式扩张与可解群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%A0%B9%E5%BC%8F%E6%89%A9%E5%BC%A0"><span class="nav-number">5.1.1.</span> <span class="nav-text">定义：根式扩张</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%AF%E8%A7%A3%E7%BE%A4"><span class="nav-number">5.1.2.</span> <span class="nav-text">定义：可解群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E4%BC%BD%E7%BD%97%E7%93%A6%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">定理：伽罗瓦判别法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3-1"><span class="nav-number">5.3.</span> <span class="nav-text">通俗理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E4%BA%8C%E6%AC%A1%E6%96%B9%E7%A8%8B"><span class="nav-number">5.4.</span> <span class="nav-text">例子：二次方程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E4%B8%89%E6%AC%A1%E6%96%B9%E7%A8%8B"><span class="nav-number">5.5.</span> <span class="nav-text">例子：三次方程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E5%9B%9B%E6%AC%A1%E6%96%B9%E7%A8%8B"><span class="nav-number">5.6.</span> <span class="nav-text">例子：四次方程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E6%AC%A1%E6%96%B9%E7%A8%8B%E4%B8%8D%E5%8F%AF%E8%A7%A3"><span class="nav-number">6.</span> <span class="nav-text">五次方程不可解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a_5-%E6%98%AF%E5%8D%95%E7%BE%A4"><span class="nav-number">6.1.</span> <span class="nav-text">\(A_5\) 是单群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#s_5-%E4%B8%8D%E6%98%AF%E5%8F%AF%E8%A7%A3%E7%BE%A4"><span class="nav-number">6.2.</span> <span class="nav-text">\(S_5\)
+不是可解群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E4%B8%80%E8%88%AC%E4%BA%94%E6%AC%A1%E6%96%B9%E7%A8%8B%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%A0%B9%E5%BC%8F%E6%B1%82%E8%A7%A3"><span class="nav-number">6.3.</span> <span class="nav-text">定理：一般五次方程不可用根式求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3-2"><span class="nav-number">6.4.</span> <span class="nav-text">通俗理解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">8.</span> <span class="nav-text">概念关系图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E5%88%97%E5%9B%9E%E9%A1%BE"><span class="nav-number">9.</span> <span class="nav-text">系列回顾</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="伽罗瓦理论：群与方程的千年谜题 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          伽罗瓦理论：群与方程的千年谜题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-02 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-02T00:00:00+08:00">2026-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/04/02/math/数学漫步/抽象代数/2026-04-10-伽罗瓦理论：群与方程的千年谜题/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>伽罗瓦理论是抽象代数最辉煌的成就之一，它建立了域扩张与群论之间的深刻联系。用伽罗瓦理论，我们可以彻底回答"五次方程为什么没有求根公式"这个数学史上悬而未决的千年难题。</p>
+<h1 id="问题的起源方程可解性">问题的起源：方程可解性</h1>
+<h2 id="从一次到四次">从一次到四次</h2>
+<p>数学史上，寻找多项式方程的"求根公式"是一条漫长的路：</p>
+<ul>
+<li><strong>一次方程</strong> <span class="math inline">\(ax + b =
+0\)</span>：显然可解，<span class="math inline">\(x = -b/a\)</span></li>
+<li><strong>二次方程</strong> <span class="math inline">\(ax^2 + bx + c
+= 0\)</span>：古巴比伦人就知道了，<span class="math inline">\(x =
+\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}\)</span></li>
+<li><strong>三次方程</strong>：16
+世纪意大利数学家卡尔达诺发表了求根公式（实际由塔尔塔利亚发现），涉及立方根</li>
+<li><strong>四次方程</strong>：卡尔达诺的学生费拉里找到了方法，通过巧妙的代换化为三次方程</li>
+</ul>
+<p>每一步都更难，但总能找到由加减乘除和开根号组成的公式。于是人们自然地问：</p>
+<blockquote>
+<p><strong>五次方程呢？</strong></p>
+</blockquote>
+<p>数学家们为此奋斗了近 300 年，直到 19 世纪初才有了答案。</p>
+<h2 id="阿贝尔-鲁菲尼定理">阿贝尔-鲁菲尼定理</h2>
+<p><strong>定理</strong>（阿贝尔，1824；鲁菲尼，1799）：一般五次及更高次方程<strong>没有求根公式</strong>——不存在用系数的加减乘除和开根号来表达根的公式。</p>
+<p>阿贝尔证明了"不存在"，但没有解释"为什么"。真正深入回答"什么时候可解，什么时候不可解"的，是年仅
+20 岁便英年早逝的伽罗瓦（Évariste Galois, 1811–1832）。</p>
+<aside>
+<p>💡
+伽罗瓦在决斗前夜写下了他的理论。他把域扩张和群论联系在一起，创造了一套能精确判断任意多项式方程是否可用根式求解的方法。这不仅回答了"五次方程为什么不可解"，还回答了"哪些五次方程可以解"。</p>
+</aside>
+<h1 id="伽罗瓦群">伽罗瓦群</h1>
+<h2 id="定义">定义</h2>
+<p>设 <span class="math inline">\(K/F\)</span> 是域扩张。<span
+class="math inline">\(K\)</span> 的所有 <strong><span
+class="math inline">\(F\)</span>-自同构</strong>（固定 <span
+class="math inline">\(F\)</span> 中每个元素的域自同构 <span
+class="math inline">\(\sigma: K \to K\)</span>）构成的群，称为 <span
+class="math inline">\(K/F\)</span> 的<strong>伽罗瓦群</strong>，记作
+<span class="math inline">\(\text{Gal}(K/F)\)</span>。</p>
+<p>更具体地说，<span class="math inline">\(\sigma \in
+\text{Gal}(K/F)\)</span> 需要满足： 1. <span
+class="math inline">\(\sigma: K \to K\)</span>
+是域同构（保持加法和乘法） 2. 对所有 <span class="math inline">\(a \in
+F\)</span>，<span class="math inline">\(\sigma(a) =
+a\)</span>（固定底域）</p>
+<p>群运算是函数复合。</p>
+<h2 id="通俗解释">通俗解释</h2>
+<p>伽罗瓦群度量的是域扩张的"对称性"。</p>
+<p>想象你在一张桌子上摆了几颗宝石（多项式的根），底座（底域 <span
+class="math inline">\(F\)</span>）固定不动。伽罗瓦群就是在不动底座的情况下，所有可能的"重新摆放宝石"的方式——前提是这种重新摆放必须保持所有代数关系不变。</p>
+<p>例如：<span class="math inline">\(\sqrt{2}\)</span> 和 <span
+class="math inline">\(-\sqrt{2}\)</span> 在 <span
+class="math inline">\(\mathbb{Q}\)</span> 上满足完全相同的代数关系（都是
+<span class="math inline">\(x^2 - 2 = 0\)</span>
+的根），所以"把它们互换"是一个合法的对称变换。但你不能把 <span
+class="math inline">\(\sqrt{2}\)</span> 换成 <span
+class="math inline">\(\sqrt{3}\)</span>，因为那会破坏代数关系。</p>
+<h2 id="例子textgalmathbbqsqrt2mathbbq">例子：<span
+class="math inline">\(\text{Gal}(\mathbb{Q}(\sqrt{2})/\mathbb{Q})\)</span></h2>
+<p><span class="math inline">\(\mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2}
+\mid a, b \in \mathbb{Q}\}\)</span>。</p>
+<p>一个 <span class="math inline">\(\mathbb{Q}\)</span>-自同构 <span
+class="math inline">\(\sigma\)</span> 必须固定所有有理数，所以完全由
+<span class="math inline">\(\sigma(\sqrt{2})\)</span> 决定。</p>
+<p>由于 <span class="math inline">\(\sigma\)</span> 保持运算，<span
+class="math inline">\(\sigma(\sqrt{2})^2 = \sigma(2) = 2\)</span>，所以
+<span class="math inline">\(\sigma(\sqrt{2}) =
+\pm\sqrt{2}\)</span>。</p>
+<p>于是只有两个自同构： - <span
+class="math inline">\(\text{id}\)</span>：<span class="math inline">\(a
++ b\sqrt{2} \mapsto a + b\sqrt{2}\)</span>（恒等） - <span
+class="math inline">\(\sigma\)</span>：<span class="math inline">\(a +
+b\sqrt{2} \mapsto a - b\sqrt{2}\)</span>（共轭）</p>
+<p><span
+class="math display">\[\text{Gal}(\mathbb{Q}(\sqrt{2})/\mathbb{Q}) =
+\{\text{id}, \sigma\} \cong \mathbb{Z}_2\]</span></p>
+<h2 id="例子textgalmathbbqsqrt32-omegamathbbq">例子：<span
+class="math inline">\(\text{Gal}(\mathbb{Q}(\sqrt[3]{2},
+\omega)/\mathbb{Q})\)</span></h2>
+<p>这是 <span class="math inline">\(x^3 - 2\)</span>
+的分裂域上的伽罗瓦群。三个根为： <span class="math display">\[\alpha_1 =
+\sqrt[3]{2}, \quad \alpha_2 = \omega\sqrt[3]{2}, \quad \alpha_3 =
+\omega^2\sqrt[3]{2}\]</span></p>
+<p>每个 <span class="math inline">\(\mathbb{Q}\)</span>-自同构必须将
+<span class="math inline">\(\{\alpha_1, \alpha_2, \alpha_3\}\)</span>
+的根互相置换（因为自同构保持多项式关系），同时也可能改变 <span
+class="math inline">\(\omega\)</span>。</p>
+<p>经过仔细分析，一共有 <span class="math inline">\(6\)</span>
+个自同构，它们对根的置换恰好给出了 <span
+class="math inline">\(S_3\)</span> 的全部 <span
+class="math inline">\(6\)</span> 个元素：</p>
+<p><span class="math display">\[\text{Gal}(\mathbb{Q}(\sqrt[3]{2},
+\omega)/\mathbb{Q}) \cong S_3\]</span></p>
+<aside>
+<p>💡 这解释了为什么三次方程<strong>可以</strong>用根式求解——<span
+class="math inline">\(S_3\)</span> 是可解群（后面会详细说明）。</p>
+</aside>
+<h1 id="伽罗瓦扩张">伽罗瓦扩张</h1>
+<h2 id="定义-1">定义</h2>
+<p>有限扩张 <span class="math inline">\(K/F\)</span>
+称为<strong>伽罗瓦扩张</strong>（或正规可分扩张），若它满足以下等价条件之一：</p>
+<ol type="1">
+<li><span class="math inline">\(K\)</span> 是 <span
+class="math inline">\(F\)</span>
+上某个可分多项式的<strong>分裂域</strong></li>
+<li><span class="math inline">\(|\text{Gal}(K/F)| = [K :
+F]\)</span>（自同构的个数等于扩张次数）</li>
+<li><span class="math inline">\(K^{\text{Gal}(K/F)} =
+F\)</span>（被所有自同构固定的元素恰好是 <span
+class="math inline">\(F\)</span>）</li>
+</ol>
+<h2 id="通俗解释-1">通俗解释</h2>
+<p>并非所有域扩张都是伽罗瓦扩张。伽罗瓦扩张是"对称性最好"的扩张——自同构的个数恰好等于扩张次数，不多不少。</p>
+<p><strong>反例</strong>：<span
+class="math inline">\(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q}\)</span>
+<strong>不是</strong>伽罗瓦扩张。这个域只包含一个实数根 <span
+class="math inline">\(\sqrt[3]{2}\)</span>，另外两个复数根不在其中。唯一的
+<span class="math inline">\(\mathbb{Q}\)</span>-自同构是恒等映射（<span
+class="math inline">\(\sqrt[3]{2}\)</span>
+只能映到自己——另外两个根不在这个域中）。所以 <span
+class="math inline">\(|\text{Gal}| = 1 \neq 3 =
+[\mathbb{Q}(\sqrt[3]{2}):\mathbb{Q}]\)</span>。</p>
+<p><strong>正例</strong>：<span
+class="math inline">\(\mathbb{Q}(\sqrt[3]{2},
+\omega)/\mathbb{Q}\)</span>
+<strong>是</strong>伽罗瓦扩张。所有三个根都在域中，<span
+class="math inline">\(|\text{Gal}| = 6 = [K:\mathbb{Q}]\)</span>。</p>
+<h1 id="伽罗瓦基本定理">伽罗瓦基本定理</h1>
+<h2 id="定理伽罗瓦对应">定理：伽罗瓦对应</h2>
+<p>设 <span class="math inline">\(K/F\)</span> 是伽罗瓦扩张，<span
+class="math inline">\(G =
+\text{Gal}(K/F)\)</span>。则存在如下<strong>反序一一对应</strong>：</p>
+<p><span class="math display">\[\{\text{中间域 } E : F \subseteq E
+\subseteq K\} \xleftrightarrow{1:1} \{\text{子群 } H \leq
+G\}\]</span></p>
+<p>对应规则是： - 中间域 <span class="math inline">\(E\)</span> <span
+class="math inline">\(\longrightarrow\)</span> 子群 <span
+class="math inline">\(H = \text{Gal}(K/E)\)</span> - 子群 <span
+class="math inline">\(H\)</span> <span
+class="math inline">\(\longrightarrow\)</span> 固定域 <span
+class="math inline">\(K^H = \{x \in K \mid \sigma(x) = x, \forall \sigma
+\in H\}\)</span></p>
+<p>并且： - <strong>反序</strong>：<span class="math inline">\(E_1
+\subseteq E_2 \Leftrightarrow H_1 \supseteq
+H_2\)</span>（域越大，对应的子群越小） -
+<strong>次数公式</strong>：<span class="math inline">\([K : E] =
+|H|\)</span>，<span class="math inline">\([E : F] = [G : H]\)</span> -
+<strong>正规性对应</strong>：<span class="math inline">\(E/F\)</span>
+是正规扩张 <span class="math inline">\(\Leftrightarrow\)</span> <span
+class="math inline">\(H \unlhd G\)</span>（<span
+class="math inline">\(H\)</span> 是 <span
+class="math inline">\(G\)</span> 的正规子群） - 此时 <span
+class="math inline">\(\text{Gal}(E/F) \cong G/H\)</span></p>
+<aside>
+<p><strong>证明</strong>（核心思路）：</p>
+<p><strong>映射是良定义的</strong>：<span
+class="math inline">\(\text{Gal}(K/E)\)</span> 确实是 <span
+class="math inline">\(G\)</span> 的子群（复合保持固定 <span
+class="math inline">\(E\)</span> 的性质）；<span
+class="math inline">\(K^H\)</span> 确实是 <span
+class="math inline">\(F\)</span> 和 <span
+class="math inline">\(K\)</span> 之间的中间域。</p>
+<p><strong>互逆性</strong>：</p>
+<ol type="a">
+<li><p>从 <span class="math inline">\(E\)</span> 出发：<span
+class="math inline">\(E \mapsto H = \text{Gal}(K/E) \mapsto
+K^H\)</span>。需要证 <span class="math inline">\(K^H =
+E\)</span>。由伽罗瓦扩张的条件 (3)（<span
+class="math inline">\(K^{\text{Gal}(K/E)} =
+E\)</span>），这正好成立。</p></li>
+<li><p>从 <span class="math inline">\(H\)</span> 出发：<span
+class="math inline">\(H \mapsto K^H = E \mapsto
+\text{Gal}(K/E)\)</span>。需要证 <span
+class="math inline">\(\text{Gal}(K/E) = H\)</span>。<span
+class="math inline">\(K/E\)</span> 也是伽罗瓦扩张，由条件 (2)，<span
+class="math inline">\(|\text{Gal}(K/E)| = [K:E] = |H|\)</span>，结合
+<span class="math inline">\(H \leq \text{Gal}(K/E)\)</span>，得 <span
+class="math inline">\(H = \text{Gal}(K/E)\)</span>。</p></li>
+</ol>
+<p><strong>正规性</strong>：<span class="math inline">\(E/F\)</span>
+正规意味着每个 <span class="math inline">\(F\)</span>-自同构将 <span
+class="math inline">\(E\)</span> 映到自身，即对每个 <span
+class="math inline">\(\sigma \in G\)</span>，<span
+class="math inline">\(\sigma(E) = E\)</span>。这等价于 <span
+class="math inline">\(\sigma H \sigma^{-1} = H\)</span>，即 <span
+class="math inline">\(H \unlhd G\)</span>。</p>
+</aside>
+<h2 id="通俗理解">通俗理解</h2>
+<p>伽罗瓦基本定理是整个伽罗瓦理论中最深刻、最优美的定理。它说的是：</p>
+<blockquote>
+<p><strong>域的结构和群的结构是同一枚硬币的两面。</strong></p>
+</blockquote>
+<p>域的"夹层"（中间域）与群的"子群"完美对应，而且关系是<strong>反转</strong>的——域越大，群越小。直觉上说，域越大，"自由度"越少（能固定更多元素的自同构越少），所以对应的子群越小。</p>
+<p>这就像一面"魔法镜子"：你在镜子的一面看到域的层级结构，在另一面看到群的子群格，两者完全一样（只是上下颠倒了）。</p>
+<h2 id="完整例子x3---2-的伽罗瓦对应">完整例子：<span
+class="math inline">\(x^3 - 2\)</span> 的伽罗瓦对应</h2>
+<p>取 <span class="math inline">\(f(x) = x^3 - 2\)</span>，分裂域 <span
+class="math inline">\(K = \mathbb{Q}(\sqrt[3]{2},
+\omega)\)</span>，<span class="math inline">\(G =
+\text{Gal}(K/\mathbb{Q}) \cong S_3\)</span>。</p>
+<p><strong><span class="math inline">\(S_3\)</span>
+的子群格</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 8%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr>
+<th>子群 <span class="math inline">\(H\)</span></th>
+<th>阶</th>
+<th>指数 <span class="math inline">\([G:H]\)</span></th>
+<th>固定域 <span class="math inline">\(K^H\)</span></th>
+<th><span class="math inline">\([K^H:\mathbb{Q}]\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\{e\}\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(6\)</span></td>
+<td><span class="math inline">\(K\)</span></td>
+<td><span class="math inline">\(6\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\langle (123) \rangle \cong
+A_3\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(\mathbb{Q}(\omega)\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\langle (23) \rangle\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+<td><span class="math inline">\(\mathbb{Q}(\sqrt[3]{2})\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\langle (12) \rangle\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+<td><span
+class="math inline">\(\mathbb{Q}(\omega\sqrt[3]{2})\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\langle (13) \rangle\)</span></td>
+<td><span class="math inline">\(2\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+<td><span
+class="math inline">\(\mathbb{Q}(\omega^2\sqrt[3]{2})\)</span></td>
+<td><span class="math inline">\(3\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(S_3\)</span></td>
+<td><span class="math inline">\(6\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(\mathbb{Q}\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>验证反序性</strong>：<span class="math inline">\(\{e\} \leq
+A_3 \leq S_3\)</span> 对应 <span class="math inline">\(K \supseteq
+\mathbb{Q}(\omega) \supseteq \mathbb{Q}\)</span>——子群越大，固定域越小
+✓</p>
+<p><strong>验证正规性</strong>：<span class="math inline">\(A_3 \unlhd
+S_3\)</span>（<span class="math inline">\(A_3\)</span> 是 <span
+class="math inline">\(S_3\)</span> 的唯一正规子群），对应的 <span
+class="math inline">\(\mathbb{Q}(\omega)/\mathbb{Q}\)</span> 是正规扩张
+✓。而 <span class="math inline">\(\langle(23)\rangle\)</span> 不是 <span
+class="math inline">\(S_3\)</span> 的正规子群，对应的 <span
+class="math inline">\(\mathbb{Q}(\sqrt[3]{2})/\mathbb{Q}\)</span>
+确实不是正规扩张 ✓。</p>
+<aside>
+<p>💡
+这个例子完美展现了伽罗瓦对应的威力：不需要直接分析复杂的域扩张结构，只要计算群的子群就够了！<span
+class="math inline">\(S_3\)</span>
+的子群一目了然，每个子群都给出一个中间域。</p>
+</aside>
+<h1 id="应用方程的根式可解性">应用：方程的根式可解性</h1>
+<h2 id="根式扩张与可解群">根式扩张与可解群</h2>
+<h3 id="定义根式扩张">定义：根式扩张</h3>
+<p>域扩张 <span class="math inline">\(K/F\)</span>
+称为<strong>根式扩张</strong>，若存在一条"链"： <span
+class="math display">\[F = K_0 \subseteq K_1 \subseteq K_2 \subseteq
+\cdots \subseteq K_m = K\]</span> 其中每一步 <span
+class="math inline">\(K_{i+1} = K_i(\alpha_i)\)</span>，且 <span
+class="math inline">\(\alpha_i^{n_i} \in
+K_i\)</span>（即每次只添加某个元素的 <span
+class="math inline">\(n_i\)</span> 次根）。</p>
+<h3 id="定义可解群">定义：可解群</h3>
+<p>有限群 <span class="math inline">\(G\)</span>
+称为<strong>可解群</strong>，若存在子群链： <span
+class="math display">\[G = G_0 \supseteq G_1 \supseteq G_2 \supseteq
+\cdots \supseteq G_k = \{e\}\]</span> 使得每个 <span
+class="math inline">\(G_{i+1} \unlhd G_i\)</span>（正规子群）且 <span
+class="math inline">\(G_i/G_{i+1}\)</span>
+是<strong>阿贝尔群</strong>。</p>
+<h2 id="定理伽罗瓦判别法">定理：伽罗瓦判别法</h2>
+<p>多项式方程 <span class="math inline">\(f(x) = 0\)</span>
+可用根式求解（即所有根都在某个根式扩张中），当且仅当其伽罗瓦群 <span
+class="math inline">\(\text{Gal}(E/F)\)</span>
+是<strong>可解群</strong>（其中 <span class="math inline">\(E\)</span>
+是 <span class="math inline">\(f\)</span> 的分裂域）。</p>
+<aside>
+<p><strong>证明</strong>（核心思路）：</p>
+<p><strong>根式 <span class="math inline">\(\Rightarrow\)</span>
+可解群</strong>：</p>
+<p>每一步根式扩张 <span
+class="math inline">\(K_i(\sqrt[n_i]{a})\)</span>
+的伽罗瓦群是循环群（阶整除 <span
+class="math inline">\(n_i\)</span>），循环群是阿贝尔的。通过伽罗瓦对应，整条链给出了伽罗瓦群的一个子群链，商群都是阿贝尔的——这就是可解群的定义。</p>
+<p><strong>可解群 <span class="math inline">\(\Rightarrow\)</span>
+根式</strong>：</p>
+<p>可解群的子群链 <span class="math inline">\(G \supseteq G_1 \supseteq
+\cdots \supseteq
+\{e\}\)</span>（阿贝尔商）对应中间域的链。每一步的伽罗瓦群是阿贝尔的，而阿贝尔扩张（在适当添加单位根后）可以由根式实现。逐步添加根式即可表达所有根。</p>
+</aside>
+<h2 id="通俗理解-1">通俗理解</h2>
+<p>这个定理把一个代数问题（方程能否用根号解）翻译成了一个群论问题（伽罗瓦群是否可解）。</p>
+<p>"可解群"这个名字不是巧合——它的命名正是因为与方程的可解性直接对应。可解群的特点是可以"一层一层"地分解为阿贝尔群，就像方程可以"一层一层"地用根式表达。</p>
+<ul>
+<li>阿贝尔群（交换群）对应最简单的根式操作——开 <span
+class="math inline">\(n\)</span> 次方</li>
+<li>可解群 = 可以逐层化为阿贝尔群 = 方程可以逐层用根式求解</li>
+</ul>
+<h2 id="例子二次方程">例子：二次方程</h2>
+<p><span class="math inline">\(f(x) = x^2 - 2\)</span>，分裂域 <span
+class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span>，<span
+class="math inline">\(\text{Gal} \cong \mathbb{Z}_2\)</span>。</p>
+<p><span class="math inline">\(\mathbb{Z}_2\)</span>
+是阿贝尔群，当然是可解群：<span class="math inline">\(\mathbb{Z}_2
+\supseteq \{e\}\)</span>。</p>
+<p>对应的根式解：<span class="math inline">\(x =
+\pm\sqrt{2}\)</span>。只需一步开方 ✓</p>
+<h2 id="例子三次方程">例子：三次方程</h2>
+<p><span class="math inline">\(f(x) = x^3 - 2\)</span>，分裂域 <span
+class="math inline">\(\mathbb{Q}(\sqrt[3]{2}, \omega)\)</span>，<span
+class="math inline">\(\text{Gal} \cong S_3\)</span>。</p>
+<p><span class="math inline">\(S_3\)</span> 是可解群，子群链为： <span
+class="math display">\[S_3 \supseteq A_3 \supseteq \{e\}\]</span></p>
+<ul>
+<li><span class="math inline">\(S_3/A_3 \cong
+\mathbb{Z}_2\)</span>（阿贝尔 ✓）</li>
+<li><span class="math inline">\(A_3/\{e\} \cong
+\mathbb{Z}_3\)</span>（阿贝尔 ✓）</li>
+</ul>
+<p>对应的根式求解过程： 1. 先用<strong>二次</strong>根式处理判别式（对应
+<span class="math inline">\(S_3/A_3 \cong \mathbb{Z}_2\)</span>） 2.
+再用<strong>三次</strong>根式求出根（对应 <span
+class="math inline">\(A_3 \cong \mathbb{Z}_3\)</span>）</p>
+<p>这正是卡尔达诺公式的结构！</p>
+<h2 id="例子四次方程">例子：四次方程</h2>
+<p>四次方程的伽罗瓦群是 <span class="math inline">\(S_4\)</span>
+的子群。<span class="math inline">\(S_4\)</span> 是可解群： <span
+class="math display">\[S_4 \supseteq A_4 \supseteq V_4 \supseteq
+\mathbb{Z}_2 \supseteq \{e\}\]</span></p>
+<p>其中 <span class="math inline">\(V_4 = \{e, (12)(34), (13)(24),
+(14)(23)\}\)</span>
+是克莱因四元群。每个商群都是阿贝尔的，所以四次方程可以用根式求解 ✓</p>
+<h1 id="五次方程不可解">五次方程不可解</h1>
+<h2 id="a_5-是单群"><span class="math inline">\(A_5\)</span> 是单群</h2>
+<p><strong>关键事实</strong>：交错群 <span
+class="math inline">\(A_5\)</span>（<span
+class="math inline">\(60\)</span>
+阶）是<strong>单群</strong>——它没有非平凡的正规子群。</p>
+<aside>
+<p>💡 <span class="math inline">\(A_5\)</span>
+是最小的非阿贝尔单群。对比一下：<span class="math inline">\(A_3 \cong
+\mathbb{Z}_3\)</span>（阿贝尔，可解），<span
+class="math inline">\(A_4\)</span> 有正规子群 <span
+class="math inline">\(V_4\)</span>（可解），但 <span
+class="math inline">\(A_5\)</span> 是"坚不可摧"的——无法进一步分解。</p>
+</aside>
+<h2 id="s_5-不是可解群"><span class="math inline">\(S_5\)</span>
+不是可解群</h2>
+<p>假设 <span class="math inline">\(S_5\)</span> 是可解群，则存在子群链
+<span class="math inline">\(S_5 = G_0 \supsetneq G_1 \supsetneq \cdots
+\supsetneq \{e\}\)</span>，每个商 <span
+class="math inline">\(G_i/G_{i+1}\)</span> 阿贝尔。</p>
+<p><span class="math inline">\(S_5\)</span> 唯一的非平凡正规子群是 <span
+class="math inline">\(A_5\)</span>（<span class="math inline">\(S_5/A_5
+\cong \mathbb{Z}_2\)</span>，阿贝尔没问题）。</p>
+<p>但 <span class="math inline">\(A_5\)</span>
+是单群——它没有非平凡正规子群！所以子群链在 <span
+class="math inline">\(A_5\)</span>
+处就<strong>卡住了</strong>：无法继续往下分解，<span
+class="math inline">\(A_5/\{e\} = A_5\)</span> 不是阿贝尔群（<span
+class="math inline">\(|A_5| = 60\)</span>）。</p>
+<p>因此 <span class="math inline">\(S_5\)</span> 不是可解群。</p>
+<h2
+id="定理一般五次方程不可用根式求解">定理：一般五次方程不可用根式求解</h2>
+<p>一般五次方程 <span class="math inline">\(x^5 + bx^3 + cx^2 + dx + e =
+0\)</span> 的伽罗瓦群是 <span class="math inline">\(S_5\)</span>。</p>
+<p><span class="math inline">\(S_5\)</span>
+不是可解群，由伽罗瓦判别法：<strong>一般五次方程没有根式解</strong>。</p>
+<h2 id="通俗理解-2">通俗理解</h2>
+<p>整条论证链如下：</p>
+<p><span class="math display">\[\boxed{A_5 \text{ 是单群}} \Rightarrow
+\boxed{S_5 \text{ 不可解}} \Rightarrow
+\boxed{\text{五次方程无根式解}}\]</span></p>
+<p>为什么恰好在五次"断裂"？</p>
+<ul>
+<li><span class="math inline">\(n \leq 4\)</span> 时，<span
+class="math inline">\(A_n\)</span> 不是单群（<span
+class="math inline">\(A_4\)</span> 有正规子群 <span
+class="math inline">\(V_4\)</span>，<span
+class="math inline">\(A_3\)</span> 本身阿贝尔），所以 <span
+class="math inline">\(S_n\)</span> 可解</li>
+<li><span class="math inline">\(n \geq 5\)</span> 时，<span
+class="math inline">\(A_n\)</span> 是单群且非阿贝尔，所以 <span
+class="math inline">\(S_n\)</span> 不可解</li>
+</ul>
+<p><span class="math inline">\(n = 5\)</span>
+是一道分水岭：交错群从"可分解"变为"不可分解"，对称群从"可解"变为"不可解"。</p>
+<aside>
+<p>💡
+这并不是说所有五次方程都无法求解！许多特殊的五次方程仍然有根式解（比如
+<span class="math inline">\(x^5 - 1 = 0\)</span>，伽罗瓦群是 <span
+class="math inline">\(\mathbb{Z}_5\)</span>，可解）。伽罗瓦理论说的是<strong>一般的</strong>五次方程（系数是独立的"字母"）不可用根式求解。</p>
+</aside>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>伽罗瓦群</strong> <span
+class="math inline">\(\text{Gal}(K/F)\)</span>
+是域扩张的对称群，由固定底域的自同构组成</li>
+<li><strong>伽罗瓦扩张</strong>是"对称性最好"的扩张：<span
+class="math inline">\(|\text{Gal}| = [K:F]\)</span></li>
+<li><strong>伽罗瓦基本定理</strong>：中间域 <span
+class="math inline">\(\xleftrightarrow{1:1}\)</span>
+子群（反序对应），正规扩张 <span
+class="math inline">\(\leftrightarrow\)</span> 正规子群</li>
+<li><strong>伽罗瓦判别法</strong>：方程可用根式求解 <span
+class="math inline">\(\Leftrightarrow\)</span> 伽罗瓦群是可解群</li>
+<li><span class="math inline">\(A_5\)</span> 是单群 <span
+class="math inline">\(\Rightarrow\)</span> <span
+class="math inline">\(S_5\)</span> 不可解 <span
+class="math inline">\(\Rightarrow\)</span>
+<strong>一般五次方程无根式解</strong></li>
+</ul>
+<p>伽罗瓦理论完美地展现了群论与域论的对应关系：群的代数结构精确刻画了方程根之间的对称性，而这种对称性决定了方程能否用根式求解。从这个意义上说，伽罗瓦理论是现代代数学的起点。</p>
+<h1 id="概念关系图">概念关系图</h1>
+<p>下图展示了本篇核心概念——伽罗瓦群、伽罗瓦扩张、基本定理、可解性判别——及其相互关系：</p>
+<div class="concept-graph"
+data-src="/assets/data/graphs/galois-overview.json">
+
+</div>
+<h1 id="系列回顾">系列回顾</h1>
+<p>本系列从集合与映射出发，经过等价关系、群论（群、子群、陪集、循环群、置换群、同态）、环论（环、理想）、域扩张，最终到达伽罗瓦理论。这条路径展现了抽象代数如何从具体走向抽象，又如何用抽象理论解决具体的数学问题。</p>
+<p>希望这个系列能帮助你建立起对抽象代数的整体认识！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/" title="伽罗瓦理论：群与方程的千年谜题">https://aquietzero.github.io/2026/04/02/math/数学漫步/抽象代数/2026-04-10-伽罗瓦理论：群与方程的千年谜题/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+              <a href="/tags/%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA/" rel="tag"># 伽罗瓦理论</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/" rel="prev" title="域扩张：走向伽罗瓦理论的桥梁">
+                  <i class="fa fa-angle-left"></i> 域扩张：走向伽罗瓦理论的桥梁
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/02/computer/AI-Coding/2026-04-02-%E5%B7%B2%E6%9C%89%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Harness%20Engineering/" rel="next" title="已有项目引入 Harness Engineering">
+                  已有项目引入 Harness Engineering <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">385k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:21</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

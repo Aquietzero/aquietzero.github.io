@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="学习完群的基本概念后，我们来探索群的内部结构。子群本身也是一个群；而陪集则是将群&quot;分割&quot;成若干等大块的工具。拉格朗日定理揭示了子群阶数与群阶数之间的深刻联系。 子群 定义 设 \(H\) 是群 \(G\) 的非空子集。若 \(H\) 在 \(G\) 的运算下也构成一个群，则称 \(H\) 是 \(G\) 的一个子群，记作 \(H \leq G\)。 通俗解释 子群就是&quot;群中套群&quot;。\(H\) 中的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="子群与陪集：群的内部结构">
+<meta property="og:url" content="https://aquietzero.github.io/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="学习完群的基本概念后，我们来探索群的内部结构。子群本身也是一个群；而陪集则是将群&quot;分割&quot;成若干等大块的工具。拉格朗日定理揭示了子群阶数与群阶数之间的深刻联系。 子群 定义 设 \(H\) 是群 \(G\) 的非空子集。若 \(H\) 在 \(G\) 的运算下也构成一个群，则称 \(H\) 是 \(G\) 的一个子群，记作 \(H \leq G\)。 通俗解释 子群就是&quot;群中套群&quot;。\(H\) 中的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-08T03:01:56.670Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="群论">
+<meta property="article:tag" content="抽象代数">
+<meta property="article:tag" content="子群">
+<meta property="article:tag" content="陪集">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/","path":"2026/03/26/math/数学漫步/抽象代数/2026-03-26-子群与陪集/","title":"子群与陪集：群的内部结构"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>子群与陪集：群的内部结构 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%BE%A4"><span class="nav-number">1.</span> <span class="nav-text">子群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">1.2.</span> <span class="nav-text">通俗解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%BE%A4%E7%9A%84%E5%88%A4%E5%AE%9A%E5%AE%9A%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">子群的判定定理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%AD%90%E7%BE%A4%E7%9A%84%E4%B8%A4%E6%AD%A5%E5%88%A4%E5%AE%9A%E6%B3%95"><span class="nav-number">1.3.1.</span> <span class="nav-text">定理：子群的两步判定法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%AD%90%E7%BE%A4%E7%9A%84%E4%B8%80%E6%AD%A5%E5%88%A4%E5%AE%9A%E6%B3%95"><span class="nav-number">1.3.2.</span> <span class="nav-text">定理：子群的一步判定法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E5%8A%A0%E6%B3%95%E7%BE%A4%E7%9A%84%E5%AD%90%E7%BE%A4"><span class="nav-number">2.1.</span> <span class="nav-text">整数加法群的子群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E7%BA%BF%E6%80%A7%E7%BE%A4"><span class="nav-number">2.2.</span> <span class="nav-text">特殊线性群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B3%E5%87%A1%E5%AD%90%E7%BE%A4"><span class="nav-number">2.3.</span> <span class="nav-text">平凡子群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%AD%90%E7%BE%A4"><span class="nav-number">2.4.</span> <span class="nav-text">循环子群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%AA%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">陪集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E5%88%92%E5%88%86%E7%9A%84%E9%9C%80%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">背景：划分的需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">3.2.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%AA%E9%9B%86%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">3.3.</span> <span class="nav-text">陪集的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E9%99%AA%E9%9B%86%E4%B8%8E%E4%BB%A3%E8%A1%A8%E5%85%83"><span class="nav-number">3.3.1.</span> <span class="nav-text">定理：陪集与代表元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E9%99%AA%E9%9B%86%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.3.2.</span> <span class="nav-text">定理：陪集的大小</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%AE%9A%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">拉格朗日定理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E5%AE%9A%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">定理：拉格朗日定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%AE%BA"><span class="nav-number">4.2.</span> <span class="nav-text">推论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="nav-number">5.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8Bmathbbz-%E7%9A%84%E5%AD%90%E7%BE%A4%E4%B8%8E%E6%8C%87%E6%95%B0"><span class="nav-number">5.1.</span> <span class="nav-text">例：\(\mathbb{Z}\) 的子群与指数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8Bs_3-%E7%9A%84%E5%AD%90%E7%BE%A4"><span class="nav-number">5.2.</span> <span class="nav-text">例：\(S_3\)
+的子群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">7.</span> <span class="nav-text">概念关系图</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="子群与陪集：群的内部结构 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          子群与陪集：群的内部结构
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-26 00:00:00" itemprop="dateCreated datePublished" datetime="2026-03-26T00:00:00+08:00">2026-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/03/26/math/数学漫步/抽象代数/2026-03-26-子群与陪集/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>学习完群的基本概念后，我们来探索群的内部结构。子群本身也是一个群；而陪集则是将群"分割"成若干等大块的工具。拉格朗日定理揭示了子群阶数与群阶数之间的深刻联系。</p>
+<h1 id="子群">子群</h1>
+<h2 id="定义">定义</h2>
+<p>设 <span class="math inline">\(H\)</span> 是群 <span
+class="math inline">\(G\)</span> 的非空子集。若 <span
+class="math inline">\(H\)</span> 在 <span
+class="math inline">\(G\)</span> 的运算下也构成一个群，则称 <span
+class="math inline">\(H\)</span> 是 <span
+class="math inline">\(G\)</span> 的一个<strong>子群</strong>，记作 <span
+class="math inline">\(H \leq G\)</span>。</p>
+<h2 id="通俗解释">通俗解释</h2>
+<p>子群就是"群中套群"。<span class="math inline">\(H\)</span>
+中的元素不仅自己可以随便运算，而且运算结果还在 <span
+class="math inline">\(H\)</span> 里面，同时 <span
+class="math inline">\(H\)</span>
+也包含单位元和逆元。子结构在数学中非常常见，比如线性代数里的子空间。</p>
+<h2 id="子群的判定定理">子群的判定定理</h2>
+<h3 id="定理子群的两步判定法">定理：子群的两步判定法</h3>
+<p>设 <span class="math inline">\(H\)</span> 是群 <span
+class="math inline">\(G\)</span> 的非空子集。则 <span
+class="math inline">\(H \leq G\)</span> 当且仅当：</p>
+<ol type="1">
+<li>对任意 <span class="math inline">\(a, b \in H\)</span>，有 <span
+class="math inline">\(ab \in H\)</span>（<strong>封闭性</strong>）</li>
+<li>对任意 <span class="math inline">\(a \in H\)</span>，有 <span
+class="math inline">\(a^{-1} \in
+H\)</span>（<strong>逆元存在</strong>）</li>
+</ol>
+<aside data-title="证明">
+<p>（<span class="math inline">\(\Rightarrow\)</span>）若 <span
+class="math inline">\(H\)</span> 是子群，则显然满足这两条。</p>
+<p>（<span class="math inline">\(\Leftarrow\)</span>）若满足两条：</p>
+<ul>
+<li>由封闭性，运算在 <span class="math inline">\(H\)</span>
+上是二元运算</li>
+<li>结合律继承自 <span class="math inline">\(G\)</span></li>
+<li>取任意 <span class="math inline">\(a \in H\)</span>，由 (2) 知 <span
+class="math inline">\(a^{-1} \in H\)</span>，再由 (1) 取 <span
+class="math inline">\(b = a^{-1}\)</span> 得 <span
+class="math inline">\(aa^{-1} = e \in H\)</span>，故单位元存在</li>
+<li>由 (2) 知逆元存在</li>
+</ul>
+故 <span class="math inline">\(H\)</span> 是子群。
+</aside>
+<h3 id="定理子群的一步判定法">定理：子群的一步判定法</h3>
+<p>设 <span class="math inline">\(H\)</span> 是群 <span
+class="math inline">\(G\)</span> 的非空子集。则 <span
+class="math inline">\(H \leq G\)</span> 当且仅当对任意 <span
+class="math inline">\(a, b \in H\)</span>，有 <span
+class="math inline">\(ab^{-1} \in H\)</span>。</p>
+<aside data-title="证明">
+<p>（<span class="math inline">\(\Rightarrow\)</span>）若 <span
+class="math inline">\(H\)</span> 是子群，则 <span
+class="math inline">\(b^{-1} \in H\)</span>，再由封闭性得 <span
+class="math inline">\(ab^{-1} \in H\)</span>。</p>
+<p>（<span class="math inline">\(\Leftarrow\)</span>）若条件成立：</p>
+<ul>
+<li>取 <span class="math inline">\(a = b\)</span>，得 <span
+class="math inline">\(bb^{-1} = e \in H\)</span></li>
+<li>取 <span class="math inline">\(a = e\)</span>，得 <span
+class="math inline">\(eb^{-1} = b^{-1} \in H\)</span></li>
+<li>取任意 <span class="math inline">\(a, b \in H\)</span>，由上步知
+<span class="math inline">\(b^{-1} \in H\)</span>，再由条件得 <span
+class="math inline">\(a(b^{-1})^{-1} = ab \in H\)</span></li>
+</ul>
+故满足两步判定法的条件，<span class="math inline">\(H\)</span> 是子群。
+</aside>
+<p>一步判定法更常用，因为它只需要检验一个条件！</p>
+<h1 id="例子">例子</h1>
+<h2 id="整数加法群的子群">整数加法群的子群</h2>
+<p><span class="math inline">\((\mathbb{Z}, +)\)</span> 是 <span
+class="math inline">\((\mathbb{Q}, +)\)</span>、<span
+class="math inline">\((\mathbb{R}, +)\)</span>、<span
+class="math inline">\((\mathbb{C}, +)\)</span> 的子群。</p>
+<p>更一般地，<span class="math inline">\(n\mathbb{Z} = \{nk \mid k \in
+\mathbb{Z}\}\)</span> 是 <span class="math inline">\(\mathbb{Z}\)</span>
+的子群。例如 <span class="math inline">\(2\mathbb{Z} = \{\ldots, -4, -2,
+0, 2, 4, \ldots\}\)</span>。</p>
+<h2 id="特殊线性群">特殊线性群</h2>
+<p>回顾：一般线性群 <span
+class="math inline">\(GL_n(\mathbb{R})\)</span> 是所有 <span
+class="math inline">\(n \times n\)</span>
+可逆实矩阵（即行列式不为零的矩阵）在矩阵乘法下构成的群。</p>
+<p>在其中挑出行列式<strong>恰好等于 1</strong>
+的那些矩阵，构成<strong>特殊线性群</strong>：</p>
+<p><span class="math display">\[SL_n(\mathbb{R}) = \{A \in
+GL_n(\mathbb{R}) \mid \det(A) = 1\}\]</span></p>
+<p>用一步判定法验证 <span class="math inline">\(SL_n(\mathbb{R}) \leq
+GL_n(\mathbb{R})\)</span>：</p>
+<p>对任意 <span class="math inline">\(A, B \in
+SL_n(\mathbb{R})\)</span>，需要证明 <span class="math inline">\(AB^{-1}
+\in SL_n(\mathbb{R})\)</span>：</p>
+<p><span class="math display">\[\det(AB^{-1}) = \det(A) \cdot
+\det(B^{-1}) = \det(A) \cdot \frac{1}{\det(B)} = 1 \cdot \frac{1}{1} =
+1\]</span></p>
+<p>因此 <span class="math inline">\(AB^{-1}\)</span> 的行列式仍然是
+1，属于 <span class="math inline">\(SL_n(\mathbb{R})\)</span>。</p>
+<p>以 <span class="math inline">\(n = 2\)</span> 为例，<span
+class="math inline">\(SL_2(\mathbb{R})\)</span> 包含所有满足 <span
+class="math inline">\(ad - bc = 1\)</span> 的矩阵 <span
+class="math inline">\(\begin{pmatrix} a &amp; b \\ c &amp; d
+\end{pmatrix}\)</span>，比如：</p>
+<p><span class="math display">\[\begin{pmatrix} 1 &amp; 3 \\ 0 &amp; 1
+\end{pmatrix}, \quad \begin{pmatrix} 0 &amp; -1 \\ 1 &amp; 0
+\end{pmatrix}, \quad \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; 1
+\end{pmatrix}\]</span></p>
+<p>这个例子体现了子群验证的关键：行列式的乘法性质 <span
+class="math inline">\(\det(AB) = \det(A)\det(B)\)</span>
+正好保证了封闭性。类似的思路在后续群同态中会再次出现。</p>
+<h2 id="平凡子群">平凡子群</h2>
+<p>对任意群 <span class="math inline">\(G\)</span>，<span
+class="math inline">\(\{e\}\)</span> 和 <span
+class="math inline">\(G\)</span>
+本身都是子群，称为<strong>平凡子群</strong>。其他子群称为<strong>非平凡子群</strong>。</p>
+<h2 id="循环子群">循环子群</h2>
+<p>若 <span class="math inline">\(a \in G\)</span>，定义 <span
+class="math inline">\(\langle a \rangle = \{a^n \mid n \in
+\mathbb{Z}\}\)</span>，称为由 <span class="math inline">\(a\)</span>
+生成的<strong>循环子群</strong>。显然 <span
+class="math inline">\(\langle a \rangle \leq G\)</span>。例如，在 <span
+class="math inline">\(\mathbb{Z}_6\)</span> 中，<span
+class="math inline">\(\langle [2] \rangle = \{[0], [2], [4]\}\)</span>
+是一个子群。</p>
+<h1 id="陪集">陪集</h1>
+<h2 id="背景划分的需求">背景：划分的需求</h2>
+<p>给定子群 <span class="math inline">\(H \leq G\)</span>，我们想要把群
+<span class="math inline">\(G\)</span>
+分割成若干等大的块。每个块称为一个<strong>陪集</strong>。</p>
+<h2 id="定义-1">定义</h2>
+<p>设 <span class="math inline">\(H \leq G\)</span>。</p>
+<ul>
+<li><strong>左陪集</strong>：<span class="math inline">\(aH = \{ah \mid
+h \in H\}\)</span>，其中 <span class="math inline">\(a \in
+G\)</span></li>
+<li><strong>右陪集</strong>：<span class="math inline">\(Ha = \{ha \mid
+h \in H\}\)</span>，其中 <span class="math inline">\(a \in
+G\)</span></li>
+</ul>
+<p><span class="math inline">\(a\)</span>
+称为该陪集的<strong>代表元</strong>。</p>
+<p>左陪集 <span class="math inline">\(aH\)</span> 就是把子群 <span
+class="math inline">\(H\)</span> "翻译"一遍：<span
+class="math inline">\(H\)</span> 中的每个元素 <span
+class="math inline">\(h\)</span> 都变成 <span
+class="math inline">\(ah\)</span>。这就像给 <span
+class="math inline">\(H\)</span> 按上一个"前缀" <span
+class="math inline">\(a\)</span>。</p>
+<blockquote>
+<p>💡 想象 <span class="math inline">\(H\)</span>
+是一栋楼的所有房间，<span class="math inline">\(aH\)</span>
+就是把这些房间都编上门牌号 <span class="math inline">\(a\)</span>
+开头。</p>
+</blockquote>
+<h2 id="陪集的性质">陪集的性质</h2>
+<h3 id="定理陪集与代表元">定理：陪集与代表元</h3>
+<p>对 <span class="math inline">\(a, b \in G\)</span>，以下等价：</p>
+<ol type="1">
+<li><span class="math inline">\(aH = bH\)</span></li>
+<li><span class="math inline">\(a^{-1}b \in H\)</span></li>
+<li><span class="math inline">\(b \in aH\)</span></li>
+</ol>
+<aside data-title="证明">
+<ul>
+<li>(1) <span class="math inline">\(\Rightarrow\)</span> (2)：若 <span
+class="math inline">\(aH = bH\)</span>，则 <span class="math inline">\(b
+= be \in bH = aH\)</span>，故存在 <span class="math inline">\(h \in
+H\)</span> 使 <span class="math inline">\(b = ah\)</span>，于是 <span
+class="math inline">\(a^{-1}b = h \in H\)</span>。</li>
+<li>(2) <span class="math inline">\(\Rightarrow\)</span> (3)：若 <span
+class="math inline">\(a^{-1}b = h \in H\)</span>，则 <span
+class="math inline">\(b = ah \in aH\)</span>。</li>
+<li>(3) <span class="math inline">\(\Rightarrow\)</span> (1)：若 <span
+class="math inline">\(b = ah_0\)</span>，则对任意 <span
+class="math inline">\(bh = ah_0h \in aH\)</span>，有 <span
+class="math inline">\(bH \subseteq aH\)</span>；反之 <span
+class="math inline">\(a = bh_0^{-1} \in bH\)</span>，故 <span
+class="math inline">\(aH \subseteq bH\)</span>。故相等。</li>
+</ul>
+</aside>
+<p><strong>例子</strong>：取 <span class="math inline">\(G =
+\mathbb{Z}_6 = \{0, 1, 2, 3, 4, 5\}\)</span>（模 6 加法群），子群 <span
+class="math inline">\(H = \{0, 3\}\)</span>。</p>
+<p>先列出所有左陪集（这里运算是加法，所以 <span class="math inline">\(a
++ H\)</span> 代替 <span class="math inline">\(aH\)</span>）：</p>
+<ul>
+<li><span class="math inline">\(0 + H = \{0, 3\}\)</span></li>
+<li><span class="math inline">\(1 + H = \{1, 4\}\)</span></li>
+<li><span class="math inline">\(2 + H = \{2, 5\}\)</span></li>
+<li><span class="math inline">\(3 + H = \{3, 0\} = \{0,
+3\}\)</span></li>
+</ul>
+<p>注意 <span class="math inline">\(0 + H = 3 +
+H\)</span>，同一个陪集可以有不同的代表元。用定理的三个条件来验证为什么
+<span class="math inline">\(0 + H = 3 + H\)</span>：</p>
+<ol type="1">
+<li><span class="math inline">\(0 + H = 3 + H = \{0, 3\}\)</span>
+✓（两个陪集相等）</li>
+<li><span class="math inline">\(-0 + 3 = 3 \in H\)</span> ✓（<span
+class="math inline">\(a^{-1}b \in H\)</span>，加法群中即 <span
+class="math inline">\(b - a \in H\)</span>）</li>
+<li><span class="math inline">\(3 \in 0 + H = \{0, 3\}\)</span> ✓（<span
+class="math inline">\(b \in aH\)</span>）</li>
+</ol>
+<p>再看 <span class="math inline">\(1 + H \neq 2 + H\)</span>，因为
+<span class="math inline">\(-1 + 2 = 1 \notin H = \{0,
+3\}\)</span>，条件 (2) 不满足，所以它们是不同的陪集。</p>
+<p>最终 <span class="math inline">\(\mathbb{Z}_6\)</span>
+被分成三块：<span class="math inline">\(\{0, 3\}\)</span>、<span
+class="math inline">\(\{1, 4\}\)</span>、<span
+class="math inline">\(\{2, 5\}\)</span>，每块大小都是 <span
+class="math inline">\(|H| = 2\)</span>。</p>
+<p>如果把全集 <span class="math inline">\(G\)</span>
+看成一个圆形，那么其子集 <span class="math inline">\(H\)</span>
+就是圆上的一小块，而其陪集，就是将这一小块进行移动。</p>
+<h3 id="定理陪集的大小">定理：陪集的大小</h3>
+<p>任意陪集 <span class="math inline">\(aH\)</span> 与 <span
+class="math inline">\(H\)</span> 等势（一样大），即 <span
+class="math inline">\(|aH| = |H|\)</span>。</p>
+<aside data-title="证明">
+<p>映射 <span class="math inline">\(\phi: H \to aH\)</span>，<span
+class="math inline">\(h \mapsto ah\)</span> 是双射：</p>
+<ul>
+<li>单射：若 <span class="math inline">\(ah_1 =
+ah_2\)</span>，则由消去律得 <span class="math inline">\(h_1 =
+h_2\)</span></li>
+<li>满射：显然每个 <span class="math inline">\(ah\)</span>
+都是映射的像</li>
+</ul>
+</aside>
+<p>这说明所有陪集都和 <span class="math inline">\(H\)</span>
+一样"大"！</p>
+<h1 id="拉格朗日定理">拉格朗日定理</h1>
+<h2 id="定理拉格朗日定理">定理：拉格朗日定理</h2>
+<p>设 <span class="math inline">\(G\)</span> 是有限群，<span
+class="math inline">\(H \leq G\)</span>，则 <span
+class="math inline">\(|H|\)</span> 整除 <span
+class="math inline">\(|G|\)</span>，且 <span class="math inline">\(|G| =
+[G:H] \cdot |H|\)</span>，其中 <span
+class="math inline">\([G:H]\)</span>
+是陪集个数（称为<strong>指数</strong>）。</p>
+<aside data-title="证明">
+<p><span class="math inline">\(G\)</span>
+可以分解为若干不相交的左陪集的并： <span class="math display">\[G = a_1H
+\cup a_2H \cup \cdots \cup a_kH\]</span></p>
+<p>这些陪集两两不相交（若相交则相等），每个陪集大小为 <span
+class="math inline">\(|H|\)</span>，故： <span
+class="math display">\[|G| = k \cdot |H| = [G:H] \cdot |H|\]</span></p>
+其中 <span class="math inline">\([G:H] = k\)</span>
+是陪集个数，称为指数。
+</aside>
+<p>想象一把梳子（子群 <span
+class="math inline">\(H\)</span>），齿的位置是固定的。把梳子放在数轴上，梳齿刚好盖住一些位置；然后把梳子<strong>平移</strong>一格（乘上一个元素
+<span class="math inline">\(a\)</span>，得到陪集 <span
+class="math inline">\(aH\)</span>），梳齿又盖住了新的一批位置；再滑一格，再盖住一批……最终整条数轴上的所有位置都被梳齿不重不漏地盖满。因为每次梳齿盖住的位置数（陪集大小）完全一样，所以总位置数（群的大小）一定是梳齿数（子群大小）的整数倍。</p>
+<p>回到前面 <span class="math inline">\(\mathbb{Z}_6\)</span>
+的例子：子群 <span class="math inline">\(H = \{0, 3\}\)</span>
+就是一把两齿梳子，齿间距为 3。放在起点盖住 <span
+class="math inline">\(\{0, 3\}\)</span>；右滑 1 格盖住 <span
+class="math inline">\(\{1, 4\}\)</span>；再滑 1 格盖住 <span
+class="math inline">\(\{2, 5\}\)</span>——三次平移恰好梳遍全部 6
+个位置，<span class="math inline">\(6 = 3 \times
+2\)</span>。反过来，<span class="math inline">\(\mathbb{Z}_6\)</span>
+不可能有大小为 4 的子群——没有任何 4 齿的梳子能通过平移不重不漏地梳遍 6
+个位置。</p>
+<h2 id="推论">推论</h2>
+<ol type="1">
+<li><strong>素数阶群</strong>：若 <span
+class="math inline">\(|G|\)</span> 是素数，则 <span
+class="math inline">\(G\)</span> 是循环群。由于素数除了 <span
+class="math inline">\(1\)</span>
+之外没有整数因子，所以只能是循环群了</li>
+<li><strong>元素的阶</strong>：任意元素的阶整除群的阶（因为 <span
+class="math inline">\(\langle a \rangle \leq G\)</span>）</li>
+<li><strong>费马小定理</strong>：若 <span class="math inline">\(a
+\not\equiv 0 \pmod{p}\)</span>，则 <span class="math inline">\(a^{p-1}
+\equiv 1 \pmod{p}\)</span>（作为 <span
+class="math inline">\(\mathbb{Z}_p^\times\)</span> 的应用）</li>
+</ol>
+<h1 id="例子-1">例子</h1>
+<h2 id="例mathbbz-的子群与指数">例：<span
+class="math inline">\(\mathbb{Z}\)</span> 的子群与指数</h2>
+<p><span class="math inline">\(\mathbb{Z}\)</span> 的子群形如 <span
+class="math inline">\(n\mathbb{Z}\)</span>。对 <span
+class="math inline">\(n\mathbb{Z} \leq m\mathbb{Z}\)</span>，有 <span
+class="math inline">\(n\mathbb{Z} \subseteq m\mathbb{Z}\)</span>
+当且仅当 <span class="math inline">\(m \mid n\)</span>。</p>
+<p>指数 <span class="math inline">\([ \mathbb{Z} : n\mathbb{Z} ] =
+n\)</span>，因为陪集为 <span class="math inline">\(0 + n\mathbb{Z}, 1 +
+n\mathbb{Z}, \ldots, (n-1) + n\mathbb{Z}\)</span>。</p>
+<h2 id="例s_3-的子群">例：<span class="math inline">\(S_3\)</span>
+的子群</h2>
+<p><span class="math inline">\(S_3 = \{e, (12), (13), (23), (123),
+(132)\}\)</span> 有以下子群：</p>
+<ul>
+<li><span class="math inline">\(\{e\}\)</span>，阶 <span
+class="math inline">\(1\)</span></li>
+<li><span class="math inline">\(\{e, (12)\}\)</span>，阶 <span
+class="math inline">\(2\)</span></li>
+<li><span class="math inline">\(\{e, (13)\}\)</span>，阶 <span
+class="math inline">\(2\)</span></li>
+<li><span class="math inline">\(\{e, (23)\}\)</span>，阶 <span
+class="math inline">\(2\)</span></li>
+<li><span class="math inline">\(\{e, (123), (132)\}\)</span>，阶 <span
+class="math inline">\(3\)</span></li>
+<li><span class="math inline">\(S_3\)</span>，阶 <span
+class="math inline">\(6\)</span></li>
+</ul>
+<p><span class="math inline">\(6\)</span> 的因子有 <span
+class="math inline">\(1, 2, 3, 6\)</span>，恰好对应所有子群的阶！</p>
+<h1 id="小结">小结</h1>
+<ul>
+<li>子群是群的非空子集，在原运算下也构成群</li>
+<li>子群判定有一步法和两步法</li>
+<li>陪集是将群按子群分割的产物，所有陪集大小相同</li>
+<li>拉格朗日定理：子群阶数整除群阶数 <span class="math inline">\(|G| =
+[G:H] \cdot |H|\)</span></li>
+<li>指数 <span class="math inline">\([G:H]\)</span> 是陪集的个数</li>
+</ul>
+<p>拉格朗日定理是有限群论的基础定理，它将陪伴我们后续学习循环群、群同态等内容。</p>
+<h1 id="概念关系图">概念关系图</h1>
+<p>下图展示了本篇关于子群、陪集与拉格朗日定理的核心概念及其相互关系：</p>
+<div class="concept-graph"
+data-src="/assets/data/graphs/subgroup-coset-lagrange.json">
+
+</div>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E5%AD%90%E7%BE%A4%E4%B8%8E%E9%99%AA%E9%9B%86/" title="子群与陪集：群的内部结构">https://aquietzero.github.io/2026/03/26/math/数学漫步/抽象代数/2026-03-26-子群与陪集/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BE%A4%E8%AE%BA/" rel="tag"># 群论</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+              <a href="/tags/%E5%AD%90%E7%BE%A4/" rel="tag"># 子群</a>
+              <a href="/tags/%E9%99%AA%E9%9B%86/" rel="tag"># 陪集</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/25/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-25-%E7%AD%89%E4%BB%B7%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%88%92%E5%88%86/" rel="prev" title="等价关系与划分 - 抽象的分类法">
+                  <i class="fa fa-angle-left"></i> 等价关系与划分 - 抽象的分类法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/03/26/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-03-26-%E7%BE%A4/" rel="next" title="群 - 从具体到抽象">
+                  群 - 从具体到抽象 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">385k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:21</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

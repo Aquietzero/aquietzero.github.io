@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="域扩张是伽罗瓦理论的基础。简单来说，域扩张就是在一个域中添加新元素，从而得到一个&quot;更大&quot;的域。理解域扩张的次数和代数性，是进入伽罗瓦理论的关键一步。 域扩张的定义 定义 设 \(K\) 和 \(F\) 是两个域，若 \(F \subseteq K\)（\(F\) 是 \(K\) 的子域），则称 \(K\) 是 \(F\) 的一个域扩张，记作 \(K&#x2F;F\)。 此时，\(K\) 可以自然地看作 \(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域扩张：走向伽罗瓦理论的桥梁">
+<meta property="og:url" content="https://aquietzero.github.io/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="域扩张是伽罗瓦理论的基础。简单来说，域扩张就是在一个域中添加新元素，从而得到一个&quot;更大&quot;的域。理解域扩张的次数和代数性，是进入伽罗瓦理论的关键一步。 域扩张的定义 定义 设 \(K\) 和 \(F\) 是两个域，若 \(F \subseteq K\)（\(F\) 是 \(K\) 的子域），则称 \(K\) 是 \(F\) 的一个域扩张，记作 \(K&#x2F;F\)。 此时，\(K\) 可以自然地看作 \(">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-08T03:03:19.788Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="抽象代数">
+<meta property="article:tag" content="域论">
+<meta property="article:tag" content="域扩张">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/","path":"2026/04/01/math/数学漫步/抽象代数/2026-04-10-域扩张：走向伽罗瓦理论的桥梁/","title":"域扩张：走向伽罗瓦理论的桥梁"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>域扩张：走向伽罗瓦理论的桥梁 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E6%89%A9%E5%BC%A0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">域扩张的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">1.2.</span> <span class="nav-text">通俗解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%BC%A0%E7%9A%84%E6%AC%A1%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">扩张的次数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">2.2.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B1mathbbqsqrt2mathbbq"><span class="nav-number">2.2.1.</span> <span class="nav-text">例1：\(\mathbb{Q}(\sqrt{2})&#x2F;\mathbb{Q}\)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B2mathbbqsqrt2-sqrt3mathbbq"><span class="nav-number">2.2.2.</span> <span class="nav-text">例2：\(\mathbb{Q}(\sqrt{2},
+\sqrt{3})&#x2F;\mathbb{Q}\)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B3mathbbcmathbbr"><span class="nav-number">2.2.3.</span> <span class="nav-text">例3：\(\mathbb{C}&#x2F;\mathbb{R}\)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B4mathbbrmathbbq"><span class="nav-number">2.2.4.</span> <span class="nav-text">例4：\(\mathbb{R}&#x2F;\mathbb{Q}\)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AC%A1%E6%95%B0%E7%9A%84%E5%8F%AF%E4%B9%98%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">次数的可乘性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E6%AC%A1%E6%95%B0%E5%8F%AF%E4%B9%98%E5%85%AC%E5%BC%8F%E5%A1%94%E5%AE%9A%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">定理：次数可乘公式（塔定理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3"><span class="nav-number">3.2.</span> <span class="nav-text">通俗理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="nav-number">3.3.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A1%94%E5%AE%9A%E7%90%86%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">3.4.</span> <span class="nav-text">塔定理的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E6%95%B0%E5%85%83%E4%B8%8E%E8%B6%85%E8%B6%8A%E5%85%83"><span class="nav-number">4.</span> <span class="nav-text">代数元与超越元</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="nav-number">4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A-1"><span class="nav-number">4.2.</span> <span class="nav-text">通俗解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-2"><span class="nav-number">4.3.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E6%89%A9%E5%BC%A0%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%A4%9A%E9%A1%B9%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">单扩张与最小多项式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="nav-number">5.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%9C%80%E5%B0%8F%E5%A4%9A%E9%A1%B9%E5%BC%8F"><span class="nav-number">5.2.</span> <span class="nav-text">定义：最小多项式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E5%8D%95%E4%BB%A3%E6%95%B0%E6%89%A9%E5%BC%A0%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">5.3.</span> <span class="nav-text">定理：单代数扩张的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E7%90%86%E8%A7%A3-1"><span class="nav-number">5.4.</span> <span class="nav-text">通俗理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90mathbbqsqrt2-%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">5.5.</span> <span class="nav-text">例子：\(\mathbb{Q}(\sqrt{2})\) 的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E6%9E%84%E9%80%A0-mathbbf_4%E5%9B%9B%E5%85%83%E5%9F%9F"><span class="nav-number">5.6.</span> <span class="nav-text">例子：构造 \(\mathbb{F}_4\)（四元域）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E6%95%B0%E9%97%AD%E5%9F%9F%E4%B8%8E%E4%BB%A3%E6%95%B0%E9%97%AD%E5%8C%85"><span class="nav-number">6.</span> <span class="nav-text">代数闭域与代数闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-4"><span class="nav-number">6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-3"><span class="nav-number">6.2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%BB%A3%E6%95%B0%E9%97%AD%E5%8C%85"><span class="nav-number">6.3.</span> <span class="nav-text">定义：代数闭包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E8%A3%82%E5%9F%9F"><span class="nav-number">7.</span> <span class="nav-text">分裂域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-5"><span class="nav-number">7.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A-2"><span class="nav-number">7.2.</span> <span class="nav-text">通俗解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-4"><span class="nav-number">7.3.</span> <span class="nav-text">例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B1x2---2-%E5%9C%A8-mathbbq-%E4%B8%8A%E7%9A%84%E5%88%86%E8%A3%82%E5%9F%9F"><span class="nav-number">7.3.1.</span> <span class="nav-text">例1：\(x^2 - 2\) 在 \(\mathbb{Q}\) 上的分裂域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B2x2-1-%E5%9C%A8-mathbbr-%E4%B8%8A%E7%9A%84%E5%88%86%E8%A3%82%E5%9F%9F"><span class="nav-number">7.3.2.</span> <span class="nav-text">例2：\(x^2 + 1\) 在 \(\mathbb{R}\) 上的分裂域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B3x3---2-%E5%9C%A8-mathbbq-%E4%B8%8A%E7%9A%84%E5%88%86%E8%A3%82%E5%9F%9F"><span class="nav-number">7.3.3.</span> <span class="nav-text">例3：\(x^3 - 2\) 在 \(\mathbb{Q}\) 上的分裂域</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">9.</span> <span class="nav-text">概念关系图</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="域扩张：走向伽罗瓦理论的桥梁 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          域扩张：走向伽罗瓦理论的桥梁
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-01 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-01T00:00:00+08:00">2026-04-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Math/" itemprop="url" rel="index"><span itemprop="name">Math</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/04/01/math/数学漫步/抽象代数/2026-04-10-域扩张：走向伽罗瓦理论的桥梁/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>域扩张是伽罗瓦理论的基础。简单来说，域扩张就是在一个域中添加新元素，从而得到一个"更大"的域。理解域扩张的次数和代数性，是进入伽罗瓦理论的关键一步。</p>
+<h1 id="域扩张的定义">域扩张的定义</h1>
+<h2 id="定义">定义</h2>
+<p>设 <span class="math inline">\(K\)</span> 和 <span
+class="math inline">\(F\)</span> 是两个域，若 <span
+class="math inline">\(F \subseteq K\)</span>（<span
+class="math inline">\(F\)</span> 是 <span
+class="math inline">\(K\)</span> 的子域），则称 <span
+class="math inline">\(K\)</span> 是 <span
+class="math inline">\(F\)</span> 的一个<strong>域扩张</strong>，记作
+<span class="math inline">\(K/F\)</span>。</p>
+<p>此时，<span class="math inline">\(K\)</span> 可以自然地看作 <span
+class="math inline">\(F\)</span> 上的<strong>向量空间</strong>——<span
+class="math inline">\(K\)</span> 中的元素是"向量"，<span
+class="math inline">\(F\)</span> 中的元素是"标量"，向量加法就是 <span
+class="math inline">\(K\)</span> 中的加法，标量乘法就是 <span
+class="math inline">\(F\)</span> 中元素乘 <span
+class="math inline">\(K\)</span> 中元素。</p>
+<h2 id="通俗解释">通俗解释</h2>
+<p>域扩张就是"扩大"数的范围——你觉得手头的数不够用了，就往里面"丢"一个新元素进去：</p>
+<ul>
+<li>从有理数 <span class="math inline">\(\mathbb{Q}\)</span> 扩张到
+<span class="math inline">\(\mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid
+a, b \in \mathbb{Q}\}\)</span>：把 <span
+class="math inline">\(\sqrt{2}\)</span> 丢进去</li>
+<li>从实数 <span class="math inline">\(\mathbb{R}\)</span> 扩张到复数
+<span class="math inline">\(\mathbb{C}\)</span>：把虚数单位 <span
+class="math inline">\(i\)</span> 丢进去</li>
+<li>从有理数 <span class="math inline">\(\mathbb{Q}\)</span> 扩张到实数
+<span
+class="math inline">\(\mathbb{R}\)</span>：一次性把所有"洞"都填上</li>
+</ul>
+<p>域扩张就像"打补丁"：原本的域可能缺少某些数（比如 <span
+class="math inline">\(\sqrt{2}\)</span> 不在 <span
+class="math inline">\(\mathbb{Q}\)</span>
+中），我们把它"扔"进去，连带所有必须加进去的元素（为了保持域的运算封闭性），就得到了一个新域。</p>
+<h1 id="扩张的次数">扩张的次数</h1>
+<h2 id="定义-1">定义</h2>
+<p>设 <span class="math inline">\(K/F\)</span> 是域扩张。<span
+class="math inline">\(K\)</span> 作为 <span
+class="math inline">\(F\)</span>
+上的向量空间的<strong>维数</strong>，称为<strong>扩张次数</strong>（degree
+of extension），记作 <span class="math inline">\([K : F]\)</span>。</p>
+<p>若 <span class="math inline">\([K : F]\)</span> 有限，则称 <span
+class="math inline">\(K/F\)</span>
+是<strong>有限扩张</strong>；否则是<strong>无限扩张</strong>。</p>
+<h2 id="例子">例子</h2>
+<h3 id="例1mathbbqsqrt2mathbbq">例1：<span
+class="math inline">\(\mathbb{Q}(\sqrt{2})/\mathbb{Q}\)</span></h3>
+<p><span class="math display">\[\mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2}
+\mid a, b \in \mathbb{Q}\}\]</span></p>
+<p>每个元素都可以唯一地写成 <span class="math inline">\(a \cdot 1 + b
+\cdot \sqrt{2}\)</span> 的形式，所以 <span class="math inline">\(\{1,
+\sqrt{2}\}\)</span> 就是这个向量空间的一组基。</p>
+<p><span class="math display">\[[\mathbb{Q}(\sqrt{2}) : \mathbb{Q}] =
+2\]</span></p>
+<h3 id="例2mathbbqsqrt2-sqrt3mathbbq">例2：<span
+class="math inline">\(\mathbb{Q}(\sqrt{2},
+\sqrt{3})/\mathbb{Q}\)</span></h3>
+<p>这个域包含形如 <span class="math inline">\(a + b\sqrt{2} + c\sqrt{3}
++ d\sqrt{6}\)</span> 的所有数（其中 <span class="math inline">\(\sqrt{6}
+= \sqrt{2}\cdot\sqrt{3}\)</span> 是乘法封闭性要求的）。</p>
+<p>基为 <span class="math inline">\(\{1, \sqrt{2}, \sqrt{3},
+\sqrt{6}\}\)</span>，故： <span
+class="math display">\[[\mathbb{Q}(\sqrt{2}, \sqrt{3}) : \mathbb{Q}] =
+4\]</span></p>
+<h3 id="例3mathbbcmathbbr">例3：<span
+class="math inline">\(\mathbb{C}/\mathbb{R}\)</span></h3>
+<p><span class="math inline">\(\mathbb{C} = \{a + bi \mid a, b \in
+\mathbb{R}\}\)</span>，基为 <span class="math inline">\(\{1,
+i\}\)</span>，故 <span class="math inline">\([\mathbb{C} : \mathbb{R}] =
+2\)</span>。</p>
+<h3 id="例4mathbbrmathbbq">例4：<span
+class="math inline">\(\mathbb{R}/\mathbb{Q}\)</span></h3>
+<p><span class="math inline">\([\mathbb{R} : \mathbb{Q}] =
+\infty\)</span>——这是无限扩张。<span
+class="math inline">\(\mathbb{R}\)</span> 作为 <span
+class="math inline">\(\mathbb{Q}\)</span>-向量空间是无限维的（因为 <span
+class="math inline">\(\mathbb{R}\)</span> 不可数，而 <span
+class="math inline">\(\mathbb{Q}\)</span>
+的有限维向量空间一定可数）。</p>
+<h1 id="次数的可乘性">次数的可乘性</h1>
+<h2 id="定理次数可乘公式塔定理">定理：次数可乘公式（塔定理）</h2>
+<p>若 <span class="math inline">\(F \subseteq E \subseteq K\)</span>
+是域，且 <span class="math inline">\(E/F\)</span> 和 <span
+class="math inline">\(K/E\)</span> 都是有限扩张，则 <span
+class="math inline">\(K/F\)</span> 也是有限扩张，并且： <span
+class="math display">\[[K : F] = [K : E] \cdot [E : F]\]</span></p>
+<aside>
+<p><strong>证明</strong>：</p>
+<p>设 <span class="math inline">\(\{e_1, \ldots, e_m\}\)</span> 是 <span
+class="math inline">\(E\)</span> 在 <span
+class="math inline">\(F\)</span> 上的基（<span class="math inline">\(m =
+[E:F]\)</span>），<span class="math inline">\(\{k_1, \ldots,
+k_n\}\)</span> 是 <span class="math inline">\(K\)</span> 在 <span
+class="math inline">\(E\)</span> 上的基（<span class="math inline">\(n =
+[K:E]\)</span>）。</p>
+<p>我们证明 <span class="math inline">\(\{e_i k_j \mid 1 \leq i \leq m,
+1 \leq j \leq n\}\)</span> 是 <span class="math inline">\(K\)</span> 在
+<span class="math inline">\(F\)</span> 上的基。</p>
+<p><strong>生成性</strong>：对任意 <span class="math inline">\(\alpha
+\in K\)</span>，先用 <span class="math inline">\(K/E\)</span>
+的基展开：<span class="math inline">\(\alpha = \sum_j a_j
+k_j\)</span>（<span class="math inline">\(a_j \in E\)</span>）。再把每个
+<span class="math inline">\(a_j\)</span> 用 <span
+class="math inline">\(E/F\)</span> 的基展开：<span
+class="math inline">\(a_j = \sum_i b_{ij} e_i\)</span>（<span
+class="math inline">\(b_{ij} \in F\)</span>）。于是 <span
+class="math inline">\(\alpha = \sum_{i,j} b_{ij} e_i k_j\)</span>。</p>
+<p><strong>线性无关</strong>：若 <span class="math inline">\(\sum_{i,j}
+b_{ij} e_i k_j = 0\)</span>（<span class="math inline">\(b_{ij} \in
+F\)</span>），写成 <span class="math inline">\(\sum_j (\sum_i b_{ij}
+e_i) k_j = 0\)</span>。由于 <span class="math inline">\(\{k_j\}\)</span>
+在 <span class="math inline">\(E\)</span> 上线性无关，每个系数 <span
+class="math inline">\(\sum_i b_{ij} e_i = 0\)</span>。再由 <span
+class="math inline">\(\{e_i\}\)</span> 在 <span
+class="math inline">\(F\)</span> 上线性无关，得 <span
+class="math inline">\(b_{ij} = 0\)</span>。</p>
+<p>故基有 <span class="math inline">\(mn\)</span> 个元素，<span
+class="math inline">\([K:F] = mn = [K:E][E:F]\)</span>。</p>
+</aside>
+<h2 id="通俗理解">通俗理解</h2>
+<p>塔定理说的是：域扩张的次数可以"逐层累乘"。</p>
+<p>想象盖楼：从 <span class="math inline">\(F\)</span> 到 <span
+class="math inline">\(E\)</span> 盖了 <span
+class="math inline">\(m\)</span> 层，从 <span
+class="math inline">\(E\)</span> 到 <span
+class="math inline">\(K\)</span> 又盖了 <span
+class="math inline">\(n\)</span> 层。但这不是简单的 <span
+class="math inline">\(m + n\)</span> 层——每一层 <span
+class="math inline">\(E \to K\)</span> 的"楼层"在 <span
+class="math inline">\(F\)</span> 看来都有 <span
+class="math inline">\(m\)</span> 个"房间"，所以总共是 <span
+class="math inline">\(m \times n\)</span> 个"房间"。</p>
+<h2 id="例子-1">例子</h2>
+<p><span class="math display">\[\mathbb{Q} \subseteq
+\mathbb{Q}(\sqrt{2}) \subseteq \mathbb{Q}(\sqrt{2},
+\sqrt{3})\]</span></p>
+<ul>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt{2}) : \mathbb{Q}] =
+2\)</span></li>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt{2}, \sqrt{3}) :
+\mathbb{Q}(\sqrt{2})] = 2\)</span>（因为 <span
+class="math inline">\(\sqrt{3} \notin
+\mathbb{Q}(\sqrt{2})\)</span>，其最小多项式 <span
+class="math inline">\(x^2 - 3\)</span> 在 <span
+class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span> 上不可约）</li>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt{2}, \sqrt{3}) :
+\mathbb{Q}] = 2 \times 2 = 4\)</span> ✓</li>
+</ul>
+<h2 id="塔定理的应用">塔定理的应用</h2>
+<p>塔定理是证明"某些数不可能用尺规作图构造"的关键工具。</p>
+<p>尺规作图每一步只能构造 <span class="math inline">\(2\)</span>
+次扩张（取交点或画圆），所以经过有限步后得到的扩张次数一定是 <span
+class="math inline">\(2\)</span> 的幂。如果某个数的最小多项式次数不是
+<span class="math inline">\(2\)</span>
+的幂，它就不能被尺规作图构造。</p>
+<p>例如，倍立方体问题要求构造 <span
+class="math inline">\(\sqrt[3]{2}\)</span>，但 <span
+class="math inline">\([\mathbb{Q}(\sqrt[3]{2}):\mathbb{Q}] =
+3\)</span>（最小多项式 <span class="math inline">\(x^3 - 2\)</span>
+不可约）。<span class="math inline">\(3\)</span> 不是 <span
+class="math inline">\(2\)</span>
+的幂，所以<strong>倍立方体问题不可解</strong>！</p>
+<h1 id="代数元与超越元">代数元与超越元</h1>
+<h2 id="定义-2">定义</h2>
+<p>设 <span class="math inline">\(K/F\)</span> 是域扩张，<span
+class="math inline">\(\alpha \in K\)</span>。</p>
+<ul>
+<li>若存在非零多项式 <span class="math inline">\(f(x) \in F[x]\)</span>
+使得 <span class="math inline">\(f(\alpha) = 0\)</span>，则称 <span
+class="math inline">\(\alpha\)</span> 是 <span
+class="math inline">\(F\)</span> 上的<strong>代数元</strong></li>
+<li>否则称 <span class="math inline">\(\alpha\)</span> 是 <span
+class="math inline">\(F\)</span> 上的<strong>超越元</strong></li>
+</ul>
+<p>若 <span class="math inline">\(K\)</span> 中所有元素都是 <span
+class="math inline">\(F\)</span> 上的代数元，则称 <span
+class="math inline">\(K/F\)</span> 是<strong>代数扩张</strong>。</p>
+<h2 id="通俗解释-1">通俗解释</h2>
+<p>代数元是"乖"的——它满足某个多项式方程，可以用有限的代数关系描述。超越元是"野"的——没有任何有理系数多项式方程能"抓住"它。</p>
+<h2 id="例子-2">例子</h2>
+<ul>
+<li><span class="math inline">\(\sqrt{2}\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的代数元：<span
+class="math inline">\(x^2 - 2 = 0\)</span> ✓</li>
+<li><span class="math inline">\(i\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的代数元：<span
+class="math inline">\(x^2 + 1 = 0\)</span> ✓</li>
+<li><span class="math inline">\(\sqrt[3]{5}\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的代数元：<span
+class="math inline">\(x^3 - 5 = 0\)</span> ✓</li>
+<li><span class="math inline">\(\pi\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的超越元（林德曼 1882
+年证明）</li>
+<li><span class="math inline">\(e\)</span> 是 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的超越元（埃尔米特 1873
+年证明）</li>
+</ul>
+<aside>
+<p>💡 有限扩张一定是代数扩张（但反过来不一定）。证明很简单：若 <span
+class="math inline">\([K:F] = n\)</span>，则对任意 <span
+class="math inline">\(\alpha \in K\)</span>，<span
+class="math inline">\(1, \alpha, \alpha^2, \ldots, \alpha^n\)</span> 这
+<span class="math inline">\(n+1\)</span> 个元素在 <span
+class="math inline">\(n\)</span>
+维空间中必然线性相关，于是存在非平凡的关系 <span
+class="math inline">\(c_0 + c_1\alpha + \cdots + c_n\alpha^n =
+0\)</span>，这就是 <span class="math inline">\(\alpha\)</span>
+满足的多项式方程。</p>
+</aside>
+<h1 id="单扩张与最小多项式">单扩张与最小多项式</h1>
+<h2 id="定义-3">定义</h2>
+<p>若 <span class="math inline">\(K = F(\alpha)\)</span>，即 <span
+class="math inline">\(K\)</span> 由 <span
+class="math inline">\(F\)</span> 添加一个元素 <span
+class="math inline">\(\alpha\)</span> 生成（<span
+class="math inline">\(K\)</span> 是包含 <span
+class="math inline">\(F\)</span> 和 <span
+class="math inline">\(\alpha\)</span> 的最小域），则称 <span
+class="math inline">\(K/F\)</span> 是<strong>单扩张</strong>。</p>
+<h2 id="定义最小多项式">定义：最小多项式</h2>
+<p>设 <span class="math inline">\(\alpha\)</span> 是 <span
+class="math inline">\(F\)</span> 上的代数元。次数最低的使得 <span
+class="math inline">\(m(\alpha) = 0\)</span> 的首一多项式 <span
+class="math inline">\(m(x) \in F[x]\)</span>，称为 <span
+class="math inline">\(\alpha\)</span> 在 <span
+class="math inline">\(F\)</span> 上的<strong>最小多项式</strong>，记作
+<span class="math inline">\(m_\alpha(x)\)</span> 或 <span
+class="math inline">\(\text{irr}(\alpha, F)\)</span>。</p>
+<p>最小多项式一定是不可约的（否则可以分解为更低次的因子，其中某个因子也以
+<span class="math inline">\(\alpha\)</span> 为根，矛盾）。</p>
+<h2 id="定理单代数扩张的结构">定理：单代数扩张的结构</h2>
+<p>若 <span class="math inline">\(\alpha\)</span> 是 <span
+class="math inline">\(F\)</span> 上的代数元，最小多项式为 <span
+class="math inline">\(m_\alpha(x)\)</span>，<span
+class="math inline">\(\deg m_\alpha = n\)</span>，则：</p>
+<p><span class="math display">\[F(\alpha) \cong
+F[x]/(m_\alpha(x))\]</span></p>
+<p>并且 <span class="math inline">\([F(\alpha) : F] = n\)</span>，基为
+<span class="math inline">\(\{1, \alpha, \alpha^2, \ldots,
+\alpha^{n-1}\}\)</span>。</p>
+<aside>
+<p><strong>证明</strong>：</p>
+<p>定义环同态 <span class="math inline">\(\phi: F[x] \to
+F(\alpha)\)</span>，<span class="math inline">\(f(x) \mapsto
+f(\alpha)\)</span>（"代入 <span
+class="math inline">\(\alpha\)</span>"映射）。</p>
+<p><strong>核</strong>：<span class="math inline">\(\ker(\phi) = \{f(x)
+\in F[x] \mid f(\alpha) = 0\}\)</span>。由于 <span
+class="math inline">\(F[x]\)</span> 是主理想环，<span
+class="math inline">\(\ker(\phi) =
+(m_\alpha(x))\)</span>（最小多项式生成了所有以 <span
+class="math inline">\(\alpha\)</span> 为根的多项式构成的理想）。</p>
+<p><strong>像</strong>：<span
+class="math inline">\(\operatorname{Im}(\phi) = F[\alpha] = \{c_0 +
+c_1\alpha + \cdots + c_k\alpha^k \mid c_i \in F\}\)</span>。由于 <span
+class="math inline">\(\alpha\)</span> 是代数元，可以证明 <span
+class="math inline">\(F[\alpha] = F(\alpha)\)</span>（<span
+class="math inline">\(F[\alpha]\)</span> 本身已经是域）。</p>
+<p>由第一同构定理：<span class="math inline">\(F[x]/(m_\alpha(x)) \cong
+F(\alpha)\)</span>。</p>
+<p>维数方面：<span class="math inline">\((m_\alpha(x))\)</span>
+中的元素至少 <span class="math inline">\(n\)</span> 次，所以 <span
+class="math inline">\(F[x]/(m_\alpha(x))\)</span> 中每个元素都可以用次数
+<span class="math inline">\(&lt; n\)</span> 的多项式表示，基为 <span
+class="math inline">\(\{1, x, x^2, \ldots, x^{n-1}\}\)</span>，对应
+<span class="math inline">\(F(\alpha)\)</span> 中的基 <span
+class="math inline">\(\{1, \alpha, \alpha^2, \ldots,
+\alpha^{n-1}\}\)</span>。</p>
+</aside>
+<h2 id="通俗理解-1">通俗理解</h2>
+<p>这个定理是域扩张理论中最核心的结构定理。它说：</p>
+<blockquote>
+<p>添加一个代数元 <span
+class="math inline">\(\alpha\)</span>，等价于在多项式环里"把最小多项式当成零"。</p>
+</blockquote>
+<p>在 <span class="math inline">\(F[x]/(m_\alpha(x))\)</span> 中，变量
+<span class="math inline">\(x\)</span> 扮演了 <span
+class="math inline">\(\alpha\)</span> 的角色。由于 <span
+class="math inline">\(m_\alpha(x) = 0\)</span>（在商环中），<span
+class="math inline">\(x\)</span>
+的高次幂可以用低次幂表示——这就是为什么扩张是有限维的。</p>
+<h2 id="例子mathbbqsqrt2-的结构">例子：<span
+class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span> 的结构</h2>
+<p><span class="math inline">\(\sqrt{2}\)</span> 的最小多项式是 <span
+class="math inline">\(m(x) = x^2 - 2\)</span>（不可约，因为 <span
+class="math inline">\(\sqrt{2} \notin \mathbb{Q}\)</span>）。</p>
+<p><span class="math display">\[\mathbb{Q}(\sqrt{2}) \cong
+\mathbb{Q}[x]/(x^2 - 2)\]</span></p>
+<p>基为 <span class="math inline">\(\{1, \sqrt{2}\}\)</span>，<span
+class="math inline">\(\sqrt{2}\)</span> 满足 <span
+class="math inline">\((\sqrt{2})^2 = 2\)</span>。</p>
+<p>在商环 <span class="math inline">\(\mathbb{Q}[x]/(x^2 - 2)\)</span>
+中：<span class="math inline">\(x^2 = 2\)</span>，所以： <span
+class="math display">\[(3 + 2x)(1 - x) = 3 - 3x + 2x - 2x^2 = 3 - x - 4
+= -1 - x\]</span></p>
+<p>对应到 <span class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span> 中：
+<span class="math display">\[(3 + 2\sqrt{2})(1 - \sqrt{2}) = 3 -
+3\sqrt{2} + 2\sqrt{2} - 4 = -1 - \sqrt{2}\]</span></p>
+<p>完全一致 ✓</p>
+<h2 id="例子构造-mathbbf_4四元域">例子：构造 <span
+class="math inline">\(\mathbb{F}_4\)</span>（四元域）</h2>
+<p>取 <span class="math inline">\(\mathbb{F}_2 = \{0,
+1\}\)</span>（二元域），多项式 <span class="math inline">\(x^2 + x +
+1\)</span> 在 <span class="math inline">\(\mathbb{F}_2\)</span>
+上不可约（代入 <span class="math inline">\(0\)</span> 和 <span
+class="math inline">\(1\)</span> 都不是根）。</p>
+<p><span class="math display">\[\mathbb{F}_4 = \mathbb{F}_2[x]/(x^2 + x
++ 1) = \{0, 1, \alpha, 1+\alpha\}\]</span></p>
+<p>其中 <span class="math inline">\(\alpha\)</span> 满足 <span
+class="math inline">\(\alpha^2 + \alpha + 1 = 0\)</span>，即 <span
+class="math inline">\(\alpha^2 = \alpha + 1\)</span>（在 <span
+class="math inline">\(\mathbb{F}_2\)</span> 中 <span
+class="math inline">\(-1 = 1\)</span>）。</p>
+<p>这个四元域的乘法表： | <span class="math inline">\(\times\)</span> |
+<span class="math inline">\(0\)</span> | <span
+class="math inline">\(1\)</span> | <span
+class="math inline">\(\alpha\)</span> | <span
+class="math inline">\(1+\alpha\)</span> |
+|----------|-----|-----|----------|------------| | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(0\)</span> | | <span
+class="math inline">\(1\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(1\)</span> | <span
+class="math inline">\(\alpha\)</span> | <span
+class="math inline">\(1+\alpha\)</span> | | <span
+class="math inline">\(\alpha\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(\alpha\)</span> | <span
+class="math inline">\(1+\alpha\)</span> | <span
+class="math inline">\(1\)</span> | | <span
+class="math inline">\(1+\alpha\)</span> | <span
+class="math inline">\(0\)</span> | <span
+class="math inline">\(1+\alpha\)</span> | <span
+class="math inline">\(1\)</span> | <span
+class="math inline">\(\alpha\)</span> |</p>
+<aside>
+<p>💡 这展示了一个深刻的事实：有限域的构造完全依赖于不可约多项式。每个
+<span class="math inline">\(p^n\)</span> 阶有限域都可以通过 <span
+class="math inline">\(\mathbb{F}_p[x]/(f(x))\)</span> 构造，其中 <span
+class="math inline">\(f(x)\)</span> 是 <span
+class="math inline">\(n\)</span> 次不可约多项式。</p>
+</aside>
+<h1 id="代数闭域与代数闭包">代数闭域与代数闭包</h1>
+<h2 id="定义-4">定义</h2>
+<p>若域 <span class="math inline">\(F\)</span> 满足：<span
+class="math inline">\(F\)</span> 上的每个非常数多项式都在 <span
+class="math inline">\(F\)</span> 中有根，则称 <span
+class="math inline">\(F\)</span> 是<strong>代数闭域</strong>。</p>
+<p>等价地说：<span class="math inline">\(F\)</span>
+上的每个非常数多项式都可以在 <span class="math inline">\(F[x]\)</span>
+中分解为一次因式的乘积。</p>
+<h2 id="例子-3">例子</h2>
+<ul>
+<li><span class="math inline">\(\mathbb{C}\)</span>
+是代数闭域（<strong>代数基本定理</strong>：<span
+class="math inline">\(\mathbb{C}\)</span> 上每个 <span
+class="math inline">\(n\)</span> 次多项式恰有 <span
+class="math inline">\(n\)</span> 个根，计重数）</li>
+<li><span class="math inline">\(\mathbb{R}\)</span> 不是代数闭域（<span
+class="math inline">\(x^2 + 1 = 0\)</span> 无实数根）</li>
+<li><span class="math inline">\(\mathbb{Q}\)</span> 不是代数闭域（<span
+class="math inline">\(x^2 - 2 = 0\)</span> 无有理根）</li>
+<li><span class="math inline">\(\mathbb{F}_p\)</span>
+不是代数闭域（<span class="math inline">\(x^p - x - 1 = 0\)</span> 无
+<span class="math inline">\(\mathbb{F}_p\)</span> 中的根）</li>
+</ul>
+<h2 id="定义代数闭包">定义：代数闭包</h2>
+<p><span class="math inline">\(F\)</span> 的<strong>代数闭包</strong>
+<span class="math inline">\(\bar{F}\)</span> 是满足以下条件的域： 1.
+<span class="math inline">\(\bar{F}/F\)</span> 是代数扩张 2. <span
+class="math inline">\(\bar{F}\)</span> 是代数闭域</p>
+<p>代数闭包可以理解为"把所有缺失的代数数全部补上"。</p>
+<ul>
+<li><span
+class="math inline">\(\overline{\mathbb{Q}}\)</span>（所有代数数构成的域）是
+<span class="math inline">\(\mathbb{Q}\)</span> 的代数闭包</li>
+<li><span class="math inline">\(\mathbb{C}\)</span> 是 <span
+class="math inline">\(\mathbb{R}\)</span> 的代数闭包</li>
+</ul>
+<aside>
+<p>💡 <span class="math inline">\(\overline{\mathbb{Q}}\)</span> 和
+<span class="math inline">\(\mathbb{C}\)</span> 完全不同！<span
+class="math inline">\(\overline{\mathbb{Q}}\)</span>
+是可数的（代数数可数），而 <span
+class="math inline">\(\mathbb{C}\)</span> 不可数。<span
+class="math inline">\(\mathbb{C}\)</span> 中的超越数（如 <span
+class="math inline">\(\pi, e\)</span>）都不在 <span
+class="math inline">\(\overline{\mathbb{Q}}\)</span> 中。</p>
+</aside>
+<h1 id="分裂域">分裂域</h1>
+<h2 id="定义-5">定义</h2>
+<p>设 <span class="math inline">\(f(x) \in F[x]\)</span>
+是非常数多项式。若存在扩张 <span class="math inline">\(E/F\)</span>
+使得： 1. <span class="math inline">\(f(x)\)</span> 在 <span
+class="math inline">\(E[x]\)</span> 中完全分解为一次因式的乘积：<span
+class="math inline">\(f(x) =
+a(x-\alpha_1)(x-\alpha_2)\cdots(x-\alpha_n)\)</span> 2. <span
+class="math inline">\(E = F(\alpha_1, \alpha_2, \ldots,
+\alpha_n)\)</span>（<span class="math inline">\(E\)</span> 由 <span
+class="math inline">\(F\)</span> 和所有根生成，不多不少）</p>
+<p>则称 <span class="math inline">\(E\)</span> 是 <span
+class="math inline">\(f(x)\)</span> 在 <span
+class="math inline">\(F\)</span> 上的<strong>分裂域</strong>（splitting
+field）。</p>
+<h2 id="通俗解释-2">通俗解释</h2>
+<p>分裂域是"让多项式完全分解所需的最小域"。你需要把多项式的所有根都"收集"起来，但不多收——只要刚好够让多项式分裂成一次因式。</p>
+<h2 id="例子-4">例子</h2>
+<h3 id="例1x2---2-在-mathbbq-上的分裂域">例1：<span
+class="math inline">\(x^2 - 2\)</span> 在 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的分裂域</h3>
+<p>根为 <span class="math inline">\(\pm\sqrt{2}\)</span>。分裂域是 <span
+class="math inline">\(\mathbb{Q}(\sqrt{2}, -\sqrt{2}) =
+\mathbb{Q}(\sqrt{2})\)</span>（<span
+class="math inline">\(-\sqrt{2}\)</span> 已经在 <span
+class="math inline">\(\mathbb{Q}(\sqrt{2})\)</span> 中了）。</p>
+<p><span class="math display">\[[\mathbb{Q}(\sqrt{2}) : \mathbb{Q}] =
+2\]</span></p>
+<h3 id="例2x2-1-在-mathbbr-上的分裂域">例2：<span
+class="math inline">\(x^2 + 1\)</span> 在 <span
+class="math inline">\(\mathbb{R}\)</span> 上的分裂域</h3>
+<p>根为 <span class="math inline">\(\pm i\)</span>。分裂域是 <span
+class="math inline">\(\mathbb{R}(i) = \mathbb{C}\)</span>。</p>
+<p><span class="math display">\[[\mathbb{C} : \mathbb{R}] =
+2\]</span></p>
+<h3 id="例3x3---2-在-mathbbq-上的分裂域">例3：<span
+class="math inline">\(x^3 - 2\)</span> 在 <span
+class="math inline">\(\mathbb{Q}\)</span> 上的分裂域</h3>
+<p>三个根为 <span class="math inline">\(\sqrt[3]{2}\)</span>、<span
+class="math inline">\(\omega\sqrt[3]{2}\)</span>、<span
+class="math inline">\(\omega^2\sqrt[3]{2}\)</span>，其中 <span
+class="math inline">\(\omega = e^{2\pi i/3} = -\frac{1}{2} +
+\frac{\sqrt{3}}{2}i\)</span> 是三次本原单位根。</p>
+<p>分裂域是 <span class="math inline">\(\mathbb{Q}(\sqrt[3]{2},
+\omega)\)</span>。利用塔定理：</p>
+<p><span class="math display">\[\mathbb{Q} \subseteq
+\mathbb{Q}(\sqrt[3]{2}) \subseteq \mathbb{Q}(\sqrt[3]{2},
+\omega)\]</span></p>
+<ul>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt[3]{2}) : \mathbb{Q}] =
+3\)</span>（最小多项式 <span class="math inline">\(x^3 -
+2\)</span>）</li>
+<li><span class="math inline">\([\mathbb{Q}(\sqrt[3]{2}, \omega) :
+\mathbb{Q}(\sqrt[3]{2})] = 2\)</span>（<span
+class="math inline">\(\omega\)</span> 满足 <span
+class="math inline">\(x^2 + x + 1 = 0\)</span>）</li>
+</ul>
+<p><span class="math display">\[[\mathbb{Q}(\sqrt[3]{2}, \omega) :
+\mathbb{Q}] = 3 \times 2 = 6\]</span></p>
+<aside>
+<p>💡 注意 <span class="math inline">\(\mathbb{Q}(\sqrt[3]{2})\)</span>
+本身<strong>不是</strong>分裂域！它只包含一个实数根 <span
+class="math inline">\(\sqrt[3]{2}\)</span>，另外两个复数根 <span
+class="math inline">\(\omega\sqrt[3]{2}, \omega^2\sqrt[3]{2}\)</span>
+不在其中。必须添加 <span class="math inline">\(\omega\)</span>
+才能让多项式完全分裂。这个分裂域将在伽罗瓦理论中扮演关键角色——它的伽罗瓦群恰好是
+<span class="math inline">\(S_3\)</span>。</p>
+</aside>
+<h1 id="小结">小结</h1>
+<ul>
+<li><strong>域扩张</strong> <span
+class="math inline">\(K/F\)</span>：<span class="math inline">\(F
+\subseteq K\)</span>，<span class="math inline">\(K\)</span> 是 <span
+class="math inline">\(F\)</span> 上的向量空间</li>
+<li><strong>扩张次数</strong> <span class="math inline">\([K:F]\)</span>
+是 <span class="math inline">\(K\)</span> 作为 <span
+class="math inline">\(F\)</span>-向量空间的维数</li>
+<li><strong>塔定理</strong>：<span class="math inline">\([K:F] = [K:E]
+\cdot [E:F]\)</span>，次数逐层相乘</li>
+<li><strong>代数元</strong>满足多项式方程；<strong>超越元</strong>不满足</li>
+<li><strong>单代数扩张</strong>：<span class="math inline">\(F(\alpha)
+\cong F[x]/(m_\alpha(x))\)</span>，次数等于最小多项式的次数</li>
+<li><strong>分裂域</strong>是"让多项式完全分解"的最小扩张</li>
+</ul>
+<p>域扩张是伽罗瓦理论的舞台。下一篇文章我们将看到：每个域扩张都对应一个伽罗瓦群，群的子群与中间域之间存在完美的对应关系——这就是伽罗瓦理论的核心！</p>
+<h1 id="概念关系图">概念关系图</h1>
+<p>下图展示了本篇核心概念——域扩张、扩张次数、代数元、单扩张、分裂域——及其相互关系：</p>
+<div class="concept-graph"
+data-src="/assets/data/graphs/field-extension.json">
+
+</div>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/" title="域扩张：走向伽罗瓦理论的桥梁">https://aquietzero.github.io/2026/04/01/math/数学漫步/抽象代数/2026-04-10-域扩张：走向伽罗瓦理论的桥梁/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag"># 抽象代数</a>
+              <a href="/tags/%E5%9F%9F%E8%AE%BA/" rel="tag"># 域论</a>
+              <a href="/tags/%E5%9F%9F%E6%89%A9%E5%BC%A0/" rel="tag"># 域扩张</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/" rel="prev" title="环与域：两个运算的世界">
+                  <i class="fa fa-angle-left"></i> 环与域：两个运算的世界
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/02/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%EF%BC%9A%E7%BE%A4%E4%B8%8E%E6%96%B9%E7%A8%8B%E7%9A%84%E5%8D%83%E5%B9%B4%E8%B0%9C%E9%A2%98/" rel="next" title="伽罗瓦理论：群与方程的千年谜题">
+                  伽罗瓦理论：群与方程的千年谜题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">385k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:21</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
