@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300italic,400,400italic,700,700italic%7CJetBrains+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aquietzero.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"width":null},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"stickytabs":false,"motion":{"enable":false,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="虽然很早之前就已经是 vibe coding，但当时还是会手写代码，我确实没想到完全不用写代码这天会来的这么快。这个从写代码到完全不写代码的转变切换得如此快速，以至于还没有什么留恋以及体感就已经完全没有写代码了，甚至有点厌倦写代码了。 引入 harness engineering 之后，感觉代码的质量与可控性大大提高，在通过不断把自己想法实现的过程中完善与优化工作流，感觉目前已经跑的较为顺畅。这段">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最近的AI编码感受">
+<meta property="og:url" content="https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/index.html">
+<meta property="og:site_name" content="NullSpace">
+<meta property="og:description" content="虽然很早之前就已经是 vibe coding，但当时还是会手写代码，我确实没想到完全不用写代码这天会来的这么快。这个从写代码到完全不写代码的转变切换得如此快速，以至于还没有什么留恋以及体感就已经完全没有写代码了，甚至有点厌倦写代码了。 引入 harness engineering 之后，感觉代码的质量与可控性大大提高，在通过不断把自己想法实现的过程中完善与优化工作流，感觉目前已经跑的较为顺畅。这段">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E6%97%A5%E5%8E%86.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E8%BD%A8%E8%BF%B9.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E5%BE%85%E5%8A%9E.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E8%AF%AD%E6%96%99.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E9%98%85%E8%AF%BB.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E5%8D%95%E8%AF%8D.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E6%96%B0%E9%97%BB.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E8%AF%8D%E5%85%B8.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E5%8F%AB%E7%89%8C%E8%AE%AD%E7%BB%83.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E5%A4%8D%E7%9B%98.png">
+<meta property="og:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E9%A1%B9%E7%9B%AE.png">
+<meta property="article:published_time" content="2026-05-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-08T07:57:55.035Z">
+<meta property="article:author" content="bifnudo">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="AI Coding">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://aquietzero.github.io/assets/images/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/%E6%97%A5%E5%8E%86.png">
+
+
+<link rel="canonical" href="https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/","path":"2026/05/08/computer/AI-Coding/2026-05-08-最近的AI编码感受/","title":"最近的AI编码感受"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>最近的AI编码感受 | NullSpace</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCZ3TL69CD"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-BCZ3TL69CD","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">NullSpace</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Stay hungry, stay foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section">首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section">归档</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section">关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">时间管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">语言学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%BA%BB%E5%B0%86%E5%A4%A7%E5%B8%88"><span class="nav-number">3.</span> <span class="nav-text">麻将大师</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bifnudo"
+      src="/assets/images/me.webp">
+  <p class="site-author-name" itemprop="name">bifnudo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">168</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aquietzero" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aquietzero" rel="noopener me" target="_blank">GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.douban.com/people/aquietzero" title="豆瓣 → https:&#x2F;&#x2F;www.douban.com&#x2F;people&#x2F;aquietzero" rel="noopener me" target="_blank">豆瓣</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhaoyunhaosss@gmail.com" title="E-Mail → mailto:zhaoyunhaosss@gmail.com" rel="noopener me" target="_blank">E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/images/me.webp">
+      <meta itemprop="name" content="bifnudo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="最近的AI编码感受 | NullSpace">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          最近的AI编码感受
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-08 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-08T00:00:00+08:00">2026-05-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer/" itemprop="url" rel="index"><span itemprop="name">Computer</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/05/08/computer/AI-Coding/2026-05-08-最近的AI编码感受/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>虽然很早之前就已经是 vibe
+coding，但当时还是会手写代码，我确实没想到完全不用写代码这天会来的这么快。这个从写代码到完全不写代码的转变切换得如此快速，以至于还没有什么留恋以及体感就已经完全没有写代码了，甚至有点厌倦写代码了。</p>
+<p>引入 harness engineering
+之后，感觉代码的质量与可控性大大提高，在通过不断把自己想法实现的过程中完善与优化工作流，感觉目前已经跑的较为顺畅。这段时间利用业余时间做了不少以前想做但是又懒得做的事情。</p>
+<h1 id="时间管理">时间管理</h1>
+<p>从大学毕业开始，我就不间断地进行时间记录，不知不觉十几年，其实我也没想过这个习惯居然会断，但实际上，这个习惯确实很自然地断掉了，忽然失去了记录的动力。但很早之前就想写一个时间记录的应用，用于将这一切记录数字化，然而因为懒一直都没进行。借着
+AI 能力的急剧提高，写这样的东西已经不需要花太多气力了。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/日历.png" />
+<img src="/assets/images/2026-05-08-最近的AI编码感受/轨迹.png" /> <img
+src="/assets/images/2026-05-08-最近的AI编码感受/年度.png" /></p>
+<p>处理这样的页面，AI
+简直得心应手，而且大部分都是简单逻辑。虽说很多逻辑自己改起来也非常快，但是一旦适应了
+AI 的能力，一行代码都不想写了。</p>
+<p>顺便也整合了待办在日历里，过去也一直没能找到合适的待办工具，这下可以按照自己的想法来实现了，虽然不难，简单的
+UI，但是这些东西适合自己才是最好的。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/待办.png" /></p>
+<h1 id="语言学习">语言学习</h1>
+<p>自动 AI 出来之后有一段时间我失去了语言学习的兴趣，感觉只要每天与 AI
+聊聊天就能保持，但事实发现并非如此，如果想长久扎实地掌握一种语言，还是需要脚踏实地进行学习。</p>
+<p>目前一些语言都已经有了一定基础，我感觉如果只是兴趣，并不是真正需要国外生活，那么阅读能力其实是一个非常重要的能力，而且投入产出比比较合理。虽然说口语才是真正掌握一门语言，但对于身处国内的我来说并不需要。</p>
+<p>所以语言学习从语料开始，上传自己希望阅读的语料，进行阅读。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/语料.png" />
+<img src="/assets/images/2026-05-08-最近的AI编码感受/阅读.png" /></p>
+<p>阅读过程中查词，并进行记录，这些词条可以生成学习卡片与学习计划，按照艾宾浩斯遗忘曲线作为每天出现的策略。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/单词.png" /></p>
+<p>另外还实现了每日新闻，可以通过阅读这些简短的新闻来学习更为正式的表达，也可以起到咨询摄入的作用。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/新闻.png" /></p>
+<p>AI
+查词其实能力已经很强大，不过如果考虑速度以及方便性，还是远远不如普通词典，所以本应用还支持上传词典，这些词典会经过预处理分析转化为同样的词条结构，方便阅读查询与展示。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/词典.png" /></p>
+<h1 id="麻将大师">麻将大师</h1>
+<p>前段时间打了几次麻将，输钱居多，以为自己对这个东西还是挺擅长的，没想到结果并不好。偶尔的机会和前领导吃了次饭，才得知他是卡牌高手，擅长德州，估计有业余顶尖水平。聊天中得知，他在德州的学习长达十年之久，可见这些东西都是需要长久的练习的，于是，我也想着借着
+AI 的能力，来实现一个麻将训练器。</p>
+<p><img
+src="/assets/images/2026-05-08-最近的AI编码感受/麻将大师.png" /></p>
+<p>这类应用其实网上已经有很多，不过还是不得我心，我希望看到的决策数据基本上都不会展示，而且玩法会有所限制，高级功能甚至要收费，于是自己写还是更好。</p>
+<p>目前只实现了自己需要的功能，主要是出牌和叫牌训练，选择之后有详细分析，并且有数据统计。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/叫牌训练.png" />
+<img
+src="/assets/images/2026-05-08-最近的AI编码感受/出牌训练.png" /></p>
+<p>里面还包含模拟实战的能力，与三个 AI 对战，AI
+会做最优的选择，这意味着如果自己选择有问题，那就会输，如果自己选择没问题，那就看概率。</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/复盘.png" /></p>
+<p>经过这个应用的训练，我才意识到自己是多么的菜。即使是原来以为很简单的叫牌训练，在一般复杂的牌型下，连叫什么牌都找不全，难怪自己要输钱了。</p>
+<h1 id="总结">总结</h1>
+<p>这里列出来的其实也只是冰山一角，AI
+确实让我提升了效率，然而却没有让我的电脑时间减少。尤其到了深夜，当想法疯狂爆发的时候，AI
+就像是阿拉丁神灯，可以满足你所有的愿望。当你说出了你的需求，接下来就只需要等待，这是一个神奇的过程，多次让我深夜奋战到两三点。</p>
+<p>工作流目前基本遵循</p>
+<ul>
+<li><code>/design</code>：功能确认，技术设计</li>
+<li><code>/feature</code>：编码实现，严格遵循测试驱动开发</li>
+<li><code>/commit</code>：提交代码</li>
+<li><code>/memory</code>：整理记忆，归档文档</li>
+</ul>
+<p>编码实验的时候测试先行非常重要，我觉得这个也是 harness engineering
+的核心。就下面的项目而言，虽然核心代码只有区区几万行，但是测试用例已经有大百个，每次提交之前都要求所有测试用例通过，试问这样的项目逻辑，还能不放心吗？</p>
+<p><img src="/assets/images/2026-05-08-最近的AI编码感受/项目.png" /></p>
+<p>日常工作很多时候的决策都是基于文档的阅读，所以基本上可以脱离过去使用的编辑器了，一个很简单的文档阅读器就能应对几乎所有情况。</p>
+<p><img
+src="/assets/images/2026-05-08-最近的AI编码感受/文档阅读.png" /></p>
+<p>以前编码，解决问题的快感，逐步转变为想法实现的快感了。有很多人提到开发会被
+Agent
+干掉，虽然我觉得并不无可能，但可能性也不高，在最近使用的过程中，我也有观察其他人的使用，甚至其他工种的人的使用，可以看出，对
+AI
+的使用能力，至少到目前为止还是受限于本身的架构素养与编程能力。当项目复杂到一定程度，并不是那么简单就能将
+AI 用好的。</p>
+<p>在我看来，只是编程语言从个别具体的编程语言转变为自然语言而已，而编程与实现本身，是非常需要工程能力的，而这个能力可能不是过去多层次的架构能力，而是需要更高层的抽象与掌控能力了。而我们，只是从xx工程师，统一编程了
+Agent 工程师而已。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+<script>
+  function resizeIframe() {
+    const obj = document.querySelector('.post-body iframe');
+    obj.onload = () => {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+      obj.setAttribute('scrolling', 'no');
+    }
+  }
+  resizeIframe();
+</script>
+
+<script src="/assets/lib/concept-graph/concept-graph-loader.js"></script>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>bifnudo
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-%E6%9C%80%E8%BF%91%E7%9A%84AI%E7%BC%96%E7%A0%81%E6%84%9F%E5%8F%97/" title="最近的AI编码感受">https://aquietzero.github.io/2026/05/08/computer/AI-Coding/2026-05-08-最近的AI编码感受/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/AI-Coding/" rel="tag"># AI Coding</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/08/computer/AI-Coding/AI%E7%BC%96%E7%A8%8B%E6%80%9D%E8%80%83/" rel="prev" title="AI编程思考">
+                  <i class="fa fa-angle-left"></i> AI编程思考
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-terminal"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">bifnudo</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">387k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">23:27</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/aquietzero" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"version":"11.5.0","config":{"flowchart":{"curve":"basis"}},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.5.0/mermaid.min.js","integrity":"sha256-K7oJiQlDulzl24ZUFOywuYme1JqBBvQzK6m8qHjt9Gk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"aquietzero-github-io","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

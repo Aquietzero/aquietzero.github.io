@@ -21,7 +21,7 @@
     <meta name="description" content="上一篇聊了如何在已有项目中引入 Harness Engineering，那是一个&quot;改造&quot;的过程——你已经有了代码，agent 可以读代码理解项目，然后逐步建立规范。但新项目不一样，文件夹里什么都没有，agent 没有任何上下文可以参考。 所以新项目的 Harness Engineering 需要一种不同的思路：你只需要准备两样东西，agent 就能帮你把整个工程体系从零搭建起来。 只需要两个文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="新项目建立 Harness Engineering">
-<meta property="og:url" content="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/index.html">
+<meta property="og:url" content="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/index.html">
 <meta property="og:site_name" content="NullSpace">
 <meta property="og:description" content="上一篇聊了如何在已有项目中引入 Harness Engineering，那是一个&quot;改造&quot;的过程——你已经有了代码，agent 可以读代码理解项目，然后逐步建立规范。但新项目不一样，文件夹里什么都没有，agent 没有任何上下文可以参考。 所以新项目的 Harness Engineering 需要一种不同的思路：你只需要准备两样东西，agent 就能帮你把整个工程体系从零搭建起来。 只需要两个文件">
 <meta property="og:locale" content="zh_CN">
@@ -34,11 +34,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/">
+<link rel="canonical" href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/","path":"2026/04/09/computer/AI-Coding/2026-04-09-新项目建立Harness Engineering/","title":"新项目建立 Harness Engineering"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/","path":"2026/04/09/computer/AI-Coding/2026-04-09-新项目建立HarnessEngineering/","title":"新项目建立 Harness Engineering"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>新项目建立 Harness Engineering | NullSpace</title>
@@ -134,7 +134,7 @@ command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-count">168</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -145,7 +145,7 @@ command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-count">99</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -183,7 +183,7 @@ command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/assets/images/me.webp">
@@ -233,8 +233,8 @@ command</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/04/09/computer/AI-Coding/2026-04-09-新项目建立Harness Engineering/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/04/09/computer/AI-Coding/2026-04-09-新项目建立HarnessEngineering/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -386,7 +386,7 @@ agent 帮你问出来</li>
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarness%20Engineering/" title="新项目建立 Harness Engineering">https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-新项目建立Harness Engineering/</a>
+      <a href="https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/" title="新项目建立 Harness Engineering">https://aquietzero.github.io/2026/04/09/computer/AI-Coding/2026-04-09-新项目建立HarnessEngineering/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -447,13 +447,13 @@ agent 帮你问出来</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">385k</span>
+    <span title="站点总字数">387k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">23:21</span>
+    <span title="站点阅读时长">23:27</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
