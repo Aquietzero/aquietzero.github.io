@@ -21,12 +21,12 @@
     <meta name="description" content="群只有一个运算，而环和域则拥有两个运算——通常称为加法和乘法。这使得它们的结构更加丰富，也更接近我们熟悉的数系。环论是现代代数几何和数论的基础。 环的定义 定义 设 \(R\) 是一个集合，配备两个二元运算 \(+\)（加法）和 \(\times\)（乘法）。若满足：  \((R, +)\) 是阿贝尔群（交换群） \((R, \times)\) 是半群（有结合律） 乘法对加法有分配律：  \(a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="环与域：两个运算的世界">
-<meta property="og:url" content="https://aquietzero.github.io/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/index.html">
+<meta property="og:url" content="https://aquietzero.github.io/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/index.html">
 <meta property="og:site_name" content="NullSpace">
 <meta property="og:description" content="群只有一个运算，而环和域则拥有两个运算——通常称为加法和乘法。这使得它们的结构更加丰富，也更接近我们熟悉的数系。环论是现代代数几何和数论的基础。 环的定义 定义 设 \(R\) 是一个集合，配备两个二元运算 \(+\)（加法）和 \(\times\)（乘法）。若满足：  \((R, +)\) 是阿贝尔群（交换群） \((R, \times)\) 是半群（有结合律） 乘法对加法有分配律：  \(a">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-30T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-30T09:21:25.807Z">
+<meta property="article:published_time" content="2026-04-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-08T09:56:57.736Z">
 <meta property="article:author" content="bifnudo">
 <meta property="article:tag" content="数学">
 <meta property="article:tag" content="抽象代数">
@@ -35,11 +35,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://aquietzero.github.io/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/">
+<link rel="canonical" href="https://aquietzero.github.io/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/","path":"2026/03/31/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/","title":"环与域：两个运算的世界"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aquietzero.github.io/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/","path":"2026/04/10/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/","title":"环与域：两个运算的世界"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>环与域：两个运算的世界 | NullSpace</title>
@@ -118,7 +118,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">环的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">2.</span> <span class="nav-text">通俗解释</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">环的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B1%E6%95%B4%E6%95%B0%E7%8E%AF-mathbbz"><span class="nav-number">3.1.</span> <span class="nav-text">例1：整数环 \(\mathbb{Z}\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B2%E6%A8%A1-n-%E5%89%A9%E4%BD%99%E7%B1%BB%E7%8E%AF-mathbbz_n"><span class="nav-number">3.2.</span> <span class="nav-text">例2：模 \(n\) 剩余类环 \(\mathbb{Z}_n\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B3%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%8E%AF-mathbbzxmathbbrxmathbbcx"><span class="nav-number">3.3.</span> <span class="nav-text">例3：多项式环 \(\mathbb{Z}[x]\)、\(\mathbb{R}[x]\)、\(\mathbb{C}[x]\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B4%E7%9F%A9%E9%98%B5%E7%8E%AF-m_nmathbbr"><span class="nav-number">3.4.</span> <span class="nav-text">例4：矩阵环 \(M_n(\mathbb{R})\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B5%E5%81%B6%E6%95%B0%E7%8E%AF-2mathbbz"><span class="nav-number">3.5.</span> <span class="nav-text">例5：偶数环 \(2\mathbb{Z}\)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">4.</span> <span class="nav-text">域的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A-1"><span class="nav-number">4.2.</span> <span class="nav-text">通俗解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">域的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7%E8%B4%A8mathbbz_p-%E6%98%AF%E5%9F%9F"><span class="nav-number">5.1.</span> <span class="nav-text">重要性质：\(\mathbb{Z}_p\) 是域</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%8E%AF%E4%B8%8E%E5%AD%90%E5%9F%9F"><span class="nav-number">6.</span> <span class="nav-text">子环与子域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="nav-number">6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%8E%AF%E5%88%A4%E5%AE%9A"><span class="nav-number">6.2.</span> <span class="nav-text">子环判定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">6.3.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">7.</span> <span class="nav-text">环的基本性质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E7%8E%AF%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">7.1.</span> <span class="nav-text">定理：环的基本性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E7%8E%AF%E4%B8%8E%E9%99%A4%E7%8E%AF"><span class="nav-number">8.</span> <span class="nav-text">整环与除环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="nav-number">8.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%90%8C%E6%80%81"><span class="nav-number">9.</span> <span class="nav-text">环同态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-4"><span class="nav-number">9.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="nav-number">9.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">环的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.</span> <span class="nav-text">环的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E7%8E%AF-mathbbz"><span class="nav-number">2.1.</span> <span class="nav-text">整数环 \(\mathbb{Z}\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1-n-%E5%89%A9%E4%BD%99%E7%B1%BB%E7%8E%AF-mathbbz_n"><span class="nav-number">2.2.</span> <span class="nav-text">模 \(n\) 剩余类环 \(\mathbb{Z}_n\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%8E%AF-mathbbzxmathbbrxmathbbcx"><span class="nav-number">2.3.</span> <span class="nav-text">多项式环 \(\mathbb{Z}[x]\)、\(\mathbb{R}[x]\)、\(\mathbb{C}[x]\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%8E%AF-m_nmathbbr"><span class="nav-number">2.4.</span> <span class="nav-text">矩阵环 \(M_n(\mathbb{R})\)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%B6%E6%95%B0%E7%8E%AF-2mathbbz"><span class="nav-number">2.5.</span> <span class="nav-text">偶数环 \(2\mathbb{Z}\)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.</span> <span class="nav-text">域的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%97%E8%A7%A3%E9%87%8A"><span class="nav-number">3.2.</span> <span class="nav-text">通俗解释</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">域的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7%E8%B4%A8mathbbz_p-%E6%98%AF%E5%9F%9F"><span class="nav-number">4.1.</span> <span class="nav-text">重要性质：\(\mathbb{Z}_p\) 是域</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%8E%AF%E4%B8%8E%E5%AD%90%E5%9F%9F"><span class="nav-number">5.</span> <span class="nav-text">子环与子域</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="nav-number">5.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E7%8E%AF%E5%88%A4%E5%AE%9A"><span class="nav-number">5.2.</span> <span class="nav-text">子环判定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">5.3.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">6.</span> <span class="nav-text">环的基本性质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%90%86%E7%8E%AF%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">6.1.</span> <span class="nav-text">定理：环的基本性质</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B4%E7%8E%AF%E4%B8%8E%E9%99%A4%E7%8E%AF"><span class="nav-number">7.</span> <span class="nav-text">整环与除环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E7%8E%AF"><span class="nav-number">7.1.</span> <span class="nav-text">整环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E7%8E%AF%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">7.1.1.</span> <span class="nav-text">整环的例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%A4%E7%8E%AF"><span class="nav-number">7.2.</span> <span class="nav-text">除环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%A4%E7%8E%AF%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">7.2.1.</span> <span class="nav-text">除环的例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%90%8C%E6%80%81"><span class="nav-number">8.</span> <span class="nav-text">环同态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="nav-number">8.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="nav-number">8.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BE%A4%E7%8E%AF%E5%9F%9F%E5%AF%B9%E6%AF%94"><span class="nav-number">9.1.</span> <span class="nav-text">群、环、域对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">10.</span> <span class="nav-text">概念关系图</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -182,7 +182,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/">
+    <link itemprop="mainEntityOfPage" href="https://aquietzero.github.io/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/assets/images/me.webp">
@@ -211,7 +211,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2026-03-31 00:00:00" itemprop="dateCreated datePublished" datetime="2026-03-31T00:00:00+08:00">2026-03-31</time>
+      <time title="创建时间：2026-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-10T00:00:00+08:00">2026-04-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -232,8 +232,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/03/31/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2026/04/10/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -244,14 +244,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
+      <span>1.9k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
+      <span>7 分钟</span>
     </span>
 </div>
 
@@ -287,29 +287,21 @@ c\)</span></li>
 ba\)</span>，则称<strong>交换环</strong> 5. 乘法单位元存在：存在 <span
 class="math inline">\(1 \in R\)</span> 使 <span class="math inline">\(1
 \cdot a = a \cdot 1 = a\)</span>，则称<strong>有单位元的环</strong></p>
-<aside>
-<p>💡
-注意：环的加法必须是阿贝尔群，但乘法只需要是半群（不必是群）。这是因为环中的乘法未必可逆！</p>
+<aside data-title="注意">
+注意：环的加法必须是阿贝尔群，但乘法只需要是半群（不必是群）。这是因为环中的乘法未必可逆！
 </aside>
-<hr />
-<h1 id="通俗解释">通俗解释</h1>
-<p>环就是"可以加减乘"的集合。你可以把环想象成： - 有 <span
-class="math inline">\(0\)</span>（加法单位） - 有加法逆元（<span
-class="math inline">\(-a\)</span>） - 有乘法运算 -
-乘法对加法满足分配律</p>
-<blockquote>
-<p>💡
-环就像一个"小王国"：有完整的加法系统（城堡），但乘法系统可能有些"残废"——不一定有乘法逆元。</p>
-</blockquote>
-<hr />
 <h1 id="环的例子">环的例子</h1>
-<h2 id="例1整数环-mathbbz">例1：整数环 <span
+<h2 id="整数环-mathbbz">整数环 <span
 class="math inline">\(\mathbb{Z}\)</span></h2>
 <p><span class="math inline">\((\mathbb{Z}, +, \times)\)</span>
-是有单位元的交换环。 - <span class="math inline">\((Z, +)\)</span>
-是阿贝尔群 - 乘法有结合律、交换律 - 乘法单位元是 <span
-class="math inline">\(1\)</span> - 分配律成立</p>
-<h2 id="例2模-n-剩余类环-mathbbz_n">例2：模 <span
+是有单位元的交换环。</p>
+<ul>
+<li><span class="math inline">\((Z, +)\)</span> 是阿贝尔群</li>
+<li>乘法有结合律、交换律</li>
+<li>乘法单位元是 <span class="math inline">\(1\)</span></li>
+<li>分配律成立</li>
+</ul>
+<h2 id="模-n-剩余类环-mathbbz_n">模 <span
 class="math inline">\(n\)</span> 剩余类环 <span
 class="math inline">\(\mathbb{Z}_n\)</span></h2>
 <p><span class="math inline">\(\mathbb{Z}_n = \{[0], [1], \ldots,
@@ -317,36 +309,34 @@ class="math inline">\(\mathbb{Z}_n\)</span></h2>
 <p>例如 <span class="math inline">\(\mathbb{Z}_6\)</span> 中：<span
 class="math inline">\([2] \times [3] = [6] =
 [0]\)</span>——这在整数环中不会发生！</p>
-<h2 id="例3多项式环-mathbbzxmathbbrxmathbbcx">例3：多项式环 <span
+<h2 id="多项式环-mathbbzxmathbbrxmathbbcx">多项式环 <span
 class="math inline">\(\mathbb{Z}[x]\)</span>、<span
 class="math inline">\(\mathbb{R}[x]\)</span>、<span
 class="math inline">\(\mathbb{C}[x]\)</span></h2>
 <p>所有多项式的集合，在多项式加法和乘法下构成有单位元的交换环。</p>
-<h2 id="例4矩阵环-m_nmathbbr">例4：矩阵环 <span
+<h2 id="矩阵环-m_nmathbbr">矩阵环 <span
 class="math inline">\(M_n(\mathbb{R})\)</span></h2>
 <p><span class="math inline">\(n \times n\)</span>
 实矩阵的集合，在矩阵加法和乘法下构成有单位元的<strong>非交换环</strong>。</p>
 <p>单位元是单位矩阵 <span class="math inline">\(I_n\)</span>。</p>
-<h2 id="例5偶数环-2mathbbz">例5：偶数环 <span
+<h2 id="偶数环-2mathbbz">偶数环 <span
 class="math inline">\(2\mathbb{Z}\)</span></h2>
 <p>偶整数集合 <span class="math inline">\(\{2k \mid k \in
 \mathbb{Z}\}\)</span>，在整数加法和乘法下构成交换环，<strong>没有单位元</strong>（因为
 <span class="math inline">\(1\)</span> 不是偶数）。</p>
-<hr />
 <h1 id="域的定义">域的定义</h1>
 <h2 id="定义-1">定义</h2>
-<p>若环 <span class="math inline">\(F\)</span> 还满足： - <span
-class="math inline">\(1 \neq 0\)</span>（至少有两个不同元素） -
-每个非零元素都有乘法逆元：<span class="math inline">\(a \in F, a \neq 0
-\Rightarrow \exists a^{-1} \in F\)</span></p>
+<p>若环 <span class="math inline">\(F\)</span> 还满足：</p>
+<ul>
+<li><span class="math inline">\(1 \neq
+0\)</span>（至少有两个不同元素）</li>
+<li>每个非零元素都有乘法逆元：<span class="math inline">\(a \in F, a
+\neq 0 \Rightarrow \exists a^{-1} \in F\)</span></li>
+</ul>
 <p>则称 <span class="math inline">\(F\)</span>
 是一个<strong>域</strong>（field）。</p>
-<h2 id="通俗解释-1">通俗解释</h2>
+<h2 id="通俗解释">通俗解释</h2>
 <p>域就是"可以加减乘除"的集合。除了加法逆元外，域中每个非零元素都有乘法逆元，所以可以做除法（除以非零数）。</p>
-<blockquote>
-<p>💡 域就是"数的完整世界"：加减乘除随便用！</p>
-</blockquote>
-<hr />
 <h1 id="域的例子">域的例子</h1>
 <table>
 <thead>
@@ -379,8 +369,8 @@ class="math inline">\(p\)</span> 为素数）</td>
 class="math inline">\(\mathbb{Z}_p\)</span> 是域</h2>
 <p><strong>定理</strong>：当 <span class="math inline">\(p\)</span>
 是素数时，<span class="math inline">\(\mathbb{Z}_p\)</span> 是域。</p>
-<p><strong>证明</strong>：</p>
-<p>只需证每个非零 <span class="math inline">\([a]\)</span> 有逆元。<span
+<aside data-title="证明">
+只需证每个非零 <span class="math inline">\([a]\)</span> 有逆元。<span
 class="math inline">\(a\)</span> 与 <span
 class="math inline">\(p\)</span> 互质（因为 <span
 class="math inline">\(p\)</span> 是素数且 <span class="math inline">\(a
@@ -388,14 +378,13 @@ class="math inline">\(p\)</span> 是素数且 <span class="math inline">\(a
 t\)</span> 使 <span class="math inline">\(sa + tp = 1\)</span>。取模
 <span class="math inline">\(p\)</span> 得 <span class="math inline">\(sa
 \equiv 1 \pmod{p}\)</span>，即 <span class="math inline">\([s]\)</span>
-是 <span class="math inline">\([a]\)</span> 的逆元。</p>
-<p><span class="math inline">\(\square\)</span></p>
-<aside>
-<p>💡 注意：<span class="math inline">\(\mathbb{Z}_6\)</span>
-不是域，因为 <span class="math inline">\([2] \times [3] =
-[0]\)</span>——存在非零元素的乘积为零！这叫<strong>零因子</strong>。</p>
+是 <span class="math inline">\([a]\)</span> 的逆元。
 </aside>
-<hr />
+<aside data-title="注意">
+<span class="math inline">\(\mathbb{Z}_6\)</span> 不是域，因为 <span
+class="math inline">\([2] \times [3] =
+[0]\)</span>——存在非零元素的乘积为零！这叫<strong>零因子</strong>。
+</aside>
 <h1 id="子环与子域">子环与子域</h1>
 <h2 id="定义-2">定义</h2>
 <ul>
@@ -417,7 +406,6 @@ class="math inline">\(ab \in S\)</span>）。</p>
 \mathbb{Z}_n\)</span>（<span class="math inline">\(n \geq
 2\)</span>）</li>
 </ul>
-<hr />
 <h1 id="环的基本性质">环的基本性质</h1>
 <h2 id="定理环的基本性质">定理：环的基本性质</h2>
 <p>设 <span class="math inline">\(R\)</span> 是环，<span
@@ -430,43 +418,97 @@ class="math inline">\(0\)</span> 是加法单位元：</p>
 class="math inline">\(-1 = (-1)\)</span> 且 <span
 class="math inline">\((-1) \cdot a = -a\)</span></li>
 </ol>
-<p><strong>证明</strong>：</p>
-<ol type="1">
-<li><span class="math inline">\(0 + 0 \cdot a = 0 \cdot a = (0+0) \cdot
-a = 0 \cdot a + 0 \cdot a\)</span>，消去得 <span class="math inline">\(0
-\cdot a = 0\)</span>。同理 <span class="math inline">\(a \cdot 0 =
-0\)</span>。</li>
-</ol>
-<p>2-4：类似可证。</p>
-<p><span class="math inline">\(\square\)</span></p>
-<hr />
 <h1 id="整环与除环">整环与除环</h1>
-<h2 id="定义-3">定义</h2>
-<ul>
-<li><strong>整环</strong>：有单位元的交换环，且无零因子（若 <span
-class="math inline">\(ab = 0\)</span>，则 <span class="math inline">\(a
-= 0\)</span> 或 <span class="math inline">\(b = 0\)</span>）</li>
-<li><strong>除环</strong>：每个非零元素都有乘法逆元的环（不必交换），即<strong>体</strong></li>
-</ul>
-<blockquote>
-<p>💡 <strong>关系</strong>：域 = 整环 + 每个非零元素可逆 = 除环 +
-交换</p>
-</blockquote>
-<aside>
-<p>💡 四元数体 <span class="math inline">\(\mathbb{H}\)</span>
-是最重要的非交换除环（除环）例子！</p>
+<h2 id="整环">整环</h2>
+<p><strong>定义</strong>：设 <span class="math inline">\(R\)</span>
+是有单位元的交换环。若 <span class="math inline">\(R\)</span>
+没有零因子，即：</p>
+<p><span class="math display">\[ab = 0 \Rightarrow a = 0 \text{ 或 } b =
+0\]</span></p>
+<p>则称 <span class="math inline">\(R\)</span>
+是<strong>整环</strong>（integral domain）。</p>
+<p>整环的关键特性是<strong>消去律</strong>成立：若 <span
+class="math inline">\(a \neq 0\)</span> 且 <span
+class="math inline">\(ab = ac\)</span>，则 <span class="math inline">\(b
+= c\)</span>。</p>
+<h3 id="整环的例子">整环的例子</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>整环</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\mathbb{Z}\)</span></td>
+<td>整数环，最典型的整环</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbb{Z}[x]\)</span></td>
+<td>整系数多项式环</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbb{R}[x]\)</span></td>
+<td>实系数多项式环</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbb{Z}[i] = \{a + bi \mid a, b \in
+\mathbb{Z}\}\)</span></td>
+<td>高斯整数环</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbb{Z}[\sqrt{-5}]\)</span></td>
+<td><span class="math inline">\(\{a + b\sqrt{-5} \mid a, b \in
+\mathbb{Z}\}\)</span></td>
+</tr>
+</tbody>
+</table>
+<aside data-title="注意">
+所有域都是整环，但反之不然。例如 <span
+class="math inline">\(\mathbb{Z}\)</span> 是整环但不是域（<span
+class="math inline">\(2\)</span> 没有乘法逆元）。
 </aside>
-<hr />
+<h2 id="除环">除环</h2>
+<p><strong>定义</strong>：设 <span class="math inline">\(D\)</span>
+是有单位元的环，<span class="math inline">\(1 \neq 0\)</span>。若 <span
+class="math inline">\(D\)</span> 中每个非零元素都有乘法逆元，即：</p>
+<p><span class="math display">\[\forall a \in D, a \neq 0 \Rightarrow
+\exists a^{-1} \in D, \quad a \cdot a^{-1} = a^{-1} \cdot a =
+1\]</span></p>
+<p>则称 <span class="math inline">\(D\)</span>
+是<strong>除环</strong>（division ring），也叫<strong>体</strong>（skew
+field）。</p>
+<p>注意：除环<strong>不要求乘法交换</strong>。若除环的乘法还是交换的，那它就是域。</p>
+<h3 id="除环的例子">除环的例子</h3>
+<ul>
+<li><span class="math inline">\(\mathbb{Q}, \mathbb{R},
+\mathbb{C}\)</span>: 所有域都是（交换的）除环</li>
+<li>四元数体 <span class="math inline">\(\mathbb{H}\)</span>: Hamilton
+四元数 <span class="math inline">\(\{a + bi + cj +
+dk\}\)</span>，<strong>非交换</strong>除环</li>
+</ul>
+<p>四元数体 <span class="math inline">\(\mathbb{H}\)</span> 满足 <span
+class="math inline">\(ij = k\)</span> 但 <span class="math inline">\(ji
+=
+-k\)</span>，因此乘法不交换。它是最经典的非交换除环，在物理学中描述三维旋转。</p>
+<aside data-title="注意">
+域 = 整环 + 每个非零元素可逆 = 除环 + 交换
+</aside>
 <h1 id="环同态">环同态</h1>
-<h2 id="定义-4">定义</h2>
+<h2 id="定义-3">定义</h2>
 <p>设 <span class="math inline">\(\phi: R \to S\)</span>
 是映射。若对任意 <span class="math inline">\(a, b \in R\)</span>：</p>
 <ol type="1">
 <li><span class="math inline">\(\phi(a + b) = \phi(a) +
 \phi(b)\)</span></li>
 <li><span class="math inline">\(\phi(ab) = \phi(a)\phi(b)\)</span></li>
-<li>（若环有单位元）<span class="math inline">\(\phi(1_R) =
-1_S\)</span></li>
+<li><span class="math inline">\(\phi(1_R) = 1_S\)</span>
+（若环有单位元）</li>
 </ol>
 <p>则称 <span class="math inline">\(\phi\)</span>
 是<strong>环同态</strong>。</p>
@@ -480,7 +522,6 @@ class="math inline">\(k \mapsto [k]\)</span> 是环同态</li>
 \mathbb{Z}\)</span>，<span class="math inline">\(f(x) \mapsto
 f(2)\)</span></li>
 </ul>
-<hr />
 <h1 id="小结">小结</h1>
 <ul>
 <li>环是带有加法和乘法两个运算的集合</li>
@@ -493,7 +534,101 @@ class="math inline">\(M_n(\mathbb{R})\)</span> 是重要例子</li>
 class="math inline">\(p\)</span> 为素数）是有限域</li>
 <li>环同态保持环的结构</li>
 </ul>
-<p>环论与群论平行发展。下一篇文章我们将学习<strong>理想</strong>——这是环中的"正规子群"，它决定了商环的结构。</p>
+<h2 id="群环域对比">群、环、域对比</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>群</th>
+<th>环</th>
+<th>域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>运算数</strong></td>
+<td>1 个</td>
+<td>2 个（加法 + 乘法）</td>
+<td>2 个（加法 + 乘法）</td>
+</tr>
+<tr>
+<td><strong>加法结构</strong></td>
+<td>—</td>
+<td>阿贝尔群</td>
+<td>阿贝尔群</td>
+</tr>
+<tr>
+<td><strong>乘法结构</strong></td>
+<td>—</td>
+<td>半群（结合律）</td>
+<td>阿贝尔群（去掉 <span class="math inline">\(0\)</span>）</td>
+</tr>
+<tr>
+<td><strong>分配律</strong></td>
+<td>—</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>乘法交换</strong></td>
+<td>—</td>
+<td>不必（交换环才有）</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>乘法单位元</strong></td>
+<td>—</td>
+<td>不必（有单位元环才有）</td>
+<td>✓（存在 <span class="math inline">\(1 \neq 0\)</span>）</td>
+</tr>
+<tr>
+<td><strong>乘法逆元</strong></td>
+<td>—</td>
+<td>不必</td>
+<td>✓（非零元素均可逆）</td>
+</tr>
+<tr>
+<td><strong>零因子</strong></td>
+<td>—</td>
+<td>可能存在</td>
+<td>不存在</td>
+</tr>
+<tr>
+<td><strong>可做除法</strong></td>
+<td>—</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>典型例子</strong></td>
+<td><span class="math inline">\(S_n\)</span>, <span
+class="math inline">\(\mathbb{Z}_n\)</span>, <span
+class="math inline">\(D_n\)</span></td>
+<td><span class="math inline">\(\mathbb{Z}\)</span>, <span
+class="math inline">\(\mathbb{Z}[x]\)</span>, <span
+class="math inline">\(M_n(\mathbb{R})\)</span></td>
+<td><span class="math inline">\(\mathbb{Q}\)</span>, <span
+class="math inline">\(\mathbb{R}\)</span>, <span
+class="math inline">\(\mathbb{C}\)</span>, <span
+class="math inline">\(\mathbb{Z}_p\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>群，环，域实际上是层层递进的数学结构，群只有一个运算（加法），只要求有结合律，单位元，逆元即可；而环则是两个运算，对加法结构要求交换律，而对乘法结要求结合律，分配律的作用在于两种运算的结合，因为这些结构本质都是“封闭集合”（不是有界集合），要求元素无论如何运算都得在集合里，所以需要保证这些运算都能对元素进行各种组合操作。而域更进一步，要求非零元素的乘法有逆元。</p>
+<p>通俗上理解，群是有理数加法，环则加上了乘法，而域则加上了除法。</p>
+<p>再进一步，群，环，域之间也有一些过渡结构，比如群加上加法交换律，就是阿贝尔群，这个也是环的子集，而环加上消去律就是整环，加上非零逆元就是除环，这些都是域的子集。</p>
+<h1 id="概念关系图">概念关系图</h1>
+<p>下图展示了本篇的核心概念及其相互关系：</p>
+<div class="concept-graph"
+data-src="/assets/data/graphs/ring-field-structure.json">
+
+</div>
 
     </div>
 
@@ -524,7 +659,7 @@ class="math inline">\(p\)</span> 为素数）是有限域</li>
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://aquietzero.github.io/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/" title="环与域：两个运算的世界">https://aquietzero.github.io/2026/03/31/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/</a>
+      <a href="https://aquietzero.github.io/2026/04/10/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%8E%AF%E4%B8%8E%E5%9F%9F%EF%BC%9A%E4%B8%A4%E4%B8%AA%E8%BF%90%E7%AE%97%E7%9A%84%E4%B8%96%E7%95%8C/" title="环与域：两个运算的世界">https://aquietzero.github.io/2026/04/10/math/数学漫步/抽象代数/2026-04-10-环与域：两个运算的世界/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -543,13 +678,13 @@ class="math inline">\(p\)</span> 为素数）是有限域</li>
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2026/03/31/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E7%90%86%E6%83%B3%E4%B8%8E%E5%95%86%E7%8E%AF%EF%BC%9A%E7%8E%AF%E7%9A%84%22%E6%AD%A3%E8%A7%84%E5%AD%90%E7%BE%A4%22/" rel="prev" title="理想与商环：环的"正规子群"">
-                  <i class="fa fa-angle-left"></i> 理想与商环：环的"正规子群"
+                <a href="/2026/04/09/computer/AI-Coding/2026-04-09-%E6%96%B0%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8BHarnessEngineering/" rel="prev" title="新项目建立 Harness Engineering">
+                  <i class="fa fa-angle-left"></i> 新项目建立 Harness Engineering
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/04/01/math/%E6%95%B0%E5%AD%A6%E6%BC%AB%E6%AD%A5/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/2026-04-10-%E5%9F%9F%E6%89%A9%E5%BC%A0%EF%BC%9A%E8%B5%B0%E5%90%91%E4%BC%BD%E7%BD%97%E7%93%A6%E7%90%86%E8%AE%BA%E7%9A%84%E6%A1%A5%E6%A2%81/" rel="next" title="域扩张：走向伽罗瓦理论的桥梁">
-                  域扩张：走向伽罗瓦理论的桥梁 <i class="fa fa-angle-right"></i>
+                <a href="/2026/04/27/life/%E6%A8%A1%E5%9E%8B%E7%B3%BB%E5%88%97/2026-04-27-%E6%9C%BA%E7%94%B2%E4%B9%8B%E5%9F%8E%E6%9F%AF%E8%A5%BF/" rel="next" title="机甲之城柯西">
+                  机甲之城柯西 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
@@ -586,13 +721,13 @@ class="math inline">\(p\)</span> 为素数）是有限域</li>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">387k</span>
+    <span title="站点总字数">388k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">23:27</span>
+    <span title="站点阅读时长">23:29</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
